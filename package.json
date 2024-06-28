@@ -1,0 +1,13 @@
+{
+  "name": "paragliding-meshmap",
+  "packageManager": "yarn@4.3.0",
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.21",
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}

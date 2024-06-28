@@ -14,4 +14,4 @@ app.get('/api/nodes', async function (_req: Request, res: Response) {
 
 app.listen(3333)
 
-console.log('Express server has started on port 3000. Open http://localhost:3000/ to see results')
+console.log('Express server has started on port 3333. Open http://localhost:3333/ to see results')

@@ -5,13 +5,14 @@
   "scripts": {
     "build": "tsc",
     "start": "nodemon --exec node --loader ts-node/esm src/index.ts",
+    "mqtt": "nodemon --exec node --loader ts-node/esm src/mqtt.ts --",
     "lint": "eslint .",
     "format": "prettier --write .",
     "fmt": "yarn format",
     "typeorm": "typeorm-ts-node-esm"
   },
   "imports": {
-    "#entity/*": "./src/entity/*.js",
+    "#entity/*": "./src/entity/*.ts",
     "#config/*": "./config/*.ts",
     "#migrations/*": "./src/migration/*.ts"
   },
@@ -38,10 +39,14 @@
   },
   "dependencies": {
     "body-parser": "^1.20.2",
+    "commander": "^12.1.0",
     "debug": "^4.3.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "mqtt": "^5.7.3",
     "mysql": "^2.18.1",
+    "p-queue": "^8.0.1",
+    "p-retry": "^6.2.0",
     "pg": "^8.12.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.2.2",

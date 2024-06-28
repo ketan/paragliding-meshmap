@@ -54,7 +54,7 @@ export default class Node extends BaseType {
   @Column()
   neighbourBroadcastIntervalSecs?: number
 
-  @Column({type: 'json'})
+  @Column({ type: 'json' })
   neighbours?: Neighbors[]
 
   @Column()

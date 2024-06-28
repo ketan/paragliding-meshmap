@@ -7,7 +7,7 @@ import { BaseType } from './base_type.js'
 
 @Entity()
 export default class Traceroute extends BaseType {
-  @Column({type: 'json'})
+  @Column({ type: 'json' })
   route: object
 
   @Column()

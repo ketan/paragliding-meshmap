@@ -14,7 +14,7 @@ export default class NeighbourInfo extends BaseType {
   @Column()
   nodeBroadcastIntervalSecs: number
 
-  @Column({type: 'json'})
+  @Column({ type: 'json' })
   neighbours: Neighbors[]
 
   static fromPacket(envelope: ServiceEnvelope) {

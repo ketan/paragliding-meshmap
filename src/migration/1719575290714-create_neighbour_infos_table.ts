@@ -17,8 +17,18 @@ export class CreateNeighbourInfosTable1719575290714 implements MigrationInterfac
           { name: 'node_broadcast_interval_secs', type: 'integer', isNullable: false },
           { name: 'neighbours', type: 'json', isNullable: false },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

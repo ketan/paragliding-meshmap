@@ -10,25 +10,25 @@ export default class Traceroute extends BaseType {
   @Column({ type: 'json' })
   route: object
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   channel?: number
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   channelId?: string
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   packetId?: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   from: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   to: number
 
-  @Column()
+  @Column({ type: 'boolean', nullable: false })
   wantResponse: boolean
 
   static fromPacket(envelope: ServiceEnvelope) {

@@ -27,8 +27,18 @@ export class CreateWaypointsTable1719576284958 implements MigrationInterface {
           { name: 'channel_id', type: 'text', isNullable: false },
           { name: 'gateway_id', type: 'bigint', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

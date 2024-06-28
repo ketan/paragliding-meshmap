@@ -3,33 +3,33 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { EnvironmentMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { BaseType } from './base_type.js'
 import { ignorableProtobufError, secondsAgo } from '../helpers/utils.js'
+import { BaseType } from './base_type.js'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {
-  @Column()
+  @Column({ type: 'bigint', nullable: false })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   temperature?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   relativeHumidity?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   barometricPressure?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   gasResistance?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   voltage?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   current?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   iaq?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

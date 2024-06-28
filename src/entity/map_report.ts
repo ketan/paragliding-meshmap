@@ -7,46 +7,46 @@ import { BaseType } from './base_type.js'
 
 @Entity()
 export default class MapReport extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'text' })
   longName: string
 
-  @Column()
+  @Column({ type: 'text' })
   shortName: string
 
-  @Column()
+  @Column({ type: 'integer' })
   role: number
 
-  @Column()
+  @Column({ type: 'integer' })
   hardwareModel: number
 
-  @Column()
+  @Column({ type: 'text' })
   firmwareVersion: string
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   region?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   modemPreset?: number
 
-  @Column()
+  @Column({ type: 'boolean', nullable: true })
   hasDefaultChannel?: boolean
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   latitude?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   longitude?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   altitude?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   positionPrecision?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   numOnlineLocalNodes?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

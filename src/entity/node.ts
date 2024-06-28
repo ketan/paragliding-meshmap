@@ -12,91 +12,91 @@ import { AppDataSource } from '../data-source.js'
 
 @Entity()
 export default class Node extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   longName?: string
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   shortName?: string
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   hardwareModel?: number
 
-  @Column()
+  @Column({ type: 'boolean', nullable: true })
   isLicensed?: boolean
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   role?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   altitude?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   latitude?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   longitude?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   airUtilTx?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   batteryLevel?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   channelUtilization?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   voltage?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   neighbourBroadcastIntervalSecs?: number
 
-  @Column({ type: 'json' })
+  @Column({ type: 'json', nullable: true })
   neighbours?: Neighbors[]
 
-  @Column()
+  @Column({ type: 'datetime', nullable: true })
   neighboursUpdatedAt?: Date
 
-  @Column()
+  @Column({ type: 'datetime', nullable: true })
   positionUpdatedAt?: Date
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   mqttConnectionState?: string
 
-  @Column()
+  @Column({ type: 'datetime', nullable: true })
   mqttConnectionStateUpdatedAt?: Date
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   firmwareVersion?: string
 
-  @Column()
+  @Column({ type: 'boolean', nullable: true })
   hasDefaultChannel?: boolean
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   modemPreset?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   numOnlineLocalNodes?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   positionPrecision?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   region?: number
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   uptimeSeconds?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   barometricPressure?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   relativeHumidity?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   temperature?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

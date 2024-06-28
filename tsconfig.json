@@ -45,7 +45,7 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "moduleDetection": "force",
-    "preserveConstEnums": true,
+    "preserveConstEnums": true
   },
   "ts-node": {
     "swc": true

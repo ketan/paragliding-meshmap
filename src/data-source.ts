@@ -17,6 +17,7 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
     return snakeCase(super.columnName(propertyName, customName, embeddedPrefixes))
   }
 }
+
 export const AppDataSource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   type: 'sqlite',

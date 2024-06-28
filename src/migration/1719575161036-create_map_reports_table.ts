@@ -30,8 +30,18 @@ export class CreateMapReportsTable1719575161036 implements MigrationInterface {
           { name: 'position_precision', type: 'integer', isNullable: true },
           { name: 'num_online_local_nodes', type: 'integer', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

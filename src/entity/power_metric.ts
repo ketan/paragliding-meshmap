@@ -8,25 +8,25 @@ import { BaseType } from './base_type.js'
 
 @Entity()
 export default class PowerMetric extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch1Voltage?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch1Current?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch2Voltage?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch2Current?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch3Voltage?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   ch3Current?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

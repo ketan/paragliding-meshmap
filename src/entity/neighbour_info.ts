@@ -8,10 +8,10 @@ import { Neighbors } from './neighbors.js'
 
 @Entity()
 export default class NeighbourInfo extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'integer' })
   nodeBroadcastIntervalSecs: number
 
   @Column({ type: 'json' })

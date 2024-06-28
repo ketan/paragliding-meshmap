@@ -48,8 +48,18 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'relative_humidity', type: 'double', isNullable: true },
           { name: 'temperature', type: 'double', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

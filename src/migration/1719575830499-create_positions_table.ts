@@ -12,7 +12,7 @@ export class CreatePositionsTable1719575830499 implements MigrationInterface {
         columns: [
           { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
 
-          { name: 'node_id', type: 'bigint', isNullable: false, isUnique: true },
+          { name: 'node_id', type: 'bigint', isNullable: false },
 
           { name: 'to', type: 'bigint', isNullable: false },
           { name: 'from', type: 'bigint', isNullable: false },
@@ -25,8 +25,18 @@ export class CreatePositionsTable1719575830499 implements MigrationInterface {
           { name: 'longitude', type: 'integer', isNullable: true },
           { name: 'altitude', type: 'integer', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

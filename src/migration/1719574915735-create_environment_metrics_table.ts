@@ -22,8 +22,18 @@ export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInte
           { name: 'current', type: 'double', isNullable: true },
           { name: 'iaq', type: 'integer', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

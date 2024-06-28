@@ -20,8 +20,18 @@ export class CreateDeviceMetricsTable1719570433709 implements MigrationInterface
           { name: 'air_util_tx', type: 'double', isNullable: true },
           { name: 'uptime_seconds', type: 'bigint', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

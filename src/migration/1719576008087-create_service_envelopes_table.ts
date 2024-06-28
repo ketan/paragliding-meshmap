@@ -17,10 +17,20 @@ export class CreateServiceEnvelopesTable1719576008087 implements MigrationInterf
           { name: 'gateway_id', type: 'bigint', isNullable: true },
           { name: 'to', type: 'bigint', isNullable: false },
           { name: 'from', type: 'bigint', isNullable: false },
-          { name: 'protobuf', type: 'binary', isNullable: false },
+          { name: 'protobuf', type: 'blob', isNullable: false },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

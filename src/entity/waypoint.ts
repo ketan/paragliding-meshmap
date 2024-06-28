@@ -7,46 +7,46 @@ import { ignorableProtobufError, toBigInt } from '../helpers/utils.js'
 
 @Entity()
 export default class Waypoint extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   from: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   to: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   waypointId: number
 
-  @Column()
+  @Column({ type: 'integer' })
   latitude: number
 
-  @Column()
+  @Column({ type: 'integer' })
   longitude: number
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   expire?: number
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   lockedTo?: number
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   name?: string
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   description?: string
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   icon?: number
 
-  @Column()
+  @Column({ type: 'integer' })
   channel: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   packetId: number
 
-  @Column()
+  @Column({ type: 'text' })
   channelId: string
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

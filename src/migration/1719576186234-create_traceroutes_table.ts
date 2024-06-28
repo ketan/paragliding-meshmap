@@ -21,8 +21,18 @@ export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
           { name: 'to', type: 'bigint', isNullable: false },
           { name: 'want_response', type: 'boolean', isNullable: false },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

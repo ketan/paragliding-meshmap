@@ -12,19 +12,29 @@ export class CreatePowerMetricsTable1719575917930 implements MigrationInterface 
         columns: [
           { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
 
-          { name: 'node_id', type: 'bigint', isNullable: false, isUnique: true },
+          { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'ch1voltage', type: 'double', isNullable: true },
-          { name: 'ch1current', type: 'double', isNullable: true },
+          { name: 'ch1_voltage', type: 'double', isNullable: true },
+          { name: 'ch1_current', type: 'double', isNullable: true },
 
-          { name: 'ch2voltage', type: 'double', isNullable: true },
-          { name: 'ch2current', type: 'double', isNullable: true },
+          { name: 'ch2_voltage', type: 'double', isNullable: true },
+          { name: 'ch2_current', type: 'double', isNullable: true },
 
-          { name: 'ch3voltage', type: 'double', isNullable: true },
-          { name: 'ch3current', type: 'double', isNullable: true },
+          { name: 'ch3_voltage', type: 'double', isNullable: true },
+          { name: 'ch3_current', type: 'double', isNullable: true },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

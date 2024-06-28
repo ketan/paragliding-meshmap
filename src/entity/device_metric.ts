@@ -8,22 +8,22 @@ import { BaseType } from './base_type.js'
 
 @Entity()
 export default class DeviceMetric extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   batteryLevel?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   voltage?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   channelUtilization?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   airUtilTx?: number
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   uptimeSeconds?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

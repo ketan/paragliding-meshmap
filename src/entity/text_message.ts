@@ -7,40 +7,40 @@ import { toBigInt } from '../helpers/utils.js'
 
 @Entity()
 export default class TextMessage extends BaseType {
-  @Column()
+  @Column({ type: 'bigint' })
   to: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   from: number
 
-  @Column()
-  channel: number
+  @Column({ type: 'integer', nullable: true })
+  channel?: number
 
-  @Column()
-  packetId: number
+  @Column({ type: 'bigint', nullable: true })
+  packetId?: number
 
-  @Column()
-  channelId: string
+  @Column({ type: 'text', nullable: true })
+  channelId?: string
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
-  @Column()
+  @Column({ type: 'text' })
   text: string
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   rxTime?: number
 
-  @Column()
+  @Column({ type: 'double', nullable: true })
   rxSnr?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   rxRssi?: number
 
-  @Column()
+  @Column({ type: 'integer', nullable: true })
   hopLimit?: number
 
-  @Column()
+  @Column({ type: 'boolean' })
   wantResponse: boolean
 
   static fromPacket(envelope: ServiceEnvelope): TextMessage {

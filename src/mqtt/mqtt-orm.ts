@@ -101,7 +101,7 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
   await AppDataSource.transaction(async (trx) => {
     try {
       node = await findOrCreateNode(trx, nodeId)
-      node.merge(newNode.serialize({ fields: { omit: ['id'] } }))
+      trx.merge(Node, node, newNode)
       return await trx.save(node)
     } catch (e) {
       logger({ err: e, newNode, node, envelope }, `Unable to update node`)

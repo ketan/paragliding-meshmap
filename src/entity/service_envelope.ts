@@ -6,22 +6,22 @@ import { toBigInt } from '../helpers/utils.js'
 
 @Entity()
 export default class ServiceEnvelope extends BaseType {
-  @Column()
+  @Column({ type: 'text' })
   mqttTopic: string
 
-  @Column()
+  @Column({ type: 'text' })
   channelId: string
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   to: number
 
-  @Column()
+  @Column({ type: 'bigint' })
   from: number
 
-  @Column()
+  @Column({ type: 'blob' })
   protobuf: Buffer
 
   static fromPacket(mqttTopic: string, payload: Buffer, envelope: ServiceEnvelopeProtobuf): ServiceEnvelope {

@@ -18,16 +18,26 @@ export class CreateTextMessagesTable1719576103688 implements MigrationInterface 
           { name: 'packet_id', type: 'bigint', isNullable: true },
           { name: 'from', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },
-          { name: 'want_response', type: 'integer', isNullable: false },
+          { name: 'want_response', type: 'boolean', isNullable: false },
 
           { name: 'hop_limit', type: 'integer', isNullable: true },
-          { name: 'rx_snr', type: 'float', isNullable: true },
+          { name: 'rx_snr', type: 'double', isNullable: true },
           { name: 'rx_rssi', type: 'integer', isNullable: true },
           { name: 'rx_time', type: 'bigint', isNullable: true },
           { name: 'text', type: 'text', isNullable: false },
 
-          { name: 'created_at', type: 'datetime', isNullable: false },
-          { name: 'updated_at', type: 'datetime', isNullable: false },
+          {
+            name: 'created_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
+          },
+          {
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: false,
+            default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
+          },
         ],
       })
     )

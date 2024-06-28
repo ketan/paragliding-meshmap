@@ -1,0 +1,9 @@
+{
+  "client": "better-sqlite3",
+  "connection": {
+    "filename": "tmp/db.sqlite3"
+  },
+  "typeMap": {
+    "number": ["bigint"]
+  }
+}

@@ -13,7 +13,6 @@
   },
   "imports": {
     "#entity/*": "./src/entity/*.ts",
-    "#config/*": "./config/*.ts",
     "#migrations/*": "./src/migration/*.ts"
   },
   "devDependencies": {

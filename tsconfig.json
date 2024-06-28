@@ -1,12 +1,46 @@
+// {
+//   "compilerOptions": {
+//     "lib": ["es5", "es6"],
+//     "target": "es5",
+//     "module": "commonjs",
+//     "moduleResolution": "node",
+//     "outDir": "./build",
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true,
+//     "sourceMap": true
+//   }
+// }
+
 {
   "compilerOptions": {
-    "lib": ["es5", "es6"],
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["ES2023"],
+    "target": "es2022",
+    "module": "node16",
+    "moduleResolution": "Node16",
     "outDir": "./build",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "alwaysStrict": true,
+    "strict": true,
+
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "skipLibCheck": true
+  },
+  "ts-node": {
+    "swc": true
   }
 }

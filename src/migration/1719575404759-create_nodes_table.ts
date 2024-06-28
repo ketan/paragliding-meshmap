@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper'
+import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreateNodesTable1719575404759 implements MigrationInterface {
   tableName = 'nodes'

@@ -1,4 +1,4 @@
 {
-  "watch": ["src"],
+  "watch": ["src", "package.json", "tsconfig.json"],
   "ext": "*"
 }

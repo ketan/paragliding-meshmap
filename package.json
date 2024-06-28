@@ -1,15 +1,14 @@
 {
   "name": "paragliding-meshmap",
   "packageManager": "yarn@4.3.0",
+  "type": "module",
   "scripts": {
-    "build": "npx tsc",
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "nodemon --exec node --loader ts-node/esm src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "fmt": "yarn format",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migration:create": "yarn typeorm migration:create "
+    "typeorm": "typeorm-ts-node-esm"
   },
   "imports": {
     "#entity/*": "./src/entity/*.js",
@@ -17,28 +16,35 @@
     "#migrations/*": "./src/migration/*.ts"
   },
   "devDependencies": {
+    "@buf/meshtastic_protobufs.bufbuild_es": "^1.10.0-20240628153259-5bc7b8ce9345.1",
+    "@bufbuild/protobuf": "^1.10.0",
     "@eslint/js": "^9.5.0",
+    "@swc/core": "^1.6.5",
+    "@types/debug": "^4.1.12",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
-    "@types/mysql": "^2",
-    "@types/node": "^16.11.10",
+    "@types/mysql": "^2.15.26",
+    "@types/node": "^20.14.9",
     "@types/nodemon": "^1.19.6",
-    "@types/pg": "^8",
+    "@types/pg": "^8.11.6",
+    "@types/pluralize": "^0.0.33",
     "eslint": "^9.5.0",
     "globals": "^15.6.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.2",
-    "ts-node": "10.9.1",
-    "typescript": "4.5.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.5.2",
     "typescript-eslint": "^7.14.1"
   },
   "dependencies": {
-    "body-parser": "^1.19.1",
+    "body-parser": "^1.20.2",
+    "debug": "^4.3.5",
     "dotenv": "^16.4.5",
-    "express": "^4.17.2",
+    "express": "^4.19.2",
     "mysql": "^2.18.1",
-    "pg": "^8.4.0",
-    "reflect-metadata": "^0.1.13",
+    "pg": "^8.12.0",
+    "pluralize": "^8.0.0",
+    "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "0.3.20"
   }

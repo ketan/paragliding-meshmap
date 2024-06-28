@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import express, { Request, Response } from 'express'
-import Node from './entity/node.js'
 import { AppDataSource } from './data-source.js'
+import Node from './entity/node.js'
 
 await AppDataSource.initialize()
 

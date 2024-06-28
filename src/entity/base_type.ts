@@ -19,5 +19,5 @@ export abstract class BaseType {
     return undefined
   }
 
-  static logger = debug('meshmap:')
+  static logger = debug('meshmap:model')
 }

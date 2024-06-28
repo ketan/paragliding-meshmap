@@ -13,3 +13,7 @@
 .pnp.*
 node_modules/
 tmp/
+.idea/
+.vscode/
+build/
+temp/

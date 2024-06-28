@@ -1,13 +1,45 @@
 {
   "name": "paragliding-meshmap",
   "packageManager": "yarn@4.3.0",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "fmt": "yarn format",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:create": "yarn typeorm migration:create "
+  },
+  "imports": {
+    "#entity/*": "./src/entity/*.js",
+    "#config/*": "./config/*.ts",
+    "#migrations/*": "./src/migration/*.ts"
+  },
   "devDependencies": {
+    "@eslint/js": "^9.5.0",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
-    "typescript": "^5.5.2"
+    "@types/mysql": "^2",
+    "@types/node": "^16.11.10",
+    "@types/nodemon": "^1.19.6",
+    "@types/pg": "^8",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.2",
+    "ts-node": "10.9.1",
+    "typescript": "4.5.2",
+    "typescript-eslint": "^7.14.1"
   },
   "dependencies": {
+    "body-parser": "^1.19.1",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.17.2",
+    "mysql": "^2.18.1",
+    "pg": "^8.4.0",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.1.7",
+    "typeorm": "0.3.20"
   }
 }

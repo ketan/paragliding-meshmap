@@ -2,7 +2,7 @@ import { Data, RouteDiscovery } from '@buf/meshtastic_protobufs.bufbuild_es/mesh
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, toBigInt } from '../helpers/utils.js'
+import { parseProtobuf, toBigInt } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -32,11 +32,11 @@ export default class Traceroute extends BaseType {
   wantResponse: boolean
 
   static fromPacket(envelope: ServiceEnvelope) {
+    const packet = envelope.packet!
+
+    const rd = parseProtobuf(() => RouteDiscovery.fromBinary((packet.payloadVariant.value as Data).payload))
+
     try {
-      const packet = envelope.packet!
-
-      const rd = RouteDiscovery.fromBinary((packet.payloadVariant.value as Data).payload)
-
       return AppDataSource.manager.merge(Traceroute, new Traceroute(), {
         to: packet.to,
         from: packet.from,
@@ -48,9 +48,7 @@ export default class Traceroute extends BaseType {
         gatewayId: toBigInt(envelope.gatewayId),
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse traceroute`)
-      }
+      this.logger(`Unable to parse traceroute`, { err: e, rd, envelope })
     }
   }
 }

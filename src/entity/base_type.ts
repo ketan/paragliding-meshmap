@@ -3,6 +3,8 @@ import { CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } fr
 
 @Entity()
 export abstract class BaseType {
+  static logger = debug('meshmap:model')
+
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number
 
@@ -18,6 +20,4 @@ export abstract class BaseType {
     }
     return undefined
   }
-
-  static logger = debug('meshmap:model')
 }

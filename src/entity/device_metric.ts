@@ -3,7 +3,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { DeviceMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, secondsAgo } from '../helpers/utils.js'
+import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -27,10 +27,11 @@ export default class DeviceMetric extends BaseType {
   uptimeSeconds?: number
 
   static fromPacket(envelope: ServiceEnvelope) {
-    try {
-      const packet = envelope.packet!
-      const metrics = DeviceMetrics.fromBinary((packet.payloadVariant.value as Data).payload)
+    const packet = envelope.packet!
 
+    const metrics = parseProtobuf(() => DeviceMetrics.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(DeviceMetric, new DeviceMetric(), {
         nodeId: packet.from,
         batteryLevel: this.sanitizeNumber(metrics.batteryLevel),
@@ -40,9 +41,7 @@ export default class DeviceMetric extends BaseType {
         uptimeSeconds: this.sanitizeNumber(metrics.uptimeSeconds),
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `unable to parse device metric`)
-      }
+      this.logger(`unable to create device metric`, { error: e, metrics, envelope })
     }
   }
 

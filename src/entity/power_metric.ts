@@ -3,7 +3,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { PowerMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, secondsAgo } from '../helpers/utils.js'
+import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -30,10 +30,11 @@ export default class PowerMetric extends BaseType {
   ch3Current?: number
 
   static fromPacket(envelope: ServiceEnvelope) {
-    try {
-      const packet = envelope.packet!
-      const metrics = PowerMetrics.fromBinary((packet.payloadVariant.value as Data).payload)
+    const packet = envelope.packet!
 
+    const metrics = parseProtobuf(() => PowerMetrics.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
         nodeId: packet.from,
         ch1Current: metrics.ch1Current,
@@ -46,9 +47,7 @@ export default class PowerMetric extends BaseType {
         ch3Voltage: metrics.ch3Voltage,
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `unable to parse power metric`)
-      }
+      this.logger(`unable to parse power metric`, { err: e, metrics, envelope })
     }
   }
 

@@ -2,7 +2,7 @@ import { Data, Position as PositionProtobuf } from '@buf/meshtastic_protobufs.bu
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, secondsAgo, toBigInt } from '../helpers/utils.js'
+import { parseProtobuf, secondsAgo, toBigInt } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -39,9 +39,10 @@ export default class Position extends BaseType {
 
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
-    try {
-      const position = PositionProtobuf.fromBinary((packet.payloadVariant.value as Data).payload)
 
+    const position = parseProtobuf(() => PositionProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(Position, new Position(), {
         nodeId: packet.from,
         to: packet.to,
@@ -57,9 +58,7 @@ export default class Position extends BaseType {
         altitude: position.altitude,
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse position`)
-      }
+      this.logger(`Unable to parse position`, { err: e, position, envelope })
     }
   }
 

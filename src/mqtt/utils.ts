@@ -25,13 +25,3 @@ export function toBigInt(str: bigint | number | string | undefined | null): numb
 export function secondsAgo(secs: number) {
   return new Date(Date.now() - secs * 1000)
 }
-
-export function ignorableProtobufError(e: Error) {
-  if (e instanceof RangeError) {
-    return true
-  }
-  if (e instanceof Error && (e.message.startsWith('illegal tag: field no ') || e.message.startsWith('cant skip wire type'))) {
-    return true
-  }
-  return false
-}

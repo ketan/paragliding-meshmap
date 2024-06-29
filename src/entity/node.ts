@@ -1,14 +1,14 @@
+import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
+import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
+import { AppDataSource } from '../data-source.js'
+import { parseProtobuf } from '../helpers/utils.js'
+import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
 import { Neighbors } from './neighbors.js'
 import Position from './position.js'
-import { ignorableProtobufError } from '../helpers/utils.js'
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { BaseType } from './base_type.js'
-import { AppDataSource } from '../data-source.js'
 
 @Entity()
 export default class Node extends BaseType {
@@ -101,9 +101,10 @@ export default class Node extends BaseType {
 
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
-    try {
-      const user = User.fromBinary((packet.payloadVariant.value as Data).payload)
 
+    const user = parseProtobuf(() => User.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(Node, new Node(), {
         nodeId: packet.from,
         longName: user.longName,
@@ -113,9 +114,7 @@ export default class Node extends BaseType {
         role: user.role,
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse node`)
-      }
+      this.logger(`Unable to create node`, { err: e, user, envelope })
     }
   }
 

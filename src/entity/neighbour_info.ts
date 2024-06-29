@@ -2,7 +2,7 @@ import { Data, NeighborInfo as NeighborInfoPB } from '@buf/meshtastic_protobufs.
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError } from '../helpers/utils.js'
+import { parseProtobuf } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
 
@@ -18,10 +18,11 @@ export default class NeighbourInfo extends BaseType {
   neighbours: Neighbors[]
 
   static fromPacket(envelope: ServiceEnvelope) {
-    try {
-      const packet = envelope.packet!
-      const neighborInfo = NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload)
+    const packet = envelope.packet!
 
+    const neighborInfo = parseProtobuf(() => NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(NeighbourInfo, new NeighbourInfo(), {
         nodeId: packet.from,
         nodeBroadcastIntervalSecs: neighborInfo.nodeBroadcastIntervalSecs,
@@ -33,9 +34,7 @@ export default class NeighbourInfo extends BaseType {
         }),
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse neighbour info`)
-      }
+      this.logger(`unable to create neighbour info`, { err: e, neighborInfo, envelope })
     }
   }
 }

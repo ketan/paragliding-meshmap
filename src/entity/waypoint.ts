@@ -1,9 +1,9 @@
 import { Data, Waypoint as WaypointProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
-import { BaseType } from './base_type.js'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, toBigInt } from '../helpers/utils.js'
+import { parseProtobuf, toBigInt } from '../helpers/utils.js'
+import { BaseType } from './base_type.js'
 
 @Entity()
 export default class Waypoint extends BaseType {
@@ -51,9 +51,10 @@ export default class Waypoint extends BaseType {
 
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
-    try {
-      const waypoint = WaypointProtobuf.fromBinary((packet.payloadVariant.value as Data).payload)
 
+    const waypoint = parseProtobuf(() => WaypointProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(Waypoint, new Waypoint(), {
         to: packet.to,
         from: packet.from,
@@ -71,9 +72,7 @@ export default class Waypoint extends BaseType {
         gatewayId: toBigInt(envelope.gatewayId),
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse waypoint`)
-      }
+      this.logger(`Unable to parse waypoint`, { err: e, waypoint, envelope })
     }
   }
 }

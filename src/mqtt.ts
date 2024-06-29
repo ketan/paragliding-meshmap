@@ -9,6 +9,8 @@ const cliOptions: CLIOptions = cliParse()
 
 await AppDataSource.initialize()
 
+await AppDataSource.runMigrations({ transaction: 'each' })
+
 const client = mqtt.connect(cliOptions.mqttBrokerUrl, {
   username: cliOptions.mqttUsername,
   password: cliOptions.mqttPassword,
@@ -22,6 +24,19 @@ client.on('connect', () => {
   client.subscribe(cliOptions.mqttTopic)
 })
 
-client.on('message', async (topic, payload, _packet) => {
-  queue.add(async () => await pRetry(() => processMessage(cliOptions, topic, payload), { retries: 5 }))
+async function handleMessageWithRetry(topic: string, payload: Buffer) {
+  try {
+    await pRetry(() => processMessage(cliOptions, topic, payload), {
+      retries: 5,
+      onFailedAttempt: async (err) => {
+        console.log(`Failed`, err)
+      },
+    })
+  } catch (e) {
+    console.log(`ignoring `, e)
+  }
+}
+
+client.on('message', async (topic, payload) => {
+  queue.add(async () => handleMessageWithRetry(topic, payload))
 })

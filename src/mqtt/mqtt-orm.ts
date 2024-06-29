@@ -16,7 +16,7 @@ import debug from 'debug'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError } from './utils.js'
+import { parseProtobuf } from '../helpers/utils.js'
 
 const logger = debug('meshmap:handler')
 
@@ -29,8 +29,8 @@ export async function updateMQTTStatus(nodeId: number, mqttConnectionState: stri
       node.updateMqttStatus(mqttConnectionState, mqttConnectionStateUpdatedAt)
       await trx.save(node)
     } catch (e) {
-      logger({ err: e, node }, `Unable to update mqtt status`)
-      throw new AbortError(e)
+      logger(`Unable to update mqtt status`, { err: e, node })
+      throw e
     }
   })
 }
@@ -41,8 +41,8 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
     try {
       return await trx.save(se)
     } catch (e) {
-      logger({ err: e, mqttTopic, se, envelope }, `Unable to create service envelope`)
-      throw new AbortError(e)
+      logger(`Unable to create service envelope`, { err: e, mqttTopic, se, envelope })
+      throw e
     }
   })
 }
@@ -53,8 +53,8 @@ export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf) {
     try {
       return await trx.save(tm)
     } catch (e) {
-      logger({ err: e, tm, envelope }, `Unable to create text message`)
-      throw new AbortError(e)
+      logger(`Unable to create text message`, { err: e, tm, envelope })
+      throw e
     }
   })
 }
@@ -67,25 +67,21 @@ export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf, 
 
   const nodeId = position.from
   let node: Node | null
+
   await AppDataSource.transaction(async (trx) => {
     try {
       if (position.latitude != null && position.longitude != null) {
-        try {
-          node = await findOrCreateNode(trx, nodeId)
-
-          node.updatePosition(position)
-          await trx.save(node)
-        } catch (e) {
-          throw new AbortError(e)
-        }
+        node = await findOrCreateNode(trx, nodeId)
+        node.updatePosition(position)
+        await trx.save(node)
       }
 
       if (savePosition) {
         await position.saveIfNoSimilarRecentPosition(trx)
       }
     } catch (e) {
-      logger({ err: e, node, position, envelope }, `Unable to update node position`)
-      throw new AbortError(e)
+      logger(`Unable to update node position`, { err: e, node, position, envelope })
+      throw e
     }
   })
 }
@@ -104,8 +100,8 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
       trx.merge(Node, node, newNode)
       return await trx.save(node)
     } catch (e) {
-      logger({ err: e, newNode, node, envelope }, `Unable to update node`)
-      throw new AbortError(e)
+      logger(`Unable to update node`, { err: e, newNode, node, envelope })
+      throw e
     }
   })
 }
@@ -120,7 +116,7 @@ export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf) 
     try {
       return await trx.save(waypoint)
     } catch (e) {
-      logger({ err: e, waypoint, envelope }, `Unable to create waypoint`)
+      logger(`Unable to create waypoint`, { err: e, waypoint, envelope })
       throw new AbortError(e)
     }
   })
@@ -144,21 +140,14 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
         await trx.save(neighborInfo)
       }
     } catch (e) {
-      logger({ err: e, neighborInfo, envelope }, `Unable to create neighborinfo`)
+      logger(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
     }
   })
 }
 
 export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProtobuf) {
-  let telemetry
-  try {
-    telemetry = Telemetry.fromBinary((envelope.packet!.payloadVariant.value as Data).payload)
-  } catch (e) {
-    if (!ignorableProtobufError(e)) {
-      logger({ err: e, envelope }, `Unable to parse telemetry`)
-    }
-  }
+  const telemetry = parseProtobuf(() => Telemetry.fromBinary((envelope.packet!.payloadVariant.value as Data).payload))
 
   if (!telemetry) {
     return
@@ -193,8 +182,8 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
         }
       }
     } catch (e) {
-      logger({ err: e, node, envelope, metric }, `Unable to create telemetry data`)
-      throw new AbortError(e)
+      logger(`Unable to create telemetry data`, { err: e, node, envelope, metric })
+      throw e
     }
   })
 }
@@ -209,8 +198,8 @@ export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeP
     try {
       await trx.save(traceroute)
     } catch (e) {
-      logger({ err: e, traceroute, envelope }, `Unable to save traceroute`)
-      throw new AbortError(e)
+      logger(`Unable to save traceroute`, { err: e, traceroute, envelope })
+      throw e
     }
   })
 }
@@ -232,8 +221,8 @@ export async function createMapReports(envelope: ServiceEnvelopeProtobuf) {
       await trx.save(node)
       await trx.save(mr)
     } catch (e) {
-      logger({ err: e, mr, node, envelope }, `Unable to save map report`)
-      throw new AbortError(e)
+      logger(`Unable to save map report`, { err: e, mr, node, envelope })
+      throw e
     }
   })
 }

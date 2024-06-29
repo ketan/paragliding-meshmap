@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.3.0",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf build; tsc",
     "start": "nodemon --exec node --loader ts-node/esm src/index.ts",
     "mqtt": "nodemon --exec node --loader ts-node/esm src/mqtt.ts --",
     "lint": "eslint .",

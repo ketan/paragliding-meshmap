@@ -2,7 +2,7 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { MapReport as MapReportProtobuf, ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError } from '../helpers/utils.js'
+import { parseProtobuf } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -50,11 +50,11 @@ export default class MapReport extends BaseType {
   numOnlineLocalNodes?: number
 
   static fromPacket(envelope: ServiceEnvelope) {
+    const packet = envelope.packet!
+
+    const mr = parseProtobuf(() => MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+
     try {
-      const packet = envelope.packet!
-
-      const mr = MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload)
-
       return AppDataSource.manager.merge(MapReport, new MapReport(), {
         nodeId: packet.from,
         longName: mr.longName,
@@ -72,9 +72,7 @@ export default class MapReport extends BaseType {
         numOnlineLocalNodes: mr.numOnlineLocalNodes,
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `Unable to parse map report`)
-      }
+      this.logger(`unable to create map report`, { err: e, mr, envelope })
     }
   }
 }

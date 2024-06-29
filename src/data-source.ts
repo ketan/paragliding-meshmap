@@ -2,6 +2,8 @@ import pluralize from 'pluralize'
 import 'reflect-metadata'
 import { DataSource, DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
 import { snakeCase } from 'typeorm/util/StringUtils.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -18,6 +20,9 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
   }
 }
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 export const AppDataSource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   type: 'sqlite',
@@ -25,11 +30,12 @@ export const AppDataSource = new DataSource({
   // port: 5432,
   // username: "test",
   // password: "test",
-  database: 'tmp/paragliding-meshmap.sqlite3',
+  database: './tmp/paragliding-meshmap.sqlite3',
   synchronize: false,
   logging: 'all',
   logger: 'debug',
-  entities: ['src/entity/**/*.ts'],
-  migrations: ['src/migration/*.ts'],
+  entities: [`${__dirname}/entity/**/*.ts`, `${__dirname}/entity/**/*.js`],
+  migrations: [`${__dirname}/migration/*.ts`, `${__dirname}/migration/*.js`],
+  migrationsTransactionMode: 'each',
   subscribers: [],
 })

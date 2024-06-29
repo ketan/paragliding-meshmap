@@ -3,7 +3,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { EnvironmentMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { ignorableProtobufError, secondsAgo } from '../helpers/utils.js'
+import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -33,10 +33,11 @@ export default class EnvironmentMetric extends BaseType {
   iaq?: number
 
   static fromPacket(envelope: ServiceEnvelope) {
-    try {
-      const packet = envelope.packet!
-      const metrics = EnvironmentMetrics.fromBinary((packet.payloadVariant.value as Data).payload)
+    const packet = envelope.packet!
 
+    const metrics = parseProtobuf(() => EnvironmentMetrics.fromBinary((packet.payloadVariant.value as Data).payload))
+
+    try {
       return AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
         nodeId: packet.from,
         temperature: this.sanitizeNumber(metrics.temperature),
@@ -48,9 +49,7 @@ export default class EnvironmentMetric extends BaseType {
         iaq: this.sanitizeNumber(metrics.iaq),
       })
     } catch (e) {
-      if (!ignorableProtobufError(e)) {
-        this.logger({ err: e, envelope }, `unable to parse environment metric`)
-      }
+      this.logger(`unable to create environment metric`, { err: e, metrics, envelope })
     }
   }
 

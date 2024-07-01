@@ -1,0 +1,39 @@
+{
+  "compileOnSave": true,
+  "include": ["assets/js"],
+  "exclude": ["./build"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "lib": ["DOM", "ESNext", "DOM.Iterable", "ES2020"],
+    "moduleResolution": "node",
+    "module": "ES2022",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./build",
+
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "useUnknownInCatchVariables": false,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "target": "es2022"
+  },
+  "ts-node": {
+    "swc": true
+  }
+}

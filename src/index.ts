@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser'
+import compression from 'compression'
 import express, { Request, Response } from 'express'
 import { AppDataSource } from './data-source.js'
 import Node from './entity/node.js'
@@ -6,8 +7,9 @@ import Node from './entity/node.js'
 await AppDataSource.initialize()
 
 const app = express()
+app.use(compression())
 app.use(bodyParser.json())
-
+app.use(express.static('dist'))
 app.get('/api/nodes', async function (_req: Request, res: Response) {
   res.json(await AppDataSource.manager.find(Node))
 })

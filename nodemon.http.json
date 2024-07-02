@@ -1,5 +1,5 @@
 {
-  "watch": ["src", "package.json", "tsconfig.json"],
+  "watch": ["src", "package.json", "tsconfig.json", "nodemon.http.json"],
   "ignore": ["test", "build", "tmp", "src/public", "dist"],
   "ext": "*"
 }

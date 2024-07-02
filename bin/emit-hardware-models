@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+import { Config_DeviceConfig_Role } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/config_pb.js'
+import { HardwareModel } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
+
+
+const hardwareModelCode =
+  'export const HardwareModelLookups = ' + JSON.stringify(HardwareModel, true, 2) + ' as Record<string, string | number>;'
+const deviceRoleCode =
+  'export const NodeRoleTypes = ' + JSON.stringify(Config_DeviceConfig_Role, true, 2) + '// as Record<string, string | number>;'
+
+console.log([hardwareModelCode, deviceRoleCode].join('\n\n'))

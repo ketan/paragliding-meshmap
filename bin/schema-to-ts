@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+yarn run sql-ts -c sql-ts.json
+
+(echo 'import { Neighbour } from "./interfaces.js";' && cat Database.ts) \
+  | sed -E 's/_([a-z])/\U\1/g' \
+  | sed -E 's/export interface ([a-z])/export interface \U\1/g' \
+  | sed -E "s/('neighbours'.*)Object/\1Neighbour[]/g" \
+  | sed -E "s/('protobuf'.*)any/\1Buffer/g" \
+  | sed -E "s/\?:(.*) \| null/\?:\1/g" \
+  | sed -E "s%Object;%any // eslint-disable-line @typescript-eslint/no-explicit-any%g" \
+  | sed -E "s/'updatedAt'\?: Date/'updatedAt': Date/g" \
+  | sed -E "s/'createdAt'\?: Date/'createdAt': Date/g" \
+  > public/assets/js/database.ts
+
+rm Database.ts
+
+bin/emit-hardware-models >  public/assets/js/hardware-modules.ts
+
+yarn run prettier -w public/assets/js/database.ts public/assets/js/hardware-modules.ts

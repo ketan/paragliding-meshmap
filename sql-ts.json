@@ -1,7 +1,7 @@
 {
-  "client": "better-sqlite3",
+  "client": "sqlite3",
   "connection": {
-    "filename": "tmp/db.sqlite3"
+    "filename": "./tmp/paragliding-meshmap.sqlite3"
   },
   "typeMap": {
     "number": ["bigint"]

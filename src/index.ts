@@ -16,9 +16,9 @@ const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
 const app = express()
-if (!isDevelopment) {
+// if (!isDevelopment) {
   app.use(compression())
-}
+// }
 
 app.use(bodyParser.json())
 
@@ -27,11 +27,13 @@ if (!isDevelopment) {
 }
 
 app.get('/api/nodes', async function (_req: Request, res: Response) {
+  res.setHeader('cache-control', 'max-age=60')
   res.json(await AppDataSource.manager.find(Node))
 })
 
 app.get('/api/hardware-models', async function (_req: Request, res: Response) {
   const models = await Node.hardwareModels(AppDataSource.manager)
+  res.setHeader('cache-control', 'max-age=60')
   res.json(models)
 })
 

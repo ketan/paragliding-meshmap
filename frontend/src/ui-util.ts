@@ -5,21 +5,25 @@ export function googleMapsLink(node: NodesEntity) {
   return `https://maps.google.com/?q=${node.latitude},${node.longitude}`
 }
 
-export function sanitizeLatLong(lat: number | string | undefined | null, lon: number | string | undefined | null) {
-  if (lat && lon) {
-    if (typeof lat === 'string') {
-      lat = Number(lat)
-    }
-    if (typeof lon !== 'number') {
-      lon = Number(lon)
-    }
-
-    if (!isNaN(lon) && !isNaN(lat)) {
-      if (lon <= 100) {
-        lon += 360
+export function sanitizeNumber(n: number | string | undefined | null) {
+  if (n) {
+    if (typeof n === 'string') {
+      n = Number(n)
+      if (!isNaN(n)) {
+        return n
       }
-      return [lat, lon] as [number, number]
     }
+  }
+}
+export function sanitizeLatLong(lat: number | string | undefined | null, lon: number | string | undefined | null) {
+  lat = sanitizeNumber(lat)
+  lon = sanitizeNumber(lon)
+
+  if (lat && lon) {
+    if (lon <= 100) {
+      lon += 360
+    }
+    return [lat, lon] as [number, number]
   }
 }
 

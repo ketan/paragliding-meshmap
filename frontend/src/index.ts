@@ -17,8 +17,9 @@ import { MapTiles } from './map-providers'
 import { mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
-import { sanitizeLatLong, sanitizeNodesProperties } from './ui-util'
+import { sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 import { DateTime } from 'luxon'
+import _ from 'lodash'
 
 interface UIConfig {
   defaultZoomLevelForNode: number
@@ -105,9 +106,34 @@ function getIconFor(node: NodesEntity) {
   return `ring-blue-500 ${commonClasses}`
 }
 
+export interface LatLngZoom {
+  lat: number
+  lng: number
+  zoom?: number
+}
+
+function getQueryLatLngZoom() {
+  const queryParams = new URLSearchParams(window.location.search)
+  const queryLat = queryParams.get('lat')
+  const queryLng = queryParams.get('lng')
+  const queryZoom = sanitizeNumber(queryParams.get('zoom'))
+
+  const latLng = sanitizeLatLong(queryLat, queryLng)
+  if (latLng) {
+    const result: LatLngZoom = {
+      lat: latLng[0],
+      lng: latLng[1],
+    }
+
+    if (queryZoom) {
+      result.zoom = queryZoom
+    }
+    return result
+  }
+}
+
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
-
     let longitude = eachNode.longitude!
     // everything to the left of Australia appears on the right of the map
     if (longitude <= 100) {
@@ -137,20 +163,7 @@ function redraw(map: Map) {
     }
   })
 
-  const queryParams = new URLSearchParams(window.location.search)
-  const queryLat = queryParams.get('lat')
-  const queryLng = queryParams.get('lng')
-  const queryZoom = queryParams.get('zoom')
-
-  const latLng = sanitizeLatLong(queryLat, queryLng)
-  if (latLng) {
-    map.flyTo(latLng, 20, { animate: false })
-  }
-
-  if (queryLat && queryLng) {
-    const zoomLevel = queryZoom || uiConfig.defaultZoomLevelForNode
-    map.flyTo([Number(queryLat), Number(queryLng)], Number(zoomLevel), { animate: false })
-  } else {
+  if (!getQueryLatLngZoom()) {
     navigator.geolocation.getCurrentPosition((pos) => {
       const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
       if (latLng) {
@@ -161,7 +174,15 @@ function redraw(map: Map) {
 }
 
 addEventListener('load', () => {
-  const map = L.map('map').setView([25, 75 + 360], 6)
+  const map = L.map('map')
+  const latLngZoom = getQueryLatLngZoom()
+
+  if (latLngZoom) {
+    console.log(latLngZoom, `load`)
+    map.setView([latLngZoom.lat, latLngZoom.lng], latLngZoom.zoom || 5)
+  } else {
+    map.setView([21, 79 + 360], 5)
+  }
 
   map.on('moveend zoomend', function () {
     const latLng = map.getCenter()

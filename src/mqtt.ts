@@ -1,4 +1,4 @@
-import mqtt from 'mqtt'
+import mqtt from 'async-mqtt'
 import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { processMessage } from './mqtt/decoder.js'
@@ -23,8 +23,8 @@ const queue = new PQueue({
   concurrency: 1,
 })
 
-client.on('connect', () => {
-  client.subscribe(cliOptions.mqttTopic)
+client.on('connect', async () => {
+  await client.subscribe(cliOptions.mqttTopic)
 })
 
 async function handleMessageWithRetry(topic: string, payload: Buffer) {

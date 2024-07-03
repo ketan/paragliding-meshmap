@@ -7,22 +7,24 @@ import { imageForModel } from '../image-for-model'
 import { googleMapsLink } from '../ui-util'
 import { DateTime } from 'luxon'
 
-const timeAgo = (timestamp?: string | null) => {
+const timeAgo = (timestamp?: string | null, addParens: boolean = false) => {
   if (timestamp) {
-    return <>{DateTime.fromISO(timestamp).toRelative()}</>
+    if (addParens) {
+      return <>({DateTime.fromISO(timestamp).toRelative()})</>
+    } else {
+      return <>{DateTime.fromISO(timestamp).toRelative()}</>
+    }
   }
   return <></>
 }
 
 function mqttStatus(node: NodesEntity) {
-  const age = <>({timeAgo(node.mqttConnectionStateUpdatedAt)})</>
-
   if (node.mqttConnectionState === 'online') {
-    return [<span class="text-green-700">Online</span>, age]
+    return [<span class="text-green-700">Online</span>, timeAgo(node.mqttConnectionStateUpdatedAt, true)]
   } else if (node.mqttConnectionState === 'offline') {
-    return [<span class="text-blue-700">Offline</span>, age]
+    return [<span class="text-blue-700">Offline</span>, timeAgo(node.mqttConnectionStateUpdatedAt, true)]
   } else {
-    return [<span class="text-blue-700">Offline</span>, age]
+    return [<span class="text-blue-700">Offline</span>, timeAgo(node.mqttConnectionStateUpdatedAt, true)]
   }
 }
 
@@ -42,14 +44,15 @@ const location = (node: NodesEntity) => {
       Location:{' '}
       <a target="_blank" class="external" href={googleMapsLink(node)}>
         {node.latitude}, {node.longitude}
-      </a>
+      </a>{' '}
+      {timeAgo(node.positionUpdatedAt, true)}
     </>
   )
 }
 
 type Value = string | number | null | JSX.Element | JSX.Element[]
 
-const keyValue = (args: { key: string; value?: Value; precision?: 2; unit?: string; renderer?: (v: string | number | null) => Value }) => {
+const keyValue = function <T>(args: { key: string; value?: T; precision?: 2; unit?: string; renderer?: (v: T) => Value }) {
   if (args.value === undefined || args.value === null) {
     return
   }
@@ -57,7 +60,7 @@ const keyValue = (args: { key: string; value?: Value; precision?: 2; unit?: stri
   if (args.renderer) {
     return (
       <>
-        {args.key}: {args.renderer(args.value)}{' '}
+        <strong>{args.key}</strong>: {args.renderer(args.value)}{' '}
       </>
     )
   }
@@ -66,14 +69,14 @@ const keyValue = (args: { key: string; value?: Value; precision?: 2; unit?: stri
     if (Number.isInteger(args.value)) {
       return (
         <>
-          {args.key}: {args.value}
+          <strong>{args.key}</strong>: {args.value}
           {args.unit}
         </>
       )
     } else {
       return (
         <>
-          {args.key}: {Number(args.value).toFixed(args.precision)}
+          <strong>{args.key}</strong>: {Number(args.value).toFixed(args.precision)}
           {args.unit}
         </>
       )
@@ -81,13 +84,13 @@ const keyValue = (args: { key: string; value?: Value; precision?: 2; unit?: stri
   } else if (typeof args.value === 'string') {
     return (
       <>
-        {args.key}: {args.value}
+        <strong>{args.key}</strong>: {args.value}
       </>
     )
   } else {
     return (
       <>
-        {args.key}: {args.value}
+        <strong>{args.key}</strong>: {args.value}
       </>
     )
   }
@@ -110,13 +113,15 @@ export function nodeTooltip(node: NodesEntity) {
     keyValue({ key: 'Hardware', value: hardwareModel }),
     keyValue({ key: 'Firmware', value: node.firmwareVersion }),
     keyValue({ key: 'Voltage', value: node.voltage, precision: 2, unit: 'V' }),
-    batteryLevel(node),
+    keyValue({ key: 'Battery', value: node.batteryLevel, renderer: (level) => (level > 100 ? 'Plugged In' : `${level}%`) }),
     location(node),
     keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
     keyValue({ key: 'Ch Util', value: node.channelUtilization, unit: '%', precision: 2 }),
     keyValue({ key: 'Air Util', value: node.airUtilTx, unit: '%', precision: 2 }),
+    ' ',
     keyValue({ key: 'ID', value: `${node.nodeId} (0x${node.nodeId.toString(15)})` }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
+    keyValue({ key: 'Neighbours Updated', value: node.neighboursUpdatedAt, renderer: timeAgo }),
   ])
     .compact()
     .flatMap((eachItem) => [eachItem, <br />])

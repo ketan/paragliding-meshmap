@@ -10,14 +10,15 @@ import 'leaflet-polylineoffset'
 import 'leaflet.markercluster'
 
 // our stuff
-import * as luxon from 'luxon'
 import { NodesEntity } from './database'
-import { NodeRoleTypes } from './hardware-modules'
+import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
-import mapLegend from './templates/legend'
+import { mapLegendTemplate } from './templates/legend'
+import { nodePositionView } from './templates/node-position'
+import { nodeTooltip } from './templates/node-tooltip'
 import { sanitizeLatLong, sanitizeNodesProperties } from './ui-util'
-import { createTooltipTemplate, nodePositionView } from './view-template-helper'
+import { DateTime } from 'luxon'
 
 interface UIConfig {
   defaultZoomLevelForNode: number
@@ -58,7 +59,7 @@ const legendOverlayGroup = new L.LayerGroup()
 const legend = new L.Control({ position: 'bottomleft' })
 legend.onAdd = function (_map) {
   const div = L.DomUtil.create('div', 'leaflet-control-layers')
-  div.innerHTML = mapLegend.toString()
+  div.innerHTML = mapLegendTemplate
   return div
 }
 
@@ -73,9 +74,9 @@ async function loadAllData(map: Map) {
     allData.hardwareModels = (await hardwareModelsResponse.json()) as HardwareModel[]
   }
 
-  const now = luxon.DateTime.now()
+  const now = DateTime.now()
   allData.newerNodes = allData.allNodes.filter((eachNode) => {
-    const age = now.diff(luxon.DateTime.fromISO(eachNode.updatedAt.toString()))
+    const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
     return age.seconds < uiConfig.configNodesMaxAgeInSeconds
   })
 
@@ -95,8 +96,8 @@ function getIconFor(node: NodesEntity) {
   if (node.mqttConnectionState === 'online') {
     return `ring-green-500 ${commonClasses}`
   }
-  const now = luxon.DateTime.now()
-  const age = now.diff(luxon.DateTime.fromISO(node.updatedAt.toString()))
+  const now = DateTime.now()
+  const age = now.diff(DateTime.fromISO(node.updatedAt))
 
   if (age.seconds > uiConfig.configNodesOfflineAgeInSeconds) {
     return `ring-red-500 ${commonClasses}`
@@ -106,7 +107,14 @@ function getIconFor(node: NodesEntity) {
 
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
-    const marker = L.marker([eachNode.latitude!, eachNode.longitude!], {
+
+    let longitude = eachNode.longitude!
+    // everything to the left of Australia appears on the right of the map
+    if (longitude <= 100) {
+      longitude += 360
+    }
+
+    const marker = L.marker([eachNode.latitude!, longitude], {
       icon: L.divIcon({
         className: getIconFor(eachNode),
         iconSize: getTextSize(eachNode),
@@ -120,7 +128,11 @@ function redraw(map: Map) {
     marker.addTo(allNodesLayerGroup)
     allClusteredLayerGroup.addLayer(marker)
 
-    if (eachNode.role == NodeRoleTypes.ROUTER || eachNode.role == NodeRoleTypes.ROUTER_CLIENT || eachNode.role == NodeRoleTypes.REPEATER) {
+    if (
+      eachNode.role == NodeRoleNameToID.ROUTER ||
+      eachNode.role == NodeRoleNameToID.ROUTER_CLIENT ||
+      eachNode.role == NodeRoleNameToID.REPEATER
+    ) {
       allRouterNodesLayerGroup.addLayer(marker)
     }
   })
@@ -205,5 +217,5 @@ function getTextSize(node: NodesEntity) {
 }
 
 function getTooltip(eachNode: NodesEntity): L.Content | ((layer: L.Layer) => L.Content) | L.Tooltip {
-  return createTooltipTemplate(eachNode)
+  return nodeTooltip(eachNode)
 }

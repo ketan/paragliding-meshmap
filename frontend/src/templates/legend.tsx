@@ -1,4 +1,6 @@
-export default (
+import renderToString from 'preact-render-to-string'
+
+export const mapLegendTemplate = renderToString(
   <div className="p-4">
     <div>
       <h3 className="text-2xl">Legend</h3>

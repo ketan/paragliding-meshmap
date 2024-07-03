@@ -1,4 +1,4 @@
-export const HardwareModelLookups = {
+export const HardwareModelIDToName = {
   '0': 'UNSET',
   '1': 'TLORA_V2',
   '2': 'TLORA_V1',
@@ -64,7 +64,14 @@ export const HardwareModelLookups = {
   '63': 'NRF52_PROMICRO_DIY',
   '64': 'RADIOMASTER_900_BANDIT_NANO',
   '65': 'HELTEC_CAPSULE_SENSOR_V3',
+  '66': 'HELTEC_VISION_MASTER_T190',
+  '67': 'HELTEC_VISION_MASTER_E213',
+  '68': 'HELTEC_VISION_MASTER_E290',
+  '69': 'HELTEC_MESH_NODE_T114',
   '255': 'PRIVATE_HW',
+} as Record<number, string>
+
+export const HardwareModelNameToID = {
   UNSET: 0,
   TLORA_V2: 1,
   TLORA_V1: 2,
@@ -130,10 +137,14 @@ export const HardwareModelLookups = {
   NRF52_PROMICRO_DIY: 63,
   RADIOMASTER_900_BANDIT_NANO: 64,
   HELTEC_CAPSULE_SENSOR_V3: 65,
+  HELTEC_VISION_MASTER_T190: 66,
+  HELTEC_VISION_MASTER_E213: 67,
+  HELTEC_VISION_MASTER_E290: 68,
+  HELTEC_MESH_NODE_T114: 69,
   PRIVATE_HW: 255,
-} as Record<string, string | number>
+} as Record<string, number>
 
-export const NodeRoleTypes = {
+export const NodeRoleIDToName = {
   '0': 'CLIENT',
   '1': 'CLIENT_MUTE',
   '2': 'ROUTER',
@@ -145,6 +156,9 @@ export const NodeRoleTypes = {
   '8': 'CLIENT_HIDDEN',
   '9': 'LOST_AND_FOUND',
   '10': 'TAK_TRACKER',
+} as Record<number, string>
+
+export const NodeRoleNameToID = {
   CLIENT: 0,
   CLIENT_MUTE: 1,
   ROUTER: 2,
@@ -156,4 +170,4 @@ export const NodeRoleTypes = {
   CLIENT_HIDDEN: 8,
   LOST_AND_FOUND: 9,
   TAK_TRACKER: 10,
-} // as Record<string, string | number>;
+} as Record<string, number>

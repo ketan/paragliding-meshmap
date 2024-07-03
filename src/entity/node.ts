@@ -181,8 +181,8 @@ export default class Node extends BaseType {
   }
 
   static async hardwareModels(mgr: EntityManager) {
-    await mgr.query(
-      'select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model'
+    return (
+      (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
   }
 }

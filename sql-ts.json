@@ -1,9 +1,11 @@
 {
   "client": "sqlite3",
   "connection": {
-    "filename": "./tmp/paragliding-meshmap.sqlite3"
+    "filename": "./tmp/paragliding-meshmap.sqlite3",
+    "useNullAsDefault": true
   },
   "typeMap": {
-    "number": ["bigint"]
+    "number": ["bigint"],
+    "string": ["datetime"]
   }
 }

@@ -32,7 +32,6 @@ export function parseProtobuf<T>(f: () => T): T {
   try {
     return f()
   } catch (e) {
-    console.log('caught an error', e)
     throw new AbortError(e)
   }
 }

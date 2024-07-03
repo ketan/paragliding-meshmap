@@ -2,11 +2,36 @@
 
 import { Config_DeviceConfig_Role } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/config_pb.js'
 import { HardwareModel } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
+import _ from 'lodash'
 
+const HardwareModelIDToName = {}
+const HardwareModelNameToID = {}
+const NodeRoleIDToName = {}
+const NodeRoleNameToID = {}
 
-const hardwareModelCode =
-  'export const HardwareModelLookups = ' + JSON.stringify(HardwareModel, true, 2) + ' as Record<string, string | number>;'
-const deviceRoleCode =
-  'export const NodeRoleTypes = ' + JSON.stringify(Config_DeviceConfig_Role, true, 2) + '// as Record<string, string | number>;'
+_.forEach(HardwareModel, (key, value) => {
+  if (typeof key === 'number') {
+    HardwareModelIDToName[key] = value
+  } else {
+    HardwareModelNameToID[key] = Number(value)
+  }
+})
 
-console.log([hardwareModelCode, deviceRoleCode].join('\n\n'))
+_.forEach(Config_DeviceConfig_Role, (key, value) => {
+  if (typeof key === 'number') {
+    NodeRoleIDToName[key] = value
+  } else {
+    NodeRoleNameToID[key] = Number(value)
+  }
+})
+
+console.log('export const HardwareModelIDToName = ' + JSON.stringify(HardwareModelIDToName, true, 2) + ' as Record<number, string>;')
+console.log()
+console.log()
+console.log('export const HardwareModelNameToID = ' + JSON.stringify(HardwareModelNameToID, true, 2) + ' as Record<string, number> ;')
+console.log()
+console.log()
+console.log('export const NodeRoleIDToName = ' + JSON.stringify(NodeRoleIDToName, true, 2) + ' as Record<number, string>;')
+console.log()
+console.log()
+console.log('export const NodeRoleNameToID = ' + JSON.stringify(NodeRoleNameToID, true, 2) + ' as Record<string, number> ;')

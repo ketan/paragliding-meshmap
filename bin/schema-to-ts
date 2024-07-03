@@ -9,12 +9,12 @@ yarn run sql-ts -c sql-ts.json
   | sed -E "s/('protobuf'.*)any/\1Buffer/g" \
   | sed -E "s/\?:(.*) \| null/\?:\1/g" \
   | sed -E "s%Object;%any // eslint-disable-line @typescript-eslint/no-explicit-any%g" \
-  | sed -E "s/'updatedAt'\?: Date/'updatedAt': Date/g" \
-  | sed -E "s/'createdAt'\?: Date/'createdAt': Date/g" \
-  > public/assets/js/database.ts
+  | sed -E "s/'updatedAt'\?:/'updatedAt':/g" \
+  | sed -E "s/'createdAt'\?:/'createdAt':/g" \
+  > frontend/src/database.ts
 
 rm Database.ts
 
-bin/emit-hardware-models >  public/assets/js/hardware-modules.ts
+bin/emit-hardware-models >  frontend/src/hardware-modules.ts
 
-yarn run prettier -w public/assets/js/database.ts public/assets/js/hardware-modules.ts
+yarn run prettier -w frontend/src/database.ts frontend/src/hardware-modules.ts

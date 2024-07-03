@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import { NodesEntity } from './database'
 
+export function googleMapsLink(node: NodesEntity) {
+  return `https://maps.google.com/?q=${node.latitude},${node.longitude}`
+}
+
 export function sanitizeLatLong(lat: number | string | undefined | null, lon: number | string | undefined | null) {
   if (lat && lon) {
     if (typeof lat === 'string') {
@@ -28,11 +32,6 @@ export function sanitizeNodeProperties(eachNode: Partial<NodesEntity>) {
   if (eachNode.latitude && eachNode.longitude && !isNaN(eachNode.latitude) && !isNaN(eachNode.longitude)) {
     eachNode.latitude = eachNode.latitude / 10000000
     eachNode.longitude = eachNode.longitude / 10000000
-
-    // everything to the left of Australia appears on the right of the map
-    if (eachNode.longitude <= 100) {
-      eachNode.longitude += 360
-    }
   } else {
     eachNode.latitude = undefined
     eachNode.longitude = undefined

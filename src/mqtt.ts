@@ -4,6 +4,9 @@ import pRetry from 'p-retry'
 import { processMessage } from './mqtt/decoder.js'
 import { CLIOptions, cliParse } from './mqtt/mqtt-cli.js'
 import { AppDataSource } from './data-source.js'
+import debug from 'debug'
+
+const logger = debug('meshmap:mqtt')
 
 const cliOptions: CLIOptions = cliParse()
 
@@ -28,12 +31,9 @@ async function handleMessageWithRetry(topic: string, payload: Buffer) {
   try {
     await pRetry(() => processMessage(cliOptions, topic, payload), {
       retries: 5,
-      onFailedAttempt: async (err) => {
-        console.log(`Failed`, err)
-      },
     })
   } catch (e) {
-    console.log(`ignoring `, e)
+    logger(`Ignoring payload`, e)
   }
 }
 

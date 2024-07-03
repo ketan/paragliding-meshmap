@@ -1,9 +1,8 @@
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,18 +19,15 @@ export default {
     filename: isProduction ? '[name]-[contenthash].js' : '[name].js',
   },
   devServer: {
-    hmr: true,
+    // hmr: true,
     static: outputDir,
     liveReload: true,
     port: 9000,
   },
   plugins: [
-    new TsconfigPathsPlugin({ configFile: './public/tsconfig.json' }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({ filename: '[name]-[contenthash].css', chunkFilename: '[id]-[contenthash].css', ignoreOrder: true }),
     new HtmlWebpackPlugin({
-      // title: 'Custom template',
-      // Load a custom template (lodash by default)
       template: './public/index.html',
     }),
   ],
@@ -39,15 +35,14 @@ export default {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: ['ts-loader'],
         exclude: /node_modules/,
       },
       {
         test: /\.s[ac]ss$/i,
-        // include: path.resolve(__dirname, 'src'),
+
         use: [
           'style-loader',
-          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -61,29 +56,19 @@ export default {
       },
       {
         test: /\.(png|jpe?g|gif|ejs)$/i,
-        // use: [
-        //   {
-        //     loader: 'asset/resource',
-        //   },
-        // ],
+
         type: 'asset/inline',
       },
       {
         test: /\.(ejs)$/i,
         type: 'asset/source',
       },
-      // {
-
-      //   // use: [
-      //   //   {
-      //   //     loader: 'asset/source',
-      //   //   },
-      //   // ],
-      //   type: 'asset/source'
-      // }
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      vue: 'vue/dist/vue.esm-bundler.js',
+    },
   },
 }

@@ -1,11 +1,11 @@
 {
   "compileOnSave": true,
-  "include": ["assets/js"],
+  "include": ["assets/js/**/*.ts", "assets/js/**/*.tsx"],
   "exclude": ["./build"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
-    "declaration": false,
+    // "declaration": false,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -19,6 +19,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./build",
+    "jsx": "preserve",
+    "jsxImportSource": "h",
 
     "preserveConstEnums": true,
     "removeComments": true,
@@ -31,7 +33,9 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
-    "target": "ES5"
+    "target": "ES5",
+    "composite": true,
+    "tsBuildInfoFile": ".tsbuildinfo"
   },
   "ts-node": {
     "swc": true

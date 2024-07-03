@@ -15,7 +15,7 @@ import { NodesEntity } from './database'
 import { NodeRoleTypes } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
-import mapLegend from './templates/legend.ejs?raw'
+import mapLegend from './templates/legend'
 import { sanitizeLatLong, sanitizeNodesProperties } from './ui-util'
 import { createTooltipTemplate, nodePositionView } from './view-template-helper'
 
@@ -58,7 +58,7 @@ const legendOverlayGroup = new L.LayerGroup()
 const legend = new L.Control({ position: 'bottomleft' })
 legend.onAdd = function (_map) {
   const div = L.DomUtil.create('div', 'leaflet-control-layers')
-  div.innerHTML = mapLegend
+  div.innerHTML = mapLegend.toString()
   return div
 }
 

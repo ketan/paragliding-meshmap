@@ -1,5 +1,5 @@
 // application css
-import '../css/index.scss'
+import './index.scss'
 
 // leaflet stuff
 import L, { Map } from 'leaflet'

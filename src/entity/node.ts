@@ -1,6 +1,6 @@
 import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
 import { parseProtobuf } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
@@ -180,8 +180,8 @@ export default class Node extends BaseType {
     })
   }
 
-  static async hardwareModels() {
-    await AppDataSource.manager.query(
+  static async hardwareModels(mgr: EntityManager) {
+    await mgr.query(
       'select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model'
     )
   }

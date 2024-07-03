@@ -15,7 +15,6 @@ export function nodePositionView(node: Partial<NodesEntity>): string {
   )
 
   console.log(positionViewTemplate)
-  debugger
 
   return ''
   // return _positionViewTemplate({ node: node, nodeName: nodeName }).toString()
@@ -38,21 +37,17 @@ export function createTooltipTemplate(node: NodesEntity): string {
   return ''
 }
 
-function importAll(r: any) {
-  return r.keys().map(r)
-}
+const allImages = import.meta.glob('./assets/images/devices/*.{png,jpg,jpeg,PNG,JPEG}', { eager: true, query: '?url', import: 'default' })
 
-// const images = importAll(require.context('./', false, /\.(png|jpe?g|svg)$/))
-
-const allImages = importAll(require.context('../images/devices', false, /\.(png|jpe?g|svg)$/))
-console.log(require.context('../images/devices', false, /\.(png|jpe?g|svg)$/))
-console.log(allImages)
 const hardwareModelLookup: Record<number, string> = {}
 for (const path in allImages) {
   const imageNameWithoutExtension = path.split('/').at(-1)!.replace('.png', '')
 
-  hardwareModelLookup[HardwareModelLookups[imageNameWithoutExtension] as number] = allImages(path).default
+  if (allImages[path]) {
+    hardwareModelLookup[HardwareModelLookups[imageNameWithoutExtension] as number] = allImages[path] as string
+  }
 }
+console.log(hardwareModelLookup)
 
 export function imageForModel(modelId: number) {
   return hardwareModelLookup[modelId]

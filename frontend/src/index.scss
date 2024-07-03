@@ -6,13 +6,13 @@
 @tailwind utilities;
 
 /*! leaflet css */
-@import '~leaflet/dist/leaflet.css';
+@import 'leaflet/dist/leaflet.css';
 /*! markercluster */
-@import '~leaflet.markercluster/dist/MarkerCluster.css';
+@import 'leaflet.markercluster/dist/MarkerCluster.css';
 /*! markercluster default */
-@import '~leaflet.markercluster/dist/MarkerCluster.Default.css';
+@import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 /*! grouped layer control */
-@import '~leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
+@import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
 
 html,
 body {

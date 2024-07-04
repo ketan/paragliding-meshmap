@@ -28,36 +28,36 @@ export function cliParse() {
   program.option('--decryption-keys <keys...>', 'Decryption keys encoded in base64 to use when decrypting service envelopes.', [
     '1PG7OiApB1nwvP+rz05pAQ==',
   ])
-  program.option('--purge-interval-seconds <interval>', 'How long to wait between each automatic database purge.', myParseInt, 3600)
+  program.option('--purge-interval-seconds <interval>', 'How long to wait between each automatic database purge.', myParseInt, 3600 * 48)
   program.option(
     '--purge-device-metrics-after-seconds <interval>',
     'Device Metrics older than this many seconds will be purged from the database.',
     myParseInt,
-    3600
+    3600 * 48
   )
   program.option(
     '--purge-environment-metrics-after-seconds <interval>',
     'Environment Metrics older than this many seconds will be purged from the database.',
     myParseInt,
-    3600
+    3600 * 48
   )
   program.option(
     '--purge-power-metrics-after-seconds <interval>',
     'Power Metrics older than this many seconds will be purged from the database.',
     myParseInt,
-    3600
+    3600 * 48
   )
   program.option(
     '--purge-nodes-unheard-for-seconds <interval>',
     "Nodes that haven't been heard from in this many seconds will be purged from the database.",
     myParseInt,
-    3600
+    3600 * 48
   )
   program.option(
     '--purge-positions-after-seconds <interval>',
     'Positions older than this many seconds will be purged from the database.',
     myParseInt,
-    3600
+    3600 * 48
   )
 
   program.parse()

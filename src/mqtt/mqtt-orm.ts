@@ -17,8 +17,21 @@ import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
 import { parseProtobuf } from '../helpers/utils.js'
+import { CLIOptions } from './mqtt-cli.js'
 
 const logger = debug('meshmap:handler')
+
+export async function purgeData(cliOptions: CLIOptions) {
+  if (cliOptions.purgeNodesUnheardForSeconds) {
+    await AppDataSource.transaction(async (trx) => {
+      await Node.purge(cliOptions.purgeNodesUnheardForSeconds, trx)
+      await DeviceMetric.purge(cliOptions.purgeDeviceMetricsAfterSeconds, trx)
+      await EnvironmentMetric.purge(cliOptions.purgeEnvironmentMetricsAfterSeconds, trx)
+      await PowerMetric.purge(cliOptions.purgePowerMetricsAfterSeconds, trx)
+      await Position.purge(cliOptions.purgePositionsAfterSeconds, trx)
+    })
+  }
+}
 
 export async function updateMQTTStatus(nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
   let node: Node | null

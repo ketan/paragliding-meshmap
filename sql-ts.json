@@ -1,8 +1,8 @@
 {
   "client": "sqlite3",
+  "useNullAsDefault": true,
   "connection": {
-    "filename": "./tmp/paragliding-meshmap.sqlite3",
-    "useNullAsDefault": true
+    "filename": "./tmp/paragliding-meshmap.sqlite3"
   },
   "typeMap": {
     "number": ["bigint"],

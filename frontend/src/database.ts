@@ -127,7 +127,8 @@ export interface ServiceEnvelopesEntity {
   gatewayId?: number
   id?: number
   mqttTopic: string
-  protobuf: Buffer
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  protobuf: any
   to: number
   updatedAt: string
 }
@@ -156,7 +157,9 @@ export interface TraceroutesEntity {
   gatewayId?: number
   id?: number
   packetId?: number
-  route: any // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  route: any
   to: number
   updatedAt: string
   wantResponse: boolean

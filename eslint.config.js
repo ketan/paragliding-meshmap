@@ -9,7 +9,7 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.strict,
   {
-    ignores: ['build/**', 'public/assets/**'],
+    ignores: ['build/**', 'public/assets/**', 'frontend/dist/**'],
   },
   {
     rules: {

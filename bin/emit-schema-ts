@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+import { Client } from '@rmp135/sql-ts'
+import { readFileSync } from 'fs'
+import _ from 'lodash'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const definition = await Client.fromConfig(JSON.parse(readFileSync(`${__dirname}/../sql-ts.json`)))
+
+const typescriptCode = await definition
+  .fetchDatabase()
+  .mapTables((table, schema) => {
+    table.interfaceName = `${_.upperFirst(_.camelCase(table.name))}Entity`
+    return table
+  })
+  .mapColumns((column, table, schema) => {
+    column.propertyName = _.camelCase(column.propertyName)
+    if (column.nullable) {
+      column.optional = true
+      column.nullable = false
+    }
+
+    if (column.defaultValue) {
+      table.nullable = false
+      column.optional = false
+    }
+    console.warn(column)
+
+    if (column.propertyName === 'neighbours') {
+      column.propertyType = 'Neighbour[]'
+    }
+    if (column.propertyName === 'protobuf' || column.propertyName === 'route') {
+      column.propertyType = 'any'
+      column.comment = 'eslint-disable-next-line @typescript-eslint/no-explicit-any'
+    }
+    return column
+  })
+  .toTypescript()
+
+console.log(`import { Neighbour } from './interfaces.js'`)
+console.log(typescriptCode)

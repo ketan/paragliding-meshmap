@@ -28,16 +28,6 @@ function mqttStatus(node: NodesEntity) {
   }
 }
 
-function batteryLevel(node: NodesEntity) {
-  if (node.batteryLevel) {
-    if (node.batteryLevel > 100) {
-      return <>Battery: Plugged In</>
-    } else {
-      return <>Battery: {node.batteryLevel}%</>
-    }
-  }
-}
-
 const location = (node: NodesEntity) => {
   return (
     <>

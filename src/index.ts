@@ -17,7 +17,7 @@ const isDevelopment = environment === 'development'
 
 const app = express()
 // if (!isDevelopment) {
-  app.use(compression())
+app.use(compression())
 // }
 
 app.use(bodyParser.json())

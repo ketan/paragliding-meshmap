@@ -185,6 +185,4 @@ export default class Node extends BaseType {
       (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
   }
-
-
 }

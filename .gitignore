@@ -18,3 +18,4 @@ tmp/
 build/
 temp/
 dist/
+*.sqlite3

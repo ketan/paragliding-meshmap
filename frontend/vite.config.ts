@@ -14,16 +14,16 @@ export default defineConfig({
   root: __dirname,
   build: {
     sourcemap: true,
-    assetsInlineLimit: 1024 * 1024, // 1024KiB
+    // assetsInlineLimit: 1024 * 1024, // 1024KiB
     emptyOutDir: true,
     rollupOptions: {
-      // output: {
-      //   manualChunks: (id) => {
-      //     if (id.includes('node_modules')) {
-      //       return 'vendor'
-      //     }
-      //   },
-      // },
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        },
+      },
       input: {
         index: resolve(__dirname, `index.html`),
       },

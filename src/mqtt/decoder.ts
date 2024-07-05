@@ -28,7 +28,7 @@ export async function processMessage(cliOptions: CLIOptions, topic: string, payl
     return
   }
 
-  const envelope = parseProtobuf(() => ServiceEnvelope.fromBinary(payload))
+  const envelope = parseProtobuf(() => ServiceEnvelope.fromBinary(payload, { readUnknownFields: true }))
 
   if (!envelope.packet) {
     return

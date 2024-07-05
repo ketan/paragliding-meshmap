@@ -52,7 +52,9 @@ export default class Waypoint extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const waypoint = parseProtobuf(() => WaypointProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+    const waypoint = parseProtobuf(() =>
+      WaypointProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
+    )
 
     try {
       return AppDataSource.manager.merge(Waypoint, new Waypoint(), {

@@ -40,7 +40,9 @@ export default class Position extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const position = parseProtobuf(() => PositionProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+    const position = parseProtobuf(() =>
+      PositionProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
+    )
 
     try {
       return AppDataSource.manager.merge(Position, new Position(), {

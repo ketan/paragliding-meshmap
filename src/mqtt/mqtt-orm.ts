@@ -62,7 +62,7 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
 
 export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collectTextMessages: boolean) {
   if (!collectTextMessages) {
-    return;
+    return
   }
   const tm = TextMessage.fromPacket(envelope)
   await AppDataSource.transaction(async (trx) => {
@@ -166,7 +166,9 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
 }
 
 export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProtobuf) {
-  const telemetry = parseProtobuf(() => Telemetry.fromBinary((envelope.packet!.payloadVariant.value as Data).payload))
+  const telemetry = parseProtobuf(() =>
+    Telemetry.fromBinary((envelope.packet!.payloadVariant.value as Data).payload, { readUnknownFields: true })
+  )
 
   if (!telemetry) {
     return

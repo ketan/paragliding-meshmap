@@ -20,7 +20,9 @@ export default class NeighbourInfo extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const neighborInfo = parseProtobuf(() => NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload))
+    const neighborInfo = parseProtobuf(() =>
+      NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
+    )
 
     try {
       return AppDataSource.manager.merge(NeighbourInfo, new NeighbourInfo(), {

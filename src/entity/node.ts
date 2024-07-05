@@ -102,7 +102,7 @@ export default class Node extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const user = parseProtobuf(() => User.fromBinary((packet.payloadVariant.value as Data).payload))
+    const user = parseProtobuf(() => User.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
 
     try {
       return AppDataSource.manager.merge(Node, new Node(), {

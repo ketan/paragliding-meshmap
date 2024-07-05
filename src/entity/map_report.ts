@@ -52,7 +52,7 @@ export default class MapReport extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const mr = parseProtobuf(() => MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload))
+    const mr = parseProtobuf(() => MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
 
     try {
       return AppDataSource.manager.merge(MapReport, new MapReport(), {

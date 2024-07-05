@@ -35,7 +35,9 @@ export default class EnvironmentMetric extends BaseType {
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!
 
-    const metrics = parseProtobuf(() => EnvironmentMetrics.fromBinary((packet.payloadVariant.value as Data).payload))
+    const metrics = parseProtobuf(() =>
+      EnvironmentMetrics.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
+    )
 
     try {
       return AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {

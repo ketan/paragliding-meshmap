@@ -55,7 +55,7 @@ export function decrypt(packet: MeshPacket, decryptionKeys: string[]): { value: 
         const decryptedBuffer = Buffer.concat([decipher.update(packet.payloadVariant.value), decipher.final()])
 
         // parse as data message
-        return { case: 'decoded', value: Data.fromBinary(decryptedBuffer) }
+        return { case: 'decoded', value: Data.fromBinary(decryptedBuffer, { readUnknownFields: true }) }
       } catch (ignore) {
         // ignore
       }

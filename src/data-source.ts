@@ -30,7 +30,7 @@ export const AppDataSource = new DataSource({
   // port: 5432,
   // username: "test",
   // password: "test",
-  database: './tmp/paragliding-meshmap.sqlite3',
+  database: process.env.DB_FILE || './tmp/paragliding-meshmap.sqlite3',
   synchronize: false,
   logging: 'all',
   logger: 'debug',

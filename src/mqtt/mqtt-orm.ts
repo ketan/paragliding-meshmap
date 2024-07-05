@@ -60,7 +60,10 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
   })
 }
 
-export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf) {
+export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collectTextMessages: boolean) {
+  if (!collectTextMessages) {
+    return;
+  }
   const tm = TextMessage.fromPacket(envelope)
   await AppDataSource.transaction(async (trx) => {
     try {
@@ -119,7 +122,10 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
   })
 }
 
-export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf) {
+export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf, saveWaypoint: boolean) {
+  if (!saveWaypoint) {
+    return
+  }
   const waypoint = Waypoint.fromPacket(envelope)
   if (!waypoint) {
     return
@@ -217,7 +223,10 @@ export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeP
   })
 }
 
-export async function createMapReports(envelope: ServiceEnvelopeProtobuf) {
+export async function createMapReports(envelope: ServiceEnvelopeProtobuf, collectMapReports: boolean) {
+  if (!collectMapReports) {
+    return
+  }
   const mr = MapReport.fromPacket(envelope)
   if (!mr) {
     return

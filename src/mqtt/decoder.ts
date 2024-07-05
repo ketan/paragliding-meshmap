@@ -22,6 +22,7 @@ export async function processMessage(cliOptions: CLIOptions, topic: string, payl
     await handleNodeStatusMessage(topic, payload)
     return
   }
+
   if (topic.includes('/stat/')) {
     // ignore
     return
@@ -45,21 +46,21 @@ export async function processMessage(cliOptions: CLIOptions, topic: string, payl
   if (envelope.packet.payloadVariant.case == 'decoded')
     switch (envelope.packet.payloadVariant.value.portnum) {
       case PortNum.TEXT_MESSAGE_APP:
-        return await handleTextMessage(cliOptions, envelope)
+        return await saveTextMessage(envelope, cliOptions.collectTextMessages)
       case PortNum.POSITION_APP:
-        return await handlePositionMessage(cliOptions, envelope)
+        return await updateNodeWithPosition(envelope, cliOptions.collectPositions)
       case PortNum.NODEINFO_APP:
-        return await handleNodeInfo(envelope)
+        return await createOrUpdateNode(envelope)
       case PortNum.WAYPOINT_APP:
-        return await handleWayPoint(cliOptions, envelope)
+        return await createOrUpdateWaypoint(envelope, cliOptions.collectWaypoints)
       case PortNum.NEIGHBORINFO_APP:
-        return await handleNeighborInfo(cliOptions, envelope)
+        return await createOrUpdateNeighborInfo(envelope, cliOptions.collectNeighbourInfo)
       case PortNum.TELEMETRY_APP:
-        return await handleTelemetryMessage(envelope)
+        return await createOrUpdateTelemetryData(envelope)
       case PortNum.TRACEROUTE_APP:
-        return await handleTracerouteMessage(envelope)
+        return await createOrUpdateTracerouteMessage(envelope)
       case PortNum.MAP_REPORT_APP:
-        return await handleMapReport(cliOptions, envelope)
+        return await createMapReports(envelope, cliOptions.collectMapReports)
     }
 }
 
@@ -69,45 +70,5 @@ export async function handleNodeStatusMessage(topic: string, payload: Buffer) {
   if (nodeId) {
     const mqttConnectionState = payload.toString()
     await updateMQTTStatus(nodeId, mqttConnectionState, new Date())
-  }
-}
-
-export async function handleTextMessage(cliOptions: CLIOptions, envelope: ServiceEnvelope) {
-  if (!cliOptions.collectTextMessages) {
-    return
-  }
-
-  await saveTextMessage(envelope)
-}
-
-async function handlePositionMessage(cliOptions: CLIOptions, envelope: ServiceEnvelope) {
-  await updateNodeWithPosition(envelope, cliOptions.collectPositions)
-}
-
-async function handleNodeInfo(envelope: ServiceEnvelope) {
-  await createOrUpdateNode(envelope)
-}
-
-async function handleWayPoint(cliOptions: CLIOptions, envelope: ServiceEnvelope) {
-  if (cliOptions.collectWaypoints) {
-    await createOrUpdateWaypoint(envelope)
-  }
-}
-
-async function handleNeighborInfo(cliOptions: CLIOptions, envelope: ServiceEnvelope) {
-  await createOrUpdateNeighborInfo(envelope, cliOptions.collectNeighbourInfo)
-}
-
-async function handleTelemetryMessage(envelope: ServiceEnvelope) {
-  await createOrUpdateTelemetryData(envelope)
-}
-
-async function handleTracerouteMessage(envelope: ServiceEnvelope) {
-  await createOrUpdateTracerouteMessage(envelope)
-}
-
-async function handleMapReport(cliOptions: CLIOptions, envelope: ServiceEnvelope) {
-  if (cliOptions.collectMapReports) {
-    await createMapReports(envelope)
   }
 }

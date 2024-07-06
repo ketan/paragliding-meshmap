@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreateTextMessagesTable1719576103688 implements MigrationInterface {
   tableName = 'text_messages'
-  indices = ['node_id', 'created_at', 'updated_at']
+  indices = ['created_at', 'updated_at']
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -21,20 +21,20 @@ export class CreateTextMessagesTable1719576103688 implements MigrationInterface 
           { name: 'want_response', type: 'boolean', isNullable: false },
 
           { name: 'hop_limit', type: 'integer', isNullable: true },
-          { name: 'rx_snr', type: 'double', isNullable: true },
+          { name: 'rx_snr', type: 'double precision', isNullable: true },
           { name: 'rx_rssi', type: 'integer', isNullable: true },
           { name: 'rx_time', type: 'bigint', isNullable: true },
           { name: 'text', type: 'text', isNullable: false },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

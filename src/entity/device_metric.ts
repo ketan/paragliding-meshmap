@@ -14,13 +14,13 @@ export default class DeviceMetric extends BaseType {
   @Column({ type: 'integer', nullable: true })
   batteryLevel?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   voltage?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   channelUtilization?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   airUtilTx?: number
 
   @Column({ type: 'bigint', nullable: true })

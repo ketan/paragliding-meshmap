@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { blobType, createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreateServiceEnvelopesTable1719576008087 implements MigrationInterface {
   tableName = 'service_envelopes'
-  indices = ['node_id', 'created_at', 'updated_at']
+  indices = ['created_at', 'updated_at']
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -17,17 +17,17 @@ export class CreateServiceEnvelopesTable1719576008087 implements MigrationInterf
           { name: 'gateway_id', type: 'bigint', isNullable: true },
           { name: 'to', type: 'bigint', isNullable: false },
           { name: 'from', type: 'bigint', isNullable: false },
-          { name: 'protobuf', type: 'blob', isNullable: false },
+          { name: 'protobuf', type: blobType(), isNullable: false },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

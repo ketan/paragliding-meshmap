@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '../helpers/migration-helper.js'
 
 export class CreateDeviceMetricsTable1719570433709 implements MigrationInterface {
   tableName = 'device_metrics'
@@ -15,20 +15,20 @@ export class CreateDeviceMetricsTable1719570433709 implements MigrationInterface
           { name: 'node_id', type: 'bigint', isNullable: false },
 
           { name: 'battery_level', type: 'integer', isNullable: true },
-          { name: 'voltage', type: 'double', isNullable: true },
-          { name: 'channel_utilization', type: 'double', isNullable: true },
-          { name: 'air_util_tx', type: 'double', isNullable: true },
+          { name: 'voltage', type: 'double precision', isNullable: true },
+          { name: 'channel_utilization', type: 'double precision', isNullable: true },
+          { name: 'air_util_tx', type: 'double precision', isNullable: true },
           { name: 'uptime_seconds', type: 'bigint', isNullable: true },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

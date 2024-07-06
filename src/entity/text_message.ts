@@ -31,7 +31,7 @@ export default class TextMessage extends BaseType {
   @Column({ type: 'bigint', nullable: true })
   rxTime?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   rxSnr?: number
 
   @Column({ type: 'integer', nullable: true })

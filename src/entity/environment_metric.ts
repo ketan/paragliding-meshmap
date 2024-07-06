@@ -11,22 +11,22 @@ export default class EnvironmentMetric extends BaseType {
   @Column({ type: 'bigint', nullable: false })
   nodeId: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   temperature?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   relativeHumidity?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   barometricPressure?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   gasResistance?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   voltage?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   current?: number
 
   @Column({ type: 'integer', nullable: true })

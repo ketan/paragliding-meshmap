@@ -9,6 +9,7 @@ import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
 import { Neighbors } from './neighbors.js'
 import Position from './position.js'
+import { dateTimeType } from '../helpers/migration-helper.js'
 
 @Entity()
 export default class Node extends BaseType {
@@ -39,16 +40,16 @@ export default class Node extends BaseType {
   @Column({ type: 'integer', nullable: true })
   longitude?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   airUtilTx?: number
 
   @Column({ type: 'integer', nullable: true })
   batteryLevel?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   channelUtilization?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   voltage?: number
 
   @Column({ type: 'integer', nullable: true })
@@ -57,16 +58,16 @@ export default class Node extends BaseType {
   @Column({ type: 'json', nullable: true })
   neighbours?: Neighbors[]
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: dateTimeType(), nullable: true })
   neighboursUpdatedAt?: Date
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: dateTimeType(), nullable: true })
   positionUpdatedAt?: Date
 
   @Column({ type: 'text', nullable: true })
   mqttConnectionState?: string
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: dateTimeType(), nullable: true })
   mqttConnectionStateUpdatedAt?: Date
 
   @Column({ type: 'text', nullable: true })
@@ -90,13 +91,13 @@ export default class Node extends BaseType {
   @Column({ type: 'bigint', nullable: true })
   uptimeSeconds?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   barometricPressure?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   relativeHumidity?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   temperature?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

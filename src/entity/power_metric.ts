@@ -11,22 +11,22 @@ export default class PowerMetric extends BaseType {
   @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch1Voltage?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch1Current?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch2Voltage?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch2Current?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch3Voltage?: number
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   ch3Current?: number
 
   static fromPacket(envelope: ServiceEnvelope) {

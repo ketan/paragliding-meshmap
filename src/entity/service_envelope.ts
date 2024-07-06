@@ -3,6 +3,7 @@ import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
 import { toBigInt } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
+import { blobType } from '../helpers/migration-helper.js'
 
 @Entity()
 export default class ServiceEnvelope extends BaseType {
@@ -21,7 +22,7 @@ export default class ServiceEnvelope extends BaseType {
   @Column({ type: 'bigint' })
   from: number
 
-  @Column({ type: 'blob' })
+  @Column({ type: blobType() })
   protobuf: Buffer
 
   static fromPacket(mqttTopic: string, payload: Buffer, envelope: ServiceEnvelopeProtobuf) {

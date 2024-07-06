@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '../helpers/migration-helper.js'
 
 export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInterface {
   tableName = 'environment_metrics'
@@ -14,23 +14,23 @@ export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInte
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'temperature', type: 'double', isNullable: true },
-          { name: 'relative_humidity', type: 'double', isNullable: true },
-          { name: 'barometric_pressure', type: 'double', isNullable: true },
-          { name: 'gas_resistance', type: 'double', isNullable: true },
-          { name: 'voltage', type: 'double', isNullable: true },
-          { name: 'current', type: 'double', isNullable: true },
+          { name: 'temperature', type: 'double precision', isNullable: true },
+          { name: 'relative_humidity', type: 'double precision', isNullable: true },
+          { name: 'barometric_pressure', type: 'double precision', isNullable: true },
+          { name: 'gas_resistance', type: 'double precision', isNullable: true },
+          { name: 'voltage', type: 'double precision', isNullable: true },
+          { name: 'current', type: 'double precision', isNullable: true },
           { name: 'iaq', type: 'integer', isNullable: true },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

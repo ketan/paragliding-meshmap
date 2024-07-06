@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreatePowerMetricsTable1719575917930 implements MigrationInterface {
   tableName = 'power_metrics'
@@ -14,24 +14,24 @@ export class CreatePowerMetricsTable1719575917930 implements MigrationInterface 
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'ch1_voltage', type: 'double', isNullable: true },
-          { name: 'ch1_current', type: 'double', isNullable: true },
+          { name: 'ch1_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch1_current', type: 'double precision', isNullable: true },
 
-          { name: 'ch2_voltage', type: 'double', isNullable: true },
-          { name: 'ch2_current', type: 'double', isNullable: true },
+          { name: 'ch2_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch2_current', type: 'double precision', isNullable: true },
 
-          { name: 'ch3_voltage', type: 'double', isNullable: true },
-          { name: 'ch3_current', type: 'double', isNullable: true },
+          { name: 'ch3_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch3_current', type: 'double precision', isNullable: true },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

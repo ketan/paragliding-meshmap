@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreateNodesTable1719575404759 implements MigrationInterface {
   tableName = 'nodes'
@@ -23,18 +23,18 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'altitude', type: 'integer', isNullable: true },
           { name: 'latitude', type: 'integer', isNullable: true },
           { name: 'longitude', type: 'integer', isNullable: true },
-          { name: 'position_updated_at', type: 'datetime', isNullable: true },
+          { name: 'position_updated_at', type: dateTimeType(), isNullable: true },
 
-          { name: 'air_util_tx', type: 'double', isNullable: true },
+          { name: 'air_util_tx', type: 'double precision', isNullable: true },
           { name: 'battery_level', type: 'integer', isNullable: true },
-          { name: 'channel_utilization', type: 'double', isNullable: true },
-          { name: 'voltage', type: 'double', isNullable: true },
+          { name: 'channel_utilization', type: 'double precision', isNullable: true },
+          { name: 'voltage', type: 'double precision', isNullable: true },
           { name: 'neighbour_broadcast_interval_secs', type: 'integer', isNullable: true },
           { name: 'neighbours', type: 'json', isNullable: true },
-          { name: 'neighbours_updated_at', type: 'datetime', isNullable: true },
+          { name: 'neighbours_updated_at', type: dateTimeType(), isNullable: true },
 
           { name: 'mqtt_connection_state', type: 'text', isNullable: true },
-          { name: 'mqtt_connection_state_updated_at', type: 'datetime', isNullable: true },
+          { name: 'mqtt_connection_state_updated_at', type: dateTimeType(), isNullable: true },
 
           { name: 'firmware_version', type: 'text', isNullable: true },
           { name: 'has_default_channel', type: 'boolean', isNullable: true },
@@ -44,19 +44,19 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'region', type: 'integer', isNullable: true },
           { name: 'uptime_seconds', type: 'bigint', isNullable: true },
 
-          { name: 'barometric_pressure', type: 'double', isNullable: true },
-          { name: 'relative_humidity', type: 'double', isNullable: true },
-          { name: 'temperature', type: 'double', isNullable: true },
+          { name: 'barometric_pressure', type: 'double precision', isNullable: true },
+          { name: 'relative_humidity', type: 'double precision', isNullable: true },
+          { name: 'temperature', type: 'double precision', isNullable: true },
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

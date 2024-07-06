@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
 
 export class CreateWaypointsTable1719576284958 implements MigrationInterface {
   tableName = 'waypoints'
-  indices = ['node_id', 'created_at', 'updated_at']
+  indices = ['created_at', 'updated_at']
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -29,13 +29,13 @@ export class CreateWaypointsTable1719576284958 implements MigrationInterface {
 
           {
             name: 'created_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: 'datetime',
+            type: dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

@@ -24,13 +24,13 @@ const queue = new PQueue({
   concurrency: 1,
 })
 
-if (cliOptions.purgeIntervalSeconds) {
-  logger(`Purging data every ${cliOptions.purgeIntervalSeconds}s`)
+if (cliOptions.purgeEvery) {
+  logger(`Purging data every ${cliOptions.purgeEvery.toHuman()}`)
 
   setInterval(async () => {
     logger(`Purging data now`)
     await purgeData(cliOptions)
-  }, cliOptions.purgeIntervalSeconds * 1000)
+  }, cliOptions.purgeEvery.as('millisecond'))
 }
 
 client.on('connect', async () => {

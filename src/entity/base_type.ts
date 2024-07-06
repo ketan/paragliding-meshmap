@@ -22,10 +22,8 @@ export abstract class BaseType {
     return undefined
   }
 
-  static async purge(purgeSecondsAgo: number, trx: EntityManager) {
-    const purgeCutoff = DateTime.now()
-      .toLocal()
-      .minus(Duration.fromObject({ second: purgeSecondsAgo }))
+  static async purge(durationAgo: Duration, trx: EntityManager) {
+    const purgeCutoff = DateTime.now().toLocal().minus(durationAgo)
 
     const query = trx.createQueryBuilder().delete().from(this.name).where('updated_at <= :updated_at', {
       updated_at: purgeCutoff.toISO(),

@@ -1,16 +1,22 @@
 import { Command, InvalidArgumentError } from 'commander'
+import { Duration } from 'luxon'
 // import commandLineArgs from 'command-line-args'
 // import commandLineUsage from 'command-line-usage'
 // originally authored by Liam Cottle (https://github.com/liamcottle/meshtastic-map)
 
-function myParseInt(value: string) {
-  // parseInt takes a string and a radix
-  const parsedValue = parseInt(value, 10)
-  if (isNaN(parsedValue)) {
-    throw new InvalidArgumentError('Not a number.')
+function parseDuration(value: string) {
+  const duration = Duration.fromISO(value.toUpperCase())
+
+  if (duration.isValid) {
+    return duration
+  } else {
+    throw new InvalidArgumentError(
+      `${value} cannot be parsed as a duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations for some examples.`
+    )
   }
-  return parsedValue
 }
+
+const defaultDuration = Duration.fromISO('P7D')
 
 export function cliParse() {
   const program = new Command()
@@ -28,36 +34,42 @@ export function cliParse() {
   program.option('--decryption-keys <keys...>', 'Decryption keys encoded in base64 to use when decrypting service envelopes.', [
     '1PG7OiApB1nwvP+rz05pAQ==',
   ])
-  program.option('--purge-interval-seconds <interval>', 'How long to wait between each automatic database purge.', myParseInt, 3600 * 48)
+
   program.option(
-    '--purge-device-metrics-after-seconds <interval>',
-    'Device Metrics older than this many seconds will be purged from the database.',
-    myParseInt,
-    3600 * 48
+    '--purge-every <duration>',
+    'How long to wait between each automatic database purge (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    parseDuration,
+    defaultDuration
   )
   program.option(
-    '--purge-environment-metrics-after-seconds <interval>',
-    'Environment Metrics older than this many seconds will be purged from the database.',
-    myParseInt,
-    3600 * 48
+    '--purge-device-metrics-older-than <duration>',
+    'Device Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    parseDuration,
+    defaultDuration
   )
   program.option(
-    '--purge-power-metrics-after-seconds <interval>',
-    'Power Metrics older than this many seconds will be purged from the database.',
-    myParseInt,
-    3600 * 48
+    '--purge-environment-metrics-older-than <duration>',
+    'Environment Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    parseDuration,
+    defaultDuration
   )
   program.option(
-    '--purge-nodes-unheard-for-seconds <interval>',
-    "Nodes that haven't been heard from in this many seconds will be purged from the database.",
-    myParseInt,
-    3600 * 48
+    '--purge-power-metrics-older-than <duration>',
+    'Power Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    parseDuration,
+    defaultDuration
   )
   program.option(
-    '--purge-positions-after-seconds <interval>',
-    'Positions older than this many seconds will be purged from the database.',
-    myParseInt,
-    3600 * 48
+    '--purge-nodes-unheard-older-than <duration>',
+    "Nodes that haven't been heard from in this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).",
+    parseDuration,
+    defaultDuration
+  )
+  program.option(
+    '--purge-positions-older-than <duration>',
+    'Positions older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    parseDuration,
+    defaultDuration
   )
 
   program.parse()
@@ -76,10 +88,10 @@ export interface CLIOptions {
   collectNeighbourInfo: true
   collectMapReports: true
   decryptionKeys: string[]
-  purgeIntervalSeconds: number
-  purgeDeviceMetricsAfterSeconds: number
-  purgeEnvironmentMetricsAfterSeconds: number
-  purgePowerMetricsAfterSeconds: number
-  purgeNodesUnheardForSeconds: number
-  purgePositionsAfterSeconds: number
+  purgeEvery: Duration
+  purgeDeviceMetricsOlderThan: Duration
+  purgeEnvironmentMetricsOlderThan: Duration
+  purgePowerMetricsOlderThan: Duration
+  purgeNodesUnheardOlderThan: Duration
+  purgePositionsOlderThan: Duration
 }

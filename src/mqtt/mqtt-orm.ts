@@ -22,13 +22,13 @@ import { CLIOptions } from './mqtt-cli.js'
 const logger = debug('meshmap:handler')
 
 export async function purgeData(cliOptions: CLIOptions) {
-  if (cliOptions.purgeNodesUnheardForSeconds) {
+  if (cliOptions.purgeNodesUnheardOlderThan) {
     await AppDataSource.transaction(async (trx) => {
-      await Node.purge(cliOptions.purgeNodesUnheardForSeconds, trx)
-      await DeviceMetric.purge(cliOptions.purgeDeviceMetricsAfterSeconds, trx)
-      await EnvironmentMetric.purge(cliOptions.purgeEnvironmentMetricsAfterSeconds, trx)
-      await PowerMetric.purge(cliOptions.purgePowerMetricsAfterSeconds, trx)
-      await Position.purge(cliOptions.purgePositionsAfterSeconds, trx)
+      await Node.purge(cliOptions.purgeNodesUnheardOlderThan, trx)
+      await DeviceMetric.purge(cliOptions.purgeDeviceMetricsOlderThan, trx)
+      await EnvironmentMetric.purge(cliOptions.purgeEnvironmentMetricsOlderThan, trx)
+      await PowerMetric.purge(cliOptions.purgePowerMetricsOlderThan, trx)
+      await Position.purge(cliOptions.purgePositionsOlderThan, trx)
     })
   }
 }

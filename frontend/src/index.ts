@@ -10,15 +10,16 @@ import 'leaflet-polylineoffset'
 import 'leaflet.markercluster'
 
 // our stuff
-import { NodesEntity } from './database'
+import { DateTime } from 'luxon'
+// import { Node } from './database'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
+import { Node } from './nodes-entity'
 import { mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
-import { sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
-import { DateTime } from 'luxon'
+import { isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 import _ from 'lodash'
 
 interface UIConfig {
@@ -26,6 +27,7 @@ interface UIConfig {
   configNodesMaxAgeInSeconds: number
   configNodesOfflineAgeInSeconds: number
 }
+
 const uiConfig: UIConfig = {
   defaultZoomLevelForNode: 15,
   configNodesMaxAgeInSeconds: 24 * 3600, // 24 hours
@@ -33,9 +35,9 @@ const uiConfig: UIConfig = {
 }
 
 const allData: {
-  allNodes: NodesEntity[]
-  newerNodes: NodesEntity[]
-  newerNodesWithPosition: NodesEntity[]
+  allNodes: Node[]
+  newerNodes: Node[]
+  newerNodesWithPosition: Node[]
   hardwareModels: HardwareModel[]
 } = {
   allNodes: [],
@@ -43,6 +45,9 @@ const allData: {
   newerNodesWithPosition: [],
   hardwareModels: [],
 }
+
+// for debugging
+_.merge(window, {allData})
 
 const defaultTileLayer = 'Google Hybrid'
 const mapTiles = new MapTiles(defaultTileLayer)
@@ -68,7 +73,7 @@ async function loadAllData(map: Map) {
   const [nodesResponse, hardwareModelsResponse] = await Promise.all([fetch('/api/nodes'), fetch('/api/hardware-models')])
 
   if (nodesResponse.status == 200 || nodesResponse.status == 304) {
-    allData.allNodes = sanitizeNodesProperties(await nodesResponse.json()) as NodesEntity[]
+    allData.allNodes = sanitizeNodesProperties(await nodesResponse.json()) as Node[]
   }
 
   if (hardwareModelsResponse.status == 200 || hardwareModelsResponse.status == 304) {
@@ -82,7 +87,7 @@ async function loadAllData(map: Map) {
   })
 
   allData.newerNodesWithPosition = allData.newerNodes.filter((eachNode) => {
-    return eachNode.latitude && eachNode.longitude
+    return eachNode.latLng
   })
 
   console.info(`Total nodes - ${allData.allNodes.length}`)
@@ -92,7 +97,7 @@ async function loadAllData(map: Map) {
   redraw(map)
 }
 
-function getIconFor(node: NodesEntity) {
+function getIconFor(node: Node) {
   const commonClasses = `bg-white rounded-full border-4 border-none ring-offset-4 ring-4`
   if (node.mqttConnectionState === 'online') {
     return `ring-green-500 ${commonClasses}`
@@ -132,24 +137,50 @@ function getQueryLatLngZoom() {
   }
 }
 
+function closeAllPopups(map: Map) {
+  map.eachLayer(function (layer) {
+    if (layer.options.pane === 'popupPane') {
+      layer.removeFrom(map)
+    }
+  })
+}
+
+function closeAllTooltips(map: Map) {
+  map.eachLayer(function (layer) {
+    if (layer.options.pane === 'tooltipPane') {
+      layer.removeFrom(map)
+    }
+  })
+}
+
+function findNodeById(nodes: Node[], nodeId?: number | string | null) {
+  // find node by id
+  nodeId = sanitizeNumber(nodeId)
+  if (!nodeId) {
+    return
+  }
+  return nodes.find((node) => node.nodeId === nodeId)
+}
+
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
-    let longitude = eachNode.longitude!
-    // everything to the left of Australia appears on the right of the map
-    if (longitude <= 100) {
-      longitude += 360
-    }
+    // const latitude = eachNode.latitude!
 
-    const marker = L.marker([eachNode.latitude!, longitude], {
+    // let longitude = eachNode.longitude!
+    // // everything to the left of Australia appears on the right of the map
+    // if (longitude <= 100) {
+    //   longitude += 360
+    // }
+
+    const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
         className: getIconFor(eachNode),
         iconSize: getTextSize(eachNode),
         html: nodePositionView(eachNode),
       }),
+
       zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
     })
-
-    marker.bindTooltip(getTooltip(eachNode))
 
     marker.addTo(allNodesLayerGroup)
     allClusteredLayerGroup.addLayer(marker)
@@ -161,6 +192,22 @@ function redraw(map: Map) {
     ) {
       allRouterNodesLayerGroup.addLayer(marker)
     }
+
+    if (!isMobile()) {
+      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true })
+    }
+    marker.on('click', () => {
+      marker.closeTooltip()
+    })
+    marker.on('click', () => {
+      closeAllTooltips(map)
+      closeAllPopups(map)
+
+      map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
+        interactive: true, // allow clicking etc inside tooltip
+        permanent: true, // don't dismiss when clicking
+      })
+    })
   })
 
   if (!getQueryLatLngZoom()) {
@@ -171,6 +218,27 @@ function redraw(map: Map) {
       }
     })
   }
+
+  const queryParams = new URLSearchParams(window.location.search)
+  const nodeIdParam = queryParams.get('nodeId')
+
+  const node = findNodeById(allData.allNodes, nodeIdParam)
+
+  if (node) {
+    if (node.offsetLatLng) {
+      // const latlng = [node.latitude, node.longitude] as [number, number]
+
+      map.flyTo(node.offsetLatLng, uiConfig.defaultZoomLevelForNode, {
+        animate: true,
+        duration: 1,
+      })
+
+      map.openTooltip(nodeTooltip(node), node.offsetLatLng, {
+        interactive: true, // allow clicking etc inside tooltip
+        permanent: true, // don't dismiss when clicking
+      })
+    }
+  }
 }
 
 addEventListener('load', () => {
@@ -178,7 +246,6 @@ addEventListener('load', () => {
   const latLngZoom = getQueryLatLngZoom()
 
   if (latLngZoom) {
-    console.log(latLngZoom, `load`)
     map.setView([latLngZoom.lat, latLngZoom.lng], latLngZoom.zoom || 5)
   } else {
     map.setView([21, 79 + 360], 5)
@@ -193,6 +260,18 @@ addEventListener('load', () => {
     url.searchParams.set('lng', latLng.lng.toString())
     url.searchParams.set('zoom', zoom.toString())
     window.history.replaceState(null, '', url.toString())
+  })
+
+  map.on('click', function (event) {
+    const clickedElement = event.originalEvent.target as Element
+
+    if (clickedElement.closest('.leaflet-tooltip')) {
+      // we clicked on a tooltip. do nothing
+      return
+    }
+
+    closeAllTooltips(map)
+    closeAllPopups(map)
   })
 
   mapTiles.tileLayer().addTo(map)
@@ -229,14 +308,10 @@ addEventListener('load', () => {
   loadAllData(map)
 })
 
-function getTextSize(node: NodesEntity) {
+function getTextSize(node: Node) {
   const testNode = document.querySelector('#test-node-size')!
   testNode.innerHTML = nodePositionView(node)
   const span = testNode.querySelector('span')!
 
   return [span.offsetWidth + 10, span.offsetHeight - 4] as [number, number]
-}
-
-function getTooltip(eachNode: NodesEntity): L.Content | ((layer: L.Layer) => L.Content) | L.Tooltip {
-  return nodeTooltip(eachNode)
 }

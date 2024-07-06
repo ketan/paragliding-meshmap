@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import { NodesEntity } from './database'
+import { Node, PointTuple } from './nodes-entity'
 
-export function googleMapsLink(node: NodesEntity) {
-  return `https://maps.google.com/?q=${node.latitude},${node.longitude}`
+export function googleMapsLink(point: PointTuple) {
+  return `https://maps.google.com/?q=${point[0]},${point[1]}`
 }
 
 export function sanitizeNumber(n: number | string | undefined | null) {
@@ -12,6 +13,10 @@ export function sanitizeNumber(n: number | string | undefined | null) {
       if (!isNaN(n)) {
         return n
       }
+    }
+
+    if (typeof n === 'number') {
+      return n
     }
   }
 }
@@ -27,22 +32,27 @@ export function sanitizeLatLong(lat: number | string | undefined | null, lon: nu
   }
 }
 
-export function sanitizeNodesProperties(nodes: NodesEntity[]): NodesEntity[] {
-  nodes.forEach((eachNode) => sanitizeNodeProperties(eachNode))
-  return nodes
+export function sanitizeNodesProperties(nodes: NodesEntity[]): Node[] {
+  return nodes.map((eachNode) => sanitizeNodeProperties(eachNode)) as Node[]
 }
 
-export function sanitizeNodeProperties(eachNode: Partial<NodesEntity>) {
-  if (eachNode.latitude && eachNode.longitude && !isNaN(eachNode.latitude) && !isNaN(eachNode.longitude)) {
-    eachNode.latitude = eachNode.latitude / 10000000
-    eachNode.longitude = eachNode.longitude / 10000000
-  } else {
-    eachNode.latitude = undefined
-    eachNode.longitude = undefined
+export function sanitizeNodeProperties(node: NodesEntity): Node {
+  const returnValue = { ...node } as Node
+
+  if (node.latitude && node.longitude && !isNaN(node.latitude) && !isNaN(node.longitude)) {
+    returnValue.latLng = [node.latitude / 10000000, node.longitude / 10000000]
+    returnValue.offsetLatLng = sanitizeLatLong(node.latitude / 10000000, node.longitude / 10000000)
+    console.log(`lat, lng`, returnValue.latLng, `new`, returnValue.offsetLatLng)
   }
+
+  return returnValue
 }
 
 export function nodeName(node: Partial<Pick<NodesEntity, 'shortName' | 'longName' | 'nodeId'>>) {
   const hexNodeId = node.nodeId ? `0x${node.nodeId?.toString(16)}` : undefined
   return _.compact([node.shortName, node.longName, hexNodeId]).at(0) || '<NO NAME>'
+}
+
+export function isMobile() {
+  return /Android|webOS|phone|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }

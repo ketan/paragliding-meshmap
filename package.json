@@ -3,8 +3,8 @@
   "packageManager": "yarn@4.3.0",
   "type": "module",
   "scripts": {
-    "build": "rm -rf build frontend/dist && tsc && cd frontend && vite build --mode production",
-    "start": "nodemon --exec node --loader ts-node/esm src/index.ts",
+    "build": "rm -rf build frontend/dist && tsc && cd frontend && tsc -b && vite build --mode production",
+    "start": "concurrently \"nodemon --exec node --loader ts-node/esm src/index.ts\" \"cd frontend && vite dev\"",
     "mqtt": "nodemon --exec node --loader ts-node/esm src/mqtt.ts --",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -40,6 +40,7 @@
     "async-mqtt": "^2.6.3",
     "autoprefixer": "^10.4.19",
     "compression": "^1.7.4",
+    "concurrently": "^8.2.2",
     "eslint": "^9.5.0",
     "globals": "^15.6.0",
     "leaflet": "^1.9.4",
@@ -76,7 +77,7 @@
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
-    "typeorm": "0.3.20",
-    "vite-express": "^0.17.0"
+    "ts-parse-database-url": "^1.0.3",
+    "typeorm": "0.3.20"
   }
 }

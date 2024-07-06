@@ -7,13 +7,13 @@ import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
-import { Neighbors } from './neighbors.js'
+import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
 import { dateTimeType } from '../helpers/migration-helper.js'
 
 @Entity()
 export default class Node extends BaseType {
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', unique: true })
   nodeId: number
 
   @Column({ type: 'text', nullable: true })
@@ -57,6 +57,12 @@ export default class Node extends BaseType {
 
   @Column({ type: 'json', nullable: true })
   neighbours?: Neighbors[]
+
+  @Column({ type: 'json', nullable: true })
+  outbox?: MessageOut[]
+
+  @Column({ type: 'json', nullable: true })
+  inbox?: MessageIn[]
 
   @Column({ type: dateTimeType(), nullable: true })
   neighboursUpdatedAt?: Date

@@ -1,14 +1,8 @@
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import express, { Request, Response } from 'express'
-import { fileURLToPath } from 'url'
-import ViteExpress from 'vite-express'
 import { AppDataSource } from './data-source.js'
 import Node from './entity/node.js'
-import path from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 await AppDataSource.initialize()
 
@@ -37,21 +31,6 @@ app.get('/api/hardware-models', async function (_req: Request, res: Response) {
   res.json(models)
 })
 
-const server = app.listen(3333)
+app.listen(3333)
 
-if (isDevelopment) {
-  ViteExpress.config({
-    viteConfigFile: `${__dirname}/../frontend/vite.config.ts`,
-    verbosity: ViteExpress.Verbosity.Normal,
-  })
-} else {
-  ViteExpress.config({
-    inlineViteConfig: {
-      base: '/',
-      build: { outDir: 'frontend/dist' },
-    },
-  })
-}
-
-ViteExpress.bind(app, server)
 console.log('Express server has started on port 3333. Open http://localhost:3333/ to see results')

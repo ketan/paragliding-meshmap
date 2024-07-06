@@ -13,15 +13,14 @@ enum GoogleMapLayers {
   roadsOnly = 'h',
 }
 
-const mapProviders: Record<MapTypes, { tileProvider: TileLayer; mapLink: (lat: number, lon: number) => string }> = {
+const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
   'Open Street Map': {
     tileProvider: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 22, // increase from 18 to 22
       minZoom: 2,
       attribution:
         'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    }),
-    mapLink: (lat: number, lon: number) => `https://openstreetmap.org?mlat=${lat}&mlon=${lon}`,
+    })
   },
 
   'Google Satellite': {
@@ -31,8 +30,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer; mapLink: (lat: n
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       attribution:
         'Tiles &copy; Google | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    }),
-    mapLink: (lat: number, lon: number) => `https://maps.google.com/?q=${lat},${lon}`,
+    })
   },
 
   'Google Hybrid': {
@@ -42,8 +40,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer; mapLink: (lat: n
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       attribution:
         'Tiles &copy; Google | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    }),
-    mapLink: (lat: number, lon: number) => `https://maps.google.com/?q=${lat},${lon}`,
+    })
   },
 }
 

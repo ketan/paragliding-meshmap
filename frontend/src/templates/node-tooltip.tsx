@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import renderToString from 'preact-render-to-string'
 import { JSX } from 'preact/jsx-runtime'
-import { NodesEntity } from '../database'
 import { HardwareModelIDToName, NodeRoleNameToID } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { googleMapsLink } from '../ui-util'
 import { DateTime } from 'luxon'
+import { Node } from '../nodes-entity'
 
 const timeAgo = (timestamp?: string | null, addParens: boolean = false) => {
   if (timestamp) {
@@ -18,7 +18,7 @@ const timeAgo = (timestamp?: string | null, addParens: boolean = false) => {
   return <></>
 }
 
-function mqttStatus(node: NodesEntity) {
+function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {
     return [<span class="text-green-700">Online</span>, timeAgo(node.mqttConnectionStateUpdatedAt, true)]
   } else if (node.mqttConnectionState === 'offline') {
@@ -28,12 +28,16 @@ function mqttStatus(node: NodesEntity) {
   }
 }
 
-const location = (node: NodesEntity) => {
+const location = (node: Node) => {
+  if (!node.latLng) {
+    return
+  }
+
   return (
     <>
-      Location:{' '}
-      <a target="_blank" class="external" href={googleMapsLink(node)}>
-        {node.latitude}, {node.longitude}
+      <strong>Location</strong>{' '}
+      <a target="_blank" class="external" href={googleMapsLink(node.latLng)}>
+        {node.latLng.join(', ')}
       </a>{' '}
       {timeAgo(node.positionUpdatedAt, true)}
     </>
@@ -86,7 +90,7 @@ const keyValue = function <T>(args: { key: string; value?: T; precision?: 2; uni
   }
 }
 
-export function nodeTooltip(node: NodesEntity) {
+export function nodeTooltip(node: Node) {
   const image = imageForModel(node.hardwareModel) ? <img class="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
 
   const nodeRole = node.role === undefined || node.role === null ? 'UNKNOWN' : NodeRoleNameToID[node.role] || 'UNKNOWN'
@@ -111,38 +115,10 @@ export function nodeTooltip(node: NodesEntity) {
     ' ',
     keyValue({ key: 'ID', value: `${node.nodeId} (0x${node.nodeId.toString(15)})` }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
-    keyValue({ key: 'Neighbours Updated', value: node.neighboursUpdatedAt, renderer: timeAgo }),
   ])
     .compact()
     .flatMap((eachItem) => [eachItem, <br />])
     .value()
 
   return renderToString(<>{elements}</>)
-
-  //   return  <div class="w-screen max-w-md overflow-hidden">
-  //   {...elements}
-
-  //   ID: { node.nodeId }
-  //   <br />
-  //   Hex ID: !{ node.nodeId.toString(16) }
-  //   <br />
-  //   Updated: { luxon.DateTime.fromISO(node.updatedAt).toRelative() }
-  //   <br />
-  //   <% if(node.neighboursUpdatedAt) { -%> Neighbours Updated: { luxon.DateTime.fromISO(node.neighboursUpdatedAt).toRelative() } <% } -%>
-  //   <br />
-  //   <% if(node.positionUpdatedAt) { -%> Position Updated: { luxon.DateTime.fromISO(node.positionUpdatedAt).toRelative() } <% } -%>
-  //   <br />
-  //   Latest message: Test<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 hours ago from K10P <br /><br />
-  //   <button onclick="showNodeDetails(3663164324);" class="border border-gray-300 bg-gray-100 p-1 w-full rounded hover:bg-gray-200 mb-1">
-  //     Show Full Details
-  //   </button>
-  //   <br />
-  //   <button onclick="showNodeNeighboursThatHeardUs(3663164324);" class="border border-gray-300 bg-gray-100 p-1 w-full rounded hover:bg-gray-200 mb-1">
-  //     Show Neighbours (Heard Us)
-  //   </button>
-  //   <br />
-  //   <button onclick="showNodeNeighboursThatWeHeard(3663164324);" class="border border-gray-300 bg-gray-100 p-1 w-full rounded hover:bg-gray-200">
-  //     Show Neighbours (We Heard)
-  //   </button>
-  // </div>
 }

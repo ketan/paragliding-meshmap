@@ -18,6 +18,8 @@ import { EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
 import { parseProtobuf } from '../helpers/utils.js'
 import { CLIOptions } from './mqtt-cli.js'
+import _ from 'lodash'
+import { secondsAgo } from './utils.js'
 
 const logger = debug('meshmap:handler')
 
@@ -65,9 +67,18 @@ export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collect
     return
   }
   const tm = TextMessage.fromPacket(envelope)
+  if (!tm) {
+    return
+  }
   await AppDataSource.transaction(async (trx) => {
     try {
-      return await trx.save(tm)
+      const senderNode = await findOrCreateNode(trx, tm.from)
+      const receiverNode = await findOrCreateNode(trx, tm.to)
+
+      senderNode.outboundMessage(tm)
+      receiverNode.inboundMessage(tm)
+
+      return await trx.save([tm, senderNode, receiverNode])
     } catch (e) {
       logger(`Unable to create text message`, { err: e, tm, envelope })
       throw e
@@ -153,11 +164,7 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
     try {
       node = await findOrCreateNode(trx, nodeId)
       node.updateNeighbors(neighborInfo.neighbours)
-      await trx.save(node)
-
-      if (saveNeighborInfo) {
-        await trx.save(neighborInfo)
-      }
+      await trx.save(_.compact([node, saveNeighborInfo ? neighborInfo : null]))
     } catch (e) {
       logger(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
@@ -178,28 +185,41 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
 
   let node: Node | null
   let metric: DeviceMetric | EnvironmentMetric | PowerMetric | undefined
+  let recentSimilarMetric: DeviceMetric | EnvironmentMetric | PowerMetric | null
   await AppDataSource.transaction(async (trx) => {
     try {
       node = await findOrCreateNode(trx, nodeId)
-
       if (telemetry.variant.case == 'deviceMetrics') {
         metric = DeviceMetric.fromPacket(envelope)
         if (metric) {
-          await metric.saveIfNoSimilarRecentMetric(trx)
+          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          if (recentSimilarMetric) {
+            return
+          }
+
           node.updateDeviceMetrics(metric)
+          await trx.save(_.compact([node, recentSimilarMetric ? null : metric]))
         }
-        await trx.save(node)
       } else if (telemetry.variant.case == 'environmentMetrics') {
         metric = EnvironmentMetric.fromPacket(envelope)
         if (metric) {
-          await metric.saveIfNoSimilarRecentMetric(trx)
+          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          if (recentSimilarMetric) {
+            return
+          }
+
           node.updateEnvironmentMetrics(metric)
+          await trx.save(_.compact([node, recentSimilarMetric ? null : metric]))
         }
-        await trx.save(node)
       } else if (telemetry.variant.case == 'powerMetrics') {
         metric = PowerMetric.fromPacket(envelope)
         if (metric) {
-          await metric.saveIfNoSimilarRecentMetric(trx)
+          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          if (recentSimilarMetric) {
+            return
+          }
+
+          await trx.save(_.compact([recentSimilarMetric ? null : metric]))
         }
       }
     } catch (e) {
@@ -242,8 +262,7 @@ export async function createMapReports(envelope: ServiceEnvelopeProtobuf, collec
       node = await findOrCreateNode(trx, nodeId)
       node.updateMapReports(mr)
 
-      await trx.save(node)
-      await trx.save(mr)
+      await trx.save([node, mr])
     } catch (e) {
       logger(`Unable to save map report`, { err: e, mr, node, envelope })
       throw e

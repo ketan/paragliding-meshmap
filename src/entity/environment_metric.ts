@@ -55,7 +55,7 @@ export default class EnvironmentMetric extends BaseType {
     }
   }
 
-  async hasRecentSimilarMetric(since: Date, trx: EntityManager) {
+  async findRecentSimilarMetric(since: Date, trx: EntityManager) {
     return await trx.findOne(EnvironmentMetric, {
       where: {
         nodeId: this.nodeId,
@@ -71,9 +71,9 @@ export default class EnvironmentMetric extends BaseType {
     })
   }
 
-  async saveIfNoSimilarRecentMetric(trx: EntityManager) {
-    if (!(await this.hasRecentSimilarMetric(secondsAgo(15), trx))) {
-      await trx.save(this)
-    }
-  }
+  // async saveIfNoSimilarRecentMetric(trx: EntityManager) {
+  //   if (!(await this.hasRecentSimilarMetric(secondsAgo(15), trx))) {
+  //     await trx.save(this)
+  //   }
+  // }
 }

@@ -47,8 +47,8 @@ export default class DeviceMetric extends BaseType {
     }
   }
 
-  async hasRecentSimilarMetric(since: Date, trx: EntityManager) {
-    return await trx.find(DeviceMetric, {
+  async findRecentSimilarMetric(since: Date, trx: EntityManager) {
+    return await trx.findOne(DeviceMetric, {
       where: {
         nodeId: this.nodeId,
         voltage: this.voltage,
@@ -58,11 +58,5 @@ export default class DeviceMetric extends BaseType {
         createdAt: MoreThanOrEqual(since),
       },
     })
-  }
-
-  async saveIfNoSimilarRecentMetric(trx: EntityManager) {
-    if (!(await this.hasRecentSimilarMetric(secondsAgo(15), trx))) {
-      await trx.save(this)
-    }
   }
 }

@@ -3,7 +3,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { DeviceMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
+import { parseProtobuf } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 
 @Entity()

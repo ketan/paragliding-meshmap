@@ -2,6 +2,7 @@ import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mes
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity, EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
+import { dateTimeType } from '../helpers/migration-helper.js'
 import { parseProtobuf } from '../helpers/utils.js'
 import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
@@ -9,9 +10,7 @@ import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
-import { dateTimeType } from '../helpers/migration-helper.js'
 import TextMessage from './text_message.js'
-import { DateTime } from 'luxon'
 
 @Entity()
 export default class Node extends BaseType {
@@ -196,7 +195,7 @@ export default class Node extends BaseType {
 
   outboundMessage(tm: TextMessage) {
     this.outbox ||= []
-    this.outbox.unshift({ to: tm.from, text: tm.text, time: new Date() })
+    this.outbox.unshift({ to: tm.to, text: tm.text, time: new Date() })
   }
 
   static async hardwareModels(mgr: EntityManager) {

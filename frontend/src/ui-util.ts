@@ -42,7 +42,6 @@ export function sanitizeNodeProperties(node: NodesEntity): Node {
   if (node.latitude && node.longitude && !isNaN(node.latitude) && !isNaN(node.longitude)) {
     returnValue.latLng = [node.latitude / 10000000, node.longitude / 10000000]
     returnValue.offsetLatLng = sanitizeLatLong(node.latitude / 10000000, node.longitude / 10000000)
-    console.log(`lat, lng`, returnValue.latLng, `new`, returnValue.offsetLatLng)
   }
 
   return returnValue

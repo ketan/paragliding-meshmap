@@ -1,9 +1,4 @@
-/*! tailwind base */
-@tailwind base;
-/*! tailwind components */
-@tailwind components;
-/*! tailwind utilities */
-@tailwind utilities;
+@import './tailwind.scss';
 
 /*! leaflet css */
 @import 'leaflet/dist/leaflet.css';
@@ -23,4 +18,12 @@ body {
 #map {
   width: 100%;
   height: 100%;
+}
+
+.tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-50;
 }

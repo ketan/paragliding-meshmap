@@ -18,7 +18,18 @@ const typescriptCode = await definition
   })
   .mapColumns((column, table, schema) => {
     column.propertyName = _.camelCase(column.propertyName)
-    if (column.nullable) {
+    if (column.type === 'bigint' || column.type.toLowerCase().startsWith('int')) {
+      column.propertyType = 'number'
+    }
+    if (
+      column.propertyType.toLowerCase() === 'date' ||
+      column.propertyType.toLowerCase() === 'datetime' ||
+      column.propertyType.toLowerCase().startsWith('timestamp')
+    ) {
+      column.propertyType = 'string'
+    }
+
+    if (column.nullable || column.isPrimaryKey) {
       column.optional = true
       column.nullable = false
     }
@@ -27,10 +38,14 @@ const typescriptCode = await definition
       table.nullable = false
       column.optional = false
     }
-    console.warn(column)
-
     if (column.propertyName === 'neighbours') {
       column.propertyType = 'Neighbour[]'
+    }
+    if (column.propertyName === 'inbox') {
+      column.propertyType = 'MessageIn[]'
+    }
+    if (column.propertyName === 'outbox') {
+      column.propertyType = 'MessageOut[]'
     }
     if (column.propertyName === 'protobuf' || column.propertyName === 'route') {
       column.propertyType = 'any'
@@ -40,5 +55,5 @@ const typescriptCode = await definition
   })
   .toTypescript()
 
-console.log(`import { Neighbour } from './interfaces.js'`)
+console.log(`import { MessageIn, MessageOut, Neighbour } from './interfaces.js'`)
 console.log(typescriptCode)

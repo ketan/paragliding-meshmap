@@ -3,6 +3,7 @@ import compression from 'compression'
 import express, { Request, Response } from 'express'
 import { AppDataSource } from './data-source.js'
 import Node from './entity/node.js'
+import Position from '#entity/position'
 
 await AppDataSource.initialize()
 
@@ -20,9 +21,22 @@ if (!isDevelopment) {
   app.use(express.static('dist'))
 }
 
-app.get('/api/nodes', async function (_req: Request, res: Response) {
+app.get('/api/nodes', async (_req: Request, res: Response) => {
   res.setHeader('cache-control', 'max-age=60')
   res.json(await AppDataSource.manager.find(Node))
+})
+
+app.get('/api/positions/:nodeId', async (req, res) => {
+  res.setHeader('cache-control', 'max-age=60')
+  const nodeId = req.params.nodeId
+  const positions = await Position.positionsForNode(nodeId)
+  if (positions) {
+    res.json(positions)
+  } else {
+    res.status(404).json({
+      message: `Node with ID ${nodeId} not found!`,
+    })
+  }
 })
 
 app.get('/api/hardware-models', async function (_req: Request, res: Response) {

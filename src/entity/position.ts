@@ -79,4 +79,22 @@ export default class Position extends BaseType {
       await trx.save(this)
     }
   }
+
+  static async positionsForNode(nodeId: string | number) {
+    const sanitizedNodeId = Number(nodeId)
+
+    if (sanitizedNodeId === null || sanitizedNodeId === undefined || isNaN(sanitizedNodeId)) {
+      return null
+    }
+
+    return await AppDataSource.manager.find(Position, {
+      select: ['createdAt', 'latitude', 'longitude', 'altitude'],
+      where: {
+        nodeId: sanitizedNodeId,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    })
+  }
 }

@@ -3,9 +3,13 @@ export interface Neighbors {
   snr: number
 }
 
-export interface MessageIn {
-  from: bigint
+interface Message {
+  text: string
+  time: Date
 }
-export interface MessageOut {
-  to: bigint
+export interface MessageIn extends Message {
+  from: number
+}
+export interface MessageOut extends Message {
+  to: number
 }

@@ -10,6 +10,8 @@ import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
 import { dateTimeType } from '../helpers/migration-helper.js'
+import TextMessage from './text_message.js'
+import { DateTime } from 'luxon'
 
 @Entity()
 export default class Node extends BaseType {
@@ -185,6 +187,16 @@ export default class Node extends BaseType {
       neighboursUpdatedAt: new Date(),
       neighbours: neighbours,
     })
+  }
+
+  inboundMessage(tm: TextMessage) {
+    this.inbox ||= []
+    this.inbox.unshift({ from: tm.from, text: tm.text, time: new Date() })
+  }
+
+  outboundMessage(tm: TextMessage) {
+    this.outbox ||= []
+    this.outbox.unshift({ to: tm.from, text: tm.text, time: new Date() })
   }
 
   static async hardwareModels(mgr: EntityManager) {

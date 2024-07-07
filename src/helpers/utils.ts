@@ -1,6 +1,6 @@
 import { AbortError } from 'p-retry'
 
-export function toBigInt(str: bigint | number | string | undefined | null): number | undefined {
+export function toBigInt(str: number | string | undefined | null): number | undefined {
   if (typeof str === 'number') {
     return str
   }
@@ -9,7 +9,7 @@ export function toBigInt(str: bigint | number | string | undefined | null): numb
     return
   }
 
-  const hexVal = (str as string).replace('!', '').replaceAll('\0', '')
+  const hexVal = str.replace('!', '').replaceAll('\0', '')
   let returnValue
   if (hexVal.startsWith('0x')) {
     returnValue = Number(hexVal)

@@ -134,7 +134,7 @@ export function nodeTooltip(node: Node) {
 
   const elements = _([
     <li>
-      <span class="font-extrabold me-2">{node.longName}</span>
+      <span class="font-extrabold me-2">{node.longName}</span> ({nodeRole})
     </li>,
     keyValue({ key: 'Short Name', value: node.shortName }),
     keyValue({ key: 'MQTT Status', value: mqttStatus(node) }),
@@ -144,7 +144,6 @@ export function nodeTooltip(node: Node) {
     <li class="mt-3"></li>,
     lastMessages(node),
     <li class="mt-3"></li>,
-    keyValue({ key: 'Role', value: nodeRole }),
     keyValue({ key: 'Hardware', value: hardwareModel }),
     keyValue({ key: 'Firmware', value: node.firmwareVersion }),
     keyValue({ key: 'Voltage', value: node.voltage, precision: 2, unit: 'V' }),
@@ -156,7 +155,7 @@ export function nodeTooltip(node: Node) {
     keyValue({ key: 'ID', value: `${node.nodeId} (0x${node.nodeId.toString(15)})` }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     <p class="text-center mt-3">
-      <button class="w-full px-4 py-2 font-semibold border border-gray-700 shadow rounded bg-gray-200">Show details</button>
+      <button class="w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">Show details</button>
     </p>,
   ])
     .compact()

@@ -20,7 +20,6 @@ import { AppDataSource } from '../data-source.js'
 import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
 import { CLIOptions } from './mqtt-cli.js'
 
-
 const logger = debug('meshmap:handler')
 
 export async function purgeData(cliOptions: CLIOptions) {

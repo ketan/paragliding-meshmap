@@ -1,4 +1,4 @@
-import preact from '@preact/preset-vite'
+import react from '@vitejs/plugin-react'
 import path, { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defineConfig } from 'vite'
@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename)
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [preact(), Inspect()],
+  plugins: [react(), Inspect()],
 
   root: __dirname,
   build: {
@@ -32,7 +32,7 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': 'http://localhost:3333/'
-    }
-  }
+      '/api': 'http://localhost:3333/',
+    },
+  },
 })

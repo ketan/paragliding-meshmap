@@ -39,6 +39,8 @@ export function sanitizeNodesProperties(nodes: NodesEntity[]): Node[] {
 export function sanitizeNodeProperties(node: NodesEntity): Node {
   const returnValue = { ...node } as Node
 
+  returnValue.nodeIdHex = `!${node.nodeId?.toString(16)}`
+
   if (node.latitude && node.longitude && !isNaN(node.latitude) && !isNaN(node.longitude)) {
     returnValue.latLng = [node.latitude / 10000000, node.longitude / 10000000]
     returnValue.offsetLatLng = sanitizeLatLong(node.latitude / 10000000, node.longitude / 10000000)
@@ -47,9 +49,8 @@ export function sanitizeNodeProperties(node: NodesEntity): Node {
   return returnValue
 }
 
-export function nodeName(node: Partial<Pick<NodesEntity, 'shortName' | 'longName' | 'nodeId'>>) {
-  const hexNodeId = node.nodeId ? `0x${node.nodeId?.toString(16)}` : undefined
-  return _.compact([node.shortName, node.longName, hexNodeId]).at(0) || '<NO NAME>'
+export function nodeName(node: Partial<Pick<Node, 'shortName' | 'longName' | 'nodeIdHex'>>) {
+  return _.compact([node.shortName, node.longName, node.nodeIdHex]).at(0) || '<NO NAME>'
 }
 
 export function isMobile() {

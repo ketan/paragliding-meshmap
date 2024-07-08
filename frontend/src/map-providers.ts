@@ -20,7 +20,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       minZoom: 2,
       attribution:
         'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    })
+    }),
   },
 
   'Google Satellite': {
@@ -30,7 +30,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       attribution:
         'Tiles &copy; Google | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    })
+    }),
   },
 
   'Google Hybrid': {
@@ -40,7 +40,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       attribution:
         'Tiles &copy; Google | Data from <a target="_blank" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a>',
-    })
+    }),
   },
 }
 

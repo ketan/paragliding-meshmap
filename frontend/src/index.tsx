@@ -12,6 +12,9 @@ import 'leaflet.markercluster'
 // our stuff
 import { DateTime } from 'luxon'
 // import { Node } from './database'
+import _ from 'lodash'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
@@ -20,7 +23,7 @@ import { mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
 import { isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
-import _ from 'lodash'
+import { AllData, SearchBarApp } from './searchbarapp'
 
 interface UIConfig {
   defaultZoomLevelForNode: number
@@ -34,12 +37,7 @@ const uiConfig: UIConfig = {
   configNodesOfflineAgeInSeconds: 3600, // 1 hour
 }
 
-const allData: {
-  allNodes: Node[]
-  newerNodes: Node[]
-  newerNodesWithPosition: Node[]
-  hardwareModels: HardwareModel[]
-} = {
+const allData: AllData = {
   allNodes: [],
   newerNodes: [],
   newerNodesWithPosition: [],
@@ -47,7 +45,7 @@ const allData: {
 }
 
 // for debugging
-_.merge(window, {allData})
+_.merge(window, { allData })
 
 const defaultTileLayer = 'Google Hybrid'
 const mapTiles = new MapTiles(defaultTileLayer)
@@ -95,6 +93,17 @@ async function loadAllData(map: Map) {
   console.info(`Newer nodes with position - ${allData.newerNodesWithPosition.length}`)
 
   redraw(map)
+
+  ReactDOM.createRoot(document.getElementById('search-bar-app')!).render(
+    <React.StrictMode>
+      <SearchBarApp
+        {...allData}
+        selectCallback={(selectedNode) => {
+          flyToNode(map, selectedNode.nodeId)
+        }}
+      />
+    </React.StrictMode>
+  )
 }
 
 function getIconFor(node: Node) {
@@ -162,6 +171,27 @@ function findNodeById(nodes: Node[], nodeId?: number | string | null) {
   return nodes.find((node) => node.nodeId === nodeId)
 }
 
+function flyToNode(map: L.Map, nodeId?: string | number | null) {
+  const node = findNodeById(allData.allNodes, nodeId)
+  if (!node) {
+    return
+  }
+
+  if (node.offsetLatLng) {
+    // const latlng = [node.latitude, node.longitude] as [number, number]
+
+    map.flyTo(node.offsetLatLng, uiConfig.defaultZoomLevelForNode, {
+      animate: true,
+      duration: 1,
+    })
+
+    map.openTooltip(nodeTooltip(node), node.offsetLatLng, {
+      interactive: true, // allow clicking etc inside tooltip
+      permanent: true, // don't dismiss when clicking
+    })
+  }
+}
+
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
     // const latitude = eachNode.latitude!
@@ -222,26 +252,16 @@ function redraw(map: Map) {
   const queryParams = new URLSearchParams(window.location.search)
   const nodeIdParam = queryParams.get('nodeId')
 
-  const node = findNodeById(allData.allNodes, nodeIdParam)
+  flyToNode(map, nodeIdParam)
 
-  if (node) {
-    if (node.offsetLatLng) {
-      // const latlng = [node.latitude, node.longitude] as [number, number]
+  // const node = findNodeById(allData.allNodes, nodeIdParam)
 
-      map.flyTo(node.offsetLatLng, uiConfig.defaultZoomLevelForNode, {
-        animate: true,
-        duration: 1,
-      })
+  // if (node) {
 
-      map.openTooltip(nodeTooltip(node), node.offsetLatLng, {
-        interactive: true, // allow clicking etc inside tooltip
-        permanent: true, // don't dismiss when clicking
-      })
-    }
-  }
+  // }
 }
 
-addEventListener('load', () => {
+addEventListener('DOMContentLoaded', () => {
   const map = L.map('map')
   const latLngZoom = getQueryLatLngZoom()
 

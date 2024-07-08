@@ -1,4 +1,4 @@
-import renderToString from 'preact-render-to-string'
+import { renderToString } from 'react-dom/server'
 
 export const mapLegendTemplate = renderToString(
   <div className="p-4">

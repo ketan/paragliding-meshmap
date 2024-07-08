@@ -1,6 +1,6 @@
+import { renderToString } from 'react-dom/server'
 import { NodesEntity } from '../database'
 import { nodeName } from '../ui-util'
-import { renderToString } from 'preact-render-to-string'
 
 export function nodePositionView(node: NodesEntity) {
   const view = (

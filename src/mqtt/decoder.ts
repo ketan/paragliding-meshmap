@@ -42,7 +42,7 @@ export async function processMessage(cliOptions: CLIOptions, topic: string, payl
     await createServiceEnvelope(topic, payload, envelope)
   }
 
-  if (envelope.packet.payloadVariant.case == 'decoded')
+  if (envelope.packet.payloadVariant.case == 'decoded') {
     switch (envelope.packet.payloadVariant.value.portnum) {
       case PortNum.TEXT_MESSAGE_APP:
         return await saveTextMessage(envelope, cliOptions.collectTextMessages)
@@ -61,6 +61,7 @@ export async function processMessage(cliOptions: CLIOptions, topic: string, payl
       case PortNum.MAP_REPORT_APP:
         return await createMapReports(envelope, cliOptions.collectMapReports)
     }
+  }
 }
 
 export async function handleNodeStatusMessage(topic: string, payload: Buffer) {

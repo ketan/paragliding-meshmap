@@ -48,6 +48,7 @@ const connString = <DataSourceOptions>{
   migrations: [`${__dirname}/migration/*.ts`, `${__dirname}/migration/*.js`],
   migrationsTransactionMode: 'each',
   subscribers: [],
+  parseInt8: true, // https://github.com/typeorm/typeorm/issues/8583
 }
 
 export const AppDataSource = new DataSource(connString)

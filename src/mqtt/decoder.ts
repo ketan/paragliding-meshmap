@@ -1,5 +1,6 @@
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
+import { parseProtobuf, toBigInt } from '../helpers/utils.js'
 import { decrypt } from './decryption.js'
 import { CLIOptions } from './mqtt-cli.js'
 import {
@@ -14,8 +15,6 @@ import {
   updateMQTTStatus,
   updateNodeWithPosition,
 } from './mqtt-orm.js'
-import { toBigInt } from './utils.js'
-import { parseProtobuf } from '../helpers/utils.js'
 
 export async function processMessage(cliOptions: CLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {

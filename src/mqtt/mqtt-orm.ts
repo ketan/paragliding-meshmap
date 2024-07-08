@@ -13,13 +13,13 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import debug from 'debug'
+import _ from 'lodash'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
-import { parseProtobuf } from '../helpers/utils.js'
+import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
 import { CLIOptions } from './mqtt-cli.js'
-import _ from 'lodash'
-import { secondsAgo } from './utils.js'
+
 
 const logger = debug('meshmap:handler')
 

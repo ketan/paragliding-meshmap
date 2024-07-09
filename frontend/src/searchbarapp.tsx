@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { PureComponent } from 'react'
 import { HardwareModel } from './interfaces'
 import { Node } from './nodes-entity'
@@ -20,11 +21,12 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
     filteredNodes: [],
   }
 
-  selectNode(node: Node) {
+  private selectNode(node: Node) {
+    this.setState({ searchText: '' })
     this.props.selectCallback(node)
   }
 
-  applyFilter(e: React.FormEvent<HTMLInputElement>) {
+  private applyFilter(e: React.FormEvent<HTMLInputElement>) {
     this.setState(
       {
         searchText: e.currentTarget.value,
@@ -32,8 +34,7 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
       () => this.filterList()
     )
   }
-
-  filterList(): void {
+  private filterList(): void {
     const searchText = this.state.searchText.toLowerCase()
     const filteredNodes = this.props.newerNodesWithPosition.filter((node) => {
       return (
@@ -47,9 +48,32 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
     this.setState({ filteredNodes })
   }
 
-  render() {
+  private showSearchResults() {
+    if (_.isEmpty(this.state.searchText)) {
+      return
+    }
     const { filteredNodes } = this.state
+    return (
+      <div className="absolute z-[1001] bg-white w-full border border-gray-200 rounded-lg shadow-md mt-1 overflow-y-scroll max-h-80 divide-y divide-gray-200">
+        {filteredNodes.map((eachNode) => {
+          return (
+            <div key={eachNode.nodeId} className="p-2 hover:bg-gray-100 cursor-pointer" onClick={() => this.selectNode(eachNode)}>
+              <div className="text-gray-950">{eachNode.longName || '-'}</div>
+              <div className="flex space-x-1 text-sm text-gray-800">
+                <div>Short Name: {eachNode.shortName || '-'}</div>
+                <div className="text-gray-200">/</div>
+                <div>Hex ID: {eachNode.nodeIdHex}</div>
+                <div className="text-gray-200">/</div>
+                <div>Node ID: {eachNode.nodeId}</div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
 
+  render() {
     return (
       <>
         <input
@@ -58,28 +82,7 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
           onInput={this.applyFilter.bind(this)}
           placeholder={`Search ${this.props.newerNodesWithPosition.length} nodes...`}
         />
-        <div className="absolute z-[1001] bg-white w-full border border-gray-200 rounded-lg shadow-md mt-1 overflow-y-scroll max-h-80 divide-y divide-gray-200">
-          {filteredNodes.map((eachNode) => {
-            return (
-              <div
-                key={eachNode.nodeId}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  this.selectNode(eachNode)
-                }}
-              >
-                <div className="text-gray-950">{eachNode.longName || '-'}</div>
-                <div className="flex space-x-1 text-sm text-gray-800">
-                  <div>Short Name: {eachNode.shortName || '-'}</div>
-                  <div className="text-gray-200">/</div>
-                  <div>Hex ID: {eachNode.nodeIdHex}</div>
-                  <div className="text-gray-200">/</div>
-                  <div>Node ID: {eachNode.nodeId}</div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        {this.showSearchResults()}
       </>
     )
   }

@@ -1,8 +1,8 @@
 import { Data, Position as PositionProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { parseProtobuf, secondsAgo, toBigInt } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
+import { parseProtobuf, secondsAgo, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 
 @Entity()

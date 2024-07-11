@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
   tableName = 'traceroutes'

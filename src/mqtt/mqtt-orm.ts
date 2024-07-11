@@ -16,8 +16,8 @@ import debug from 'debug'
 import _ from 'lodash'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
+import { parseProtobuf, secondsAgo } from '#helpers/utils'
 import { CLIOptions } from './mqtt-cli.js'
 
 const logger = debug('meshmap:handler')

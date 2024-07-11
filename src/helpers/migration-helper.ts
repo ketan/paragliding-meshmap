@@ -1,5 +1,5 @@
 import { QueryRunner, TableIndex } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
+import { AppDataSource } from '#config/data-source'
 
 export function primaryKeyType(queryRunner: QueryRunner) {
   if (queryRunner.connection.options.type.includes('sqlite')) {

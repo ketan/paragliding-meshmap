@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '../helpers/migration-helper.js'
+import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '#helpers/migration-helper'
 
 export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInterface {
   tableName = 'environment_metrics'

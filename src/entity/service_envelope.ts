@@ -1,9 +1,9 @@
 import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { toBigInt } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
+import { toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
-import { blobType } from '../helpers/migration-helper.js'
+import { blobType } from '#helpers/migration-helper'
 
 @Entity()
 export default class ServiceEnvelope extends BaseType {

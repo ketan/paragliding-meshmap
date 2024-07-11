@@ -2,9 +2,9 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { EnvironmentMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { parseProtobuf } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
 import { BaseType } from './base_type.js'
+import { parseProtobuf } from '#helpers/utils'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {

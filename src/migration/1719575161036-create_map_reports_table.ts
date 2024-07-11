@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '../helpers/migration-helper.js'
+import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '#helpers/migration-helper'
 
 export class CreateMapReportsTable1719575161036 implements MigrationInterface {
   tableName = 'map_reports'

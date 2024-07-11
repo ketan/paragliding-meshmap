@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateTextMessagesTable1719576103688 implements MigrationInterface {
   tableName = 'text_messages'

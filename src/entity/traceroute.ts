@@ -1,8 +1,8 @@
 import { Data, RouteDiscovery } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { parseProtobuf, toBigInt } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
+import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 
 @Entity()

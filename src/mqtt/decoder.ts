@@ -16,7 +16,8 @@ import {
   updateNodeWithPosition,
 } from './mqtt-orm.js'
 
-export async function processMessage(cliOptions: CLIOptions, topic: string, payload: Buffer) {
+export async function processMessage(cliOptions: CLIOptions
+  , topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
     await handleNodeStatusMessage(topic, payload)
     return

@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 export class CreatePositionsTable1719575830499 implements MigrationInterface {
   tableName = 'positions'
   indices = ['node_id', 'created_at', 'updated_at']

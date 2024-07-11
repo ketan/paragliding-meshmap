@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '../helpers/migration-helper.js'
+import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '#helpers/migration-helper'
 
 export class CreateDeviceMetricsTable1719570433709 implements MigrationInterface {
   tableName = 'device_metrics'

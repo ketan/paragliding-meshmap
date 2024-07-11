@@ -1,1 +1,6 @@
-.gitignore
+node_modules/
+tmp/
+.pnp.*
+.yarn*
+.npm*
+.env

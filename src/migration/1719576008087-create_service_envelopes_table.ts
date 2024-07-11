@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { blobType, createIndices, dateTimeType, dropIndices, primaryKeyType } from '../helpers/migration-helper.js'
+import { blobType, createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateServiceEnvelopesTable1719576008087 implements MigrationInterface {
   tableName = 'service_envelopes'

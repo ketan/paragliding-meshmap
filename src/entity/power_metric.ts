@@ -2,8 +2,8 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { PowerMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
-import { AppDataSource } from '../data-source.js'
-import { parseProtobuf, secondsAgo } from '../helpers/utils.js'
+import { AppDataSource } from '#config/data-source'
+import { parseProtobuf, secondsAgo } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 
 @Entity()

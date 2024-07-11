@@ -1,13 +1,10 @@
-FROM node:22-bookworm
+FROM node:22-alpine
 
-
-
-RUN corepack enable
 COPY . /app
 WORKDIR /app
-RUN yarn install
+RUN ls -alh && du -sh .
+RUN npm install --include prod && npm cache clean --force
 
-SHELL ["/bin/bash"]
-EXPOSE 3333
-
-CMD ["/bin/bash", "-c", "yarn run mqtt"]
+WORKDIR /app
+ENV DEBUG_COLORS=true
+CMD ["npm", "run", "prod"]

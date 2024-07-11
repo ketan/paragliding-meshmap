@@ -1,9 +1,11 @@
+import Node from '#entity/node'
+import Position from '#entity/position'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import express, { Request, Response } from 'express'
-import { AppDataSource } from './data-source.js'
-import Node from './entity/node.js'
-import Position from '#entity/position'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { AppDataSource } from '#config/data-source'
 
 await AppDataSource.initialize()
 
@@ -11,14 +13,15 @@ const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
 const app = express()
-// if (!isDevelopment) {
 app.use(compression())
-// }
 
 app.use(bodyParser.json())
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 if (!isDevelopment) {
-  app.use(express.static('dist'))
+  app.use(express.static(`${__dirname}/../frontend/dist`))
 }
 
 app.get('/api/nodes', async (_req: Request, res: Response) => {

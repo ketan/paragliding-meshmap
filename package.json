@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf build frontend/dist",
-    "build": "npm run clean && tsc --noEmit && cd frontend && tsc -b && vite build --mode production",
+    "build": "npm run clean && tsc --noEmit && cd frontend && tsc -b && vite build --mode=production",
     "start": "concurrently \"nodemon --exec node --loader ts-node/esm src/index.ts\" \"cd frontend && vite dev\"",
     "mqtt": "nodemon --exec node --loader ts-node/esm src/mqtt.ts --",
     "prod": "NODE_ENV=production npm run migrate && NODE_ENV=production concurrently \"node --loader ts-node/esm src/index.ts\" \"node --loader ts-node/esm src/mqtt.ts\"",
@@ -13,7 +13,8 @@
     "typeorm": "typeorm-ts-node-esm",
     "migrate": "typeorm-ts-node-esm migration:run -d src/config/data-source.ts",
     "schema-to-ts": "bin/schema-to-ts",
-    "docker:build": "NODE_ENV=production npm run build && docker build . --progress plain --tag paragliding-meshmap:$(git log -1  --pretty=format:%cd --date=format:%Y-%m-%d_%H-%M)_$(git rev-parse --short HEAD) --tag paragliding-meshmap"
+    "docker:build": "NODE_ENV=production npm run build && docker build . --progress plain --tag paragliding-meshmap:$(git log -1  --pretty=format:%cd --date=format:%Y-%m-%d_%H-%M)_$(git rev-parse --short HEAD) --tag paragliding-meshmap",
+    "docker:publish": "NODE_ENV=production npm run build && docker buildx build . --platform linux/amd64,linux/arm64  --progress plain --manifest ghcr.io/ketan/paragliding-meshmap --jobs 2 && docker manifest push ghcr.io/ketan/paragliding-meshmap docker://ghcr.io/ketan/paragliding-meshmap:latest"
   },
   "imports": {
     "#entity/*": "./src/entity/*.ts",

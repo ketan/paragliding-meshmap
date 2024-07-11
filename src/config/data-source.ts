@@ -26,7 +26,8 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const dbConnectionOpts = parseDatabaseUrl.default(process.env.DB_URL || `sqlite:///${__dirname}/../tmp/paragliding-meshmap.sqlite3`)
+const dbConnectionOpts = parseDatabaseUrl.default(process.env.DB_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`)
+
 let driver = dbConnectionOpts.driver
 if (driver === 'postgresql') {
   driver = 'postgres'
@@ -44,8 +45,8 @@ const connString = <DataSourceOptions>{
   synchronize: false,
   logging: 'all',
   logger: 'debug',
-  entities: [`${__dirname}/entity/**/*.ts`, `${__dirname}/entity/**/*.js`],
-  migrations: [`${__dirname}/migration/*.ts`, `${__dirname}/migration/*.js`],
+  entities: [`${__dirname}/../entity/**/*.ts`, `${__dirname}/../entity/**/*.js`],
+  migrations: [`${__dirname}/../migration/*.ts`, `${__dirname}/../migration/*.js`],
   migrationsTransactionMode: 'each',
   subscribers: [],
   parseInt8: true, // https://github.com/typeorm/typeorm/issues/8583

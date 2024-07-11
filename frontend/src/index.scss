@@ -8,6 +8,7 @@
 @import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
 
 @import './tailwind.scss';
+@import 'cooltipz-css/cooltipz.css';
 
 html,
 body {
@@ -20,10 +21,53 @@ body {
   height: 100%;
 }
 
-.tooltip {
-  @apply invisible absolute;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.has-tooltip:hover .tooltip {
-  @apply visible z-50;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
+
+[aria-label][data-cooltipz-dir]::after,
+[aria-label][class*='cooltipz']::after {
+  @apply z-[10000];
+  @apply font-medium text-white rounded-lg shadow-sm bg-black text-sm;
+}
+
+[aria-label][data-cooltipz-dir]::before,
+[aria-label][class*='cooltipz']::before {
+  @apply z-[10001];
+}
+
+// .tooltip::after {
+//   @apply pr-10;
+// }
+
+// .has-tooltip {
+//   @apply visible relative;
+//   // z-index: 10000;
+
+//   .tooltip {
+//     @apply invisible absolute z-[10000] inline-block px-3 py-2 font-medium text-white rounded-lg shadow-sm bg-black;
+//   /* vertically center */
+//   top:50%;
+//   transform:translateY(-50%);
+
+//   /* move to right */
+//   left:100%;
+//   margin-left:15px; /* and add a small left margin */
+//     margin-left:15px; /* and add a small left margin */
+//     // @apply invisible absolute py-1 px-2 mr-10 bg-black text-center rounded-md text-white z-[10000] font-medium; // px-2 py-1 -ml-12 left-1/2 top-full;
+//   }
+// }

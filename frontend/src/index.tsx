@@ -10,20 +10,19 @@ import 'leaflet-polylineoffset'
 import 'leaflet.markercluster'
 
 // our stuff
-import { DateTime } from 'luxon'
-// import { Node } from './database'
 import _ from 'lodash'
+import { DateTime } from 'luxon'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
 import { Node } from './nodes-entity'
+import { AllData, SearchBarApp } from './searchbarapp'
 import { mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
 import { isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
-import { AllData, SearchBarApp } from './searchbarapp'
 
 interface UIConfig {
   defaultZoomLevelForNode: number
@@ -194,14 +193,6 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
 
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
-    // const latitude = eachNode.latitude!
-
-    // let longitude = eachNode.longitude!
-    // // everything to the left of Australia appears on the right of the map
-    // if (longitude <= 100) {
-    //   longitude += 360
-    // }
-
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
         className: getIconFor(eachNode),
@@ -253,12 +244,6 @@ function redraw(map: Map) {
   const nodeIdParam = queryParams.get('nodeId')
 
   flyToNode(map, nodeIdParam)
-
-  // const node = findNodeById(allData.allNodes, nodeIdParam)
-
-  // if (node) {
-
-  // }
 }
 
 addEventListener('DOMContentLoaded', () => {

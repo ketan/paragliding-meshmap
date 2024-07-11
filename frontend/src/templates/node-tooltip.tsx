@@ -13,9 +13,8 @@ const timeAgo = (timestamp?: string | null, addParens: boolean = false) => {
     const dateTime = DateTime.fromISO(timestamp)
     return (
       <>
-        <span className="has-tooltip font-light">
+        <span className="has-tooltip font-light" aria-label={dateTime.toFormat('dd LLL, yyyy hh:mm a')} data-cooltipz-dir="bottom">
           {addParens ? '(' : null}
-          <span className="tooltip rounded shadow-lg p-1 bg-gray-100 -mt-8">{dateTime.toLocaleString(DateTime.DATETIME_MED)}</span>
           {dateTime.toRelative()}
           {addParens ? ')' : null}
         </span>
@@ -68,7 +67,7 @@ type KeyValueType<T> = {
 const keyValue = function <T>(args: KeyValueType<T>) {
   if ('renderer' in args) {
     return (
-      <li>
+      <li key={args.key}>
         <span className="font-extrabold me-2">{args.key}:</span>
         {args.renderer()}
       </li>
@@ -82,7 +81,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
 
     if (typeof args.value === 'string') {
       return (
-        <li>
+        <li key={args.key}>
           <span className="font-extrabold me-2">{args.key}:</span>
           {args.value}
         </li>
@@ -90,7 +89,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
     } else if (typeof args.value === 'number') {
       if (Number.isInteger(args.value)) {
         return (
-          <li>
+          <li key={args.key}>
             <span className="font-extrabold me-2">{args.key}:</span>
             {args.value}
             {args.unit}
@@ -98,7 +97,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
         )
       } else {
         return (
-          <li>
+          <li key={args.key}>
             <span className="font-extrabold me-2">{args.key}:</span>
             {Number(args.value).toFixed(args.precision)}
             {args.unit}

@@ -13,7 +13,7 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import debug from 'debug'
-import _ from 'lodash'
+import compact from 'lodash/compact.js'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
@@ -163,7 +163,7 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
     try {
       node = await findOrCreateNode(trx, nodeId)
       node.updateNeighbors(neighborInfo.neighbours)
-      await trx.save(_.compact([node, saveNeighborInfo ? neighborInfo : null]))
+      await trx.save(compact([node, saveNeighborInfo ? neighborInfo : null]))
     } catch (e) {
       logger(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
@@ -197,7 +197,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           }
 
           node.updateDeviceMetrics(metric)
-          await trx.save(_.compact([node, recentSimilarMetric ? null : metric]))
+          await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
       } else if (telemetry.variant.case == 'environmentMetrics') {
         metric = EnvironmentMetric.fromPacket(envelope)
@@ -208,7 +208,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           }
 
           node.updateEnvironmentMetrics(metric)
-          await trx.save(_.compact([node, recentSimilarMetric ? null : metric]))
+          await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
       } else if (telemetry.variant.case == 'powerMetrics') {
         metric = PowerMetric.fromPacket(envelope)
@@ -218,7 +218,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
             return
           }
 
-          await trx.save(_.compact([recentSimilarMetric ? null : metric]))
+          await trx.save(compact([recentSimilarMetric ? null : metric]))
         }
       }
     } catch (e) {

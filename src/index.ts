@@ -1,11 +1,11 @@
+import { AppDataSource } from '#config/data-source'
 import Node from '#entity/node'
 import Position from '#entity/position'
 import bodyParser from 'body-parser'
-import compression from 'compression'
+
 import express, { Request, Response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { AppDataSource } from '#config/data-source'
 
 await AppDataSource.initialize()
 
@@ -13,7 +13,6 @@ const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
 const app = express()
-app.use(compression())
 
 app.use(bodyParser.json())
 

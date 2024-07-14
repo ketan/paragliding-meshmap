@@ -5,7 +5,7 @@ import 'reflect-metadata'
 import parseDatabaseUrl from 'ts-parse-database-url'
 import { DataSource, DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
 import { DataSourceOptions } from 'typeorm/browser'
-import { snakeCase } from 'typeorm/util/StringUtils.js'
+import snakeCase from 'lodash/snakeCase.js'
 import { fileURLToPath } from 'url'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts

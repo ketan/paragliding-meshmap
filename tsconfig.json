@@ -19,7 +19,8 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "./build",
+    "outDir": "./build/out",
+    "noEmitOnError": true,
 
     "preserveConstEnums": true,
     "removeComments": true,

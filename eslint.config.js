@@ -1,3 +1,4 @@
+import unusedImports from 'eslint-plugin-unused-imports'
 import pluginJs from '@eslint/js'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js'
@@ -21,7 +22,24 @@ export default [
       'react-refresh': reactRefresh,
     },
   },
-
+  {
+    plugins: {
+      'unused-imports': unusedImports,
+    },
+    rules: {
+      'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
   {
     rules: {
       curly: ['error'],

@@ -19,7 +19,7 @@ export function addOpts(command: Command) {
   command.option('--mqtt-broker-url <URL>', 'MQTT Broker URL (e.g: mqtt://mqtt.meshtastic.org)', 'mqtt://mqtt.meshtastic.org')
   command.option('--mqtt-username <USERNAME>', 'MQTT Username(e.g: meshdev)', 'meshdev')
   command.option('--mqtt-password <PASSWORD>', 'MQTT Password (e.g: large4cats)', 'large4cats')
-  command.option('--mqtt-topic <TOPIC>', 'MQTT Topic to subscribe to (e.g: msh/#)', '#')
+  command.option('--mqtt-topic <TOPIC>', 'MQTT Topic to subscribe to (e.g: msh/#, msh/IN/#)', 'msh/#')
   command.option('--no-collect-service-envelopes', 'This option will save all received service envelopes to the database.')
   command.option('--no-collect-positions', 'This option will save all received positions to the database.')
   command.option('--no-collect-text-messages', 'This option will save all received text messages to the database.')

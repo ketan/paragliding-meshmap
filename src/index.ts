@@ -1,3 +1,7 @@
+// do this first
+import 'dotenv/config'
+
+//
 import { AppDataSource } from '#config/data-source'
 import Node from '#entity/node'
 import Position from '#entity/position'

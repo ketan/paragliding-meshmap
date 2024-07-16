@@ -4,6 +4,7 @@ import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class TextMessage extends BaseType {
@@ -62,7 +63,7 @@ export default class TextMessage extends BaseType {
         rxTime: packet.rxTime,
       })
     } catch (e) {
-      this.logger(`unable to parse text message`, { err: e, envelope })
+      errLog(`unable to parse text message`, { err: e, envelope })
     }
   }
 }

@@ -1,3 +1,5 @@
+import { AppDataSource } from '#config/data-source'
+import { BaseType } from '#entity/base_type'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
 import MapReport from '#entity/map_report'
@@ -9,6 +11,8 @@ import ServiceEnvelope from '#entity/service_envelope'
 import TextMessage from '#entity/text_message'
 import Traceroute from '#entity/traceroute'
 import Waypoint from '#entity/waypoint'
+import { errLog } from '#helpers/logger'
+import { parseProtobuf, secondsAgo } from '#helpers/utils'
 import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
@@ -16,20 +20,35 @@ import debug from 'debug'
 import compact from 'lodash/compact.js'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
-import { AppDataSource } from '#config/data-source'
-import { parseProtobuf, secondsAgo } from '#helpers/utils'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
-const logger = debug('meshmap:handler')
+export async function dumpStats(logger: debug.Debugger) {
+  const entityTypes = Array.from(AppDataSource.entityMetadatasMap.keys())
 
+  const counts: Record<string, number> = {}
+
+  for (let index = 0; index < entityTypes.length; index++) {
+    const entity = entityTypes[index]
+    if (entity === BaseType) {
+      continue
+    }
+
+    const repo = AppDataSource.manager.getRepository(entity)
+    const count = await AppDataSource.manager.count(entity)
+
+    counts[repo.metadata.name] = count
+  }
+
+  logger(`Record counts`, counts)
+}
 export async function purgeData(cliOptions: MQTTCLIOptions) {
   if (cliOptions.purgeNodesUnheardOlderThan) {
     await AppDataSource.transaction(async (trx) => {
-      await Node.purge(cliOptions.purgeNodesUnheardOlderThan, trx)
       await DeviceMetric.purge(cliOptions.purgeDeviceMetricsOlderThan, trx)
       await EnvironmentMetric.purge(cliOptions.purgeEnvironmentMetricsOlderThan, trx)
-      await PowerMetric.purge(cliOptions.purgePowerMetricsOlderThan, trx)
+      await Node.purge(cliOptions.purgeNodesUnheardOlderThan, trx)
       await Position.purge(cliOptions.purgePositionsOlderThan, trx)
+      await PowerMetric.purge(cliOptions.purgePowerMetricsOlderThan, trx)
     })
   }
 }
@@ -43,7 +62,7 @@ export async function updateMQTTStatus(nodeId: number, mqttConnectionState: stri
       node.updateMqttStatus(mqttConnectionState, mqttConnectionStateUpdatedAt)
       await trx.save(node)
     } catch (e) {
-      logger(`Unable to update mqtt status`, { err: e, node })
+      errLog(`Unable to update mqtt status`, { err: e, node })
       throw e
     }
   })
@@ -55,7 +74,7 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
     try {
       return await trx.save(se)
     } catch (e) {
-      logger(`Unable to create service envelope`, { err: e, mqttTopic, se, envelope })
+      errLog(`Unable to create service envelope`, { err: e, mqttTopic, se, envelope })
       throw e
     }
   })
@@ -79,7 +98,7 @@ export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collect
 
       return await trx.save([tm, senderNode, receiverNode])
     } catch (e) {
-      logger(`Unable to create text message`, { err: e, tm, envelope })
+      errLog(`Unable to create text message`, { err: e, tm, envelope })
       throw e
     }
   })
@@ -106,7 +125,7 @@ export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf, 
         await position.saveIfNoSimilarRecentPosition(trx)
       }
     } catch (e) {
-      logger(`Unable to update node position`, { err: e, node, position, envelope })
+      errLog(`Unable to update node position`, { err: e, node, position, envelope })
       throw e
     }
   })
@@ -126,7 +145,7 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
       trx.merge(Node, node, newNode)
       return await trx.save(node)
     } catch (e) {
-      logger(`Unable to update node`, { err: e, newNode, node, envelope })
+      errLog(`Unable to update node`, { err: e, newNode, node, envelope })
       throw e
     }
   })
@@ -145,7 +164,7 @@ export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf, 
     try {
       return await trx.save(waypoint)
     } catch (e) {
-      logger(`Unable to create waypoint`, { err: e, waypoint, envelope })
+      errLog(`Unable to create waypoint`, { err: e, waypoint, envelope })
       throw new AbortError(e)
     }
   })
@@ -165,7 +184,7 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
       node.updateNeighbors(neighborInfo.neighbours)
       await trx.save(compact([node, saveNeighborInfo ? neighborInfo : null]))
     } catch (e) {
-      logger(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
+      errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
     }
   })
@@ -222,7 +241,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
         }
       }
     } catch (e) {
-      logger(`Unable to create telemetry data`, { err: e, node, envelope, metric })
+      errLog(`Unable to create telemetry data`, { err: e, node, envelope, metric })
       throw e
     }
   })
@@ -238,7 +257,7 @@ export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeP
     try {
       await trx.save(traceroute)
     } catch (e) {
-      logger(`Unable to save traceroute`, { err: e, traceroute, envelope })
+      errLog(`Unable to save traceroute`, { err: e, traceroute, envelope })
       throw e
     }
   })
@@ -263,7 +282,7 @@ export async function createMapReports(envelope: ServiceEnvelopeProtobuf, collec
 
       await trx.save([node, mr])
     } catch (e) {
-      logger(`Unable to save map report`, { err: e, mr, node, envelope })
+      errLog(`Unable to save map report`, { err: e, mr, node, envelope })
       throw e
     }
   })

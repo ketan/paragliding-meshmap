@@ -1,15 +1,19 @@
-import ServiceEnvelope from '#entity/service_envelope'
-import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
+// do this first
+import 'dotenv/config'
+
+//
 import { AppDataSource } from '#config/data-source'
-import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import Node from '#entity/node'
-import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
-import { parseProtobuf } from '#helpers/utils'
-import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
+import Node from '#entity/node'
 import PowerMetric from '#entity/power_metric'
-;async () => {
+import ServiceEnvelope from '#entity/service_envelope'
+import { parseProtobuf } from '#helpers/utils'
+import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
+import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
+import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
+import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
+async () => {
   await AppDataSource.initialize()
 
   const envelopes = await AppDataSource.manager.find(ServiceEnvelope, {

@@ -4,6 +4,7 @@ import { AppDataSource } from '#config/data-source'
 import { toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 import { blobType } from '#helpers/migration-helper'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class ServiceEnvelope extends BaseType {
@@ -39,7 +40,7 @@ export default class ServiceEnvelope extends BaseType {
         gatewayId: toBigInt(envelope.gatewayId),
       })
     } catch (e) {
-      this.logger(`unable to service envelope`, { err: e, envelope })
+      errLog(`unable to service envelope`, { err: e, envelope })
     }
   }
 }

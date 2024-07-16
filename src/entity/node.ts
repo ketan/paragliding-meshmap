@@ -11,6 +11,7 @@ import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class Node extends BaseType {
@@ -122,7 +123,7 @@ export default class Node extends BaseType {
         role: user.role,
       })
     } catch (e) {
-      this.logger(`Unable to create node`, { err: e, user, envelope })
+      errLog(`Unable to create node`, { err: e, user, envelope })
     }
   }
 

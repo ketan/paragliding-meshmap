@@ -4,6 +4,7 @@ import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class Traceroute extends BaseType {
@@ -48,7 +49,7 @@ export default class Traceroute extends BaseType {
         gatewayId: toBigInt(envelope.gatewayId),
       })
     } catch (e) {
-      this.logger(`Unable to parse traceroute`, { err: e, rd, envelope })
+      errLog(`unable to parse traceroute`, { err: e, rd, envelope })
     }
   }
 }

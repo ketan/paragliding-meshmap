@@ -4,6 +4,7 @@ import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class Waypoint extends BaseType {
@@ -74,7 +75,7 @@ export default class Waypoint extends BaseType {
         gatewayId: toBigInt(envelope.gatewayId),
       })
     } catch (e) {
-      this.logger(`Unable to parse waypoint`, { err: e, waypoint, envelope })
+      errLog(`unable to parse waypoint`, { err: e, waypoint, envelope })
     }
   }
 }

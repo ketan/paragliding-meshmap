@@ -4,6 +4,7 @@ import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { BaseType } from './base_type.js'
 import { parseProtobuf } from '#helpers/utils'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class MapReport extends BaseType {
@@ -72,7 +73,7 @@ export default class MapReport extends BaseType {
         numOnlineLocalNodes: mr.numOnlineLocalNodes,
       })
     } catch (e) {
-      this.logger(`unable to create map report`, { err: e, mr, envelope })
+      errLog(`unable to create map report`, { err: e, mr, envelope })
     }
   }
 }

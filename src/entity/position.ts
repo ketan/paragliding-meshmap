@@ -4,6 +4,7 @@ import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, secondsAgo, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class Position extends BaseType {
@@ -60,7 +61,7 @@ export default class Position extends BaseType {
         altitude: position.altitude,
       })
     } catch (e) {
-      this.logger(`Unable to parse position`, { err: e, position, envelope })
+      errLog(`Unable to parse position`, { err: e, position, envelope })
     }
   }
 

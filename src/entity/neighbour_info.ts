@@ -5,6 +5,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { Column, Entity } from 'typeorm'
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class NeighbourInfo extends BaseType {
@@ -36,7 +37,7 @@ export default class NeighbourInfo extends BaseType {
         }),
       })
     } catch (e) {
-      this.logger(`unable to create neighbour info`, { err: e, neighborInfo, envelope })
+      errLog(`unable to create neighbour info`, { err: e, neighborInfo, envelope })
     }
   }
 }

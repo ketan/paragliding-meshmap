@@ -5,6 +5,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { DeviceMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class DeviceMetric extends BaseType {
@@ -43,7 +44,7 @@ export default class DeviceMetric extends BaseType {
         uptimeSeconds: this.sanitizeNumber(metrics.uptimeSeconds),
       })
     } catch (e) {
-      this.logger(`unable to create device metric`, { error: e, metrics, envelope })
+      errLog(`unable to create device metric`, { error: e, metrics, envelope })
     }
   }
 

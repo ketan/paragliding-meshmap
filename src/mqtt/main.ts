@@ -1,12 +1,14 @@
+import { errLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
-import { MQTTCLIOptions } from '../helpers/cli.js'
-import { purgeData } from '#mqtt/mqtt-orm'
+import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
 import PQueue from 'p-queue'
 import pRetry from 'p-retry'
+import { MQTTCLIOptions } from '../helpers/cli.js'
+import { Duration } from 'luxon'
 
-export function mqttProcessor(cliOptions: MQTTCLIOptions) {
+export async function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
@@ -18,6 +20,11 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const queue = new PQueue({
     concurrency: 1,
   })
+
+  setInterval(() => {
+    dumpStats(logger)
+  }, Duration.fromISO(`PT10M`).toMillis())
+  await dumpStats(logger)
 
   if (cliOptions.purgeEvery) {
     logger(`Purging data every ${cliOptions.purgeEvery.toHuman()}`)
@@ -40,13 +47,11 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
         retries: 5,
       })
     } catch (e) {
-      logger(`Ignoring payload`, e)
+      errLog(`ignoring payload`, e)
     }
   }
 
-
   client.on('message', async (topic, payload) => {
-    console.log(`message`)
     queue.add(async () => handleMessageWithRetry(topic, payload))
   })
 }

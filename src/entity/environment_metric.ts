@@ -5,6 +5,7 @@ import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { BaseType } from './base_type.js'
 import { parseProtobuf } from '#helpers/utils'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {
@@ -51,7 +52,7 @@ export default class EnvironmentMetric extends BaseType {
         iaq: this.sanitizeNumber(metrics.iaq),
       })
     } catch (e) {
-      this.logger(`unable to create environment metric`, { err: e, metrics, envelope })
+      errLog(`unable to create environment metric`, { err: e, metrics, envelope })
     }
   }
 

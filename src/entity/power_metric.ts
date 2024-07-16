@@ -5,6 +5,7 @@ import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, secondsAgo } from '#helpers/utils'
 import { BaseType } from './base_type.js'
+import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class PowerMetric extends BaseType {
@@ -47,7 +48,7 @@ export default class PowerMetric extends BaseType {
         ch3Voltage: metrics.ch3Voltage,
       })
     } catch (e) {
-      this.logger(`unable to parse power metric`, { err: e, metrics, envelope })
+      errLog(`unable to parse power metric`, { err: e, metrics, envelope })
     }
   }
 

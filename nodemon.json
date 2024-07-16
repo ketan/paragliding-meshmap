@@ -1,5 +1,5 @@
 {
   "watch": ["src", "package.json", "tsconfig.json", "package-lock.json"],
-  "ignore": ["test", "build", "tmp", "src/public", "dist"],
+  "ignore": ["test", "build", "tmp", "dist"],
   "ext": "*"
 }

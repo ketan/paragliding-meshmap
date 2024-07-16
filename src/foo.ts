@@ -13,7 +13,7 @@ import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.j
 import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
 import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
-async () => {
+;async () => {
   await AppDataSource.initialize()
 
   const envelopes = await AppDataSource.manager.find(ServiceEnvelope, {

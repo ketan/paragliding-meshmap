@@ -12,6 +12,8 @@ export async function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
+  logger(`Starting mqtt with options`, cliOptions)
+
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {
     username: cliOptions.mqttUsername,
     password: cliOptions.mqttPassword,

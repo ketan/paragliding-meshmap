@@ -13,4 +13,5 @@ ENV DEBUG_COLORS=true
 ENV NODE_ENV=production
 
 EXPOSE 3333
-CMD ["npm", "run", "prod"]
+
+CMD ["node", "index.js"]

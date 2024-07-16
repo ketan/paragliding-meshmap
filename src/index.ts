@@ -1,13 +1,17 @@
 import { AppDataSource } from '#config/data-source'
 import Node from '#entity/node'
 import Position from '#entity/position'
+import { webCLIParse } from '#helpers/cli'
+import { mqttProcessor } from '#mqtt/main'
 import bodyParser from 'body-parser'
-
 import express, { Request, Response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+const cliOptions = webCLIParse()
 
+// ;(async (cliOptions: WebCLIOptions) => {
 await AppDataSource.initialize()
+await AppDataSource.runMigrations({ transaction: 'each' })
 
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
@@ -20,7 +24,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 if (!isDevelopment) {
-  app.use(express.static(`${__dirname}/../frontend/dist`))
+  app.use(express.static(`${__dirname}/public`))
 }
 
 app.get('/api/nodes', async (_req: Request, res: Response) => {
@@ -47,6 +51,13 @@ app.get('/api/hardware-models', async function (_req: Request, res: Response) {
   res.json(models)
 })
 
-app.listen(3333)
+const port = process.env.PORT || 3333
+app.listen(port)
 
-console.log('Express server has started on port 3333. Open http://localhost:3333/ to see results')
+console.log(`Express server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+
+if (cliOptions.mqtt) {
+  mqttProcessor(cliOptions)
+}
+
+// })(cliOptions)

@@ -1,7 +1,7 @@
 {
   "files": [],
   "compilerOptions": {
-    "noEmitOnError": true,
+    "noEmitOnError": true
   },
   "references": [
     {

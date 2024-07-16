@@ -20,6 +20,7 @@ export function sanitizeNumber(n: number | string | undefined | null) {
     }
   }
 }
+
 export function sanitizeLatLong(lat: number | string | undefined | null, lon: number | string | undefined | null) {
   lat = sanitizeNumber(lat)
   lon = sanitizeNumber(lon)

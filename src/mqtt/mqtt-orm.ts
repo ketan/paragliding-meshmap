@@ -18,11 +18,11 @@ import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, secondsAgo } from '#helpers/utils'
-import { CLIOptions } from './mqtt-cli.js'
+import { MQTTCLIOptions } from '../helpers/cli.js'
 
 const logger = debug('meshmap:handler')
 
-export async function purgeData(cliOptions: CLIOptions) {
+export async function purgeData(cliOptions: MQTTCLIOptions) {
   if (cliOptions.purgeNodesUnheardOlderThan) {
     await AppDataSource.transaction(async (trx) => {
       await Node.purge(cliOptions.purgeNodesUnheardOlderThan, trx)

@@ -2,7 +2,7 @@ import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtasti
 import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
 import { parseProtobuf, toBigInt } from '../helpers/utils.js'
 import { decrypt } from './decryption.js'
-import { CLIOptions } from './mqtt-cli.js'
+import { MQTTCLIOptions } from '../helpers/cli.js'
 import {
   createMapReports,
   createOrUpdateNeighborInfo,
@@ -16,8 +16,7 @@ import {
   updateNodeWithPosition,
 } from './mqtt-orm.js'
 
-export async function processMessage(cliOptions: CLIOptions
-  , topic: string, payload: Buffer) {
+export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
     await handleNodeStatusMessage(topic, payload)
     return

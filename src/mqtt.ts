@@ -1,16 +1,15 @@
+import { AppDataSource } from '#config/data-source'
+import { processMessage } from '#mqtt/decoder'
+import { purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
 import PQueue from 'p-queue'
 import pRetry from 'p-retry'
-import { AppDataSource } from '#config/data-source'
-import { CLIOptions, cliParse } from '#mqtt/mqtt-cli'
-import { purgeData } from '#mqtt/mqtt-orm'
-import { processMessage } from '#mqtt/decoder'
-
+import { MQTTCLIOptions, mqttCLIParse } from './helpers/cli.js'
 
 const logger = debug('meshmap:mqtt')
 
-const cliOptions: CLIOptions = cliParse()
+const cliOptions: MQTTCLIOptions = mqttCLIParse()
 
 await AppDataSource.initialize()
 

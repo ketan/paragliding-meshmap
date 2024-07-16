@@ -21,10 +21,9 @@
     "noUnusedParameters": true,
     "outDir": "./build/out",
     "noEmitOnError": true,
-
     "preserveConstEnums": true,
     "removeComments": true,
-    "rootDir": "./",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,

@@ -30,28 +30,6 @@ export default class PowerMetric extends BaseType {
   @Column({ type: 'double precision', nullable: true })
   ch3Current?: number
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
-
-    const metrics = parseProtobuf(() => PowerMetrics.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
-
-    try {
-      return AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
-        nodeId: packet.from,
-        ch1Current: metrics.ch1Current,
-        ch1Voltage: metrics.ch1Voltage,
-
-        ch2Current: metrics.ch2Current,
-        ch2Voltage: metrics.ch2Voltage,
-
-        ch3Current: metrics.ch3Current,
-        ch3Voltage: metrics.ch3Voltage,
-      })
-    } catch (e) {
-      errLog(`unable to parse power metric`, { err: e, metrics, envelope })
-    }
-  }
-
   async findRecentSimilarMetric(since: Date, trx: EntityManager) {
     return await trx.findOne(PowerMetric, {
       where: {
@@ -70,6 +48,24 @@ export default class PowerMetric extends BaseType {
   async saveIfNoSimilarRecentMetric(trx: EntityManager) {
     if (!(await this.findRecentSimilarMetric(secondsAgo(15), trx))) {
       await trx.save(this)
+    }
+  }
+
+  static fromTelemetry(nodeId: number, telemetry: PowerMetrics) {
+    try {
+      return AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
+        nodeId: nodeId,
+        ch1Current: telemetry.ch1Current,
+        ch1Voltage: telemetry.ch1Voltage,
+
+        ch2Current: telemetry.ch2Current,
+        ch2Voltage: telemetry.ch2Voltage,
+
+        ch3Current: telemetry.ch3Current,
+        ch3Voltage: telemetry.ch3Voltage,
+      })
+    } catch (e) {
+      errLog(`unable to parse power metric`, { err: e, metrics: telemetry })
     }
   }
 }

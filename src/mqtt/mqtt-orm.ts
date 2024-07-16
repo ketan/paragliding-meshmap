@@ -208,7 +208,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
     try {
       node = await findOrCreateNode(trx, nodeId)
       if (telemetry.variant.case == 'deviceMetrics') {
-        metric = DeviceMetric.fromPacket(envelope)
+        metric = DeviceMetric.fromTelemetry(nodeId, telemetry.variant.value)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
@@ -219,7 +219,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
       } else if (telemetry.variant.case == 'environmentMetrics') {
-        metric = EnvironmentMetric.fromPacket(envelope)
+        metric = EnvironmentMetric.fromTelemetry(nodeId, telemetry.variant.value)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
@@ -230,7 +230,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
       } else if (telemetry.variant.case == 'powerMetrics') {
-        metric = PowerMetric.fromPacket(envelope)
+        metric = PowerMetric.fromTelemetry(nodeId, telemetry.variant.value)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {

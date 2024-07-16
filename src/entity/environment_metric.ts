@@ -33,29 +33,6 @@ export default class EnvironmentMetric extends BaseType {
   @Column({ type: 'integer', nullable: true })
   iaq?: number
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
-
-    const metrics = parseProtobuf(() =>
-      EnvironmentMetrics.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
-    )
-
-    try {
-      return AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
-        nodeId: packet.from,
-        temperature: this.sanitizeNumber(metrics.temperature),
-        relativeHumidity: this.sanitizeNumber(metrics.relativeHumidity),
-        barometricPressure: this.sanitizeNumber(metrics.barometricPressure),
-        gasResistance: this.sanitizeNumber(metrics.gasResistance),
-        voltage: this.sanitizeNumber(metrics.voltage),
-        current: this.sanitizeNumber(metrics.current),
-        iaq: this.sanitizeNumber(metrics.iaq),
-      })
-    } catch (e) {
-      errLog(`unable to create environment metric`, { err: e, metrics, envelope })
-    }
-  }
-
   async findRecentSimilarMetric(since: Date, trx: EntityManager) {
     return await trx.findOne(EnvironmentMetric, {
       where: {
@@ -72,4 +49,20 @@ export default class EnvironmentMetric extends BaseType {
     })
   }
 
+  static fromTelemetry(nodeId: number, telemetry: EnvironmentMetrics) {
+    try {
+      return AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
+        nodeId: nodeId,
+        temperature: this.sanitizeNumber(telemetry.temperature),
+        relativeHumidity: this.sanitizeNumber(telemetry.relativeHumidity),
+        barometricPressure: this.sanitizeNumber(telemetry.barometricPressure),
+        gasResistance: this.sanitizeNumber(telemetry.gasResistance),
+        voltage: this.sanitizeNumber(telemetry.voltage),
+        current: this.sanitizeNumber(telemetry.current),
+        iaq: this.sanitizeNumber(telemetry.iaq),
+      })
+    } catch (e) {
+      errLog(`unable to create environment metric`, { err: e, telemetry })
+    }
+  }
 }

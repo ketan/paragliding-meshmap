@@ -22,7 +22,7 @@ import { AllData, SearchBarApp } from './searchbarapp'
 import { mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
-import { isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import { isMobile, nodeName, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 
 interface UIConfig {
   defaultZoomLevelForNode: number
@@ -233,9 +233,11 @@ function redraw(map: Map) {
 
   if (!getQueryLatLngZoom()) {
     navigator.geolocation.getCurrentPosition((pos) => {
-      const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
-      if (latLng) {
-        map.flyTo(latLng, 20, { animate: false })
+      if (!getQueryLatLngZoom()) {
+        const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
+        if (latLng) {
+          map.flyTo(latLng, 20, { animate: false })
+        }
       }
     })
   }
@@ -314,9 +316,27 @@ addEventListener('DOMContentLoaded', () => {
 })
 
 function getTextSize(node: Node) {
-  const testNode = document.querySelector('#test-node-size')!
-  testNode.innerHTML = nodePositionView(node)
-  const span = testNode.querySelector('span')!
+  const name = nodeName(node)
+  let width = 0
+  let height = 0
+  for (let i = 0; i < name.length; i++) {
+    const char = name[i]
+    const [w, h] = getCharWidth(char)
+    width += w
+    height = Math.max(height, h)
+  }
 
-  return [span.offsetWidth + 10, span.offsetHeight - 4] as [number, number]
+  return [width + 10, height - 4] as [number, number]
+}
+
+const charSizes: Record<string, [number, number]> = {}
+// no validation in place for perf reason, so make sure to just pass a single character
+function getCharWidth(c: string) {
+  if (!charSizes[c]) {
+    const testNode = document.querySelector('#test-node-size')!
+    testNode.innerHTML = nodePositionView({ shortName: c })
+    const span = testNode.querySelector('span')!
+    charSizes[c] = [span.offsetWidth, span.offsetHeight]
+  }
+  return charSizes[c]
 }

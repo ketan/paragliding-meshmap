@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { NodesEntity } from './database'
-import { Node, PointTuple } from './nodes-entity'
+import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
 
 export function googleMapsLink(point: PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
@@ -50,7 +50,7 @@ export function sanitizeNodeProperties(node: NodesEntity): Node {
   return returnValue
 }
 
-export function nodeName(node: Partial<Pick<Node, 'shortName' | 'longName' | 'nodeIdHex'>>) {
+export function nodeName(node: Partial<NodeNameAttributes>) {
   return _.compact([node.shortName, node.longName, node.nodeIdHex]).at(0) || '<NO NAME>'
 }
 

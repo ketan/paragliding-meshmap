@@ -7,3 +7,5 @@ export interface Node extends Omit<NodesEntity, 'latitude' | 'longitude'> {
   offsetLatLng?: PointTuple
   nodeIdHex: string
 }
+
+export type NodeNameAttributes = Pick<Node, 'shortName' | 'longName' | 'nodeIdHex'>

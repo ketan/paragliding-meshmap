@@ -13,7 +13,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 const cliOptions = webCLIParse()
 
-// ;(async (cliOptions: WebCLIOptions) => {
 await AppDataSource.initialize()
 await AppDataSource.runMigrations({ transaction: 'each' })
 
@@ -63,5 +62,3 @@ console.log(`Express server has started on port ${port}. Open http://localhost:$
 if (cliOptions.mqtt) {
   mqttProcessor(cliOptions)
 }
-
-// })(cliOptions)

@@ -49,25 +49,3 @@ body {
 [aria-label][class*='cooltipz']::before {
   @apply z-[10001];
 }
-
-// .tooltip::after {
-//   @apply pr-10;
-// }
-
-// .has-tooltip {
-//   @apply visible relative;
-//   // z-index: 10000;
-
-//   .tooltip {
-//     @apply invisible absolute z-[10000] inline-block px-3 py-2 font-medium text-white rounded-lg shadow-sm bg-black;
-//   /* vertically center */
-//   top:50%;
-//   transform:translateY(-50%);
-
-//   /* move to right */
-//   left:100%;
-//   margin-left:15px; /* and add a small left margin */
-//     margin-left:15px; /* and add a small left margin */
-//     // @apply invisible absolute py-1 px-2 mr-10 bg-black text-center rounded-md text-white z-[10000] font-medium; // px-2 py-1 -ml-12 left-1/2 top-full;
-//   }
-// }

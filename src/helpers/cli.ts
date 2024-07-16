@@ -72,9 +72,10 @@ export function webCLIParse() {
   const program = new Command()
   program.showHelpAfterError()
   program.option('--no-mqtt', 'Disable MQTT listener. Other MQTT options do not have an effect if MQTT is disabled.')
-  addOpts(program)
-  program.parse()
 
+  addOpts(program)
+
+  program.parse()
   return program.opts() as WebCLIOptions
 }
 

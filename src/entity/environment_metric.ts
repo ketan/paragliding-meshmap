@@ -72,9 +72,4 @@ export default class EnvironmentMetric extends BaseType {
     })
   }
 
-  // async saveIfNoSimilarRecentMetric(trx: EntityManager) {
-  //   if (!(await this.hasRecentSimilarMetric(secondsAgo(15), trx))) {
-  //     await trx.save(this)
-  //   }
-  // }
 }

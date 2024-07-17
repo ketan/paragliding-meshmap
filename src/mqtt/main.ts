@@ -8,7 +8,7 @@ import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
-export async function mqttProcessor(cliOptions: MQTTCLIOptions) {
+export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
@@ -26,7 +26,7 @@ export async function mqttProcessor(cliOptions: MQTTCLIOptions) {
   setInterval(() => {
     dumpStats(logger)
   }, Duration.fromISO(`PT10M`).toMillis())
-  await dumpStats(logger)
+  dumpStats(logger)
 
   if (cliOptions.purgeEvery) {
     logger(`Purging data every ${cliOptions.purgeEvery.toHuman()}`)

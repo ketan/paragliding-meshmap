@@ -16,6 +16,10 @@ const cliOptions = webCLIParse()
 await AppDataSource.initialize()
 await AppDataSource.runMigrations({ transaction: 'each' })
 
+if (cliOptions.mqtt) {
+  mqttProcessor(cliOptions)
+}
+
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
@@ -58,7 +62,3 @@ const port = process.env.PORT || 3333
 app.listen(port)
 
 console.log(`Express server has started on port ${port}. Open http://localhost:${port}/ to see results`)
-
-if (cliOptions.mqtt) {
-  mqttProcessor(cliOptions)
-}

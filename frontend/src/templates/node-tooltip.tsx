@@ -46,7 +46,7 @@ const location = (node: Node) => {
   }
 
   return (
-    <li>
+    <li key="location">
       <span className="font-extrabold me-2">Location:</span>
       <a target="_blank" className="external link text-blue-600" href={googleMapsLink(node.latLng)} rel="noreferrer">
         {node.latLng.join(', ')}
@@ -66,10 +66,14 @@ type KeyValueType<T> = {
 
 const keyValue = function <T>(args: KeyValueType<T>) {
   if ('renderer' in args) {
+    const value = args.renderer()
+    if (value === null || value === undefined) {
+      return
+    }
     return (
       <li key={args.key}>
         <span className="font-extrabold me-2">{args.key}:</span>
-        {args.renderer()}
+        {value}
       </li>
     )
   }
@@ -127,7 +131,7 @@ function lastMessages(node: Node) {
   }
 
   return (
-    <li className="text-wrap">
+    <li className="text-wrap" key="lastMessages">
       <span className="font-extrabold me-2">Last messages</span>
       <ul className="list-inside ml-3">{_.compact(node.outbox.map(renderMessage))}</ul>
     </li>
@@ -145,16 +149,16 @@ export function nodeTooltip(node: Node) {
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? 'UNKNOWN' : HardwareModelIDToName[node.hardwareModel]
 
-  const padding = () => <li className="mt-3"></li>
+  const padding = () => <li key={window.crypto.randomUUID()} className="mt-3"></li>
 
   const nodeName = (
-    <li>
+    <li key="longName">
       <span className="font-extrabold me-2">{node.longName}</span> ({nodeRole})
     </li>
   )
 
   const showDetailsButton = (
-    <p className="text-center mt-3">
+    <p className="text-center mt-3" key="showDetails">
       <button className="w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
         Show details
       </button>
@@ -200,7 +204,7 @@ export function nodeTooltip(node: Node) {
   return renderToString(
     <div className="text-base tabular-nums max-w-sm hover:max-w-lg">
       {image}
-      <ul>{elements}</ul>
+      <ul>{_.compact(elements)}</ul>
     </div>
   )
 }

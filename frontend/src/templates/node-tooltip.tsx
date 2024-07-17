@@ -119,8 +119,8 @@ function renderMessage(message: MessageIn | MessageOut) {
   }
 
   return (
-    <li className="mb-1" key={message.time}>
-      <span className="italic">{message.text}</span> {timeAgo(message.time, true)}
+    <li className='message-bubble' key={message.time}>
+      <span className="text-sm">{message.text}</span> {timeAgo(message.time, true)}
     </li>
   )
 }
@@ -132,8 +132,8 @@ function lastMessages(node: Node) {
 
   return (
     <li className="text-wrap" key="lastMessages">
-      <span className="font-extrabold me-2">Last messages</span>
-      <ul className="list-inside ml-3">{_.compact(node.outbox.map(renderMessage))}</ul>
+      <span className="font-extrabold me-2">Recent outgoing LongFast messages</span>
+      <ul className="list-inside ml-1">{_.compact(node.outbox.map(renderMessage))}</ul>
     </li>
   )
 }

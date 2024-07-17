@@ -49,3 +49,7 @@ body {
 [aria-label][class*='cooltipz']::before {
   @apply z-[10001];
 }
+
+.message-bubble {
+  @apply bg-slate-200 px-2 py-2 mt-3 rounded-md;
+}

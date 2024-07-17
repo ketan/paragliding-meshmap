@@ -19,11 +19,13 @@ import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
 import { Node } from './nodes-entity'
 import { AllData, SearchBarApp } from './searchbarapp'
-import { mapLegendTemplate } from './templates/legend'
+import { cssClassFor, mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
 import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import debug from 'debug'
 
+const logger = debug('meshmap')
 interface UIConfig {
   defaultZoomLevelForNode: number
   configNodesMaxAgeInSeconds: number
@@ -107,17 +109,16 @@ async function loadAllData(map: Map) {
 }
 
 function getIconFor(node: Node) {
-  const commonClasses = `bg-white rounded-full border-4 border-none ring-offset-4 ring-4`
   if (node.mqttConnectionState === 'online') {
-    return `ring-green-500 ${commonClasses}`
+    return cssClassFor('online')
   }
   const now = DateTime.now()
   const age = now.diff(DateTime.fromISO(node.updatedAt))
 
   if (age.seconds > uiConfig.configNodesOfflineAgeInSeconds) {
-    return `ring-red-500 ${commonClasses}`
+    return cssClassFor('disconnected')
   }
-  return `ring-blue-500 ${commonClasses}`
+  return cssClassFor('offline')
 }
 
 export interface LatLngZoom {
@@ -224,6 +225,7 @@ function redraw(map: Map) {
     marker.on('click', () => {
       closeAllTooltips(map)
       closeAllPopups(map)
+      logger(`Selected node`, eachNode)
 
       map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip

@@ -5,8 +5,29 @@ export const mapLegendTemplate = renderToString(
     <div>
       <h3 className="text-2xl">Legend</h3>
     </div>
-    <div>Connected</div>
-    <div>Disconnected</div>
-    <div>Offline Too Long</div>
+    <div className="relative pl-4">
+      <span className={`absolute h-3 w-3 rounded-full bg-green-600 border-3 top-0.5 left-0`}></span>
+      Connected
+    </div>
+    <div className="relative pl-4">
+      <span className={`absolute h-3 w-3 rounded-full bg-blue-600 border-3 top-0.5 left-0`}></span>
+      Disconnected
+    </div>
+    <div className="relative pl-4">
+      <span className={`absolute h-3 w-3 rounded-full bg-red-600 border-3 top-0.5 left-0`}></span>
+      Offline Too Long
+    </div>
   </div>
 )
+
+export function cssClassFor(str: 'online' | 'offline' | 'disconnected') {
+  const commonClasses = `bg-white rounded-full border-4 border-none ring-offset-4 ring-4`
+
+  if (str === 'online') {
+    return `ring-green-600 ${commonClasses}`
+  } else if (str === 'disconnected') {
+    return `ring-blue-600 ${commonClasses}`
+  } else if (str === 'offline') {
+    return `ring-red-600 ${commonClasses}`
+  }
+}

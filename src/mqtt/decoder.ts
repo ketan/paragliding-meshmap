@@ -38,28 +38,26 @@ export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, 
     envelope.packet.payloadVariant = payloadVariant
   }
 
-  if (cliOptions.collectServiceEnvelopes) {
-    await createServiceEnvelope(topic, payload, envelope)
-  }
+  await createServiceEnvelope(topic, payload, envelope)
 
   if (envelope.packet.payloadVariant.case == 'decoded') {
     switch (envelope.packet.payloadVariant.value.portnum) {
       case PortNum.TEXT_MESSAGE_APP:
-        return await saveTextMessage(envelope, cliOptions.collectTextMessages)
+        return await saveTextMessage(envelope)
       case PortNum.POSITION_APP:
-        return await updateNodeWithPosition(envelope, cliOptions.collectPositions)
+        return await updateNodeWithPosition(envelope)
       case PortNum.NODEINFO_APP:
         return await createOrUpdateNode(envelope)
       case PortNum.WAYPOINT_APP:
-        return await createOrUpdateWaypoint(envelope, cliOptions.collectWaypoints)
+        return await createOrUpdateWaypoint(envelope)
       case PortNum.NEIGHBORINFO_APP:
-        return await createOrUpdateNeighborInfo(envelope, cliOptions.collectNeighbourInfo)
+        return await createOrUpdateNeighborInfo(envelope)
       case PortNum.TELEMETRY_APP:
         return await createOrUpdateTelemetryData(envelope)
       case PortNum.TRACEROUTE_APP:
         return await createOrUpdateTracerouteMessage(envelope)
       case PortNum.MAP_REPORT_APP:
-        return await createMapReports(envelope, cliOptions.collectMapReports)
+        return await createMapReports(envelope)
     }
   }
 }

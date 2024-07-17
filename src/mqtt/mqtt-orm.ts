@@ -42,13 +42,19 @@ export async function dumpStats(logger: debug.Debugger) {
   logger(`Record counts`, counts)
 }
 export async function purgeData(cliOptions: MQTTCLIOptions) {
-  if (cliOptions.purgeNodesUnheardOlderThan) {
+  if (cliOptions.purgeDataOlderThan) {
     await AppDataSource.transaction(async (trx) => {
-      await DeviceMetric.purge(cliOptions.purgeDeviceMetricsOlderThan, trx)
-      await EnvironmentMetric.purge(cliOptions.purgeEnvironmentMetricsOlderThan, trx)
-      await Node.purge(cliOptions.purgeNodesUnheardOlderThan, trx)
-      await Position.purge(cliOptions.purgePositionsOlderThan, trx)
-      await PowerMetric.purge(cliOptions.purgePowerMetricsOlderThan, trx)
+      await DeviceMetric.purge(cliOptions.purgeDataOlderThan, trx)
+      await EnvironmentMetric.purge(cliOptions.purgeDataOlderThan, trx)
+      await MapReport.purge(cliOptions.purgeDataOlderThan, trx)
+      await NeighbourInfo.purge(cliOptions.purgeDataOlderThan, trx)
+      await Node.purge(cliOptions.purgeDataOlderThan, trx)
+      await Position.purge(cliOptions.purgeDataOlderThan, trx)
+      await PowerMetric.purge(cliOptions.purgeDataOlderThan, trx)
+      await ServiceEnvelope.purge(cliOptions.purgeDataOlderThan, trx)
+      await TextMessage.purge(cliOptions.purgeDataOlderThan, trx)
+      await Traceroute.purge(cliOptions.purgeDataOlderThan, trx)
+      await Waypoint.purge(cliOptions.purgeDataOlderThan, trx)
     })
   }
 }
@@ -80,10 +86,7 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
   })
 }
 
-export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collectTextMessages: boolean) {
-  if (!collectTextMessages) {
-    return
-  }
+export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf) {
   const tm = TextMessage.fromPacket(envelope)
   if (!tm) {
     return
@@ -104,7 +107,7 @@ export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf, collect
   })
 }
 
-export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf, savePosition: boolean) {
+export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf) {
   const position = Position.fromPacket(envelope)
   if (!position) {
     return
@@ -121,9 +124,7 @@ export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf, 
         await trx.save(node)
       }
 
-      if (savePosition) {
-        await position.saveIfNoSimilarRecentPosition(trx)
-      }
+      await position.saveIfNoSimilarRecentPosition(trx)
     } catch (e) {
       errLog(`Unable to update node position`, { err: e, node, position, envelope })
       throw e
@@ -151,10 +152,7 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
   })
 }
 
-export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf, saveWaypoint: boolean) {
-  if (!saveWaypoint) {
-    return
-  }
+export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf) {
   const waypoint = Waypoint.fromPacket(envelope)
   if (!waypoint) {
     return
@@ -170,7 +168,7 @@ export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf, 
   })
 }
 
-export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtobuf, saveNeighborInfo: boolean) {
+export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtobuf) {
   const neighborInfo = NeighbourInfo.fromPacket(envelope)
   if (!neighborInfo) {
     return
@@ -182,7 +180,7 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
     try {
       node = await findOrCreateNode(trx, nodeId)
       node.updateNeighbors(neighborInfo.neighbours)
-      await trx.save(compact([node, saveNeighborInfo ? neighborInfo : null]))
+      await trx.save([node, neighborInfo])
     } catch (e) {
       errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
@@ -263,10 +261,7 @@ export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeP
   })
 }
 
-export async function createMapReports(envelope: ServiceEnvelopeProtobuf, collectMapReports: boolean) {
-  if (!collectMapReports) {
-    return
-  }
+export async function createMapReports(envelope: ServiceEnvelopeProtobuf) {
   const mr = MapReport.fromPacket(envelope)
   if (!mr) {
     return

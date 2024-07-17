@@ -20,12 +20,6 @@ export function addOpts(command: Command) {
   command.option('--mqtt-username <USERNAME>', 'MQTT Username(e.g: meshdev)', 'meshdev')
   command.option('--mqtt-password <PASSWORD>', 'MQTT Password (e.g: large4cats)', 'large4cats')
   command.option('--mqtt-topic <TOPIC>', 'MQTT Topic to subscribe to (e.g: msh/#, msh/IN/#)', 'msh/#')
-  command.option('--no-collect-service-envelopes', 'This option will save all received service envelopes to the database.')
-  command.option('--no-collect-positions', 'This option will save all received positions to the database.')
-  command.option('--no-collect-text-messages', 'This option will save all received text messages to the database.')
-  command.option('--no-collect-waypoints', 'This option will save all received waypoints to the database.')
-  command.option('--no-collect-neighbour-info', 'This option will save all received neighbour infos to the database.')
-  command.option('--no-collect-map-reports', 'This option will save all received map reports to the database.')
   command.option('--decryption-keys <keys...>', 'Decryption keys encoded in base64 to use when decrypting service envelopes.', [
     '1PG7OiApB1nwvP+rz05pAQ==',
   ])
@@ -34,35 +28,11 @@ export function addOpts(command: Command) {
     '--purge-every <duration>',
     'How long to wait between each automatic database purge (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
     parseDuration,
-    defaultDuration
+    Duration.fromISO('PT10M')
   )
   command.option(
-    '--purge-device-metrics-older-than <duration>',
-    'Device Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
-    parseDuration,
-    defaultDuration
-  )
-  command.option(
-    '--purge-environment-metrics-older-than <duration>',
-    'Environment Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
-    parseDuration,
-    defaultDuration
-  )
-  command.option(
-    '--purge-power-metrics-older-than <duration>',
-    'Power Metrics older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
-    parseDuration,
-    defaultDuration
-  )
-  command.option(
-    '--purge-nodes-unheard-older-than <duration>',
-    "Nodes that haven't been heard from in this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).",
-    parseDuration,
-    defaultDuration
-  )
-  command.option(
-    '--purge-positions-older-than <duration>',
-    'Positions older than this many seconds will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
+    '--purge-data-older-than <duration>',
+    'Data older than this duration will be purged from the database (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations).',
     parseDuration,
     defaultDuration
   )
@@ -94,19 +64,9 @@ export interface MQTTCLIOptions {
   mqttUsername: string
   mqttPassword: string
   mqttTopic: string
-  collectServiceEnvelopes: boolean
-  collectPositions: boolean
-  collectTextMessages: boolean
-  collectWaypoints: boolean
-  collectNeighbourInfo: boolean
-  collectMapReports: boolean
   decryptionKeys: string[]
   purgeEvery: Duration
-  purgeDeviceMetricsOlderThan: Duration
-  purgeEnvironmentMetricsOlderThan: Duration
-  purgePowerMetricsOlderThan: Duration
-  purgeNodesUnheardOlderThan: Duration
-  purgePositionsOlderThan: Duration
+  purgeDataOlderThan: Duration
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

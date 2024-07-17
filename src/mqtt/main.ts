@@ -25,17 +25,19 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
 
   setInterval(() => {
     dumpStats(logger)
-  }, Duration.fromISO(`PT10M`).toMillis())
+  }, Duration.fromISO(`PT30S`).toMillis())
   dumpStats(logger)
 
   if (cliOptions.purgeEvery) {
-    logger(`Purging data every ${cliOptions.purgeEvery.toHuman()}`)
+    logger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
 
     setInterval(async () => {
       logger(`Purging data now`)
       await purgeData(cliOptions)
+      logger(`Next purge in ${cliOptions.purgeEvery.toHuman()}`)
     }, cliOptions.purgeEvery.as('millisecond'))
   }
+  purgeData(cliOptions)
 
   client.on('connect', async () => {
     logger(`Connected to ${cliOptions.mqttBrokerUrl}`)

@@ -1,9 +1,10 @@
+import { AppDataSource } from '#config/data-source'
+import { errLog } from '#helpers/logger'
+import { dateTimeType } from '#helpers/migration-helper'
+import { parseProtobuf } from '#helpers/utils'
 import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity, EntityManager } from 'typeorm'
-import { AppDataSource } from '#config/data-source'
-import { dateTimeType } from '#helpers/migration-helper'
-import { parseProtobuf } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
@@ -11,7 +12,6 @@ import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
-import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class Node extends BaseType {
@@ -176,8 +176,8 @@ export default class Node extends BaseType {
     AppDataSource.manager.merge(Node, this, {
       nodeId: position.from,
       positionUpdatedAt: new Date(),
-      latitude: position.latitude,
-      longitude: position.longitude,
+      latitude: BaseType.sanitizeNumber(position.latitude), // unlikely that lat/lon/alt are exactly `0`
+      longitude: BaseType.sanitizeNumber(position.longitude),
       altitude: BaseType.sanitizeNumber(position.altitude),
     })
   }
@@ -191,17 +191,21 @@ export default class Node extends BaseType {
 
   inboundMessage(tm: TextMessage) {
     this.inbox ||= []
-    this.inbox.unshift({ from: tm.from, text: tm.text, time: new Date() })
+    this.inbox.unshift({ from: tm.from, text: tm.text, time: this.now() })
   }
 
   outboundMessage(tm: TextMessage) {
     this.outbox ||= []
-    this.outbox.unshift({ to: tm.to, text: tm.text, time: new Date() })
+    this.outbox.unshift({ to: tm.to, text: tm.text, time: this.now() })
   }
 
   static async hardwareModels(mgr: EntityManager) {
     return (
       (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
+  }
+
+  now() {
+    return new Date().toJSON()
   }
 }

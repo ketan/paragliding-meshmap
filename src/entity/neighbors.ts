@@ -5,7 +5,7 @@ export interface Neighbors {
 
 interface Message {
   text: string
-  time: Date
+  time: string
 }
 export interface MessageIn extends Message {
   from: number

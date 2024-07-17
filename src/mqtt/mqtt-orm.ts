@@ -120,11 +120,13 @@ export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf) 
     try {
       if (position.latitude != null && position.longitude != null) {
         node = await findOrCreateNode(trx, nodeId)
+        const recentPosition = await position.findRecentPosition(secondsAgo(15), trx)
+        if (recentPosition) {
+          return
+        }
         node.updatePosition(position)
-        await trx.save(node)
+        await trx.save([node, position])
       }
-
-      await position.saveIfNoSimilarRecentPosition(trx)
     } catch (e) {
       errLog(`Unable to update node position`, { err: e, node, position, envelope })
       throw e

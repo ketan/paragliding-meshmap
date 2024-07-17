@@ -65,20 +65,14 @@ export default class Position extends BaseType {
     }
   }
 
-  async hasRecentPosition(since: Date, trx: EntityManager) {
-    return !!(await trx.findOne(Position, {
+  async findRecentPosition(since: Date, trx: EntityManager) {
+    return await trx.findOne(Position, {
       where: {
         nodeId: this.nodeId,
         packetId: this.packetId,
         createdAt: MoreThanOrEqual(since),
       },
-    }))
-  }
-
-  async saveIfNoSimilarRecentPosition(trx: EntityManager) {
-    if (!(await this.hasRecentPosition(secondsAgo(15), trx))) {
-      await trx.save(this)
-    }
+    })
   }
 
   static async positionsForNode(nodeId: string | number) {

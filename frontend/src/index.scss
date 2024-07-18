@@ -52,4 +52,10 @@ body {
 
 .message-bubble {
   @apply bg-slate-200 px-2 py-2 mt-3 rounded-md;
+
+  &:before {
+    // show quotes
+    content: '“';
+    @apply font-serif text-4xl leading-[0];
+  }
 }

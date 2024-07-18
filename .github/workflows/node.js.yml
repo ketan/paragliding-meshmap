@@ -50,4 +50,4 @@ jobs:
       with:
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ghcr.io/ketan/paragliding-meshmap:latest,ghcr.io/ketan/paragliding-meshmap:{{ steps.commit.outputs.short }}
+        tags: ghcr.io/ketan/paragliding-meshmap:latest,ghcr.io/ketan/paragliding-meshmap:${{ steps.commit.outputs.short }}

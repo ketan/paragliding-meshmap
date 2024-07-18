@@ -1,13 +1,12 @@
+import { BaseType } from '#entity/base_type'
 import { errLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
 import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
-import { Duration } from 'luxon'
 import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
-import { BaseType } from '#entity/base_type'
 
 export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
@@ -26,21 +25,20 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
     concurrency: 1,
   })
 
-  setInterval(() => {
+  if (cliOptions.dumpStatsEvery) {
+    setInterval(() => {
+      dumpStats(logger)
+    }, cliOptions.dumpStatsEvery.as('millisecond'))
     dumpStats(logger)
-  }, Duration.fromISO(`PT30S`).toMillis())
-  dumpStats(logger)
+  }
 
   if (cliOptions.purgeEvery) {
     logger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
-
     setInterval(async () => {
-      logger(`Purging data now`)
-      await purgeData(cliOptions)
-      logger(`Next purge in ${cliOptions.purgeEvery.toHuman()}`)
+      await purgeData(cliOptions, logger)
     }, cliOptions.purgeEvery.as('millisecond'))
   }
-  purgeData(cliOptions)
+  purgeData(cliOptions, logger)
 
   client.on('connect', async () => {
     logger(`Connected to ${cliOptions.mqttBrokerUrl}`)

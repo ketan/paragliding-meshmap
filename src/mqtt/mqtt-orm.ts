@@ -41,8 +41,10 @@ export async function dumpStats(logger: debug.Debugger) {
 
   logger(`Record counts`, counts)
 }
-export async function purgeData(cliOptions: MQTTCLIOptions) {
+export async function purgeData(cliOptions: MQTTCLIOptions, logger: debug.Debugger) {
   if (cliOptions.purgeDataOlderThan) {
+    await dumpStats(logger)
+    logger(`Purging data now`)
     await AppDataSource.transaction(async (trx) => {
       await DeviceMetric.purge(cliOptions.purgeDataOlderThan, trx)
       await EnvironmentMetric.purge(cliOptions.purgeDataOlderThan, trx)
@@ -56,6 +58,8 @@ export async function purgeData(cliOptions: MQTTCLIOptions) {
       await Traceroute.purge(cliOptions.purgeDataOlderThan, trx)
       await Waypoint.purge(cliOptions.purgeDataOlderThan, trx)
     })
+    await dumpStats(logger)
+    logger(`Next purge in ${cliOptions.purgeEvery.toHuman()}`)
   }
 }
 

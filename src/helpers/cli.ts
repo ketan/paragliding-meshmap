@@ -36,6 +36,12 @@ export function addOpts(command: Command) {
     parseDuration,
     defaultDuration
   )
+  command.option(
+    '--dump-stats-every <duration>',
+    'Dump stats at specified intervals (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations)',
+    parseDuration,
+    Duration.fromISO('PT5M')
+  )
 }
 
 export function webCLIParse() {
@@ -67,6 +73,7 @@ export interface MQTTCLIOptions {
   decryptionKeys: string[]
   purgeEvery: Duration
   purgeDataOlderThan: Duration
+  dumpStatsEvery: Duration
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

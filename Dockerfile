@@ -3,12 +3,13 @@ FROM node:22-alpine AS build
 COPY . /app
 WORKDIR /app
 
-RUN apk add -U git \
-  && npm install \
+RUN npm install \
   && npm run build
+
 
 FROM node:22-alpine
 
+ARG GIT_SHA
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT

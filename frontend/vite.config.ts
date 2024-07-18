@@ -8,7 +8,7 @@ import Inspect from 'vite-plugin-inspect'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const commitHash = child.execSync('git rev-parse --short HEAD').toString()
+const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString()
 
 // https://vitejs.dev/config/
 export default defineConfig({

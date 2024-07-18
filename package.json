@@ -17,7 +17,7 @@
     "typeorm": "typeorm-ts-node-esm",
     "migrate": "typeorm-ts-node-esm migration:run -d src/config/data-source.ts",
     "schema-to-ts": "bin/schema-to-ts",
-    "docker:build": "docker build . --progress plain --tag paragliding-meshmap:$(git log -1  --pretty=format:%cd --date=format:%Y-%m-%d_%H-%M)_$(git rev-parse --short HEAD) --tag paragliding-meshmap",
+    "docker:build": "docker build . --progress plain --tag paragliding-meshmap --build-arg GIT_SHA=$(git rev-parse --short HEAD) --tag paragliding-meshmap",
     "test": "mocha",
     "test:watch": "nodemon --config nodemon.test.json --exec mocha"
   },

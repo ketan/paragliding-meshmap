@@ -39,7 +39,7 @@ export default class DeviceMetric extends BaseType {
 
   static fromTelemetry(nodeId: number, telemetry: DeviceMetrics) {
     try {
-      return AppDataSource.manager.merge(DeviceMetric, new DeviceMetric(), {
+      const entity = AppDataSource.manager.merge(DeviceMetric, new DeviceMetric(), {
         nodeId: nodeId,
         batteryLevel: this.sanitizeNumber(telemetry.batteryLevel),
         voltage: this.sanitizeNumber(telemetry.voltage),
@@ -47,6 +47,8 @@ export default class DeviceMetric extends BaseType {
         airUtilTx: this.sanitizeNumber(telemetry.airUtilTx),
         uptimeSeconds: this.sanitizeNumber(telemetry.uptimeSeconds),
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, telemetry)
+      return entity
     } catch (e) {
       errLog(`unable to create device metric`, { error: e, telemetry })
     }

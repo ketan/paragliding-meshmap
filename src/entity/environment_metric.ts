@@ -48,7 +48,7 @@ export default class EnvironmentMetric extends BaseType {
 
   static fromTelemetry(nodeId: number, telemetry: EnvironmentMetrics) {
     try {
-      return AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
+      const entity = AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
         nodeId: nodeId,
         temperature: this.sanitizeNumber(telemetry.temperature),
         relativeHumidity: this.sanitizeNumber(telemetry.relativeHumidity),
@@ -58,6 +58,8 @@ export default class EnvironmentMetric extends BaseType {
         current: this.sanitizeNumber(telemetry.current),
         iaq: this.sanitizeNumber(telemetry.iaq),
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, telemetry)
+      return entity
     } catch (e) {
       errLog(`unable to create environment metric`, { err: e, telemetry })
     }

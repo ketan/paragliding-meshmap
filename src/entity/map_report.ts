@@ -56,7 +56,7 @@ export default class MapReport extends BaseType {
     const mr = parseProtobuf(() => MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
 
     try {
-      return AppDataSource.manager.merge(MapReport, new MapReport(), {
+      const entity = AppDataSource.manager.merge(MapReport, new MapReport(), {
         nodeId: packet.from,
         longName: mr.longName,
         shortName: mr.shortName,
@@ -72,6 +72,8 @@ export default class MapReport extends BaseType {
         positionPrecision: mr.positionPrecision,
         numOnlineLocalNodes: mr.numOnlineLocalNodes,
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, mr, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to create map report`, { err: e, mr, envelope })
     }

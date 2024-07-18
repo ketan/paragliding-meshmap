@@ -48,7 +48,7 @@ export default class TextMessage extends BaseType {
     const packet = envelope.packet!
 
     try {
-      return AppDataSource.manager.merge(TextMessage, new TextMessage(), {
+      const entity = AppDataSource.manager.merge(TextMessage, new TextMessage(), {
         channelId: envelope.channelId,
         channel: packet.channel,
         from: packet.from,
@@ -62,6 +62,8 @@ export default class TextMessage extends BaseType {
         rxSnr: packet.rxSnr,
         rxTime: packet.rxTime,
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to parse text message`, { err: e, envelope })
     }

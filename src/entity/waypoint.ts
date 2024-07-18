@@ -58,7 +58,7 @@ export default class Waypoint extends BaseType {
     )
 
     try {
-      return AppDataSource.manager.merge(Waypoint, new Waypoint(), {
+      const entity = AppDataSource.manager.merge(Waypoint, new Waypoint(), {
         to: packet.to,
         from: packet.from,
         waypointId: waypoint.id,
@@ -74,6 +74,9 @@ export default class Waypoint extends BaseType {
         channelId: envelope.channelId,
         gatewayId: toBigInt(envelope.gatewayId),
       })
+
+      this.decodeLogger(`Decoded ${this.name}`, entity, waypoint, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to parse waypoint`, { err: e, waypoint, envelope })
     }

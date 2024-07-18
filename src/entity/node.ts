@@ -134,7 +134,7 @@ export default class Node extends BaseType {
     const user = parseProtobuf(() => User.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
 
     try {
-      return AppDataSource.manager.merge(Node, new Node(), {
+      const entity = AppDataSource.manager.merge(Node, new Node(), {
         nodeId: packet.from,
         longName: user.longName,
         shortName: user.shortName,
@@ -142,6 +142,9 @@ export default class Node extends BaseType {
         isLicensed: user.isLicensed,
         role: user.role,
       })
+
+      this.decodeLogger(`Decoded ${this.name}`, entity, user, envelope)
+      return entity
     } catch (e) {
       errLog(`Unable to create node`, { err: e, user, envelope })
     }

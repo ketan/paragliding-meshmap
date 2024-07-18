@@ -46,7 +46,7 @@ export default class Position extends BaseType {
     )
 
     try {
-      return AppDataSource.manager.merge(Position, new Position(), {
+      const entity = AppDataSource.manager.merge(Position, new Position(), {
         nodeId: packet.from,
         to: packet.to,
         from: packet.from,
@@ -60,6 +60,9 @@ export default class Position extends BaseType {
         longitude: position.longitudeI,
         altitude: position.altitude,
       })
+
+      this.decodeLogger(`Decoded ${this.name}`, entity, position, envelope)
+      return entity
     } catch (e) {
       errLog(`Unable to parse position`, { err: e, position, envelope })
     }

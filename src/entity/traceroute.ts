@@ -38,7 +38,7 @@ export default class Traceroute extends BaseType {
     const rd = parseProtobuf(() => RouteDiscovery.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
 
     try {
-      return AppDataSource.manager.merge(Traceroute, new Traceroute(), {
+      const entity = AppDataSource.manager.merge(Traceroute, new Traceroute(), {
         to: packet.to,
         from: packet.from,
         wantResponse: (packet.payloadVariant.value as Data).wantResponse,
@@ -48,6 +48,8 @@ export default class Traceroute extends BaseType {
         channelId: envelope.channelId,
         gatewayId: toBigInt(envelope.gatewayId),
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, rd, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to parse traceroute`, { err: e, rd, envelope })
     }

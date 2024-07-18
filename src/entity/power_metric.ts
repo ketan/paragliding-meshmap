@@ -51,7 +51,7 @@ export default class PowerMetric extends BaseType {
 
   static fromTelemetry(nodeId: number, telemetry: PowerMetrics) {
     try {
-      return AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
+      const entity = AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
         nodeId: nodeId,
         ch1Current: telemetry.ch1Current,
         ch1Voltage: telemetry.ch1Voltage,
@@ -62,6 +62,8 @@ export default class PowerMetric extends BaseType {
         ch3Current: telemetry.ch3Current,
         ch3Voltage: telemetry.ch3Voltage,
       })
+      this.decodeLogger(`Decoded ${this.name}`, entity, telemetry)
+      return entity
     } catch (e) {
       errLog(`unable to parse power metric`, { err: e, metrics: telemetry })
     }

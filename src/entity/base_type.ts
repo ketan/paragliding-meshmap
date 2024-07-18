@@ -5,6 +5,7 @@ import { CreateDateColumn, Entity, EntityManager, PrimaryGeneratedColumn, Update
 @Entity()
 export abstract class BaseType {
   static logger = debug('meshmap:model')
+  static decodeLogger = debug('meshmap:decode')
 
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number

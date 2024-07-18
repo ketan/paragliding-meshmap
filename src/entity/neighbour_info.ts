@@ -26,7 +26,7 @@ export default class NeighbourInfo extends BaseType {
     )
 
     try {
-      return AppDataSource.manager.merge(NeighbourInfo, new NeighbourInfo(), {
+      const entity = AppDataSource.manager.merge(NeighbourInfo, new NeighbourInfo(), {
         nodeId: packet.from,
         nodeBroadcastIntervalSecs: neighborInfo.nodeBroadcastIntervalSecs,
         neighbours: neighborInfo.neighbors.map((neighbour) => {
@@ -36,6 +36,9 @@ export default class NeighbourInfo extends BaseType {
           }
         }),
       })
+
+      this.decodeLogger(`Decoded ${this.name}`, entity, neighborInfo, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to create neighbour info`, { err: e, neighborInfo, envelope })
     }

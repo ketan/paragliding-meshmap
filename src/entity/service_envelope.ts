@@ -30,7 +30,7 @@ export default class ServiceEnvelope extends BaseType {
     const packet = envelope.packet!
 
     try {
-      return AppDataSource.manager.merge(ServiceEnvelope, new ServiceEnvelope(), {
+      const entity = AppDataSource.manager.merge(ServiceEnvelope, new ServiceEnvelope(), {
         from: packet.from,
         to: packet.to,
 
@@ -39,6 +39,9 @@ export default class ServiceEnvelope extends BaseType {
         channelId: envelope.channelId,
         gatewayId: toBigInt(envelope.gatewayId),
       })
+
+      this.decodeLogger(`Decoded ${this.name}`, entity, envelope)
+      return entity
     } catch (e) {
       errLog(`unable to service envelope`, { err: e, envelope })
     }

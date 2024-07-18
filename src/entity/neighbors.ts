@@ -7,6 +7,7 @@ interface Message {
   text: string
   time: string
 }
+
 export interface MessageIn extends Message {
   from: number
 }

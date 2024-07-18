@@ -1,0 +1,5 @@
+{
+  "watch": ["src", "package.json", "tsconfig.json", "package-lock.json", "test"],
+  "ignore": ["build", "tmp", "dist"],
+  "ext": "*"
+}

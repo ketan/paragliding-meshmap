@@ -4,7 +4,8 @@ import { dateTimeType } from '#helpers/migration-helper'
 import { parseProtobuf } from '#helpers/utils'
 import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Column, Entity, EntityManager } from 'typeorm'
+import { DateTime } from 'luxon'
+import { BeforeInsert, BeforeUpdate, Column, Entity, EntityManager } from 'typeorm'
 import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
@@ -107,6 +108,25 @@ export default class Node extends BaseType {
 
   @Column({ type: 'double precision', nullable: true })
   temperature?: number
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  purgeTextMessages() {
+    const purgeDataOlderThan = BaseType.purgeDataOlderThan
+    if (!purgeDataOlderThan) {
+      return
+    }
+
+    const now = DateTime.now()
+
+    this.inbox = this.inbox?.filter((msg) => {
+      return now.diff(DateTime.fromISO(msg.time)) < purgeDataOlderThan
+    })
+
+    this.outbox = this.outbox?.filter((msg) => {
+      return now.diff(DateTime.fromISO(msg.time)) < purgeDataOlderThan
+    })
+  }
 
   static fromPacket(envelope: ServiceEnvelope) {
     const packet = envelope.packet!

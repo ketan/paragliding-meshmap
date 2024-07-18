@@ -15,6 +15,9 @@ export abstract class BaseType {
   @CreateDateColumn()
   createdAt: Date
 
+  static purgeEvery?: Duration
+  static purgeDataOlderThan?: Duration
+
   static sanitizeNumber(num: number | undefined) {
     if (num !== 0) {
       return num

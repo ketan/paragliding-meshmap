@@ -7,12 +7,15 @@ import { Duration } from 'luxon'
 import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
+import { BaseType } from '#entity/base_type'
 
 export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
   logger(`Starting mqtt with options`, cliOptions)
+  BaseType.purgeDataOlderThan = cliOptions.purgeDataOlderThan
+  BaseType.purgeEvery = cliOptions.purgeEvery
 
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {
     username: cliOptions.mqttUsername,

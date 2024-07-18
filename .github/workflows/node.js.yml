@@ -19,7 +19,6 @@ jobs:
       attestations: write
       id-token: write
 
-
     strategy:
       matrix:
         node-version: [22.x]
@@ -39,12 +38,15 @@ jobs:
     - run: npm run build
     -
       name: Set up QEMU
+      if: github.event_name != 'pull_request'
       uses: docker/setup-qemu-action@v3
     -
       name: Set up Docker Buildx
+      if: github.event_name != 'pull_request'
       uses: docker/setup-buildx-action@v3
     -
       name: Login to GitLab
+      if: github.event_name != 'pull_request'
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
@@ -52,6 +54,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     -
       name: Publish docker images
+      if: github.event_name != 'pull_request'
       uses: docker/build-push-action@v5
       with:
         platforms: linux/amd64,linux/arm64

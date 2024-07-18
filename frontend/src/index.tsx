@@ -11,7 +11,7 @@ import 'leaflet.markercluster'
 
 // our stuff
 import _ from 'lodash'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { NodeRoleNameToID } from './hardware-modules'
@@ -26,16 +26,17 @@ import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, saniti
 import debug from 'debug'
 
 const logger = debug('meshmap')
+logger.enabled = true
 interface UIConfig {
   defaultZoomLevelForNode: number
-  configNodesMaxAgeInSeconds: number
-  configNodesOfflineAgeInSeconds: number
+  configNodesMaxAge: Duration
+  configNodesOfflineAge: Duration
 }
 
 const uiConfig: UIConfig = {
   defaultZoomLevelForNode: 15,
-  configNodesMaxAgeInSeconds: 24 * 3600, // 24 hours
-  configNodesOfflineAgeInSeconds: 3600, // 1 hour
+  configNodesMaxAge: Duration.fromISO('PT1H'),
+  configNodesOfflineAge: Duration.fromISO('PT15M'),
 }
 
 const allData: AllData = {
@@ -83,7 +84,7 @@ async function loadAllData(map: Map) {
   const now = DateTime.now()
   allData.newerNodes = allData.allNodes.filter((eachNode) => {
     const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
-    return age.seconds < uiConfig.configNodesMaxAgeInSeconds
+    return age < uiConfig.configNodesMaxAge
   })
 
   allData.newerNodesWithPosition = allData.newerNodes.filter((eachNode) => {
@@ -109,16 +110,19 @@ async function loadAllData(map: Map) {
 }
 
 function getIconFor(node: Node) {
+  let icon = cssClassFor('disconnected')
   if (node.mqttConnectionState === 'online') {
-    return cssClassFor('online')
+    icon = cssClassFor('online')
   }
+
   const now = DateTime.now()
   const age = now.diff(DateTime.fromISO(node.updatedAt))
 
-  if (age.seconds > uiConfig.configNodesOfflineAgeInSeconds) {
-    return cssClassFor('disconnected')
+  if (age > uiConfig.configNodesOfflineAge) {
+    icon = cssClassFor('offline')
   }
-  return cssClassFor('offline')
+
+  return icon
 }
 
 export interface LatLngZoom {

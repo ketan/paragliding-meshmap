@@ -5,13 +5,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -22,41 +21,37 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
-    - id: commit
-      uses: prompt/actions-commit-hash@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
-    - run: npm test
-    - run: npm run build
-    -
-      name: Set up QEMU
-      if: github.event_name != 'pull_request'
-      uses: docker/setup-qemu-action@v3
-    -
-      name: Set up Docker Buildx
-      if: github.event_name != 'pull_request'
-      uses: docker/setup-buildx-action@v3
-    -
-      name: Login to GitLab
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    -
-      name: Publish docker images
-      if: github.event_name != 'pull_request'
-      uses: docker/build-push-action@v5
-      with:
-        platforms: linux/amd64,linux/arm64
-        push: true
-        provenance: true
-        tags: ghcr.io/ketan/paragliding-meshmap:latest,ghcr.io/ketan/paragliding-meshmap:${{ steps.commit.outputs.short }}
-        build-args: GIT_SHA=${{ steps.commit.outputs.short }}
+      - uses: actions/checkout@v4
+      - id: commit
+        uses: prompt/actions-commit-hash@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Set up QEMU
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitLab
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish docker images
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: true
+          tags: ghcr.io/ketan/paragliding-meshmap:latest,ghcr.io/ketan/paragliding-meshmap:${{ steps.commit.outputs.short }}
+          build-args: GIT_SHA=${{ steps.commit.outputs.short }}

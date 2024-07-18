@@ -119,7 +119,7 @@ function renderMessage(message: MessageIn | MessageOut) {
   }
 
   return (
-    <li className='message-bubble' key={message.time}>
+    <li className="message-bubble" key={message.time}>
       <span className="text-sm">{message.text}</span> {timeAgo(message.time, true)}
     </li>
   )

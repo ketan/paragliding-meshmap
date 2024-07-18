@@ -46,7 +46,11 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
     logger(`Subscribed to ${cliOptions.mqttTopic}`)
   })
 
+  let messageId = 0
   async function handleMessageWithRetry(topic: string, payload: Buffer) {
+    messageId++
+    BaseType.decodeLogger(`Begin msg - ${messageId} - ${topic}`)
+
     try {
       await pRetry(() => processMessage(cliOptions, topic, payload), {
         retries: 5,
@@ -54,6 +58,7 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
     } catch (e) {
       errLog(`ignoring payload`, e)
     }
+    BaseType.decodeLogger(`End msg - ${messageId}`)
   }
 
   client.on('message', async (topic, payload) => {

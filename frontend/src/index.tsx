@@ -29,14 +29,18 @@ const logger = debug('meshmap')
 logger.enabled = true
 interface UIConfig {
   defaultZoomLevelForNode: number
+
+  // Don't show nodes older than this
   configNodesMaxAge: Duration
+
+  // Nodes older than this are considered offline
   configNodesOfflineAge: Duration
 }
 
 const uiConfig: UIConfig = {
-  defaultZoomLevelForNode: 15,
-  configNodesMaxAge: Duration.fromISO('PT1H'),
-  configNodesOfflineAge: Duration.fromISO('PT15M'),
+  defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
+  configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P2D'),
+  configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'PT1D'),
 }
 
 const allData: AllData = {

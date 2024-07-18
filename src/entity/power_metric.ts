@@ -10,22 +10,22 @@ export default class PowerMetric extends BaseType {
   @Column({ type: 'bigint' })
   nodeId: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch1_voltage' })
   ch1Voltage?: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch1_current' })
   ch1Current?: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch2_voltage' })
   ch2Voltage?: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch2_current' })
   ch2Current?: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch3_voltage' })
   ch3Voltage?: number
 
-  @Column({ type: 'double precision', nullable: true })
+  @Column({ type: 'double precision', nullable: true, name: 'ch3_current' })
   ch3Current?: number
 
   async findRecentSimilarMetric(since: Date, trx: EntityManager) {

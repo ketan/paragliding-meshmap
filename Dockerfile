@@ -3,7 +3,8 @@ FROM node:22-alpine AS build
 COPY . /app
 WORKDIR /app
 
-RUN npm install \
+RUN apk add -U git \
+  && npm install \
   && npm run build
 
 FROM node:22-alpine

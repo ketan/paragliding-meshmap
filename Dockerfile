@@ -5,9 +5,11 @@ LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT
 
 COPY package-lock.json build /app/
-WORKDIR /app
-RUN npm install --include prod && npm cache clean --force
 COPY package.json /app/
+WORKDIR /app
+
+RUN npm install --include prod \
+  && npm cache clean --force
 
 ENV DEBUG_COLORS=true
 ENV NODE_ENV=production

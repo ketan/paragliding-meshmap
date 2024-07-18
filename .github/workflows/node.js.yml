@@ -13,6 +13,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
 
     strategy:
       matrix:
@@ -50,5 +56,6 @@ jobs:
       with:
         platforms: linux/amd64,linux/arm64
         push: true
+        provenance: true
         tags: ghcr.io/ketan/paragliding-meshmap:latest,ghcr.io/ketan/paragliding-meshmap:${{ steps.commit.outputs.short }}
         build-args: GIT_SHA=${{ steps.commit.outputs.short }}

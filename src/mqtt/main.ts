@@ -56,7 +56,7 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
         retries: 5,
       })
     } catch (e) {
-      errLog(`ignoring payload`, e)
+      errLog(`ignoring payload`, { err: e, topic, payload })
     }
     BaseType.decodeLogger(`End msg - ${messageId}`)
   }

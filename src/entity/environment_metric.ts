@@ -1,8 +1,8 @@
-import { EnvironmentMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { BaseType } from './base_type.js'
 import { errLog } from '#helpers/logger'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {
@@ -46,7 +46,7 @@ export default class EnvironmentMetric extends BaseType {
     })
   }
 
-  static fromTelemetry(nodeId: number, telemetry: EnvironmentMetrics) {
+  static fromTelemetry(nodeId: number, telemetry: meshtastic.EnvironmentMetrics) {
     try {
       const entity = AppDataSource.manager.merge(EnvironmentMetric, new EnvironmentMetric(), {
         nodeId: nodeId,

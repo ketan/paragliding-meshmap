@@ -1,11 +1,10 @@
 import { AppDataSource } from '#config/data-source'
+import { errLog } from '#helpers/logger'
 import { parseProtobuf } from '#helpers/utils'
-import { Data, NeighborInfo as NeighborInfoPB } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
-import { errLog } from '#helpers/logger'
 
 @Entity()
 export default class NeighbourInfo extends BaseType {
@@ -18,21 +17,25 @@ export default class NeighbourInfo extends BaseType {
   @Column({ type: 'json' })
   neighbours: Neighbors[]
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
+  static fromPacket(envelope: meshtastic.ServiceEnvelope) {
+    const packet = envelope.packet
+    const payload = packet?.decoded?.payload
 
-    const neighborInfo = parseProtobuf(() =>
-      NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
-    )
+    if (!payload) {
+      return
+    }
+
+    // NeighborInfoPB.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
+    const neighborInfo = parseProtobuf(() => meshtastic.NeighborInfo.decode(payload))
 
     try {
       const entity = AppDataSource.manager.merge(NeighbourInfo, new NeighbourInfo(), {
-        nodeId: packet.from,
-        nodeBroadcastIntervalSecs: neighborInfo.nodeBroadcastIntervalSecs,
+        nodeId: packet.from!,
+        nodeBroadcastIntervalSecs: neighborInfo.nodeBroadcastIntervalSecs!,
         neighbours: neighborInfo.neighbors.map((neighbour) => {
           return {
-            nodeId: neighbour.nodeId,
-            snr: neighbour.snr,
+            nodeId: neighbour.nodeId!,
+            snr: neighbour.snr!,
           }
         }),
       })

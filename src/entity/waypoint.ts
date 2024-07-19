@@ -1,10 +1,9 @@
-import { Data, Waypoint as WaypointProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 import { errLog } from '#helpers/logger'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 
 @Entity()
 export default class Waypoint extends BaseType {
@@ -50,28 +49,31 @@ export default class Waypoint extends BaseType {
   @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
+  static fromPacket(envelope: meshtastic.ServiceEnvelope) {
+    const packet = envelope.packet
+    const payload = packet?.decoded?.payload
 
-    const waypoint = parseProtobuf(() =>
-      WaypointProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
-    )
+    if (!payload) {
+      return
+    }
+
+    const waypoint = parseProtobuf(() => meshtastic.Waypoint.decode(payload))
 
     try {
       const entity = AppDataSource.manager.merge(Waypoint, new Waypoint(), {
-        to: packet.to,
-        from: packet.from,
-        waypointId: waypoint.id,
-        latitude: waypoint.latitudeI,
-        longitude: waypoint.longitudeI,
-        expire: waypoint.expire,
-        lockedTo: waypoint.lockedTo,
-        name: waypoint.name,
-        description: waypoint.description,
-        icon: waypoint.icon,
-        channel: packet.channel,
-        packetId: packet.id,
-        channelId: envelope.channelId,
+        to: packet.to!,
+        from: packet.from!,
+        waypointId: waypoint.id!,
+        latitude: waypoint.latitudeI!,
+        longitude: waypoint.longitudeI!,
+        expire: waypoint.expire!,
+        lockedTo: waypoint.lockedTo!,
+        name: waypoint.name!,
+        description: waypoint.description!,
+        icon: waypoint.icon!,
+        channel: packet.channel!,
+        packetId: packet.id!,
+        channelId: envelope.channelId!,
         gatewayId: toBigInt(envelope.gatewayId),
       })
 

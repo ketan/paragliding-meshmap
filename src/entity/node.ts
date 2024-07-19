@@ -2,10 +2,9 @@ import { AppDataSource } from '#config/data-source'
 import { errLog } from '#helpers/logger'
 import { dateTimeType } from '#helpers/migration-helper'
 import { parseProtobuf } from '#helpers/utils'
-import { Data, User } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { DateTime } from 'luxon'
 import { BeforeInsert, BeforeUpdate, Column, Entity, EntityManager } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
@@ -128,19 +127,24 @@ export default class Node extends BaseType {
     })
   }
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
+  static fromPacket(envelope: meshtastic.ServiceEnvelope) {
+    const packet = envelope.packet
+    const payload = packet?.decoded?.payload
 
-    const user = parseProtobuf(() => User.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
+    if (!payload) {
+      return
+    }
+
+    const user = parseProtobuf(() => meshtastic.User.decode(payload))
 
     try {
       const entity = AppDataSource.manager.merge(Node, new Node(), {
-        nodeId: packet.from,
-        longName: user.longName,
-        shortName: user.shortName,
-        hardwareModel: user.hwModel,
-        isLicensed: user.isLicensed,
-        role: user.role,
+        nodeId: packet.from!,
+        longName: user.longName!,
+        shortName: user.shortName!,
+        hardwareModel: user.hwModel!,
+        isLicensed: user.isLicensed!,
+        role: user.role!,
       })
 
       this.decodeLogger(`Decoded ${this.name}`, entity, user, envelope)

@@ -1,9 +1,8 @@
 import { AppDataSource } from '#config/data-source'
 import { errLog } from '#helpers/logger'
 import { parseProtobuf, toBigInt } from '#helpers/utils'
-import { Data, Position as PositionProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { BaseType } from './base_type.js'
 
 @Entity()
@@ -38,27 +37,30 @@ export default class Position extends BaseType {
   @Column({ type: 'integer', nullable: true })
   altitude?: number
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
+  static fromPacket(envelope: meshtastic.ServiceEnvelope) {
+    const packet = envelope.packet
+    const payload = packet?.decoded?.payload
 
-    const position = parseProtobuf(() =>
-      PositionProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true })
-    )
+    if (!payload) {
+      return
+    }
+
+    const position = parseProtobuf(() => meshtastic.Position.decode(payload))
 
     try {
       const entity = AppDataSource.manager.merge(Position, new Position(), {
-        nodeId: packet.from,
-        to: packet.to,
-        from: packet.from,
+        nodeId: packet.from!,
+        to: packet.to!,
+        from: packet.from!,
 
-        channel: packet.channel,
-        packetId: packet.id,
-        channelId: envelope.channelId,
+        channel: packet.channel!,
+        packetId: packet.id!,
+        channelId: envelope.channelId!,
         gatewayId: toBigInt(envelope.gatewayId),
 
-        latitude: position.latitudeI,
-        longitude: position.longitudeI,
-        altitude: position.altitude,
+        latitude: position.latitudeI!,
+        longitude: position.longitudeI!,
+        altitude: position.altitude!,
       })
 
       this.decodeLogger(`Decoded ${this.name}`, entity, position, envelope)

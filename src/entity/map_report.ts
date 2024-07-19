@@ -1,10 +1,9 @@
-import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { MapReport as MapReportProtobuf, ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
-import { BaseType } from './base_type.js'
-import { parseProtobuf } from '#helpers/utils'
 import { errLog } from '#helpers/logger'
+import { parseProtobuf } from '#helpers/utils'
+import { Column, Entity } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
+import { BaseType } from './base_type.js'
 
 @Entity()
 export default class MapReport extends BaseType {
@@ -50,27 +49,32 @@ export default class MapReport extends BaseType {
   @Column({ type: 'integer', nullable: true })
   numOnlineLocalNodes?: number
 
-  static fromPacket(envelope: ServiceEnvelope) {
-    const packet = envelope.packet!
+  static fromPacket(envelope: meshtastic.ServiceEnvelope) {
+    const packet = envelope.packet
+    const payload = packet?.decoded?.payload
 
-    const mr = parseProtobuf(() => MapReportProtobuf.fromBinary((packet.payloadVariant.value as Data).payload, { readUnknownFields: true }))
+    if (payload) {
+      return
+    }
+
+    const mr = parseProtobuf(() => meshtastic.MapReport.decode(payload))
 
     try {
       const entity = AppDataSource.manager.merge(MapReport, new MapReport(), {
-        nodeId: packet.from,
-        longName: mr.longName,
-        shortName: mr.shortName,
-        role: mr.role,
-        hardwareModel: mr.hwModel,
-        firmwareVersion: mr.firmwareVersion,
-        region: mr.region,
-        modemPreset: mr.modemPreset,
-        hasDefaultChannel: mr.hasDefaultChannel,
-        latitude: mr.latitudeI,
-        longitude: mr.longitudeI,
-        altitude: mr.altitude,
-        positionPrecision: mr.positionPrecision,
-        numOnlineLocalNodes: mr.numOnlineLocalNodes,
+        nodeId: packet.from!,
+        longName: mr.longName!,
+        shortName: mr.shortName!,
+        role: mr.role!,
+        hardwareModel: mr.hwModel!,
+        firmwareVersion: mr.firmwareVersion!,
+        region: mr.region!,
+        modemPreset: mr.modemPreset!,
+        hasDefaultChannel: mr.hasDefaultChannel!,
+        latitude: mr.latitudeI!,
+        longitude: mr.longitudeI!,
+        altitude: mr.altitude!,
+        positionPrecision: mr.positionPrecision!,
+        numOnlineLocalNodes: mr.numOnlineLocalNodes!,
       })
       this.decodeLogger(`Decoded ${this.name}`, entity, mr, envelope)
       return entity

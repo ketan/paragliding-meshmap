@@ -19,7 +19,10 @@ export abstract class BaseType {
   static purgeEvery?: Duration
   static purgeDataOlderThan?: Duration
 
-  static sanitizeNumber(num: number | undefined) {
+  static sanitizeNumber(num: number | undefined | null) {
+    if (num === undefined || num === null) {
+      return undefined
+    }
     if (num !== 0) {
       return num
     }

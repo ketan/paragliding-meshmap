@@ -1,9 +1,9 @@
-import { PowerMetrics } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 import { secondsAgo } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 import { errLog } from '#helpers/logger'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 
 @Entity()
 export default class PowerMetric extends BaseType {
@@ -49,18 +49,18 @@ export default class PowerMetric extends BaseType {
     }
   }
 
-  static fromTelemetry(nodeId: number, telemetry: PowerMetrics) {
+  static fromTelemetry(nodeId: number, telemetry: meshtastic.PowerMetrics) {
     try {
       const entity = AppDataSource.manager.merge(PowerMetric, new PowerMetric(), {
         nodeId: nodeId,
-        ch1Current: telemetry.ch1Current,
-        ch1Voltage: telemetry.ch1Voltage,
+        ch1Current: telemetry.ch1Current!,
+        ch1Voltage: telemetry.ch1Voltage!,
 
-        ch2Current: telemetry.ch2Current,
-        ch2Voltage: telemetry.ch2Voltage,
+        ch2Current: telemetry.ch2Current!,
+        ch2Voltage: telemetry.ch2Voltage!,
 
-        ch3Current: telemetry.ch3Current,
-        ch3Voltage: telemetry.ch3Voltage,
+        ch3Current: telemetry.ch3Current!,
+        ch3Voltage: telemetry.ch3Voltage!,
       })
       this.decodeLogger(`Decoded ${this.name}`, entity, telemetry)
       return entity

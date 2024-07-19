@@ -1,10 +1,10 @@
-import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Column, Entity } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
-import { toBigInt } from '#helpers/utils'
-import { BaseType } from './base_type.js'
-import { blobType } from '#helpers/migration-helper'
 import { errLog } from '#helpers/logger'
+import { blobType } from '#helpers/migration-helper'
+import { toBigInt } from '#helpers/utils'
+import { Column, Entity } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
+import { BaseType } from './base_type.js'
 
 @Entity()
 export default class ServiceEnvelope extends BaseType {
@@ -26,17 +26,17 @@ export default class ServiceEnvelope extends BaseType {
   @Column({ type: blobType() })
   protobuf: Buffer
 
-  static fromPacket(mqttTopic: string, payload: Buffer, envelope: ServiceEnvelopeProtobuf) {
+  static fromPacket(mqttTopic: string, payload: Buffer, envelope: meshtastic.ServiceEnvelope) {
     const packet = envelope.packet!
 
     try {
       const entity = AppDataSource.manager.merge(ServiceEnvelope, new ServiceEnvelope(), {
-        from: packet.from,
-        to: packet.to,
+        from: packet.from!,
+        to: packet.to!,
 
         protobuf: payload,
         mqttTopic: mqttTopic,
-        channelId: envelope.channelId,
+        channelId: envelope.channelId!,
         gatewayId: toBigInt(envelope.gatewayId),
       })
 

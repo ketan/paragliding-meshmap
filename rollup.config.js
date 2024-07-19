@@ -5,7 +5,7 @@ import { defineConfig } from 'rollup'
 import { fileURLToPath } from 'url'
 
 const inputs = Object.fromEntries(
-  globSync('src/**/*.{ts,js,tsx}').map((file) => [
+  globSync('src/**/*.{ts,js,tsx}', { ignore: '**/*.d.ts' }).map((file) => [
     // This remove `src/` as well as the file extension from each
     // file, so e.g. src/nested/foo.js becomes nested/foo
     path.relative('src', file.slice(0, file.length - path.extname(file).length)),

@@ -13,13 +13,11 @@ import Traceroute from '#entity/traceroute'
 import Waypoint from '#entity/waypoint'
 import { errLog } from '#helpers/logger'
 import { parseProtobuf, secondsAgo } from '#helpers/utils'
-import { Data } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
-import { ServiceEnvelope as ServiceEnvelopeProtobuf } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { Telemetry } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/telemetry_pb.js'
 import debug from 'debug'
 import compact from 'lodash/compact.js'
 import { AbortError } from 'p-retry'
 import { EntityManager } from 'typeorm'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
 export async function dumpStats(logger: debug.Debugger) {
@@ -78,7 +76,7 @@ export async function updateMQTTStatus(nodeId: number, mqttConnectionState: stri
   })
 }
 
-export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, envelope: ServiceEnvelopeProtobuf) {
+export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, envelope: meshtastic.ServiceEnvelope) {
   const se = ServiceEnvelope.fromPacket(mqttTopic, payload, envelope)
   await AppDataSource.transaction(async (trx) => {
     try {
@@ -90,7 +88,7 @@ export async function createServiceEnvelope(mqttTopic: string, payload: Buffer, 
   })
 }
 
-export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf) {
+export async function saveTextMessage(envelope: meshtastic.ServiceEnvelope) {
   const tm = TextMessage.fromPacket(envelope)
   if (!tm) {
     return
@@ -111,7 +109,7 @@ export async function saveTextMessage(envelope: ServiceEnvelopeProtobuf) {
   })
 }
 
-export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf) {
+export async function updateNodeWithPosition(envelope: meshtastic.ServiceEnvelope) {
   const position = Position.fromPacket(envelope)
   if (!position) {
     return
@@ -138,7 +136,7 @@ export async function updateNodeWithPosition(envelope: ServiceEnvelopeProtobuf) 
   })
 }
 
-export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
+export async function createOrUpdateNode(envelope: meshtastic.ServiceEnvelope) {
   const newNode = Node.fromPacket(envelope)
   if (!newNode) {
     return
@@ -158,7 +156,7 @@ export async function createOrUpdateNode(envelope: ServiceEnvelopeProtobuf) {
   })
 }
 
-export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf) {
+export async function createOrUpdateWaypoint(envelope: meshtastic.ServiceEnvelope) {
   const waypoint = Waypoint.fromPacket(envelope)
   if (!waypoint) {
     return
@@ -174,7 +172,7 @@ export async function createOrUpdateWaypoint(envelope: ServiceEnvelopeProtobuf) 
   })
 }
 
-export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtobuf) {
+export async function createOrUpdateNeighborInfo(envelope: meshtastic.ServiceEnvelope) {
   const neighborInfo = NeighbourInfo.fromPacket(envelope)
   if (!neighborInfo) {
     return
@@ -194,16 +192,21 @@ export async function createOrUpdateNeighborInfo(envelope: ServiceEnvelopeProtob
   })
 }
 
-export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProtobuf) {
-  const telemetry = parseProtobuf(() =>
-    Telemetry.fromBinary((envelope.packet!.payloadVariant.value as Data).payload, { readUnknownFields: true })
-  )
+export async function createOrUpdateTelemetryData(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  const payload = packet?.decoded?.payload
+
+  if (!payload) {
+    return
+  }
+
+  const telemetry = parseProtobuf(() => meshtastic.Telemetry.decode(payload))
 
   if (!telemetry) {
     return
   }
 
-  const nodeId = envelope.packet!.from
+  const nodeId = packet.from!
 
   let node: Node | null
   let metric: DeviceMetric | EnvironmentMetric | PowerMetric | undefined
@@ -211,8 +214,8 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
   await AppDataSource.transaction(async (trx) => {
     try {
       node = await findOrCreateNode(trx, nodeId)
-      if (telemetry.variant.case == 'deviceMetrics') {
-        metric = DeviceMetric.fromTelemetry(nodeId, telemetry.variant.value)
+      if (telemetry.variant == 'deviceMetrics') {
+        metric = DeviceMetric.fromTelemetry(nodeId, telemetry.deviceMetrics!)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
@@ -222,8 +225,8 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           node.updateDeviceMetrics(metric)
           await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
-      } else if (telemetry.variant.case == 'environmentMetrics') {
-        metric = EnvironmentMetric.fromTelemetry(nodeId, telemetry.variant.value)
+      } else if (telemetry.variant == 'environmentMetrics') {
+        metric = EnvironmentMetric.fromTelemetry(nodeId, telemetry.environmentMetrics!)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
@@ -233,8 +236,8 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
           node.updateEnvironmentMetrics(metric)
           await trx.save(compact([node, recentSimilarMetric ? null : metric]))
         }
-      } else if (telemetry.variant.case == 'powerMetrics') {
-        metric = PowerMetric.fromTelemetry(nodeId, telemetry.variant.value)
+      } else if (telemetry.variant == 'powerMetrics') {
+        metric = PowerMetric.fromTelemetry(nodeId, telemetry.powerMetrics!)
         if (metric) {
           recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
@@ -251,7 +254,7 @@ export async function createOrUpdateTelemetryData(envelope: ServiceEnvelopeProto
   })
 }
 
-export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeProtobuf) {
+export async function createOrUpdateTracerouteMessage(envelope: meshtastic.ServiceEnvelope) {
   const traceroute = Traceroute.fromPacket(envelope)
   if (!traceroute) {
     return
@@ -267,7 +270,7 @@ export async function createOrUpdateTracerouteMessage(envelope: ServiceEnvelopeP
   })
 }
 
-export async function createMapReports(envelope: ServiceEnvelopeProtobuf) {
+export async function createMapReports(envelope: meshtastic.ServiceEnvelope) {
   const mr = MapReport.fromPacket(envelope)
   if (!mr) {
     return

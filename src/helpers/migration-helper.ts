@@ -1,4 +1,4 @@
-import { QueryRunner, TableIndex } from 'typeorm'
+import { QueryRunner, TableColumn, TableIndex } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 
 export function primaryKeyType(queryRunner: QueryRunner) {
@@ -21,6 +21,40 @@ export async function dropIndices(queryRunner: QueryRunner, tableName: string, c
     tableName,
     columnNames.map((eachColumn) => new TableIndex({ name: `${tableName}_${eachColumn}_idx`, columnNames: [eachColumn] }))
   )
+}
+
+export async function makeColumnNullable(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
+  const table = await queryRunner.getTable(tableName)
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const columnName = columnNames[index]
+    const existingColumn = table?.findColumnByName(columnName)
+    if (!existingColumn) {
+      throw Error(`Column ${columnName} not found in table ${tableName}`)
+    }
+    await queryRunner.changeColumn(
+      tableName,
+      columnName,
+      new TableColumn({ type: existingColumn.type, name: columnName, isNullable: true })
+    )
+  }
+}
+
+export async function makeColumnNonNullable(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
+  const table = await queryRunner.getTable(tableName)
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const columnName = columnNames[index]
+    const existingColumn = table?.findColumnByName(columnName)
+    if (!existingColumn) {
+      throw Error(`Column ${columnName} not found in table ${tableName}`)
+    }
+    await queryRunner.changeColumn(
+      tableName,
+      columnName,
+      new TableColumn({ type: existingColumn.type, name: columnName, isNullable: false })
+    )
+  }
 }
 
 export function dateTimeType() {

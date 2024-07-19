@@ -1,5 +1,5 @@
-import { Data, MeshPacket } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mesh_pb.js'
 import crypto from 'crypto'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 
 function createNonce(packetId: number, fromNode: number) {
   // Expand packetId to 64 bits
@@ -30,17 +30,17 @@ function algorithmForKey(key: Buffer) {
   }
 }
 
-export function decrypt(packet: MeshPacket, decryptionKeys: string[]): { value: Data; case: 'decoded' } | null {
-  if (packet.payloadVariant.case == 'decoded') {
-    return packet.payloadVariant
+export function decrypt(packet: meshtastic.IMeshPacket, decryptionKeys: string[]) {
+  if (packet.decoded) {
+    return packet.decoded
   }
 
-  if (packet.payloadVariant.case === 'encrypted') {
+  if (packet.encrypted) {
     for (const eachKey in decryptionKeys) {
       try {
         const key = Buffer.from(eachKey, 'base64')
 
-        const nonceBuffer = createNonce(packet.id, packet.from)
+        const nonceBuffer = createNonce(packet.id!, packet.from!)
 
         const algorithm = algorithmForKey(key)
 
@@ -52,10 +52,10 @@ export function decrypt(packet: MeshPacket, decryptionKeys: string[]): { value: 
         const decipher = crypto.createDecipheriv(algorithm, key, nonceBuffer)
 
         // decrypt encrypted packet
-        const decryptedBuffer = Buffer.concat([decipher.update(packet.payloadVariant.value), decipher.final()])
+        const decryptedBuffer = Buffer.concat([decipher.update(packet.encrypted), decipher.final()])
 
         // parse as data message
-        return { case: 'decoded', value: Data.fromBinary(decryptedBuffer, { readUnknownFields: true }) }
+        return meshtastic.Data.decode(decryptedBuffer)
       } catch (ignore) {
         // ignore
       }

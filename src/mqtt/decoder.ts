@@ -1,5 +1,3 @@
-import { ServiceEnvelope } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/mqtt_pb.js'
-import { PortNum } from '@buf/meshtastic_protobufs.bufbuild_es/meshtastic/portnums_pb.js'
 import { parseProtobuf, toBigInt } from '../helpers/utils.js'
 import { decrypt } from './decryption.js'
 import { MQTTCLIOptions } from '../helpers/cli.js'
@@ -15,6 +13,7 @@ import {
   updateMQTTStatus,
   updateNodeWithPosition,
 } from './mqtt-orm.js'
+import { meshtastic } from '../gen/meshtastic-protobufs.js'
 
 export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
@@ -27,7 +26,7 @@ export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, 
     return
   }
 
-  const envelope = parseProtobuf(() => ServiceEnvelope.fromBinary(payload, { readUnknownFields: true }))
+  const envelope = parseProtobuf(() => meshtastic.ServiceEnvelope.decode(payload))
 
   if (!envelope.packet) {
     return
@@ -35,28 +34,28 @@ export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, 
 
   const payloadVariant = decrypt(envelope.packet, cliOptions.decryptionKeys)
   if (payloadVariant) {
-    envelope.packet.payloadVariant = payloadVariant
+    envelope.packet.decoded = payloadVariant
   }
 
   await createServiceEnvelope(topic, payload, envelope)
 
-  if (envelope.packet.payloadVariant.case == 'decoded') {
-    switch (envelope.packet.payloadVariant.value.portnum) {
-      case PortNum.TEXT_MESSAGE_APP:
+  if (envelope.packet.decoded) {
+    switch (envelope.packet.decoded.portnum) {
+      case meshtastic.PortNum.TEXT_MESSAGE_APP:
         return await saveTextMessage(envelope)
-      case PortNum.POSITION_APP:
+      case meshtastic.PortNum.POSITION_APP:
         return await updateNodeWithPosition(envelope)
-      case PortNum.NODEINFO_APP:
+      case meshtastic.PortNum.NODEINFO_APP:
         return await createOrUpdateNode(envelope)
-      case PortNum.WAYPOINT_APP:
+      case meshtastic.PortNum.WAYPOINT_APP:
         return await createOrUpdateWaypoint(envelope)
-      case PortNum.NEIGHBORINFO_APP:
+      case meshtastic.PortNum.NEIGHBORINFO_APP:
         return await createOrUpdateNeighborInfo(envelope)
-      case PortNum.TELEMETRY_APP:
+      case meshtastic.PortNum.TELEMETRY_APP:
         return await createOrUpdateTelemetryData(envelope)
-      case PortNum.TRACEROUTE_APP:
+      case meshtastic.PortNum.TRACEROUTE_APP:
         return await createOrUpdateTracerouteMessage(envelope)
-      case PortNum.MAP_REPORT_APP:
+      case meshtastic.PortNum.MAP_REPORT_APP:
         return await createMapReports(envelope)
     }
   }

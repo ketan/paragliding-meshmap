@@ -15,4 +15,4 @@ npx pbjs \
 sed -i -e 's@"protobufjs/minimal"@"protobufjs/minimal.js"@g' -e 's@import \* as \$protobuf @import \$protobuf @g' src/gen/meshtastic-protobufs.js
 
 npx pbts -o src/gen/meshtastic-protobufs.d.ts src/gen/meshtastic-protobufs.js
-yarn run prettier -w src/gen/meshtastic-protobufs.*
+npx prettier -w src/gen/meshtastic-protobufs.*

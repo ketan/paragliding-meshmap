@@ -132,7 +132,9 @@ function lastMessages(node: Node) {
     .reverse()
     .slice(0, 5)
 
-  console.log(top5RecentMessages)
+  if (top5RecentMessages.length === 0) {
+    return
+  }
 
   return (
     <li className="text-wrap" key="lastMessages">

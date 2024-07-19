@@ -1,4 +1,4 @@
-FROM node:22-slim AS build
+FROM node:22.4-alpine AS build
 
 COPY . /app
 WORKDIR /app
@@ -10,7 +10,7 @@ RUN ls -alh \
   && ls -alh node_modules/.bin \
   && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build
 
-FROM node:22-slim
+FROM node:22.4-alpine
 
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"

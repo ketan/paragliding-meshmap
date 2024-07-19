@@ -5,7 +5,7 @@ WORKDIR /app
 ARG GIT_SHA
 
 RUN yarn install --frozen-lockfile \
-  && GIT_SHA=${GIT_SHA} yarn run build
+  && GIT_SHA=${GIT_SHA} yarn run --debug --verbose build
 
 FROM node:22-alpine
 

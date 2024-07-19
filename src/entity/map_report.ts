@@ -16,8 +16,8 @@ export default class MapReport extends BaseType {
   @Column({ type: 'text' })
   shortName: string
 
-  @Column({ type: 'integer' })
-  role: number
+  @Column({ type: 'integer', nullable: true })
+  role?: number
 
   @Column({ type: 'integer' })
   hardwareModel: number

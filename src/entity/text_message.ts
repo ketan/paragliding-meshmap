@@ -40,8 +40,8 @@ export default class TextMessage extends BaseType {
   @Column({ type: 'integer', nullable: true })
   hopLimit?: number
 
-  @Column({ type: 'boolean' })
-  wantResponse: boolean
+  @Column({ type: 'boolean', nullable: true })
+  wantResponse?: boolean | null
 
   static fromPacket(envelope: meshtastic.ServiceEnvelope) {
     const packet = envelope.packet!

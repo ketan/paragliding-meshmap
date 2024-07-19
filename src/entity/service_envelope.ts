@@ -17,11 +17,11 @@ export default class ServiceEnvelope extends BaseType {
   @Column({ type: 'bigint', nullable: true })
   gatewayId?: number
 
-  @Column({ type: 'bigint' })
-  to: number
+  @Column({ type: 'bigint', nullable: true })
+  to?: number
 
-  @Column({ type: 'bigint' })
-  from: number
+  @Column({ type: 'bigint', nullable: true })
+  from?: number
 
   @Column({ type: blobType() })
   protobuf: Buffer

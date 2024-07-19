@@ -4,10 +4,7 @@ COPY . /app
 WORKDIR /app
 ARG GIT_SHA
 
-RUN ls -alh \
-  && yarn install \
-  && sleep 10 \
-  && ls -alh node_modules/.bin \
+RUN yarn install --frozen-lockfile \
   && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build
 
 FROM node:22.4-alpine

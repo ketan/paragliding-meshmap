@@ -5,8 +5,7 @@ WORKDIR /app
 ARG GIT_SHA
 
 RUN yarn install --frozen-lockfile \
-  && GIT_SHA=${GIT_SHA} npm run build
-
+  && GIT_SHA=${GIT_SHA} yarn run build
 
 FROM node:22-alpine
 
@@ -18,7 +17,7 @@ COPY --from=build /app/package.json /app/package-lock.json /app/build /app/
 WORKDIR /app
 
 RUN yarn install --frozen-lockfile --prod \
-  && npm cache clean --force
+  && yarn cache clean --force
 
 ENV DEBUG_COLORS=true
 ENV NODE_ENV=production

@@ -44,6 +44,7 @@ export default defineConfig({
     'p-retry',
     'path',
     'pluralize',
+    'protobufjs/minimal.js',
     'reflect-metadata',
     'ts-parse-database-url',
     'typeorm',

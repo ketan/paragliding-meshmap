@@ -26,7 +26,8 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const dbConnectionOpts = parseDatabaseUrl.default(process.env.DB_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`)
+const dbConfig = parseDatabaseUrl.default(process.env.DB_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`)
+const dbConnectionOpts = { ...dbConfig, username: dbConfig.user }
 
 let driver = dbConnectionOpts.driver
 if (driver === 'postgresql') {
@@ -36,11 +37,17 @@ if (driver === 'sqlite3') {
   driver = 'sqlite'
 }
 
+// remove driver
+delete dbConnectionOpts.driver
+
+// remove port if empty
+if (!dbConnectionOpts.port) {
+  delete dbConnectionOpts.driver
+}
+
 export const connString = <DataSourceOptions>{
   ...dbConnectionOpts,
   namingStrategy: new SnakeNamingStrategy(),
-  port: Number(dbConnectionOpts.port),
-  driver: undefined,
   type: driver,
   synchronize: false,
   logging: 'all',

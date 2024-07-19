@@ -53,7 +53,7 @@ export default class MapReport extends BaseType {
     const packet = envelope.packet
     const payload = packet?.decoded?.payload
 
-    if (payload) {
+    if (!payload) {
       return
     }
 

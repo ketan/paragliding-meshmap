@@ -1,5 +1,5 @@
 import { BaseType } from '#entity/base_type'
-import { errLog } from '#helpers/logger'
+import { errLog, perfLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
 import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
@@ -49,7 +49,7 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   let messageId = 0
   async function handleMessageWithRetry(topic: string, payload: Buffer) {
     messageId++
-    BaseType.decodeLogger(`Begin msg - ${messageId} - ${topic}`)
+    perfLog(`Begin msg - ${messageId} - ${topic}`)
 
     try {
       await pRetry(() => processMessage(cliOptions, topic, payload), {
@@ -58,7 +58,7 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
     } catch (e) {
       errLog(`ignoring payload`, { err: e, topic, payload })
     }
-    BaseType.decodeLogger(`End msg - ${messageId}`)
+    perfLog(`End msg - ${messageId}`)
   }
 
   client.on('message', async (topic, payload) => {

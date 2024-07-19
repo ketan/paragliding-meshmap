@@ -12,7 +12,7 @@ import express, { Request, Response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { createDatabase } from 'typeorm-extension'
-import { connString } from '#config/conn-string'
+import { connString, dbConnectionConcurrency } from '#config/conn-string'
 const cliOptions = webCLIParse()
 
 await createDatabase({ options: connString })
@@ -20,7 +20,7 @@ await AppDataSource.initialize()
 await AppDataSource.runMigrations({ transaction: 'each' })
 
 if (cliOptions.mqtt) {
-  mqttProcessor(cliOptions)
+  mqttProcessor(cliOptions, dbConnectionConcurrency)
 }
 
 const environment = process.env.NODE_ENV || 'development'

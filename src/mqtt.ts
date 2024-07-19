@@ -2,7 +2,7 @@
 import 'dotenv/config'
 
 //
-import { connString } from '#config/conn-string'
+import { connString, dbConnectionConcurrency } from '#config/conn-string'
 import { AppDataSource } from '#config/data-source'
 import { mqttProcessor } from '#mqtt/main'
 import { createDatabase } from 'typeorm-extension'
@@ -14,4 +14,4 @@ await createDatabase({ options: connString })
 await AppDataSource.initialize()
 await AppDataSource.runMigrations({ transaction: 'each' })
 
-mqttProcessor(cliOptions)
+mqttProcessor(cliOptions, dbConnectionConcurrency)

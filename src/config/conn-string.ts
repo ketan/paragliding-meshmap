@@ -7,7 +7,7 @@ import parseDatabaseUrl from 'ts-parse-database-url'
 import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
 import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
-
+import os from 'os'
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
   tableName(targetName: string, userSpecifiedName: string | undefined): string {
@@ -58,3 +58,8 @@ export const connString = <DataSourceOptions>{
   subscribers: [],
   parseInt8: true, // https://github.com/typeorm/typeorm/issues/8583
 }
+
+export const dbConnectionConcurrency =
+  connString.type === 'sqlite' || connString.type === 'better-sqlite3'
+    ? 1
+    : Number(process.env.DB_CONNECTION_CONCURRENCY) || os.cpus().length

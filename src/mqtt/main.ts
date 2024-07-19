@@ -8,7 +8,7 @@ import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
-export function mqttProcessor(cliOptions: MQTTCLIOptions) {
+export function mqttProcessor(cliOptions: MQTTCLIOptions, dbConnectionConcurrency: number) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
@@ -22,7 +22,7 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   })
 
   const queue = new PQueue({
-    concurrency: 1,
+    concurrency: dbConnectionConcurrency,
   })
 
   if (cliOptions.dumpStatsEvery) {

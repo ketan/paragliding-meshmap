@@ -62,6 +62,6 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions) {
   }
 
   client.on('message', async (topic, payload) => {
-    queue.add(async () => handleMessageWithRetry(topic, payload))
+    queue.add(() => handleMessageWithRetry(topic, payload))
   })
 }

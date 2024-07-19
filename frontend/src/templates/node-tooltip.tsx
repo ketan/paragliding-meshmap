@@ -114,10 +114,6 @@ const keyValue = function <T>(args: KeyValueType<T>) {
 
 const MINUS_ONE_HEX = Number('0xffffffff')
 function renderMessage(message: MessageIn | MessageOut) {
-  if (('from' in message && message.from !== MINUS_ONE_HEX) || ('to' in message && message.to !== MINUS_ONE_HEX)) {
-    return
-  }
-
   return (
     <li className="message-bubble" key={message.time}>
       <span className="text-sm">{message.text}</span> {timeAgo(message.time, true)}
@@ -130,10 +126,21 @@ function lastMessages(node: Node) {
     return
   }
 
+  const top5RecentMessages = node.outbox
+    .filter((msg) => ('from' in msg && msg.from === MINUS_ONE_HEX) || ('to' in msg && msg.to === MINUS_ONE_HEX))
+    .sort((a, b) => {
+      console.log(a.time, b.time)
+      return DateTime.fromISO(a.time).diff(DateTime.fromISO(b.time)).toMillis()
+    })
+    .slice(0, 5)
+    .reverse()
+
+  console.log(top5RecentMessages)
+
   return (
     <li className="text-wrap" key="lastMessages">
       <span className="font-extrabold me-2">Recent outgoing LongFast messages</span>
-      <ul className="list-inside ml-1">{_.compact(node.outbox.map(renderMessage))}</ul>
+      <ul className="list-inside ml-1">{top5RecentMessages.map(renderMessage)}</ul>
     </li>
   )
 }

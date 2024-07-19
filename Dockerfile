@@ -6,7 +6,7 @@ ARG GIT_SHA
 
 RUN yarn install --frozen-lockfile \
   && ls -alh node_modules/.bin \
-  && GIT_SHA=${GIT_SHA} yarn run --debug --verbose build
+  && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build
 
 FROM node:22-alpine
 

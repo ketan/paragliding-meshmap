@@ -5,7 +5,7 @@ WORKDIR /app
 ARG GIT_SHA
 
 RUN ls -alh \
-  && yarn install --frozen-lockfile \
+  && yarn install \
   && sleep 10 \
   && ls -alh node_modules/.bin \
   && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build

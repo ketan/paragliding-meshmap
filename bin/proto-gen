@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+rm -rf ./src/protos src/gen/meshtastic-protobufs.js src/gen/meshtastic-protobufs.d.ts
+mkdir -p src/gen
+
+npx @bufbuild/buf  export buf.build/meshtastic/protobufs -o ./src/protos
+npx pbjs \
+  --target static-module \
+  --no-create --no-encode --no-verify --no-convert --no-delimited --no-typeurl --null-defaults --alt-comment \
+  --path ./src/protos \
+  --wrap es6 \
+  --out src/gen/meshtastic-protobufs.js \
+  src/protos/meshtastic/mqtt.proto
+
+sed -i -e 's@"protobufjs/minimal"@"protobufjs/minimal.js"@g' -e 's@import \* as \$protobuf @import \$protobuf @g' src/gen/meshtastic-protobufs.js
+
+npx pbts -o src/gen/meshtastic-protobufs.d.ts src/gen/meshtastic-protobufs.js
+yarn run prettier -w src/gen/meshtastic-protobufs.*

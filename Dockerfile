@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshm
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT
 
-COPY --from=build /app/package.json /app/package-lock.json /app/build /app/
+COPY --from=build /app/package.json /app/yarn.lock /app/build /app/
 WORKDIR /app
 
 RUN yarn install --frozen-lockfile --prod \

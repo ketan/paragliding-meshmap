@@ -11,8 +11,11 @@ import bodyParser from 'body-parser'
 import express, { Request, Response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { createDatabase } from 'typeorm-extension'
+import { connString } from '#config/conn-string'
 const cliOptions = webCLIParse()
 
+await createDatabase({ options: connString })
 await AppDataSource.initialize()
 await AppDataSource.runMigrations({ transaction: 'each' })
 

@@ -59,6 +59,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-unused-imports": "^3.2.0",
+    "fastq": "^1.17.1",
     "glob": "^11.0.0",
     "globals": "^15.8.0",
     "leaflet": "^1.9.4",
@@ -105,7 +106,8 @@
     "sqlite3": "^5.1.7",
     "supports-color": "^9.4.0",
     "ts-parse-database-url": "^1.0.3",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.5.1"
   },
   "engines": {
     "node": ">=22.0"

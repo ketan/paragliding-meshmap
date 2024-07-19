@@ -3,8 +3,8 @@
 # Deployment
 
 ```bash
-npm install
-npm run docker:build
+yarn install
+yarn run docker:build
 docker run -it -e DEBUG='typeorm*,meshmap*,-mqtt*' -e DB_URL=... paragliding-meshmap
 ```
 

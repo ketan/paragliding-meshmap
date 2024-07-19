@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app
 ARG GIT_SHA
 
-RUN npm install \
+RUN yarn install --frozen-lockfile \
   && GIT_SHA=${GIT_SHA} npm run build
 
 
@@ -17,7 +17,7 @@ LABEL org.opencontainers.image.licenses=MIT
 COPY --from=build /app/package.json /app/package-lock.json /app/build /app/
 WORKDIR /app
 
-RUN npm install --include prod \
+RUN yarn install --frozen-lockfile --prod \
   && npm cache clean --force
 
 ENV DEBUG_COLORS=true

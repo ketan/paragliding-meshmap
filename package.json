@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf build frontend/dist",
-    "build": "npm run clean && concurrently npm:build:fe npm:build:be && cp -rf frontend/dist build/public",
+    "build": "yarn run clean && concurrently npm:build:fe npm:build:be && cp -rf frontend/dist build/public",
     "build:be": "npx rollup -c rollup.config.js",
     "build:fe": "cd frontend && tsc -b && vite build --mode=production",
     "start": "concurrently -P \"npm:start:be -- {@}\" npm:start:fe --",
@@ -13,7 +13,7 @@
     "prod": "node index.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "fmt": "npm run format",
+    "fmt": "yarn run format",
     "typeorm": "typeorm-ts-node-esm",
     "migrate": "typeorm-ts-node-esm migration:run -d src/config/data-source.ts",
     "schema-to-ts": "bin/schema-to-ts",

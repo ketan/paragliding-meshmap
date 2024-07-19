@@ -128,12 +128,9 @@ function lastMessages(node: Node) {
 
   const top5RecentMessages = node.outbox
     .filter((msg) => ('from' in msg && msg.from === MINUS_ONE_HEX) || ('to' in msg && msg.to === MINUS_ONE_HEX))
-    .sort((a, b) => {
-      console.log(a.time, b.time)
-      return DateTime.fromISO(a.time).diff(DateTime.fromISO(b.time)).toMillis()
-    })
-    .slice(0, 5)
+    .sort((a, b) => DateTime.fromISO(a.time).diff(DateTime.fromISO(b.time)).toMillis())
     .reverse()
+    .slice(0, 5)
 
   console.log(top5RecentMessages)
 

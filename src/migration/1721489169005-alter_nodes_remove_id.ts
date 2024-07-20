@@ -6,7 +6,7 @@ export class AlterNodesRemoveId1721489169005 implements MigrationInterface {
         await queryRunner.dropColumn('nodes', 'id')
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(_queryRunner: QueryRunner): Promise<void> {
     }
 
 }

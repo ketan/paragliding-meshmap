@@ -53,10 +53,17 @@ export function mqttProcessor(cliOptions: MQTTCLIOptions, dbConnectionConcurrenc
 
     try {
       await pRetry(() => processMessage(cliOptions, topic, payload), {
-        retries: 5,
+        retries: 2,
+        randomize: true,
+        minTimeout: 100,
+        maxTimeout: 1000,
       })
     } catch (e) {
-      errLog(`ignoring payload`, { err: e, topic, payload })
+      if (e instanceof RangeError || (e.message && (e.message as string).includes('invalid wire type'))) {
+        // ignore
+      } else {
+        errLog(`ignoring payload`, { err: e, topic, payload })
+      }
     }
     perfLog(`End msg - ${messageId}`)
   }

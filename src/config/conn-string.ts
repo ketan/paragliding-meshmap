@@ -64,6 +64,5 @@ export const dbConnectionConcurrency =
     ? 1
     : Number(process.env.DB_CONNECTION_CONCURRENCY) || os.cpus().length
 
-
 console.log(`Using connection parameters`, connString)
 console.log(`Using connection concurrency`, dbConnectionConcurrency)

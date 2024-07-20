@@ -65,10 +65,8 @@ export async function updateMQTTStatus(nodeId: number, mqttConnectionState: stri
   let node: Node | null
 
   await AppDataSource.transaction(async (trx) => {
-    node = await findOrCreateNode(trx, nodeId)
     try {
-      node.updateMqttStatus(mqttConnectionState, mqttConnectionStateUpdatedAt)
-      await trx.save(node)
+      await Node.updateMqttStatus(trx, nodeId, mqttConnectionState, mqttConnectionStateUpdatedAt)
     } catch (e) {
       errLog(`Unable to update mqtt status`, { err: e, node })
       throw e
@@ -115,22 +113,17 @@ export async function updateNodeWithPosition(envelope: meshtastic.ServiceEnvelop
     return
   }
 
-  const nodeId = position.from
-  let node: Node | null
-
   await AppDataSource.transaction(async (trx) => {
     try {
       if (position.latitude != null && position.longitude != null) {
-        node = await findOrCreateNode(trx, nodeId)
         const recentPosition = await position.findRecentPosition(secondsAgo(15), trx)
         if (recentPosition) {
           return
         }
-        node.updatePosition(position)
-        await trx.save([node, position])
+        await Node.updatePosition(trx, await trx.save(position))
       }
     } catch (e) {
-      errLog(`Unable to update node position`, { err: e, node, position, envelope })
+      errLog(`Unable to update node position`, { err: e, position, envelope })
       throw e
     }
   })
@@ -142,13 +135,10 @@ export async function createOrUpdateNode(envelope: meshtastic.ServiceEnvelope) {
     return
   }
 
-  const nodeId = newNode.nodeId
   let node: Node | null
   await AppDataSource.transaction(async (trx) => {
     try {
-      node = await findOrCreateNode(trx, nodeId)
-      trx.merge(Node, node, newNode)
-      return await trx.save(node)
+      await Node.createOrUpdate(trx, newNode)
     } catch (e) {
       errLog(`Unable to update node`, { err: e, newNode, node, envelope })
       throw e
@@ -178,13 +168,9 @@ export async function createOrUpdateNeighborInfo(envelope: meshtastic.ServiceEnv
     return
   }
 
-  const nodeId = neighborInfo.nodeId
-  let node: Node | null
   await AppDataSource.transaction(async (trx) => {
     try {
-      node = await findOrCreateNode(trx, nodeId)
-      node.updateNeighbors(neighborInfo.neighbours)
-      await trx.save([node, neighborInfo])
+      return await Node.updateNeighbors(trx, await trx.save(neighborInfo))
     } catch (e) {
       errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
@@ -206,49 +192,47 @@ export async function createOrUpdateTelemetryData(envelope: meshtastic.ServiceEn
     return
   }
 
-  const nodeId = packet.from!
+  const nodeId = packet.from
+  if (nodeId === null || nodeId === undefined) {
+    return // nothing to capture, move on
+  }
 
-  let node: Node | null
-  let metric: DeviceMetric | EnvironmentMetric | PowerMetric | undefined
-  let recentSimilarMetric: DeviceMetric | EnvironmentMetric | PowerMetric | null
+  let metric
   await AppDataSource.transaction(async (trx) => {
     try {
-      node = await findOrCreateNode(trx, nodeId)
       if (telemetry.variant == 'deviceMetrics') {
         metric = DeviceMetric.fromTelemetry(nodeId, telemetry.deviceMetrics!)
         if (metric) {
-          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          const recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
             return
           }
 
-          node.updateDeviceMetrics(metric)
-          await trx.save(compact([node, recentSimilarMetric ? null : metric]))
+          return await Node.updateDeviceMetrics(trx, await trx.save(metric))
         }
       } else if (telemetry.variant == 'environmentMetrics') {
         metric = EnvironmentMetric.fromTelemetry(nodeId, telemetry.environmentMetrics!)
         if (metric) {
-          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          const recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
             return
           }
 
-          node.updateEnvironmentMetrics(metric)
-          await trx.save(compact([node, recentSimilarMetric ? null : metric]))
+          return await Node.updateEnvironmentMetrics(trx, await trx.save(metric))
         }
       } else if (telemetry.variant == 'powerMetrics') {
         metric = PowerMetric.fromTelemetry(nodeId, telemetry.powerMetrics!)
         if (metric) {
-          recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
+          const recentSimilarMetric = await metric.findRecentSimilarMetric(secondsAgo(15), trx)
           if (recentSimilarMetric) {
             return
           }
 
-          await trx.save(compact([recentSimilarMetric ? null : metric]))
+          await trx.save(metric)
         }
       }
     } catch (e) {
-      errLog(`Unable to create telemetry data`, { err: e, node, envelope, metric })
+      errLog(`Unable to create telemetry data`, { err: e, nodeId, envelope })
       throw e
     }
   })
@@ -276,17 +260,11 @@ export async function createMapReports(envelope: meshtastic.ServiceEnvelope) {
     return
   }
 
-  const nodeId = mr.nodeId
-  let node: Node | null
-
   await AppDataSource.transaction(async (trx) => {
     try {
-      node = await findOrCreateNode(trx, nodeId)
-      node.updateMapReports(mr)
-
-      await trx.save([node, mr])
+      return Node.updateMapReports(trx, await trx.save(mr))
     } catch (e) {
-      errLog(`Unable to save map report`, { err: e, mr, node, envelope })
+      errLog(`Unable to save map report`, { err: e, mr, envelope })
       throw e
     }
   })

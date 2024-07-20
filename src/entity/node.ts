@@ -12,6 +12,7 @@ import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
+import NeighbourInfo from './neighbour_info.js'
 
 @Entity()
 export default class Node extends BaseType {
@@ -108,6 +109,11 @@ export default class Node extends BaseType {
   @Column({ type: 'double precision', nullable: true })
   temperature?: number
 
+  private static conflictResolve = {
+    skipUpdateIfNoValuesChanged: true,
+    conflictPaths: ['nodeId'],
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
   purgeTextMessages() {
@@ -154,66 +160,83 @@ export default class Node extends BaseType {
     }
   }
 
-  public updateDeviceMetrics(dm: DeviceMetric) {
-    AppDataSource.manager.merge(Node, this, {
-      batteryLevel: dm.batteryLevel,
-      voltage: dm.voltage,
-      airUtilTx: dm.airUtilTx,
-      channelUtilization: dm.channelUtilization,
-      uptimeSeconds: dm.uptimeSeconds,
-    })
+  static async updateDeviceMetrics(trx: EntityManager, dm: DeviceMetric) {
+    return trx.getRepository(Node).upsert(
+      {
+        nodeId: dm.nodeId,
+        batteryLevel: dm.batteryLevel,
+        voltage: dm.voltage,
+        airUtilTx: dm.airUtilTx,
+        channelUtilization: dm.channelUtilization,
+        uptimeSeconds: dm.uptimeSeconds,
+      },
+      this.conflictResolve
+    )
   }
 
-  updateEnvironmentMetrics(em: EnvironmentMetric) {
-    AppDataSource.manager.merge(Node, this, {
-      barometricPressure: em.barometricPressure,
-      relativeHumidity: em.relativeHumidity,
-      temperature: em.temperature,
-      voltage: em.voltage,
-    })
+  static async updateEnvironmentMetrics(trx: EntityManager, em: EnvironmentMetric) {
+    return trx.getRepository(Node).upsert(
+      {
+        nodeId: em.nodeId,
+        barometricPressure: em.barometricPressure,
+        relativeHumidity: em.relativeHumidity,
+        temperature: em.temperature,
+        voltage: em.voltage,
+      },
+      this.conflictResolve
+    )
   }
 
-  updateMapReports(mr: MapReport) {
-    AppDataSource.manager.merge(Node, this, {
-      nodeId: mr.nodeId,
-      shortName: mr.shortName,
-      longName: mr.longName,
-      role: mr.role,
-      latitude: mr.latitude,
-      longitude: mr.longitude,
-      altitude: BaseType.sanitizeNumber(mr.altitude),
-      firmwareVersion: mr.firmwareVersion,
-      region: mr.region,
-      modemPreset: mr.modemPreset,
-      hasDefaultChannel: mr.hasDefaultChannel,
-      positionPrecision: mr.positionPrecision,
-      numOnlineLocalNodes: mr.numOnlineLocalNodes,
-      positionUpdatedAt: new Date(),
-    })
+  static updateMapReports(trx: EntityManager, mr: MapReport) {
+    return trx.getRepository(Node).upsert(
+      {
+        nodeId: mr.nodeId,
+        shortName: mr.shortName,
+        longName: mr.longName,
+        role: mr.role,
+        latitude: mr.latitude,
+        longitude: mr.longitude,
+        altitude: BaseType.sanitizeNumber(mr.altitude),
+        firmwareVersion: mr.firmwareVersion,
+        region: mr.region,
+        modemPreset: mr.modemPreset,
+        hasDefaultChannel: mr.hasDefaultChannel,
+        positionPrecision: mr.positionPrecision,
+        numOnlineLocalNodes: mr.numOnlineLocalNodes,
+        positionUpdatedAt: new Date(),
+      },
+      this.conflictResolve
+    )
   }
 
-  updateMqttStatus(mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
-    AppDataSource.manager.merge(Node, this, {
-      mqttConnectionState: mqttConnectionState,
-      mqttConnectionStateUpdatedAt: mqttConnectionStateUpdatedAt,
-    })
+  static async updateMqttStatus(trx: EntityManager, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
+    return trx.getRepository(Node).upsert(
+      {
+        nodeId,
+        mqttConnectionState,
+        mqttConnectionStateUpdatedAt,
+      },
+      this.conflictResolve
+    )
   }
 
-  updatePosition(position: Position) {
-    AppDataSource.manager.merge(Node, this, {
-      nodeId: position.from,
-      positionUpdatedAt: new Date(),
-      latitude: BaseType.sanitizeNumber(position.latitude), // unlikely that lat/lon/alt are exactly `0`
-      longitude: BaseType.sanitizeNumber(position.longitude),
-      altitude: BaseType.sanitizeNumber(position.altitude),
-    })
+  static async updatePosition(trx: EntityManager, position: Position) {
+    return trx.getRepository(Node).upsert(
+      {
+        nodeId: position.from,
+        positionUpdatedAt: new Date(),
+        latitude: BaseType.sanitizeNumber(position.latitude), // unlikely that lat/lon/alt are exactly `0`
+        longitude: BaseType.sanitizeNumber(position.longitude),
+        altitude: BaseType.sanitizeNumber(position.altitude),
+      },
+      this.conflictResolve
+    )
   }
 
-  updateNeighbors(neighbours: Neighbors[]) {
-    AppDataSource.manager.merge(Node, this, {
-      neighboursUpdatedAt: new Date(),
-      neighbours: neighbours,
-    })
+  static updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {
+    return trx
+      .getRepository(Node)
+      .upsert({ nodeId: neighborInfo.nodeId, neighbours: neighborInfo.neighbours, neighboursUpdatedAt: new Date() }, this.conflictResolve)
   }
 
   inboundMessage(tm: TextMessage) {
@@ -230,6 +253,12 @@ export default class Node extends BaseType {
     return (
       (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
+  }
+  static async createOrUpdate(trx: EntityManager, newNode: Node) {
+    return trx.getRepository(Node).upsert(newNode, {
+      skipUpdateIfNoValuesChanged: true,
+      conflictPaths: ['nodeId'],
+    })
   }
 
   now() {

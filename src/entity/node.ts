@@ -5,18 +5,18 @@ import { parseProtobuf } from '#helpers/utils'
 import { DateTime } from 'luxon'
 import { BeforeInsert, BeforeUpdate, Column, Entity, EntityManager } from 'typeorm'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { BaseType } from './base_type.js'
+import { BaseTypeWithoutPrimaryKey, BaseType } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
 import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
+import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
-import NeighbourInfo from './neighbour_info.js'
 
 @Entity()
-export default class Node extends BaseType {
-  @Column({ type: 'bigint', unique: true })
+export default class Node extends BaseTypeWithoutPrimaryKey {
+  @Column({ type: 'bigint', unique: true, primary: true })
   nodeId: number
 
   @Column({ type: 'text', nullable: true })

@@ -1,5 +1,7 @@
 import 'dotenv/config'
+import { globSync } from 'glob'
 import snakeCase from 'lodash/snakeCase.js'
+import os from 'os'
 import path from 'path'
 import pluralize from 'pluralize'
 import 'reflect-metadata'
@@ -7,7 +9,6 @@ import parseDatabaseUrl from 'ts-parse-database-url'
 import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
 import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
-import os from 'os'
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
   tableName(targetName: string, userSpecifiedName: string | undefined): string {
@@ -52,7 +53,7 @@ export const connString = <DataSourceOptions>{
   synchronize: false,
   logging: 'all',
   logger: 'debug',
-  entities: [`${__dirname}/../entity/**/*.ts`, `${__dirname}/../entity/**/*.js`],
+  entities: globSync(`${__dirname}/../entity/**/*.{ts,js,tsx}`, { ignore: '**/base_type.{ts,js}' }),
   migrations: [`${__dirname}/../migration/*.ts`, `${__dirname}/../migration/*.js`],
   migrationsTransactionMode: 'each',
   subscribers: [],

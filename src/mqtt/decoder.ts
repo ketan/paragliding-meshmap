@@ -14,10 +14,11 @@ import {
   updateNodeWithPosition,
 } from './mqtt-orm.js'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
+import { Database } from '#config/data-source'
 
-export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
+export async function processMessage(db: Database, cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
-    await handleNodeStatusMessage(topic, payload)
+    await handleNodeStatusMessage(db, topic, payload)
     return
   }
 
@@ -37,35 +38,35 @@ export async function processMessage(cliOptions: MQTTCLIOptions, topic: string, 
     envelope.packet.decoded = payloadVariant
   }
 
-  await createServiceEnvelope(topic, payload, envelope)
+  await createServiceEnvelope(db, topic, payload, envelope)
 
   if (envelope.packet.decoded) {
     switch (envelope.packet.decoded.portnum) {
       case meshtastic.PortNum.TEXT_MESSAGE_APP:
-        return await saveTextMessage(envelope)
+        return await saveTextMessage(db, envelope)
       case meshtastic.PortNum.POSITION_APP:
-        return await updateNodeWithPosition(envelope)
+        return await updateNodeWithPosition(db, envelope)
       case meshtastic.PortNum.NODEINFO_APP:
-        return await createOrUpdateNode(envelope)
+        return await createOrUpdateNode(db, envelope)
       case meshtastic.PortNum.WAYPOINT_APP:
-        return await createOrUpdateWaypoint(envelope)
+        return await createOrUpdateWaypoint(db, envelope)
       case meshtastic.PortNum.NEIGHBORINFO_APP:
-        return await createOrUpdateNeighborInfo(envelope)
+        return await createOrUpdateNeighborInfo(db, envelope)
       case meshtastic.PortNum.TELEMETRY_APP:
-        return await createOrUpdateTelemetryData(envelope)
+        return await createOrUpdateTelemetryData(db, envelope)
       case meshtastic.PortNum.TRACEROUTE_APP:
-        return await createOrUpdateTracerouteMessage(envelope)
+        return await createOrUpdateTracerouteMessage(db, envelope)
       case meshtastic.PortNum.MAP_REPORT_APP:
-        return await createMapReports(envelope)
+        return await createMapReports(db, envelope)
     }
   }
 }
 
-export async function handleNodeStatusMessage(topic: string, payload: Buffer) {
+export async function handleNodeStatusMessage(db: Database, topic: string, payload: Buffer) {
   const nodeIdHex = topic.split('/').at(-1)
   const nodeId = toBigInt(nodeIdHex)
   if (nodeId) {
     const mqttConnectionState = payload.toString()
-    await updateMQTTStatus(nodeId, mqttConnectionState, new Date())
+    await updateMQTTStatus(db, nodeId, mqttConnectionState, new Date())
   }
 }

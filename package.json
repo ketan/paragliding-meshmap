@@ -35,6 +35,7 @@
     "@swc/core": "^1.6.13",
     "@tailwindcss/forms": "^0.5.7",
     "@types/body-parser": "^1.19.5",
+    "@types/chai": "^4.3.16",
     "@types/debug": "^4.1.12",
     "@types/express": "^4.17.21",
     "@types/leaflet": "^1.9.12",
@@ -86,7 +87,7 @@
     "vite-plugin-inspect": "^0.8.4"
   },
   "dependencies": {
-    "@types/chai": "^4.3.16",
+    "@prisma/client": "^5.17.0",
     "async-mqtt": "^2.6.3",
     "body-parser": "^1.20.2",
     "commander": "^12.1.0",
@@ -96,18 +97,16 @@
     "express": "^4.19.2",
     "glob": "^11.0.0",
     "luxon": "^3.4.4",
-    "mysql": "^2.18.1",
     "p-queue": "^8.0.1",
     "p-retry": "^6.2.0",
     "pg": "^8.12.0",
     "pluralize": "^8.0.0",
+    "prisma": "^5.17.0",
+    "prisma-generator-typescript-interfaces": "^1.4.0",
+    "prisma-json-types-generator": "^3.0.4",
     "protobufjs": "^7.3.2",
     "reflect-metadata": "^0.2.2",
-    "sqlite3": "^5.1.7",
-    "supports-color": "^9.4.0",
-    "ts-parse-database-url": "^1.0.3",
-    "typeorm": "^0.3.20",
-    "typeorm-extension": "^3.5.1"
+    "supports-color": "^9.4.0"
   },
   "engines": {
     "node": ">=22.0"

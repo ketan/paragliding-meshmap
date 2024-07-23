@@ -2,16 +2,12 @@
 import 'dotenv/config'
 
 //
-import { connString, dbConnectionConcurrency } from '#config/conn-string'
-import { AppDataSource } from '#config/data-source'
+import { createDB, Database } from '#config/data-source'
 import { mqttProcessor } from '#mqtt/main'
-import { createDatabase } from 'typeorm-extension'
 import { MQTTCLIOptions, mqttCLIParse } from './helpers/cli.js'
 
 const cliOptions: MQTTCLIOptions = mqttCLIParse()
 
-await createDatabase({ options: connString })
-await AppDataSource.initialize()
-await AppDataSource.runMigrations({ transaction: 'each' })
+const db: Database = createDB(cliOptions.purgeDataOlderThan)
 
-mqttProcessor(cliOptions, dbConnectionConcurrency)
+mqttProcessor(db, cliOptions)

@@ -6,7 +6,7 @@ mkdir -p src/gen
 npx @bufbuild/buf  export buf.build/meshtastic/protobufs -o ./src/protos
 npx pbjs \
   --target static-module \
-  --no-create --no-encode --no-verify --no-convert --no-delimited --no-typeurl --null-defaults --alt-comment \
+  --no-create --no-encode --no-verify --no-convert --no-delimited --no-typeurl --alt-comment \
   --path ./src/protos \
   --wrap es6 \
   --out src/gen/meshtastic-protobufs.js \

@@ -52,21 +52,21 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The global channel ID it was sent on
-     * @member {string|null|undefined} channelId
+     * @member {string} channelId
      * @memberof meshtastic.ServiceEnvelope
      * @instance
      */
-    ServiceEnvelope.prototype.channelId = null
+    ServiceEnvelope.prototype.channelId = ''
 
     /**
      * The sending gateway node ID. Can we use this to authenticate/prevent fake
      * nodeid impersonation for senders? - i.e. use gateway/mesh id (which is authenticated) + local node id as
      * the globally trusted nodenum
-     * @member {string|null|undefined} gatewayId
+     * @member {string} gatewayId
      * @memberof meshtastic.ServiceEnvelope
      * @instance
      */
-    ServiceEnvelope.prototype.gatewayId = null
+    ServiceEnvelope.prototype.gatewayId = ''
 
     /**
      * Decodes a ServiceEnvelope message from the specified reader or buffer.
@@ -147,109 +147,109 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * A full name for this user, i.e. "Kevin Hester"
-     * @member {string|null|undefined} longName
+     * @member {string} longName
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.longName = null
+    MapReport.prototype.longName = ''
 
     /**
      * A VERY short name, ideally two characters.
      * Suitable for a tiny OLED screen
-     * @member {string|null|undefined} shortName
+     * @member {string} shortName
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.shortName = null
+    MapReport.prototype.shortName = ''
 
     /**
      * Role of the node that applies specific settings for a particular use-case
-     * @member {meshtastic.Config.DeviceConfig.Role|null|undefined} role
+     * @member {meshtastic.Config.DeviceConfig.Role} role
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.role = null
+    MapReport.prototype.role = 0
 
     /**
      * Hardware model of the node, i.e. T-Beam, Heltec V3, etc...
-     * @member {meshtastic.HardwareModel|null|undefined} hwModel
+     * @member {meshtastic.HardwareModel} hwModel
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.hwModel = null
+    MapReport.prototype.hwModel = 0
 
     /**
      * Device firmware version string
-     * @member {string|null|undefined} firmwareVersion
+     * @member {string} firmwareVersion
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.firmwareVersion = null
+    MapReport.prototype.firmwareVersion = ''
 
     /**
      * The region code for the radio (US, CN, EU433, etc...)
-     * @member {meshtastic.Config.LoRaConfig.RegionCode|null|undefined} region
+     * @member {meshtastic.Config.LoRaConfig.RegionCode} region
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.region = null
+    MapReport.prototype.region = 0
 
     /**
      * Modem preset used by the radio (LongFast, MediumSlow, etc...)
-     * @member {meshtastic.Config.LoRaConfig.ModemPreset|null|undefined} modemPreset
+     * @member {meshtastic.Config.LoRaConfig.ModemPreset} modemPreset
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.modemPreset = null
+    MapReport.prototype.modemPreset = 0
 
     /**
      * Whether the node has a channel with default PSK and name (LongFast, MediumSlow, etc...)
      * and it uses the default frequency slot given the region and modem preset.
-     * @member {boolean|null|undefined} hasDefaultChannel
+     * @member {boolean} hasDefaultChannel
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.hasDefaultChannel = null
+    MapReport.prototype.hasDefaultChannel = false
 
     /**
      * Latitude: multiply by 1e-7 to get degrees in floating point
-     * @member {number|null|undefined} latitudeI
+     * @member {number} latitudeI
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.latitudeI = null
+    MapReport.prototype.latitudeI = 0
 
     /**
      * Longitude: multiply by 1e-7 to get degrees in floating point
-     * @member {number|null|undefined} longitudeI
+     * @member {number} longitudeI
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.longitudeI = null
+    MapReport.prototype.longitudeI = 0
 
     /**
      * Altitude in meters above MSL
-     * @member {number|null|undefined} altitude
+     * @member {number} altitude
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.altitude = null
+    MapReport.prototype.altitude = 0
 
     /**
      * Indicates the bits of precision for latitude and longitude set by the sending node
-     * @member {number|null|undefined} positionPrecision
+     * @member {number} positionPrecision
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.positionPrecision = null
+    MapReport.prototype.positionPrecision = 0
 
     /**
      * Number of online nodes (heard in the last 2 hours) this node has in its list that were received locally (not via MQTT)
-     * @member {number|null|undefined} numOnlineLocalNodes
+     * @member {number} numOnlineLocalNodes
      * @memberof meshtastic.MapReport
      * @instance
      */
-    MapReport.prototype.numOnlineLocalNodes = null
+    MapReport.prototype.numOnlineLocalNodes = 0
 
     /**
      * Decodes a MapReport message from the specified reader or buffer.
@@ -524,104 +524,104 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Sets the role of node
-       * @member {meshtastic.Config.DeviceConfig.Role|null|undefined} role
+       * @member {meshtastic.Config.DeviceConfig.Role} role
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.role = null
+      DeviceConfig.prototype.role = 0
 
       /**
        * Disabling this will disable the SerialConsole by not initilizing the StreamAPI
-       * @member {boolean|null|undefined} serialEnabled
+       * @member {boolean} serialEnabled
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.serialEnabled = null
+      DeviceConfig.prototype.serialEnabled = false
 
       /**
        * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
        * Set this to true to leave the debug log outputting even when API is active.
-       * @member {boolean|null|undefined} debugLogEnabled
+       * @member {boolean} debugLogEnabled
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.debugLogEnabled = null
+      DeviceConfig.prototype.debugLogEnabled = false
 
       /**
        * For boards without a hard wired button, this is the pin number that will be used
        * Boards that have more than one button can swap the function with this one. defaults to BUTTON_PIN if defined.
-       * @member {number|null|undefined} buttonGpio
+       * @member {number} buttonGpio
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.buttonGpio = null
+      DeviceConfig.prototype.buttonGpio = 0
 
       /**
        * For boards without a PWM buzzer, this is the pin number that will be used
        * Defaults to PIN_BUZZER if defined.
-       * @member {number|null|undefined} buzzerGpio
+       * @member {number} buzzerGpio
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.buzzerGpio = null
+      DeviceConfig.prototype.buzzerGpio = 0
 
       /**
        * Sets the role of node
-       * @member {meshtastic.Config.DeviceConfig.RebroadcastMode|null|undefined} rebroadcastMode
+       * @member {meshtastic.Config.DeviceConfig.RebroadcastMode} rebroadcastMode
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.rebroadcastMode = null
+      DeviceConfig.prototype.rebroadcastMode = 0
 
       /**
        * Send our nodeinfo this often
        * Defaults to 900 Seconds (15 minutes)
-       * @member {number|null|undefined} nodeInfoBroadcastSecs
+       * @member {number} nodeInfoBroadcastSecs
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.nodeInfoBroadcastSecs = null
+      DeviceConfig.prototype.nodeInfoBroadcastSecs = 0
 
       /**
        * Treat double tap interrupt on supported accelerometers as a button press if set to true
-       * @member {boolean|null|undefined} doubleTapAsButtonPress
+       * @member {boolean} doubleTapAsButtonPress
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.doubleTapAsButtonPress = null
+      DeviceConfig.prototype.doubleTapAsButtonPress = false
 
       /**
        * If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
-       * @member {boolean|null|undefined} isManaged
+       * @member {boolean} isManaged
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.isManaged = null
+      DeviceConfig.prototype.isManaged = false
 
       /**
        * Disables the triple-press of user button to enable or disable GPS
-       * @member {boolean|null|undefined} disableTripleClick
+       * @member {boolean} disableTripleClick
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.disableTripleClick = null
+      DeviceConfig.prototype.disableTripleClick = false
 
       /**
        * POSIX Timezone definition string from https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv.
-       * @member {string|null|undefined} tzdef
+       * @member {string} tzdef
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.tzdef = null
+      DeviceConfig.prototype.tzdef = ''
 
       /**
        * If true, disable the default blinking LED (LED_PIN) behavior on the device
-       * @member {boolean|null|undefined} ledHeartbeatDisabled
+       * @member {boolean} ledHeartbeatDisabled
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
-      DeviceConfig.prototype.ledHeartbeatDisabled = null
+      DeviceConfig.prototype.ledHeartbeatDisabled = false
 
       /**
        * Decodes a DeviceConfig message from the specified reader or buffer.
@@ -824,112 +824,112 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * We should send our position this often (but only if it has changed significantly)
        * Defaults to 15 minutes
-       * @member {number|null|undefined} positionBroadcastSecs
+       * @member {number} positionBroadcastSecs
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.positionBroadcastSecs = null
+      PositionConfig.prototype.positionBroadcastSecs = 0
 
       /**
        * Adaptive position braoadcast, which is now the default.
-       * @member {boolean|null|undefined} positionBroadcastSmartEnabled
+       * @member {boolean} positionBroadcastSmartEnabled
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.positionBroadcastSmartEnabled = null
+      PositionConfig.prototype.positionBroadcastSmartEnabled = false
 
       /**
        * If set, this node is at a fixed position.
        * We will generate GPS position updates at the regular interval, but use whatever the last lat/lon/alt we have for the node.
        * The lat/lon/alt can be set by an internal GPS or with the help of the app.
-       * @member {boolean|null|undefined} fixedPosition
+       * @member {boolean} fixedPosition
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.fixedPosition = null
+      PositionConfig.prototype.fixedPosition = false
 
       /**
        * Is GPS enabled for this node?
-       * @member {boolean|null|undefined} gpsEnabled
+       * @member {boolean} gpsEnabled
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.gpsEnabled = null
+      PositionConfig.prototype.gpsEnabled = false
 
       /**
        * How often should we try to get GPS position (in seconds)
        * or zero for the default of once every 30 seconds
        * or a very large value (maxint) to update only once at boot.
-       * @member {number|null|undefined} gpsUpdateInterval
+       * @member {number} gpsUpdateInterval
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.gpsUpdateInterval = null
+      PositionConfig.prototype.gpsUpdateInterval = 0
 
       /**
        * Deprecated in favor of using smart / regular broadcast intervals as implicit attempt time
-       * @member {number|null|undefined} gpsAttemptTime
+       * @member {number} gpsAttemptTime
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.gpsAttemptTime = null
+      PositionConfig.prototype.gpsAttemptTime = 0
 
       /**
        * Bit field of boolean configuration options for POSITION messages
        * (bitwise OR of PositionFlags)
-       * @member {number|null|undefined} positionFlags
+       * @member {number} positionFlags
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.positionFlags = null
+      PositionConfig.prototype.positionFlags = 0
 
       /**
        * (Re)define GPS_RX_PIN for your board.
-       * @member {number|null|undefined} rxGpio
+       * @member {number} rxGpio
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.rxGpio = null
+      PositionConfig.prototype.rxGpio = 0
 
       /**
        * (Re)define GPS_TX_PIN for your board.
-       * @member {number|null|undefined} txGpio
+       * @member {number} txGpio
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.txGpio = null
+      PositionConfig.prototype.txGpio = 0
 
       /**
        * The minimum distance in meters traveled (since the last send) before we can send a position to the mesh if position_broadcast_smart_enabled
-       * @member {number|null|undefined} broadcastSmartMinimumDistance
+       * @member {number} broadcastSmartMinimumDistance
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.broadcastSmartMinimumDistance = null
+      PositionConfig.prototype.broadcastSmartMinimumDistance = 0
 
       /**
        * The minimum number of seconds (since the last send) before we can send a position to the mesh if position_broadcast_smart_enabled
-       * @member {number|null|undefined} broadcastSmartMinimumIntervalSecs
+       * @member {number} broadcastSmartMinimumIntervalSecs
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.broadcastSmartMinimumIntervalSecs = null
+      PositionConfig.prototype.broadcastSmartMinimumIntervalSecs = 0
 
       /**
        * (Re)define PIN_GPS_EN for your board.
-       * @member {number|null|undefined} gpsEnGpio
+       * @member {number} gpsEnGpio
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.gpsEnGpio = null
+      PositionConfig.prototype.gpsEnGpio = 0
 
       /**
        * Set where GPS is enabled, disabled, or not present
-       * @member {meshtastic.Config.PositionConfig.GpsMode|null|undefined} gpsMode
+       * @member {meshtastic.Config.PositionConfig.GpsMode} gpsMode
        * @memberof meshtastic.Config.PositionConfig
        * @instance
        */
-      PositionConfig.prototype.gpsMode = null
+      PositionConfig.prototype.gpsMode = 0
 
       /**
        * Decodes a PositionConfig message from the specified reader or buffer.
@@ -1118,85 +1118,85 @@ export const meshtastic = ($root.meshtastic = (() => {
        * Description: Will sleep everything as much as possible, for the tracker and sensor role this will also include the lora radio.
        * Don't use this setting if you want to use your device with the phone apps or are using a device without a user button.
        * Technical Details: Works for ESP32 devices and NRF52 devices in the Sensor or Tracker roles
-       * @member {boolean|null|undefined} isPowerSaving
+       * @member {boolean} isPowerSaving
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.isPowerSaving = null
+      PowerConfig.prototype.isPowerSaving = false
 
       /**
        * Description: If non-zero, the device will fully power off this many seconds after external power is removed.
-       * @member {number|null|undefined} onBatteryShutdownAfterSecs
+       * @member {number} onBatteryShutdownAfterSecs
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.onBatteryShutdownAfterSecs = null
+      PowerConfig.prototype.onBatteryShutdownAfterSecs = 0
 
       /**
        * Ratio of voltage divider for battery pin eg. 3.20 (R1=100k, R2=220k)
        * Overrides the ADC_MULTIPLIER defined in variant for battery voltage calculation.
        * https://meshtastic.org/docs/configuration/radio/power/#adc-multiplier-override
        * Should be set to floating point value between 2 and 6
-       * @member {number|null|undefined} adcMultiplierOverride
+       * @member {number} adcMultiplierOverride
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.adcMultiplierOverride = null
+      PowerConfig.prototype.adcMultiplierOverride = 0
 
       /**
        * Description: The number of seconds for to wait before turning off BLE in No Bluetooth states
        * Technical Details: ESP32 Only 0 for default of 1 minute
-       * @member {number|null|undefined} waitBluetoothSecs
+       * @member {number} waitBluetoothSecs
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.waitBluetoothSecs = null
+      PowerConfig.prototype.waitBluetoothSecs = 0
 
       /**
        * Super Deep Sleep Seconds
        * While in Light Sleep if mesh_sds_timeout_secs is exceeded we will lower into super deep sleep
        * for this value (default 1 year) or a button press
        * 0 for default of one year
-       * @member {number|null|undefined} sdsSecs
+       * @member {number} sdsSecs
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.sdsSecs = null
+      PowerConfig.prototype.sdsSecs = 0
 
       /**
        * Description: In light sleep the CPU is suspended, LoRa radio is on, BLE is off an GPS is on
        * Technical Details: ESP32 Only 0 for default of 300
-       * @member {number|null|undefined} lsSecs
+       * @member {number} lsSecs
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.lsSecs = null
+      PowerConfig.prototype.lsSecs = 0
 
       /**
        * Description: While in light sleep when we receive packets on the LoRa radio we will wake and handle them and stay awake in no BLE mode for this value
        * Technical Details: ESP32 Only 0 for default of 10 seconds
-       * @member {number|null|undefined} minWakeSecs
+       * @member {number} minWakeSecs
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.minWakeSecs = null
+      PowerConfig.prototype.minWakeSecs = 0
 
       /**
        * I2C address of INA_2XX to use for reading device battery voltage
-       * @member {number|null|undefined} deviceBatteryInaAddress
+       * @member {number} deviceBatteryInaAddress
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.deviceBatteryInaAddress = null
+      PowerConfig.prototype.deviceBatteryInaAddress = 0
 
       /**
        * If non-zero, we want powermon log outputs.  With the particular (bitfield) sources enabled.
        * Note: we picked an ID of 32 so that lower more efficient IDs can be used for more frequently used options.
-       * @member {number|Long|null|undefined} powermonEnables
+       * @member {number|Long} powermonEnables
        * @memberof meshtastic.Config.PowerConfig
        * @instance
        */
-      PowerConfig.prototype.powermonEnables = null
+      PowerConfig.prototype.powermonEnables = $util.Long ? $util.Long.fromBits(0, 0, true) : 0
 
       /**
        * Decodes a PowerConfig message from the specified reader or buffer.
@@ -1295,52 +1295,52 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable WiFi (disables Bluetooth)
-       * @member {boolean|null|undefined} wifiEnabled
+       * @member {boolean} wifiEnabled
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.wifiEnabled = null
+      NetworkConfig.prototype.wifiEnabled = false
 
       /**
        * If set, this node will try to join the specified wifi network and
        * acquire an address via DHCP
-       * @member {string|null|undefined} wifiSsid
+       * @member {string} wifiSsid
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.wifiSsid = null
+      NetworkConfig.prototype.wifiSsid = ''
 
       /**
        * If set, will be use to authenticate to the named wifi
-       * @member {string|null|undefined} wifiPsk
+       * @member {string} wifiPsk
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.wifiPsk = null
+      NetworkConfig.prototype.wifiPsk = ''
 
       /**
        * NTP server to use if WiFi is conneced, defaults to `0.pool.ntp.org`
-       * @member {string|null|undefined} ntpServer
+       * @member {string} ntpServer
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.ntpServer = null
+      NetworkConfig.prototype.ntpServer = ''
 
       /**
        * Enable Ethernet
-       * @member {boolean|null|undefined} ethEnabled
+       * @member {boolean} ethEnabled
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.ethEnabled = null
+      NetworkConfig.prototype.ethEnabled = false
 
       /**
        * acquire an address via DHCP or assign static
-       * @member {meshtastic.Config.NetworkConfig.AddressMode|null|undefined} addressMode
+       * @member {meshtastic.Config.NetworkConfig.AddressMode} addressMode
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.addressMode = null
+      NetworkConfig.prototype.addressMode = 0
 
       /**
        * struct to keep static address
@@ -1352,11 +1352,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * rsyslog Server and Port
-       * @member {string|null|undefined} rsyslogServer
+       * @member {string} rsyslogServer
        * @memberof meshtastic.Config.NetworkConfig
        * @instance
        */
-      NetworkConfig.prototype.rsyslogServer = null
+      NetworkConfig.prototype.rsyslogServer = ''
 
       /**
        * Decodes a NetworkConfig message from the specified reader or buffer.
@@ -1458,35 +1458,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
         /**
          * Static IP address
-         * @member {number|null|undefined} ip
+         * @member {number} ip
          * @memberof meshtastic.Config.NetworkConfig.IpV4Config
          * @instance
          */
-        IpV4Config.prototype.ip = null
+        IpV4Config.prototype.ip = 0
 
         /**
          * Static gateway address
-         * @member {number|null|undefined} gateway
+         * @member {number} gateway
          * @memberof meshtastic.Config.NetworkConfig.IpV4Config
          * @instance
          */
-        IpV4Config.prototype.gateway = null
+        IpV4Config.prototype.gateway = 0
 
         /**
          * Static subnet mask
-         * @member {number|null|undefined} subnet
+         * @member {number} subnet
          * @memberof meshtastic.Config.NetworkConfig.IpV4Config
          * @instance
          */
-        IpV4Config.prototype.subnet = null
+        IpV4Config.prototype.subnet = 0
 
         /**
          * Static DNS server address
-         * @member {number|null|undefined} dns
+         * @member {number} dns
          * @memberof meshtastic.Config.NetworkConfig.IpV4Config
          * @instance
          */
-        IpV4Config.prototype.dns = null
+        IpV4Config.prototype.dns = 0
 
         /**
          * Decodes an IpV4Config message from the specified reader or buffer.
@@ -1574,93 +1574,93 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * Number of seconds the screen stays on after pressing the user button or receiving a message
        * 0 for default of one minute MAXUINT for always on
-       * @member {number|null|undefined} screenOnSecs
+       * @member {number} screenOnSecs
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.screenOnSecs = null
+      DisplayConfig.prototype.screenOnSecs = 0
 
       /**
        * How the GPS coordinates are formatted on the OLED screen.
-       * @member {meshtastic.Config.DisplayConfig.GpsCoordinateFormat|null|undefined} gpsFormat
+       * @member {meshtastic.Config.DisplayConfig.GpsCoordinateFormat} gpsFormat
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.gpsFormat = null
+      DisplayConfig.prototype.gpsFormat = 0
 
       /**
        * Automatically toggles to the next page on the screen like a carousel, based the specified interval in seconds.
        * Potentially useful for devices without user buttons.
-       * @member {number|null|undefined} autoScreenCarouselSecs
+       * @member {number} autoScreenCarouselSecs
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.autoScreenCarouselSecs = null
+      DisplayConfig.prototype.autoScreenCarouselSecs = 0
 
       /**
        * If this is set, the displayed compass will always point north. if unset, the old behaviour
        * (top of display is heading direction) is used.
-       * @member {boolean|null|undefined} compassNorthTop
+       * @member {boolean} compassNorthTop
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.compassNorthTop = null
+      DisplayConfig.prototype.compassNorthTop = false
 
       /**
        * Flip screen vertically, for cases that mount the screen upside down
-       * @member {boolean|null|undefined} flipScreen
+       * @member {boolean} flipScreen
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.flipScreen = null
+      DisplayConfig.prototype.flipScreen = false
 
       /**
        * Perferred display units
-       * @member {meshtastic.Config.DisplayConfig.DisplayUnits|null|undefined} units
+       * @member {meshtastic.Config.DisplayConfig.DisplayUnits} units
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.units = null
+      DisplayConfig.prototype.units = 0
 
       /**
        * Override auto-detect in screen
-       * @member {meshtastic.Config.DisplayConfig.OledType|null|undefined} oled
+       * @member {meshtastic.Config.DisplayConfig.OledType} oled
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.oled = null
+      DisplayConfig.prototype.oled = 0
 
       /**
        * Display Mode
-       * @member {meshtastic.Config.DisplayConfig.DisplayMode|null|undefined} displaymode
+       * @member {meshtastic.Config.DisplayConfig.DisplayMode} displaymode
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.displaymode = null
+      DisplayConfig.prototype.displaymode = 0
 
       /**
        * Print first line in pseudo-bold? FALSE is original style, TRUE is bold
-       * @member {boolean|null|undefined} headingBold
+       * @member {boolean} headingBold
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.headingBold = null
+      DisplayConfig.prototype.headingBold = false
 
       /**
        * Should we wake the screen up on accelerometer detected motion or tap
-       * @member {boolean|null|undefined} wakeOnTapOrMotion
+       * @member {boolean} wakeOnTapOrMotion
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.wakeOnTapOrMotion = null
+      DisplayConfig.prototype.wakeOnTapOrMotion = false
 
       /**
        * Indicates how to rotate or invert the compass output to accurate display on the display.
-       * @member {meshtastic.Config.DisplayConfig.CompassOrientation|null|undefined} compassOrientation
+       * @member {meshtastic.Config.DisplayConfig.CompassOrientation} compassOrientation
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
-      DisplayConfig.prototype.compassOrientation = null
+      DisplayConfig.prototype.compassOrientation = 0
 
       /**
        * Decodes a DisplayConfig message from the specified reader or buffer.
@@ -1918,11 +1918,11 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * When enabled, the `modem_preset` fields will be adhered to, else the `bandwidth`/`spread_factor`/`coding_rate`
        * will be taked from their respective manually defined fields
-       * @member {boolean|null|undefined} usePreset
+       * @member {boolean} usePreset
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.usePreset = null
+      LoRaConfig.prototype.usePreset = false
 
       /**
        * Either modem_config or bandwidth/spreading/coding will be specified - NOT BOTH.
@@ -1930,87 +1930,87 @@ export const meshtastic = ($root.meshtastic = (() => {
        * Because protobufs take ZERO space when the value is zero this works out nicely.
        * This value is replaced by bandwidth/spread_factor/coding_rate.
        * If you'd like to experiment with other options add them to MeshRadio.cpp in the device code.
-       * @member {meshtastic.Config.LoRaConfig.ModemPreset|null|undefined} modemPreset
+       * @member {meshtastic.Config.LoRaConfig.ModemPreset} modemPreset
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.modemPreset = null
+      LoRaConfig.prototype.modemPreset = 0
 
       /**
        * Bandwidth in MHz
        * Certain bandwidth numbers are 'special' and will be converted to the
        * appropriate floating point value: 31 -> 31.25MHz
-       * @member {number|null|undefined} bandwidth
+       * @member {number} bandwidth
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.bandwidth = null
+      LoRaConfig.prototype.bandwidth = 0
 
       /**
        * A number from 7 to 12.
        * Indicates number of chirps per symbol as 1<<spread_factor.
-       * @member {number|null|undefined} spreadFactor
+       * @member {number} spreadFactor
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.spreadFactor = null
+      LoRaConfig.prototype.spreadFactor = 0
 
       /**
        * The denominator of the coding rate.
        * ie for 4/5, the value is 5. 4/8 the value is 8.
-       * @member {number|null|undefined} codingRate
+       * @member {number} codingRate
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.codingRate = null
+      LoRaConfig.prototype.codingRate = 0
 
       /**
        * This parameter is for advanced users with advanced test equipment, we do not recommend most users use it.
        * A frequency offset that is added to to the calculated band center frequency.
        * Used to correct for crystal calibration errors.
-       * @member {number|null|undefined} frequencyOffset
+       * @member {number} frequencyOffset
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.frequencyOffset = null
+      LoRaConfig.prototype.frequencyOffset = 0
 
       /**
        * The region code for the radio (US, CN, EU433, etc...)
-       * @member {meshtastic.Config.LoRaConfig.RegionCode|null|undefined} region
+       * @member {meshtastic.Config.LoRaConfig.RegionCode} region
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.region = null
+      LoRaConfig.prototype.region = 0
 
       /**
        * Maximum number of hops. This can't be greater than 7.
        * Default of 3
        * Attempting to set a value > 7 results in the default
-       * @member {number|null|undefined} hopLimit
+       * @member {number} hopLimit
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.hopLimit = null
+      LoRaConfig.prototype.hopLimit = 0
 
       /**
        * Disable TX from the LoRa radio. Useful for hot-swapping antennas and other tests.
        * Defaults to false
-       * @member {boolean|null|undefined} txEnabled
+       * @member {boolean} txEnabled
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.txEnabled = null
+      LoRaConfig.prototype.txEnabled = false
 
       /**
        * If zero, then use default max legal continuous power (ie. something that won't
        * burn out the radio hardware)
        * In most cases you should use zero here.
        * Units are in dBm.
-       * @member {number|null|undefined} txPower
+       * @member {number} txPower
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.txPower = null
+      LoRaConfig.prototype.txPower = 0
 
       /**
        * This controls the actual hardware frequency the radio transmits on.
@@ -2020,29 +2020,29 @@ export const meshtastic = ($root.meshtastic = (() => {
        * algorithm to derive the channel number")
        * If using the hash algorithm the channel number will be: hash(channel_name) %
        * NUM_CHANNELS (Where num channels depends on the regulatory region).
-       * @member {number|null|undefined} channelNum
+       * @member {number} channelNum
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.channelNum = null
+      LoRaConfig.prototype.channelNum = 0
 
       /**
        * If true, duty cycle limits will be exceeded and thus you're possibly not following
        * the local regulations if you're not a HAM.
        * Has no effect if the duty cycle of the used region is 100%.
-       * @member {boolean|null|undefined} overrideDutyCycle
+       * @member {boolean} overrideDutyCycle
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.overrideDutyCycle = null
+      LoRaConfig.prototype.overrideDutyCycle = false
 
       /**
        * If true, sets RX boosted gain mode on SX126X based radios
-       * @member {boolean|null|undefined} sx126xRxBoostedGain
+       * @member {boolean} sx126xRxBoostedGain
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.sx126xRxBoostedGain = null
+      LoRaConfig.prototype.sx126xRxBoostedGain = false
 
       /**
        * This parameter is for advanced users and licensed HAM radio operators.
@@ -2050,19 +2050,19 @@ export const meshtastic = ($root.meshtastic = (() => {
        * will still be applied. This will allow you to use out-of-band frequencies.
        * Please respect your local laws and regulations. If you are a HAM, make sure you
        * enable HAM mode and turn off encryption.
-       * @member {number|null|undefined} overrideFrequency
+       * @member {number} overrideFrequency
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.overrideFrequency = null
+      LoRaConfig.prototype.overrideFrequency = 0
 
       /**
        * If true, disable the build-in PA FAN using pin define in RF95_FAN_EN.
-       * @member {boolean|null|undefined} paFanDisabled
+       * @member {boolean} paFanDisabled
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.paFanDisabled = null
+      LoRaConfig.prototype.paFanDisabled = false
 
       /**
        * For testing it is useful sometimes to force a node to never listen to
@@ -2076,11 +2076,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * If true, the device will not process any packets received via LoRa that passed via MQTT anywhere on the path towards it.
-       * @member {boolean|null|undefined} ignoreMqtt
+       * @member {boolean} ignoreMqtt
        * @memberof meshtastic.Config.LoRaConfig
        * @instance
        */
-      LoRaConfig.prototype.ignoreMqtt = null
+      LoRaConfig.prototype.ignoreMqtt = false
 
       /**
        * Decodes a LoRaConfig message from the specified reader or buffer.
@@ -2287,35 +2287,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable Bluetooth on the device
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.Config.BluetoothConfig
        * @instance
        */
-      BluetoothConfig.prototype.enabled = null
+      BluetoothConfig.prototype.enabled = false
 
       /**
        * Determines the pairing strategy for the device
-       * @member {meshtastic.Config.BluetoothConfig.PairingMode|null|undefined} mode
+       * @member {meshtastic.Config.BluetoothConfig.PairingMode} mode
        * @memberof meshtastic.Config.BluetoothConfig
        * @instance
        */
-      BluetoothConfig.prototype.mode = null
+      BluetoothConfig.prototype.mode = 0
 
       /**
        * Specified PIN for PairingMode.FixedPin
-       * @member {number|null|undefined} fixedPin
+       * @member {number} fixedPin
        * @memberof meshtastic.Config.BluetoothConfig
        * @instance
        */
-      BluetoothConfig.prototype.fixedPin = null
+      BluetoothConfig.prototype.fixedPin = 0
 
       /**
        * Enables device (serial style logs) over Bluetooth
-       * @member {boolean|null|undefined} deviceLoggingEnabled
+       * @member {boolean} deviceLoggingEnabled
        * @memberof meshtastic.Config.BluetoothConfig
        * @instance
        */
-      BluetoothConfig.prototype.deviceLoggingEnabled = null
+      BluetoothConfig.prototype.deviceLoggingEnabled = false
 
       /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
@@ -2448,86 +2448,86 @@ export const meshtastic = ($root.meshtastic = (() => {
     /**
      * The new preferred location encoding, multiply by 1e-7 to get degrees
      * in floating point
-     * @member {number|null|undefined} latitudeI
+     * @member {number} latitudeI
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.latitudeI = null
+    Position.prototype.latitudeI = 0
 
     /**
      * TODO: REPLACE
-     * @member {number|null|undefined} longitudeI
+     * @member {number} longitudeI
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.longitudeI = null
+    Position.prototype.longitudeI = 0
 
     /**
      * In meters above MSL (but see issue #359)
-     * @member {number|null|undefined} altitude
+     * @member {number} altitude
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitude = null
+    Position.prototype.altitude = 0
 
     /**
      * This is usually not sent over the mesh (to save space), but it is sent
      * from the phone so that the local device can set its time if it is sent over
      * the mesh (because there are devices on the mesh without GPS or RTC).
      * seconds since 1970
-     * @member {number|null|undefined} time
+     * @member {number} time
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.time = null
+    Position.prototype.time = 0
 
     /**
      * TODO: REPLACE
-     * @member {meshtastic.Position.LocSource|null|undefined} locationSource
+     * @member {meshtastic.Position.LocSource} locationSource
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.locationSource = null
+    Position.prototype.locationSource = 0
 
     /**
      * TODO: REPLACE
-     * @member {meshtastic.Position.AltSource|null|undefined} altitudeSource
+     * @member {meshtastic.Position.AltSource} altitudeSource
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitudeSource = null
+    Position.prototype.altitudeSource = 0
 
     /**
      * Positional timestamp (actual timestamp of GPS solution) in integer epoch seconds
-     * @member {number|null|undefined} timestamp
+     * @member {number} timestamp
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.timestamp = null
+    Position.prototype.timestamp = 0
 
     /**
      * Pos. timestamp milliseconds adjustment (rarely available or required)
-     * @member {number|null|undefined} timestampMillisAdjust
+     * @member {number} timestampMillisAdjust
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.timestampMillisAdjust = null
+    Position.prototype.timestampMillisAdjust = 0
 
     /**
      * HAE altitude in meters - can be used instead of MSL altitude
-     * @member {number|null|undefined} altitudeHae
+     * @member {number} altitudeHae
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitudeHae = null
+    Position.prototype.altitudeHae = 0
 
     /**
      * Geoidal separation in meters
-     * @member {number|null|undefined} altitudeGeoidalSeparation
+     * @member {number} altitudeGeoidalSeparation
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitudeGeoidalSeparation = null
+    Position.prototype.altitudeGeoidalSeparation = 0
 
     /**
      * Horizontal, Vertical and Position Dilution of Precision, in 1/100 units
@@ -2535,37 +2535,37 @@ export const meshtastic = ($root.meshtastic = (() => {
      * - for higher precision scenarios, HDOP and VDOP can be used instead,
      * in which case PDOP becomes redundant (PDOP=sqrt(HDOP^2 + VDOP^2))
      * TODO: REMOVE/INTEGRATE
-     * @member {number|null|undefined} PDOP
+     * @member {number} PDOP
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.PDOP = null
+    Position.prototype.PDOP = 0
 
     /**
      * TODO: REPLACE
-     * @member {number|null|undefined} HDOP
+     * @member {number} HDOP
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.HDOP = null
+    Position.prototype.HDOP = 0
 
     /**
      * TODO: REPLACE
-     * @member {number|null|undefined} VDOP
+     * @member {number} VDOP
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.VDOP = null
+    Position.prototype.VDOP = 0
 
     /**
      * GPS accuracy (a hardware specific constant) in mm
      * multiplied with DOP to calculate positional accuracy
      * Default: "'bout three meters-ish" :)
-     * @member {number|null|undefined} gpsAccuracy
+     * @member {number} gpsAccuracy
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.gpsAccuracy = null
+    Position.prototype.gpsAccuracy = 0
 
     /**
      * Ground speed in m/s and True North TRACK in 1/100 degrees
@@ -2574,79 +2574,79 @@ export const meshtastic = ($root.meshtastic = (() => {
      * - "heading" is where the fuselage points (measured in horizontal plane)
      * - "yaw" indicates a relative rotation about the vertical axis
      * TODO: REMOVE/INTEGRATE
-     * @member {number|null|undefined} groundSpeed
+     * @member {number} groundSpeed
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.groundSpeed = null
+    Position.prototype.groundSpeed = 0
 
     /**
      * TODO: REPLACE
-     * @member {number|null|undefined} groundTrack
+     * @member {number} groundTrack
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.groundTrack = null
+    Position.prototype.groundTrack = 0
 
     /**
      * GPS fix quality (from NMEA GxGGA statement or similar)
-     * @member {number|null|undefined} fixQuality
+     * @member {number} fixQuality
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.fixQuality = null
+    Position.prototype.fixQuality = 0
 
     /**
      * GPS fix type 2D/3D (from NMEA GxGSA statement)
-     * @member {number|null|undefined} fixType
+     * @member {number} fixType
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.fixType = null
+    Position.prototype.fixType = 0
 
     /**
      * GPS "Satellites in View" number
-     * @member {number|null|undefined} satsInView
+     * @member {number} satsInView
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.satsInView = null
+    Position.prototype.satsInView = 0
 
     /**
      * Sensor ID - in case multiple positioning sensors are being used
-     * @member {number|null|undefined} sensorId
+     * @member {number} sensorId
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.sensorId = null
+    Position.prototype.sensorId = 0
 
     /**
      * Estimated/expected time (in seconds) until next update:
      * - if we update at fixed intervals of X seconds, use X
      * - if we update at dynamic intervals (based on relative movement etc),
      * but "AT LEAST every Y seconds", use Y
-     * @member {number|null|undefined} nextUpdate
+     * @member {number} nextUpdate
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.nextUpdate = null
+    Position.prototype.nextUpdate = 0
 
     /**
      * A sequence number, incremented with each Position message to help
      * detect lost updates if needed
-     * @member {number|null|undefined} seqNumber
+     * @member {number} seqNumber
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.seqNumber = null
+    Position.prototype.seqNumber = 0
 
     /**
      * Indicates the bits of precision set by the sending node
-     * @member {number|null|undefined} precisionBits
+     * @member {number} precisionBits
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.precisionBits = null
+    Position.prototype.precisionBits = 0
 
     /**
      * Decodes a Position message from the specified reader or buffer.
@@ -2903,6 +2903,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} HELTEC_VISION_MASTER_E290=68 Heltec Vision Master E290 with ESP32-S3 CPU, and a 2.9 inch E-Ink display
    * @property {number} HELTEC_MESH_NODE_T114=69 Heltec Mesh Node T114 board with nRF52840 CPU, and a 1.14 inch TFT display, Ultimate low-power design,
    * specifically adapted for the Meshtatic project
+   * @property {number} SENSECAP_INDICATOR=70 Sensecap Indicator from Seeed Studio. ESP32-S3 device with TFT and RP2040 coprocessor
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -2979,6 +2980,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[67] = 'HELTEC_VISION_MASTER_E213')] = 67
     values[(valuesById[68] = 'HELTEC_VISION_MASTER_E290')] = 68
     values[(valuesById[69] = 'HELTEC_MESH_NODE_T114')] = 69
+    values[(valuesById[70] = 'SENSECAP_INDICATOR')] = 70
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -3046,67 +3048,67 @@ export const meshtastic = ($root.meshtastic = (() => {
      * In the case of Signal that would mean +16504442323, for the default macaddr derived id it would be !<8 hexidecimal bytes>.
      * Note: app developers are encouraged to also use the following standard
      * node IDs "^all" (for broadcast), "^local" (for the locally connected node)
-     * @member {string|null|undefined} id
+     * @member {string} id
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.id = null
+    User.prototype.id = ''
 
     /**
      * A full name for this user, i.e. "Kevin Hester"
-     * @member {string|null|undefined} longName
+     * @member {string} longName
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.longName = null
+    User.prototype.longName = ''
 
     /**
      * A VERY short name, ideally two characters.
      * Suitable for a tiny OLED screen
-     * @member {string|null|undefined} shortName
+     * @member {string} shortName
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.shortName = null
+    User.prototype.shortName = ''
 
     /**
      * Deprecated in Meshtastic 2.1.x
      * This is the addr of the radio.
      * Not populated by the phone, but added by the esp32 when broadcasting
-     * @member {Uint8Array|null|undefined} macaddr
+     * @member {Uint8Array} macaddr
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.macaddr = null
+    User.prototype.macaddr = $util.newBuffer([])
 
     /**
      * TBEAM, HELTEC, etc...
      * Starting in 1.2.11 moved to hw_model enum in the NodeInfo object.
      * Apps will still need the string here for older builds
      * (so OTA update can find the right image), but if the enum is available it will be used instead.
-     * @member {meshtastic.HardwareModel|null|undefined} hwModel
+     * @member {meshtastic.HardwareModel} hwModel
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.hwModel = null
+    User.prototype.hwModel = 0
 
     /**
      * In some regions Ham radio operators have different bandwidth limitations than others.
      * If this user is a licensed operator, set this flag.
      * Also, "long_name" should be their licence number.
-     * @member {boolean|null|undefined} isLicensed
+     * @member {boolean} isLicensed
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.isLicensed = null
+    User.prototype.isLicensed = false
 
     /**
      * Indicates that the user's role in the mesh
-     * @member {meshtastic.Config.DeviceConfig.Role|null|undefined} role
+     * @member {meshtastic.Config.DeviceConfig.Role} role
      * @memberof meshtastic.User
      * @instance
      */
-    User.prototype.role = null
+    User.prototype.role = 0
 
     /**
      * Decodes a User message from the specified reader or buffer.
@@ -3419,29 +3421,29 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Formerly named typ and of type Type
-     * @member {meshtastic.PortNum|null|undefined} portnum
+     * @member {meshtastic.PortNum} portnum
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.portnum = null
+    Data.prototype.portnum = 0
 
     /**
      * TODO: REPLACE
-     * @member {Uint8Array|null|undefined} payload
+     * @member {Uint8Array} payload
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.payload = null
+    Data.prototype.payload = $util.newBuffer([])
 
     /**
      * Not normally used, but for testing a sender can request that recipient
      * responds in kind (i.e. if it received a position, it should unicast back it's position).
      * Note: that if you set this on a broadcast you will receive many replies.
-     * @member {boolean|null|undefined} wantResponse
+     * @member {boolean} wantResponse
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.wantResponse = null
+    Data.prototype.wantResponse = false
 
     /**
      * The address of the destination node.
@@ -3449,47 +3451,47 @@ export const meshtastic = ($root.meshtastic = (() => {
      * layer software should never need it.
      * RouteDiscovery messages _must_ populate this.
      * Other message types might need to if they are doing multihop routing.
-     * @member {number|null|undefined} dest
+     * @member {number} dest
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.dest = null
+    Data.prototype.dest = 0
 
     /**
      * The address of the original sender for this message.
      * This field should _only_ be populated for reliable multihop packets (to keep
      * packets small).
-     * @member {number|null|undefined} source
+     * @member {number} source
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.source = null
+    Data.prototype.source = 0
 
     /**
      * Only used in routing or response messages.
      * Indicates the original message ID that this message is reporting failure on. (formerly called original_id)
-     * @member {number|null|undefined} requestId
+     * @member {number} requestId
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.requestId = null
+    Data.prototype.requestId = 0
 
     /**
      * If set, this message is intened to be a reply to a previously sent message with the defined id.
-     * @member {number|null|undefined} replyId
+     * @member {number} replyId
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.replyId = null
+    Data.prototype.replyId = 0
 
     /**
      * Defaults to false. If true, then what is in the payload should be treated as an emoji like giving
      * a message a heart or poop emoji.
-     * @member {number|null|undefined} emoji
+     * @member {number} emoji
      * @memberof meshtastic.Data
      * @instance
      */
-    Data.prototype.emoji = null
+    Data.prototype.emoji = 0
 
     /**
      * Decodes a Data message from the specified reader or buffer.
@@ -3584,68 +3586,68 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Id of the waypoint
-     * @member {number|null|undefined} id
+     * @member {number} id
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.id = null
+    Waypoint.prototype.id = 0
 
     /**
      * latitude_i
-     * @member {number|null|undefined} latitudeI
+     * @member {number} latitudeI
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.latitudeI = null
+    Waypoint.prototype.latitudeI = 0
 
     /**
      * longitude_i
-     * @member {number|null|undefined} longitudeI
+     * @member {number} longitudeI
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.longitudeI = null
+    Waypoint.prototype.longitudeI = 0
 
     /**
      * Time the waypoint is to expire (epoch)
-     * @member {number|null|undefined} expire
+     * @member {number} expire
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.expire = null
+    Waypoint.prototype.expire = 0
 
     /**
      * If greater than zero, treat the value as a nodenum only allowing them to update the waypoint.
      * If zero, the waypoint is open to be edited by any member of the mesh.
-     * @member {number|null|undefined} lockedTo
+     * @member {number} lockedTo
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.lockedTo = null
+    Waypoint.prototype.lockedTo = 0
 
     /**
      * Name of the waypoint - max 30 chars
-     * @member {string|null|undefined} name
+     * @member {string} name
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.name = null
+    Waypoint.prototype.name = ''
 
     /**
      * Description of the waypoint - max 100 chars
-     * @member {string|null|undefined} description
+     * @member {string} description
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.description = null
+    Waypoint.prototype.description = ''
 
     /**
      * Designator icon for the waypoint in the form of a unicode emoji
-     * @member {number|null|undefined} icon
+     * @member {number} icon
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.icon = null
+    Waypoint.prototype.icon = 0
 
     /**
      * Decodes a Waypoint message from the specified reader or buffer.
@@ -3735,11 +3737,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The MQTT topic this message will be sent /received on
-     * @member {string|null|undefined} topic
+     * @member {string} topic
      * @memberof meshtastic.MqttClientProxyMessage
      * @instance
      */
-    MqttClientProxyMessage.prototype.topic = null
+    MqttClientProxyMessage.prototype.topic = ''
 
     /**
      * Bytes
@@ -3759,11 +3761,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Whether the message should be retained (or not)
-     * @member {boolean|null|undefined} retained
+     * @member {boolean} retained
      * @memberof meshtastic.MqttClientProxyMessage
      * @instance
      */
-    MqttClientProxyMessage.prototype.retained = null
+    MqttClientProxyMessage.prototype.retained = false
 
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
@@ -3899,19 +3901,19 @@ export const meshtastic = ($root.meshtastic = (() => {
      * The sending node number.
      * Note: Our crypto implementation uses this field as well.
      * See [crypto](/docs/overview/encryption) for details.
-     * @member {number|null|undefined} from
+     * @member {number} from
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.from = null
+    MeshPacket.prototype.from = 0
 
     /**
      * The (immediate) destination for this packet
-     * @member {number|null|undefined} to
+     * @member {number} to
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.to = null
+    MeshPacket.prototype.to = 0
 
     /**
      * (Usually) If set, this indicates the index in the secondary_channels table that this packet was sent/received on.
@@ -3921,11 +3923,11 @@ export const meshtastic = ($root.meshtastic = (() => {
      * Very briefly, while sending and receiving deep inside the device Router code, this field instead
      * contains the 'channel hash' instead of the index.
      * This 'trick' is only used while the payload_variant is an 'encrypted'.
-     * @member {number|null|undefined} channel
+     * @member {number} channel
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.channel = null
+    MeshPacket.prototype.channel = 0
 
     /**
      * TODO: REPLACE
@@ -3952,43 +3954,43 @@ export const meshtastic = ($root.meshtastic = (() => {
      * any ACK or the completion of a mesh broadcast flood).
      * Note: Our crypto implementation uses this id as well.
      * See [crypto](/docs/overview/encryption) for details.
-     * @member {number|null|undefined} id
+     * @member {number} id
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.id = null
+    MeshPacket.prototype.id = 0
 
     /**
      * The time this message was received by the esp32 (secs since 1970).
      * Note: this field is _never_ sent on the radio link itself (to save space) Times
      * are typically not sent over the mesh, but they will be added to any Packet
      * (chain of SubPacket) sent to the phone (so the phone can know exact time of reception)
-     * @member {number|null|undefined} rxTime
+     * @member {number} rxTime
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.rxTime = null
+    MeshPacket.prototype.rxTime = 0
 
     /**
      * *Never* sent over the radio links.
      * Set during reception to indicate the SNR of this packet.
      * Used to collect statistics on current link quality.
-     * @member {number|null|undefined} rxSnr
+     * @member {number} rxSnr
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.rxSnr = null
+    MeshPacket.prototype.rxSnr = 0
 
     /**
      * If unset treated as zero (no forwarding, send to adjacent nodes only)
      * if 1, allow hopping through one node, etc...
      * For our usecase real world topologies probably have a max of about 3.
      * This field is normally placed into a few of bits in the header.
-     * @member {number|null|undefined} hopLimit
+     * @member {number} hopLimit
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.hopLimit = null
+    MeshPacket.prototype.hopLimit = 0
 
     /**
      * This packet is being sent as a reliable message, we would prefer it to arrive at the destination.
@@ -4000,53 +4002,53 @@ export const meshtastic = ($root.meshtastic = (() => {
      * So FloodingRouter.cpp generates an implicit ack which is delivered to the original sender.
      * If after some time we don't hear anyone rebroadcast our packet, we will timeout and retransmit, using the regular resend logic.
      * Note: This flag is normally sent in a flag bit in the header when sent over the wire
-     * @member {boolean|null|undefined} wantAck
+     * @member {boolean} wantAck
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.wantAck = null
+    MeshPacket.prototype.wantAck = false
 
     /**
      * The priority of this message for sending.
      * See MeshPacket.Priority description for more details.
-     * @member {meshtastic.MeshPacket.Priority|null|undefined} priority
+     * @member {meshtastic.MeshPacket.Priority} priority
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.priority = null
+    MeshPacket.prototype.priority = 0
 
     /**
      * rssi of received packet. Only sent to phone for dispay purposes.
-     * @member {number|null|undefined} rxRssi
+     * @member {number} rxRssi
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.rxRssi = null
+    MeshPacket.prototype.rxRssi = 0
 
     /**
      * Describe if this message is delayed
-     * @member {meshtastic.MeshPacket.Delayed|null|undefined} delayed
+     * @member {meshtastic.MeshPacket.Delayed} delayed
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.delayed = null
+    MeshPacket.prototype.delayed = 0
 
     /**
      * Describes whether this packet passed via MQTT somewhere along the path it currently took.
-     * @member {boolean|null|undefined} viaMqtt
+     * @member {boolean} viaMqtt
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.viaMqtt = null
+    MeshPacket.prototype.viaMqtt = false
 
     /**
      * Hop limit with which the original packet started. Sent via LoRa using three bits in the unencrypted header.
      * When receiving a packet, the difference between hop_start and hop_limit gives how many hops it traveled.
-     * @member {number|null|undefined} hopStart
+     * @member {number} hopStart
      * @memberof meshtastic.MeshPacket
      * @instance
      */
-    MeshPacket.prototype.hopStart = null
+    MeshPacket.prototype.hopStart = 0
 
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
@@ -4282,11 +4284,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The node number
-     * @member {number|null|undefined} num
+     * @member {number} num
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.num = null
+    NodeInfo.prototype.num = 0
 
     /**
      * The user info for this node
@@ -4308,19 +4310,19 @@ export const meshtastic = ($root.meshtastic = (() => {
     /**
      * Returns the Signal-to-noise ratio (SNR) of the last received message,
      * as measured by the receiver. Return SNR of the last received message in dB
-     * @member {number|null|undefined} snr
+     * @member {number} snr
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.snr = null
+    NodeInfo.prototype.snr = 0
 
     /**
      * Set to indicate the last time we received a packet from this node
-     * @member {number|null|undefined} lastHeard
+     * @member {number} lastHeard
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.lastHeard = null
+    NodeInfo.prototype.lastHeard = 0
 
     /**
      * The latest device metrics for the node.
@@ -4332,36 +4334,36 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * local channel index we heard that node on. Only populated if its not the default channel.
-     * @member {number|null|undefined} channel
+     * @member {number} channel
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.channel = null
+    NodeInfo.prototype.channel = 0
 
     /**
      * True if we witnessed the node over MQTT instead of LoRA transport
-     * @member {boolean|null|undefined} viaMqtt
+     * @member {boolean} viaMqtt
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.viaMqtt = null
+    NodeInfo.prototype.viaMqtt = false
 
     /**
      * Number of hops away from us this node is (0 if adjacent)
-     * @member {number|null|undefined} hopsAway
+     * @member {number} hopsAway
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.hopsAway = null
+    NodeInfo.prototype.hopsAway = 0
 
     /**
      * True if node is in our favorites list
      * Persists between NodeDB internal clean ups
-     * @member {boolean|null|undefined} isFavorite
+     * @member {boolean} isFavorite
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.isFavorite = null
+    NodeInfo.prototype.isFavorite = false
 
     /**
      * Decodes a NodeInfo message from the specified reader or buffer.
@@ -4505,29 +4507,29 @@ export const meshtastic = ($root.meshtastic = (() => {
     /**
      * Tells the phone what our node number is, default starting value is
      * lowbyte of macaddr, but it will be fixed if that is already in use
-     * @member {number|null|undefined} myNodeNum
+     * @member {number} myNodeNum
      * @memberof meshtastic.MyNodeInfo
      * @instance
      */
-    MyNodeInfo.prototype.myNodeNum = null
+    MyNodeInfo.prototype.myNodeNum = 0
 
     /**
      * The total number of reboots this node has ever encountered
      * (well - since the last time we discarded preferences)
-     * @member {number|null|undefined} rebootCount
+     * @member {number} rebootCount
      * @memberof meshtastic.MyNodeInfo
      * @instance
      */
-    MyNodeInfo.prototype.rebootCount = null
+    MyNodeInfo.prototype.rebootCount = 0
 
     /**
      * The minimum app version that can talk to this device.
      * Phone/PC apps should compare this to their build number and if too low tell the user they must update their app
-     * @member {number|null|undefined} minAppVersion
+     * @member {number} minAppVersion
      * @memberof meshtastic.MyNodeInfo
      * @instance
      */
-    MyNodeInfo.prototype.minAppVersion = null
+    MyNodeInfo.prototype.minAppVersion = 0
 
     /**
      * Decodes a MyNodeInfo message from the specified reader or buffer.
@@ -4601,35 +4603,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Log levels, chosen to match python logging conventions.
-     * @member {string|null|undefined} message
+     * @member {string} message
      * @memberof meshtastic.LogRecord
      * @instance
      */
-    LogRecord.prototype.message = null
+    LogRecord.prototype.message = ''
 
     /**
      * Seconds since 1970 - or 0 for unknown/unset
-     * @member {number|null|undefined} time
+     * @member {number} time
      * @memberof meshtastic.LogRecord
      * @instance
      */
-    LogRecord.prototype.time = null
+    LogRecord.prototype.time = 0
 
     /**
      * Usually based on thread name - if known
-     * @member {string|null|undefined} source
+     * @member {string} source
      * @memberof meshtastic.LogRecord
      * @instance
      */
-    LogRecord.prototype.source = null
+    LogRecord.prototype.source = ''
 
     /**
      * Not yet set
-     * @member {meshtastic.LogRecord.Level|null|undefined} level
+     * @member {meshtastic.LogRecord.Level} level
      * @memberof meshtastic.LogRecord
      * @instance
      */
-    LogRecord.prototype.level = null
+    LogRecord.prototype.level = 0
 
     /**
      * Decodes a LogRecord message from the specified reader or buffer.
@@ -4728,35 +4730,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Last attempt to queue status, ErrorCode
-     * @member {number|null|undefined} res
+     * @member {number} res
      * @memberof meshtastic.QueueStatus
      * @instance
      */
-    QueueStatus.prototype.res = null
+    QueueStatus.prototype.res = 0
 
     /**
      * Free entries in the outgoing queue
-     * @member {number|null|undefined} free
+     * @member {number} free
      * @memberof meshtastic.QueueStatus
      * @instance
      */
-    QueueStatus.prototype.free = null
+    QueueStatus.prototype.free = 0
 
     /**
      * Maximum entries in the outgoing queue
-     * @member {number|null|undefined} maxlen
+     * @member {number} maxlen
      * @memberof meshtastic.QueueStatus
      * @instance
      */
-    QueueStatus.prototype.maxlen = null
+    QueueStatus.prototype.maxlen = 0
 
     /**
      * What was mesh packet id that generated this response?
-     * @member {number|null|undefined} meshPacketId
+     * @member {number} meshPacketId
      * @memberof meshtastic.QueueStatus
      * @instance
      */
-    QueueStatus.prototype.meshPacketId = null
+    QueueStatus.prototype.meshPacketId = 0
 
     /**
      * Decodes a QueueStatus message from the specified reader or buffer.
@@ -4854,11 +4856,11 @@ export const meshtastic = ($root.meshtastic = (() => {
     /**
      * The packet id, used to allow the phone to request missing read packets from the FIFO,
      * see our bluetooth docs
-     * @member {number|null|undefined} id
+     * @member {number} id
      * @memberof meshtastic.FromRadio
      * @instance
      */
-    FromRadio.prototype.id = null
+    FromRadio.prototype.id = 0
 
     /**
      * Log levels, chosen to match python logging conventions.
@@ -5125,19 +5127,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The fully qualified path of the file
-     * @member {string|null|undefined} fileName
+     * @member {string} fileName
      * @memberof meshtastic.FileInfo
      * @instance
      */
-    FileInfo.prototype.fileName = null
+    FileInfo.prototype.fileName = ''
 
     /**
      * The size of the file in bytes
-     * @member {number|null|undefined} sizeBytes
+     * @member {number} sizeBytes
      * @memberof meshtastic.FileInfo
      * @instance
      */
-    FileInfo.prototype.sizeBytes = null
+    FileInfo.prototype.sizeBytes = 0
 
     /**
      * Decodes a FileInfo message from the specified reader or buffer.
@@ -5364,19 +5366,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * PortNum to determine the how to handle the compressed payload.
-     * @member {meshtastic.PortNum|null|undefined} portnum
+     * @member {meshtastic.PortNum} portnum
      * @memberof meshtastic.Compressed
      * @instance
      */
-    Compressed.prototype.portnum = null
+    Compressed.prototype.portnum = 0
 
     /**
      * Compressed data.
-     * @member {Uint8Array|null|undefined} data
+     * @member {Uint8Array} data
      * @memberof meshtastic.Compressed
      * @instance
      */
-    Compressed.prototype.data = null
+    Compressed.prototype.data = $util.newBuffer([])
 
     /**
      * Decodes a Compressed message from the specified reader or buffer.
@@ -5443,27 +5445,27 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The node ID of the node sending info on its neighbors
-     * @member {number|null|undefined} nodeId
+     * @member {number} nodeId
      * @memberof meshtastic.NeighborInfo
      * @instance
      */
-    NeighborInfo.prototype.nodeId = null
+    NeighborInfo.prototype.nodeId = 0
 
     /**
      * Field to pass neighbor info for the next sending cycle
-     * @member {number|null|undefined} lastSentById
+     * @member {number} lastSentById
      * @memberof meshtastic.NeighborInfo
      * @instance
      */
-    NeighborInfo.prototype.lastSentById = null
+    NeighborInfo.prototype.lastSentById = 0
 
     /**
      * Broadcast interval of the represented node (in seconds)
-     * @member {number|null|undefined} nodeBroadcastIntervalSecs
+     * @member {number} nodeBroadcastIntervalSecs
      * @memberof meshtastic.NeighborInfo
      * @instance
      */
-    NeighborInfo.prototype.nodeBroadcastIntervalSecs = null
+    NeighborInfo.prototype.nodeBroadcastIntervalSecs = 0
 
     /**
      * The list of out edges from this node
@@ -5548,37 +5550,37 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Node ID of neighbor
-     * @member {number|null|undefined} nodeId
+     * @member {number} nodeId
      * @memberof meshtastic.Neighbor
      * @instance
      */
-    Neighbor.prototype.nodeId = null
+    Neighbor.prototype.nodeId = 0
 
     /**
      * SNR of last heard message
-     * @member {number|null|undefined} snr
+     * @member {number} snr
      * @memberof meshtastic.Neighbor
      * @instance
      */
-    Neighbor.prototype.snr = null
+    Neighbor.prototype.snr = 0
 
     /**
      * Reception time (in secs since 1970) of last message that was last sent by this ID.
      * Note: this is for local storage only and will not be sent out over the mesh.
-     * @member {number|null|undefined} lastRxTime
+     * @member {number} lastRxTime
      * @memberof meshtastic.Neighbor
      * @instance
      */
-    Neighbor.prototype.lastRxTime = null
+    Neighbor.prototype.lastRxTime = 0
 
     /**
      * Broadcast interval of this neighbor (in seconds).
      * Note: this is for local storage only and will not be sent out over the mesh.
-     * @member {number|null|undefined} nodeBroadcastIntervalSecs
+     * @member {number} nodeBroadcastIntervalSecs
      * @memberof meshtastic.Neighbor
      * @instance
      */
-    Neighbor.prototype.nodeBroadcastIntervalSecs = null
+    Neighbor.prototype.nodeBroadcastIntervalSecs = 0
 
     /**
      * Decodes a Neighbor message from the specified reader or buffer.
@@ -5658,83 +5660,83 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Device firmware version string
-     * @member {string|null|undefined} firmwareVersion
+     * @member {string} firmwareVersion
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.firmwareVersion = null
+    DeviceMetadata.prototype.firmwareVersion = ''
 
     /**
      * Device state version
-     * @member {number|null|undefined} deviceStateVersion
+     * @member {number} deviceStateVersion
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.deviceStateVersion = null
+    DeviceMetadata.prototype.deviceStateVersion = 0
 
     /**
      * Indicates whether the device can shutdown CPU natively or via power management chip
-     * @member {boolean|null|undefined} canShutdown
+     * @member {boolean} canShutdown
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.canShutdown = null
+    DeviceMetadata.prototype.canShutdown = false
 
     /**
      * Indicates that the device has native wifi capability
-     * @member {boolean|null|undefined} hasWifi
+     * @member {boolean} hasWifi
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.hasWifi = null
+    DeviceMetadata.prototype.hasWifi = false
 
     /**
      * Indicates that the device has native bluetooth capability
-     * @member {boolean|null|undefined} hasBluetooth
+     * @member {boolean} hasBluetooth
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.hasBluetooth = null
+    DeviceMetadata.prototype.hasBluetooth = false
 
     /**
      * Indicates that the device has an ethernet peripheral
-     * @member {boolean|null|undefined} hasEthernet
+     * @member {boolean} hasEthernet
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.hasEthernet = null
+    DeviceMetadata.prototype.hasEthernet = false
 
     /**
      * Indicates that the device's role in the mesh
-     * @member {meshtastic.Config.DeviceConfig.Role|null|undefined} role
+     * @member {meshtastic.Config.DeviceConfig.Role} role
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.role = null
+    DeviceMetadata.prototype.role = 0
 
     /**
      * Indicates the device's current enabled position flags
-     * @member {number|null|undefined} positionFlags
+     * @member {number} positionFlags
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.positionFlags = null
+    DeviceMetadata.prototype.positionFlags = 0
 
     /**
      * Device hardware model
-     * @member {meshtastic.HardwareModel|null|undefined} hwModel
+     * @member {meshtastic.HardwareModel} hwModel
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.hwModel = null
+    DeviceMetadata.prototype.hwModel = 0
 
     /**
      * Has Remote Hardware enabled
-     * @member {boolean|null|undefined} hasRemoteHardware
+     * @member {boolean} hasRemoteHardware
      * @memberof meshtastic.DeviceMetadata
      * @instance
      */
-    DeviceMetadata.prototype.hasRemoteHardware = null
+    DeviceMetadata.prototype.hasRemoteHardware = false
 
     /**
      * Decodes a DeviceMetadata message from the specified reader or buffer.
@@ -5881,11 +5883,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The node_num exposing the available gpio pin
-     * @member {number|null|undefined} nodeNum
+     * @member {number} nodeNum
      * @memberof meshtastic.NodeRemoteHardwarePin
      * @instance
      */
-    NodeRemoteHardwarePin.prototype.nodeNum = null
+    NodeRemoteHardwarePin.prototype.nodeNum = 0
 
     /**
      * The the available gpio pin for usage with RemoteHardware module
@@ -5959,35 +5961,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The ID of the entire payload
-     * @member {number|null|undefined} payloadId
+     * @member {number} payloadId
      * @memberof meshtastic.ChunkedPayload
      * @instance
      */
-    ChunkedPayload.prototype.payloadId = null
+    ChunkedPayload.prototype.payloadId = 0
 
     /**
      * The total number of chunks in the payload
-     * @member {number|null|undefined} chunkCount
+     * @member {number} chunkCount
      * @memberof meshtastic.ChunkedPayload
      * @instance
      */
-    ChunkedPayload.prototype.chunkCount = null
+    ChunkedPayload.prototype.chunkCount = 0
 
     /**
      * The current chunk index in the total
-     * @member {number|null|undefined} chunkIndex
+     * @member {number} chunkIndex
      * @memberof meshtastic.ChunkedPayload
      * @instance
      */
-    ChunkedPayload.prototype.chunkIndex = null
+    ChunkedPayload.prototype.chunkIndex = 0
 
     /**
      * The binary data of the current chunk
-     * @member {Uint8Array|null|undefined} payloadChunk
+     * @member {Uint8Array} payloadChunk
      * @memberof meshtastic.ChunkedPayload
      * @instance
      */
-    ChunkedPayload.prototype.payloadChunk = null
+    ChunkedPayload.prototype.payloadChunk = $util.newBuffer([])
 
     /**
      * Decodes a ChunkedPayload message from the specified reader or buffer.
@@ -6129,11 +6131,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The ID of the entire payload
-     * @member {number|null|undefined} payloadId
+     * @member {number} payloadId
      * @memberof meshtastic.ChunkedPayloadResponse
      * @instance
      */
-    ChunkedPayloadResponse.prototype.payloadId = null
+    ChunkedPayloadResponse.prototype.payloadId = 0
 
     /**
      * Request to transfer chunked payload
@@ -6288,11 +6290,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Deprecated in favor of LoraConfig.channel_num
-     * @member {number|null|undefined} channelNum
+     * @member {number} channelNum
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.channelNum = null
+    ChannelSettings.prototype.channelNum = 0
 
     /**
      * A simple pre-shared key for now for crypto.
@@ -6305,11 +6307,11 @@ export const meshtastic = ($root.meshtastic = (() => {
      * `1` = The special "default" channel key: {0xd4, 0xf1, 0xbb, 0x3a, 0x20, 0x29, 0x07, 0x59, 0xf0, 0xbc, 0xff, 0xab, 0xcf, 0x4e, 0x69, 0x01}
      * `2` through 10 = The default channel key, except with 1 through 9 added to the last byte.
      * Shown to user as simple1 through 10
-     * @member {Uint8Array|null|undefined} psk
+     * @member {Uint8Array} psk
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.psk = null
+    ChannelSettings.prototype.psk = $util.newBuffer([])
 
     /**
      * A SHORT name that will be packed into the URL.
@@ -6320,11 +6322,11 @@ export const meshtastic = ($root.meshtastic = (() => {
      * In user interfaces it should be rendered as a local language translation of "X".
      * For channel_num hashing empty string will be treated as "X".
      * Where "X" is selected based on the English words listed above for ModemPreset
-     * @member {string|null|undefined} name
+     * @member {string} name
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.name = null
+    ChannelSettings.prototype.name = ''
 
     /**
      * Used to construct a globally unique channel ID.
@@ -6338,27 +6340,27 @@ export const meshtastic = ($root.meshtastic = (() => {
      * Those channels do not have a numeric id included in the settings, but instead it is pulled from
      * a table of well known IDs.
      * (see Well Known Channels FIXME)
-     * @member {number|null|undefined} id
+     * @member {number} id
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.id = null
+    ChannelSettings.prototype.id = 0
 
     /**
      * If true, messages on the mesh will be sent to the *public* internet by any gateway ndoe
-     * @member {boolean|null|undefined} uplinkEnabled
+     * @member {boolean} uplinkEnabled
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.uplinkEnabled = null
+    ChannelSettings.prototype.uplinkEnabled = false
 
     /**
      * If true, messages seen on the internet will be forwarded to the local mesh.
-     * @member {boolean|null|undefined} downlinkEnabled
+     * @member {boolean} downlinkEnabled
      * @memberof meshtastic.ChannelSettings
      * @instance
      */
-    ChannelSettings.prototype.downlinkEnabled = null
+    ChannelSettings.prototype.downlinkEnabled = false
 
     /**
      * Per-channel module settings.
@@ -6451,20 +6453,20 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Bits of precision for the location sent in position packets.
-     * @member {number|null|undefined} positionPrecision
+     * @member {number} positionPrecision
      * @memberof meshtastic.ModuleSettings
      * @instance
      */
-    ModuleSettings.prototype.positionPrecision = null
+    ModuleSettings.prototype.positionPrecision = 0
 
     /**
      * Controls whether or not the phone / clients should mute the current channel
      * Useful for noisy public channels you don't necessarily want to disable
-     * @member {boolean|null|undefined} isClientMuted
+     * @member {boolean} isClientMuted
      * @memberof meshtastic.ModuleSettings
      * @instance
      */
-    ModuleSettings.prototype.isClientMuted = null
+    ModuleSettings.prototype.isClientMuted = false
 
     /**
      * Decodes a ModuleSettings message from the specified reader or buffer.
@@ -6533,11 +6535,11 @@ export const meshtastic = ($root.meshtastic = (() => {
      * The index of this channel in the channel table (from 0 to MAX_NUM_CHANNELS-1)
      * (Someday - not currently implemented) An index of -1 could be used to mean "set by name",
      * in which case the target node will find and set the channel by settings.name.
-     * @member {number|null|undefined} index
+     * @member {number} index
      * @memberof meshtastic.Channel
      * @instance
      */
-    Channel.prototype.index = null
+    Channel.prototype.index = 0
 
     /**
      * The new settings, or NULL to disable that channel
@@ -6549,11 +6551,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * TODO: REPLACE
-     * @member {meshtastic.Channel.Role|null|undefined} role
+     * @member {meshtastic.Channel.Role} role
      * @memberof meshtastic.Channel
      * @instance
      */
-    Channel.prototype.role = null
+    Channel.prototype.role = 0
 
     /**
      * Decodes a Channel message from the specified reader or buffer.
@@ -6913,92 +6915,92 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * If a meshtastic node is able to reach the internet it will normally attempt to gateway any channels that are marked as
        * is_uplink_enabled or is_downlink_enabled.
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.enabled = null
+      MQTTConfig.prototype.enabled = false
 
       /**
        * The server to use for our MQTT global message gateway feature.
        * If not set, the default server will be used
-       * @member {string|null|undefined} address
+       * @member {string} address
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.address = null
+      MQTTConfig.prototype.address = ''
 
       /**
        * MQTT username to use (most useful for a custom MQTT server).
        * If using a custom server, this will be honoured even if empty.
        * If using the default server, this will only be honoured if set, otherwise the device will use the default username
-       * @member {string|null|undefined} username
+       * @member {string} username
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.username = null
+      MQTTConfig.prototype.username = ''
 
       /**
        * MQTT password to use (most useful for a custom MQTT server).
        * If using a custom server, this will be honoured even if empty.
        * If using the default server, this will only be honoured if set, otherwise the device will use the default password
-       * @member {string|null|undefined} password
+       * @member {string} password
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.password = null
+      MQTTConfig.prototype.password = ''
 
       /**
        * Whether to send encrypted or decrypted packets to MQTT.
        * This parameter is only honoured if you also set server
        * (the default official mqtt.meshtastic.org server can handle encrypted packets)
        * Decrypted packets may be useful for external systems that want to consume meshtastic packets
-       * @member {boolean|null|undefined} encryptionEnabled
+       * @member {boolean} encryptionEnabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.encryptionEnabled = null
+      MQTTConfig.prototype.encryptionEnabled = false
 
       /**
        * Whether to send / consume json packets on MQTT
-       * @member {boolean|null|undefined} jsonEnabled
+       * @member {boolean} jsonEnabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.jsonEnabled = null
+      MQTTConfig.prototype.jsonEnabled = false
 
       /**
        * If true, we attempt to establish a secure connection using TLS
-       * @member {boolean|null|undefined} tlsEnabled
+       * @member {boolean} tlsEnabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.tlsEnabled = null
+      MQTTConfig.prototype.tlsEnabled = false
 
       /**
        * The root topic to use for MQTT messages. Default is "msh".
        * This is useful if you want to use a single MQTT server for multiple meshtastic networks and separate them via ACLs
-       * @member {string|null|undefined} root
+       * @member {string} root
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.root = null
+      MQTTConfig.prototype.root = ''
 
       /**
        * If true, we can use the connected phone / client to proxy messages to MQTT instead of a direct connection
-       * @member {boolean|null|undefined} proxyToClientEnabled
+       * @member {boolean} proxyToClientEnabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.proxyToClientEnabled = null
+      MQTTConfig.prototype.proxyToClientEnabled = false
 
       /**
        * If true, we will periodically report unencrypted information about our node to a map via MQTT
-       * @member {boolean|null|undefined} mapReportingEnabled
+       * @member {boolean} mapReportingEnabled
        * @memberof meshtastic.ModuleConfig.MQTTConfig
        * @instance
        */
-      MQTTConfig.prototype.mapReportingEnabled = null
+      MQTTConfig.prototype.mapReportingEnabled = false
 
       /**
        * Settings for reporting information about our node to a map via MQTT
@@ -7106,19 +7108,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * How often we should report our info to the map (in seconds)
-       * @member {number|null|undefined} publishIntervalSecs
+       * @member {number} publishIntervalSecs
        * @memberof meshtastic.ModuleConfig.MapReportSettings
        * @instance
        */
-      MapReportSettings.prototype.publishIntervalSecs = null
+      MapReportSettings.prototype.publishIntervalSecs = 0
 
       /**
        * Bits of precision for the location sent (default of 32 is full precision).
-       * @member {number|null|undefined} positionPrecision
+       * @member {number} positionPrecision
        * @memberof meshtastic.ModuleConfig.MapReportSettings
        * @instance
        */
-      MapReportSettings.prototype.positionPrecision = null
+      MapReportSettings.prototype.positionPrecision = 0
 
       /**
        * Decodes a MapReportSettings message from the specified reader or buffer.
@@ -7184,19 +7186,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Whether the Module is enabled
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.RemoteHardwareConfig
        * @instance
        */
-      RemoteHardwareConfig.prototype.enabled = null
+      RemoteHardwareConfig.prototype.enabled = false
 
       /**
        * Whether the Module allows consumers to read / write to pins not defined in available_pins
-       * @member {boolean|null|undefined} allowUndefinedPinAccess
+       * @member {boolean} allowUndefinedPinAccess
        * @memberof meshtastic.ModuleConfig.RemoteHardwareConfig
        * @instance
        */
-      RemoteHardwareConfig.prototype.allowUndefinedPinAccess = null
+      RemoteHardwareConfig.prototype.allowUndefinedPinAccess = false
 
       /**
        * Exposes the available pins to the mesh for reading and writing
@@ -7274,20 +7276,20 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Whether the Module is enabled
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.NeighborInfoConfig
        * @instance
        */
-      NeighborInfoConfig.prototype.enabled = null
+      NeighborInfoConfig.prototype.enabled = false
 
       /**
        * Interval in seconds of how often we should try to send our
        * Neighbor Info to the mesh
-       * @member {number|null|undefined} updateInterval
+       * @member {number} updateInterval
        * @memberof meshtastic.ModuleConfig.NeighborInfoConfig
        * @instance
        */
-      NeighborInfoConfig.prototype.updateInterval = null
+      NeighborInfoConfig.prototype.updateInterval = 0
 
       /**
        * Decodes a NeighborInfoConfig message from the specified reader or buffer.
@@ -7364,74 +7366,74 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Whether the Module is enabled
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.enabled = null
+      DetectionSensorConfig.prototype.enabled = false
 
       /**
        * Interval in seconds of how often we can send a message to the mesh when a state change is detected
-       * @member {number|null|undefined} minimumBroadcastSecs
+       * @member {number} minimumBroadcastSecs
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.minimumBroadcastSecs = null
+      DetectionSensorConfig.prototype.minimumBroadcastSecs = 0
 
       /**
        * Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
        * When set to 0, only state changes will be broadcasted
        * Works as a sort of status heartbeat for peace of mind
-       * @member {number|null|undefined} stateBroadcastSecs
+       * @member {number} stateBroadcastSecs
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.stateBroadcastSecs = null
+      DetectionSensorConfig.prototype.stateBroadcastSecs = 0
 
       /**
        * Send ASCII bell with alert message
        * Useful for triggering ext. notification on bell
-       * @member {boolean|null|undefined} sendBell
+       * @member {boolean} sendBell
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.sendBell = null
+      DetectionSensorConfig.prototype.sendBell = false
 
       /**
        * Friendly name used to format message sent to mesh
        * Example: A name "Motion" would result in a message "Motion detected"
        * Maximum length of 20 characters
-       * @member {string|null|undefined} name
+       * @member {string} name
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.name = null
+      DetectionSensorConfig.prototype.name = ''
 
       /**
        * GPIO pin to monitor for state changes
-       * @member {number|null|undefined} monitorPin
+       * @member {number} monitorPin
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.monitorPin = null
+      DetectionSensorConfig.prototype.monitorPin = 0
 
       /**
        * Whether or not the GPIO pin state detection is triggered on HIGH (1)
        * Otherwise LOW (0)
-       * @member {boolean|null|undefined} detectionTriggeredHigh
+       * @member {boolean} detectionTriggeredHigh
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.detectionTriggeredHigh = null
+      DetectionSensorConfig.prototype.detectionTriggeredHigh = false
 
       /**
        * Whether or not use INPUT_PULLUP mode for GPIO pin
        * Only applicable if the board uses pull-up resistors on the pin
-       * @member {boolean|null|undefined} usePullup
+       * @member {boolean} usePullup
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.usePullup = null
+      DetectionSensorConfig.prototype.usePullup = false
 
       /**
        * Decodes a DetectionSensorConfig message from the specified reader or buffer.
@@ -7524,59 +7526,59 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Whether Audio is enabled
-       * @member {boolean|null|undefined} codec2Enabled
+       * @member {boolean} codec2Enabled
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.codec2Enabled = null
+      AudioConfig.prototype.codec2Enabled = false
 
       /**
        * PTT Pin
-       * @member {number|null|undefined} pttPin
+       * @member {number} pttPin
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.pttPin = null
+      AudioConfig.prototype.pttPin = 0
 
       /**
        * The audio sample rate to use for codec2
-       * @member {meshtastic.ModuleConfig.AudioConfig.Audio_Baud|null|undefined} bitrate
+       * @member {meshtastic.ModuleConfig.AudioConfig.Audio_Baud} bitrate
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.bitrate = null
+      AudioConfig.prototype.bitrate = 0
 
       /**
        * I2S Word Select
-       * @member {number|null|undefined} i2sWs
+       * @member {number} i2sWs
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.i2sWs = null
+      AudioConfig.prototype.i2sWs = 0
 
       /**
        * I2S Data IN
-       * @member {number|null|undefined} i2sSd
+       * @member {number} i2sSd
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.i2sSd = null
+      AudioConfig.prototype.i2sSd = 0
 
       /**
        * I2S Data OUT
-       * @member {number|null|undefined} i2sDin
+       * @member {number} i2sDin
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.i2sDin = null
+      AudioConfig.prototype.i2sDin = 0
 
       /**
        * I2S Clock
-       * @member {number|null|undefined} i2sSck
+       * @member {number} i2sSck
        * @memberof meshtastic.ModuleConfig.AudioConfig
        * @instance
        */
-      AudioConfig.prototype.i2sSck = null
+      AudioConfig.prototype.i2sSck = 0
 
       /**
        * Decodes an AudioConfig message from the specified reader or buffer.
@@ -7691,35 +7693,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable the Paxcounter Module
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.PaxcounterConfig
        * @instance
        */
-      PaxcounterConfig.prototype.enabled = null
+      PaxcounterConfig.prototype.enabled = false
 
       /**
        * PaxcounterConfig paxcounterUpdateInterval.
-       * @member {number|null|undefined} paxcounterUpdateInterval
+       * @member {number} paxcounterUpdateInterval
        * @memberof meshtastic.ModuleConfig.PaxcounterConfig
        * @instance
        */
-      PaxcounterConfig.prototype.paxcounterUpdateInterval = null
+      PaxcounterConfig.prototype.paxcounterUpdateInterval = 0
 
       /**
        * WiFi RSSI threshold. Defaults to -80
-       * @member {number|null|undefined} wifiThreshold
+       * @member {number} wifiThreshold
        * @memberof meshtastic.ModuleConfig.PaxcounterConfig
        * @instance
        */
-      PaxcounterConfig.prototype.wifiThreshold = null
+      PaxcounterConfig.prototype.wifiThreshold = 0
 
       /**
        * BLE RSSI threshold. Defaults to -80
-       * @member {number|null|undefined} bleThreshold
+       * @member {number} bleThreshold
        * @memberof meshtastic.ModuleConfig.PaxcounterConfig
        * @instance
        */
-      PaxcounterConfig.prototype.bleThreshold = null
+      PaxcounterConfig.prototype.bleThreshold = 0
 
       /**
        * Decodes a PaxcounterConfig message from the specified reader or buffer.
@@ -7799,69 +7801,69 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Preferences for the SerialModule
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.enabled = null
+      SerialConfig.prototype.enabled = false
 
       /**
        * TODO: REPLACE
-       * @member {boolean|null|undefined} echo
+       * @member {boolean} echo
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.echo = null
+      SerialConfig.prototype.echo = false
 
       /**
        * RX pin (should match Arduino gpio pin number)
-       * @member {number|null|undefined} rxd
+       * @member {number} rxd
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.rxd = null
+      SerialConfig.prototype.rxd = 0
 
       /**
        * TX pin (should match Arduino gpio pin number)
-       * @member {number|null|undefined} txd
+       * @member {number} txd
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.txd = null
+      SerialConfig.prototype.txd = 0
 
       /**
        * Serial baud rate
-       * @member {meshtastic.ModuleConfig.SerialConfig.Serial_Baud|null|undefined} baud
+       * @member {meshtastic.ModuleConfig.SerialConfig.Serial_Baud} baud
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.baud = null
+      SerialConfig.prototype.baud = 0
 
       /**
        * TODO: REPLACE
-       * @member {number|null|undefined} timeout
+       * @member {number} timeout
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.timeout = null
+      SerialConfig.prototype.timeout = 0
 
       /**
        * Mode for serial module operation
-       * @member {meshtastic.ModuleConfig.SerialConfig.Serial_Mode|null|undefined} mode
+       * @member {meshtastic.ModuleConfig.SerialConfig.Serial_Mode} mode
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.mode = null
+      SerialConfig.prototype.mode = 0
 
       /**
        * Overrides the platform's defacto Serial port instance to use with Serial module config settings
        * This is currently only usable in output modes like NMEA / CalTopo and may behave strangely or not work at all in other modes
        * Existing logging over the Serial Console will still be present
-       * @member {boolean|null|undefined} overrideConsoleSerialPort
+       * @member {boolean} overrideConsoleSerialPort
        * @memberof meshtastic.ModuleConfig.SerialConfig
        * @instance
        */
-      SerialConfig.prototype.overrideConsoleSerialPort = null
+      SerialConfig.prototype.overrideConsoleSerialPort = false
 
       /**
        * Decodes a SerialConfig message from the specified reader or buffer.
@@ -8041,134 +8043,134 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable the ExternalNotificationModule
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.enabled = null
+      ExternalNotificationConfig.prototype.enabled = false
 
       /**
        * When using in On/Off mode, keep the output on for this many
        * milliseconds. Default 1000ms (1 second).
-       * @member {number|null|undefined} outputMs
+       * @member {number} outputMs
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.outputMs = null
+      ExternalNotificationConfig.prototype.outputMs = 0
 
       /**
        * Define the output pin GPIO setting Defaults to
        * EXT_NOTIFY_OUT if set for the board.
        * In standalone devices this pin should drive the LED to match the UI.
-       * @member {number|null|undefined} output
+       * @member {number} output
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.output = null
+      ExternalNotificationConfig.prototype.output = 0
 
       /**
        * Optional: Define a secondary output pin for a vibra motor
        * This is used in standalone devices to match the UI.
-       * @member {number|null|undefined} outputVibra
+       * @member {number} outputVibra
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.outputVibra = null
+      ExternalNotificationConfig.prototype.outputVibra = 0
 
       /**
        * Optional: Define a tertiary output pin for an active buzzer
        * This is used in standalone devices to to match the UI.
-       * @member {number|null|undefined} outputBuzzer
+       * @member {number} outputBuzzer
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.outputBuzzer = null
+      ExternalNotificationConfig.prototype.outputBuzzer = 0
 
       /**
        * IF this is true, the 'output' Pin will be pulled active high, false
        * means active low.
-       * @member {boolean|null|undefined} active
+       * @member {boolean} active
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.active = null
+      ExternalNotificationConfig.prototype.active = false
 
       /**
        * True: Alert when a text message arrives (output)
-       * @member {boolean|null|undefined} alertMessage
+       * @member {boolean} alertMessage
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertMessage = null
+      ExternalNotificationConfig.prototype.alertMessage = false
 
       /**
        * True: Alert when a text message arrives (output_vibra)
-       * @member {boolean|null|undefined} alertMessageVibra
+       * @member {boolean} alertMessageVibra
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertMessageVibra = null
+      ExternalNotificationConfig.prototype.alertMessageVibra = false
 
       /**
        * True: Alert when a text message arrives (output_buzzer)
-       * @member {boolean|null|undefined} alertMessageBuzzer
+       * @member {boolean} alertMessageBuzzer
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertMessageBuzzer = null
+      ExternalNotificationConfig.prototype.alertMessageBuzzer = false
 
       /**
        * True: Alert when the bell character is received (output)
-       * @member {boolean|null|undefined} alertBell
+       * @member {boolean} alertBell
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertBell = null
+      ExternalNotificationConfig.prototype.alertBell = false
 
       /**
        * True: Alert when the bell character is received (output_vibra)
-       * @member {boolean|null|undefined} alertBellVibra
+       * @member {boolean} alertBellVibra
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertBellVibra = null
+      ExternalNotificationConfig.prototype.alertBellVibra = false
 
       /**
        * True: Alert when the bell character is received (output_buzzer)
-       * @member {boolean|null|undefined} alertBellBuzzer
+       * @member {boolean} alertBellBuzzer
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.alertBellBuzzer = null
+      ExternalNotificationConfig.prototype.alertBellBuzzer = false
 
       /**
        * use a PWM output instead of a simple on/off output. This will ignore
        * the 'output', 'output_ms' and 'active' settings and use the
        * device.buzzer_gpio instead.
-       * @member {boolean|null|undefined} usePwm
+       * @member {boolean} usePwm
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.usePwm = null
+      ExternalNotificationConfig.prototype.usePwm = false
 
       /**
        * The notification will toggle with 'output_ms' for this time of seconds.
        * Default is 0 which means don't repeat at all. 60 would mean blink
        * and/or beep for 60 seconds
-       * @member {number|null|undefined} nagTimeout
+       * @member {number} nagTimeout
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.nagTimeout = null
+      ExternalNotificationConfig.prototype.nagTimeout = 0
 
       /**
        * When true, enables devices with native I2S audio output to use the RTTTL over speaker like a buzzer
        * T-Watch S3 and T-Deck for example have this capability
-       * @member {boolean|null|undefined} useI2sAsBuzzer
+       * @member {boolean} useI2sAsBuzzer
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
        * @instance
        */
-      ExternalNotificationConfig.prototype.useI2sAsBuzzer = null
+      ExternalNotificationConfig.prototype.useI2sAsBuzzer = false
 
       /**
        * Decodes an ExternalNotificationConfig message from the specified reader or buffer.
@@ -8288,51 +8290,51 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable the Store and Forward Module
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.enabled = null
+      StoreForwardConfig.prototype.enabled = false
 
       /**
        * TODO: REPLACE
-       * @member {boolean|null|undefined} heartbeat
+       * @member {boolean} heartbeat
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.heartbeat = null
+      StoreForwardConfig.prototype.heartbeat = false
 
       /**
        * TODO: REPLACE
-       * @member {number|null|undefined} records
+       * @member {number} records
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.records = null
+      StoreForwardConfig.prototype.records = 0
 
       /**
        * TODO: REPLACE
-       * @member {number|null|undefined} historyReturnMax
+       * @member {number} historyReturnMax
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.historyReturnMax = null
+      StoreForwardConfig.prototype.historyReturnMax = 0
 
       /**
        * TODO: REPLACE
-       * @member {number|null|undefined} historyReturnWindow
+       * @member {number} historyReturnWindow
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.historyReturnWindow = null
+      StoreForwardConfig.prototype.historyReturnWindow = 0
 
       /**
        * Set to true to let this node act as a server that stores received messages and resends them upon request.
-       * @member {boolean|null|undefined} isServer
+       * @member {boolean} isServer
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
        * @instance
        */
-      StoreForwardConfig.prototype.isServer = null
+      StoreForwardConfig.prototype.isServer = false
 
       /**
        * Decodes a StoreForwardConfig message from the specified reader or buffer.
@@ -8414,28 +8416,28 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable the Range Test Module
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.RangeTestConfig
        * @instance
        */
-      RangeTestConfig.prototype.enabled = null
+      RangeTestConfig.prototype.enabled = false
 
       /**
        * Send out range test messages from this node
-       * @member {number|null|undefined} sender
+       * @member {number} sender
        * @memberof meshtastic.ModuleConfig.RangeTestConfig
        * @instance
        */
-      RangeTestConfig.prototype.sender = null
+      RangeTestConfig.prototype.sender = 0
 
       /**
        * Bool value indicating that this node should save a RangeTest.csv file.
        * ESP32 Only
-       * @member {boolean|null|undefined} save
+       * @member {boolean} save
        * @memberof meshtastic.ModuleConfig.RangeTestConfig
        * @instance
        */
-      RangeTestConfig.prototype.save = null
+      RangeTestConfig.prototype.save = false
 
       /**
        * Decodes a RangeTestConfig message from the specified reader or buffer.
@@ -8519,89 +8521,89 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * Interval in seconds of how often we should try to send our
        * device metrics to the mesh
-       * @member {number|null|undefined} deviceUpdateInterval
+       * @member {number} deviceUpdateInterval
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.deviceUpdateInterval = null
+      TelemetryConfig.prototype.deviceUpdateInterval = 0
 
       /**
        * TelemetryConfig environmentUpdateInterval.
-       * @member {number|null|undefined} environmentUpdateInterval
+       * @member {number} environmentUpdateInterval
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.environmentUpdateInterval = null
+      TelemetryConfig.prototype.environmentUpdateInterval = 0
 
       /**
        * Preferences for the Telemetry Module (Environment)
        * Enable/Disable the telemetry measurement module measurement collection
-       * @member {boolean|null|undefined} environmentMeasurementEnabled
+       * @member {boolean} environmentMeasurementEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.environmentMeasurementEnabled = null
+      TelemetryConfig.prototype.environmentMeasurementEnabled = false
 
       /**
        * Enable/Disable the telemetry measurement module on-device display
-       * @member {boolean|null|undefined} environmentScreenEnabled
+       * @member {boolean} environmentScreenEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.environmentScreenEnabled = null
+      TelemetryConfig.prototype.environmentScreenEnabled = false
 
       /**
        * We'll always read the sensor in Celsius, but sometimes we might want to
        * display the results in Fahrenheit as a "user preference".
-       * @member {boolean|null|undefined} environmentDisplayFahrenheit
+       * @member {boolean} environmentDisplayFahrenheit
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.environmentDisplayFahrenheit = null
+      TelemetryConfig.prototype.environmentDisplayFahrenheit = false
 
       /**
        * Enable/Disable the air quality metrics
-       * @member {boolean|null|undefined} airQualityEnabled
+       * @member {boolean} airQualityEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.airQualityEnabled = null
+      TelemetryConfig.prototype.airQualityEnabled = false
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
-       * @member {number|null|undefined} airQualityInterval
+       * @member {number} airQualityInterval
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.airQualityInterval = null
+      TelemetryConfig.prototype.airQualityInterval = 0
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
-       * @member {boolean|null|undefined} powerMeasurementEnabled
+       * @member {boolean} powerMeasurementEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.powerMeasurementEnabled = null
+      TelemetryConfig.prototype.powerMeasurementEnabled = false
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
-       * @member {number|null|undefined} powerUpdateInterval
+       * @member {number} powerUpdateInterval
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.powerUpdateInterval = null
+      TelemetryConfig.prototype.powerUpdateInterval = 0
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
-       * @member {boolean|null|undefined} powerScreenEnabled
+       * @member {boolean} powerScreenEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
-      TelemetryConfig.prototype.powerScreenEnabled = null
+      TelemetryConfig.prototype.powerScreenEnabled = false
 
       /**
        * Decodes a TelemetryConfig message from the specified reader or buffer.
@@ -8708,93 +8710,93 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Enable the rotary encoder #1. This is a 'dumb' encoder sending pulses on both A and B pins while rotating.
-       * @member {boolean|null|undefined} rotary1Enabled
+       * @member {boolean} rotary1Enabled
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.rotary1Enabled = null
+      CannedMessageConfig.prototype.rotary1Enabled = false
 
       /**
        * GPIO pin for rotary encoder A port.
-       * @member {number|null|undefined} inputbrokerPinA
+       * @member {number} inputbrokerPinA
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerPinA = null
+      CannedMessageConfig.prototype.inputbrokerPinA = 0
 
       /**
        * GPIO pin for rotary encoder B port.
-       * @member {number|null|undefined} inputbrokerPinB
+       * @member {number} inputbrokerPinB
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerPinB = null
+      CannedMessageConfig.prototype.inputbrokerPinB = 0
 
       /**
        * GPIO pin for rotary encoder Press port.
-       * @member {number|null|undefined} inputbrokerPinPress
+       * @member {number} inputbrokerPinPress
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerPinPress = null
+      CannedMessageConfig.prototype.inputbrokerPinPress = 0
 
       /**
        * Generate input event on CW of this kind.
-       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar|null|undefined} inputbrokerEventCw
+       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar} inputbrokerEventCw
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerEventCw = null
+      CannedMessageConfig.prototype.inputbrokerEventCw = 0
 
       /**
        * Generate input event on CCW of this kind.
-       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar|null|undefined} inputbrokerEventCcw
+       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar} inputbrokerEventCcw
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerEventCcw = null
+      CannedMessageConfig.prototype.inputbrokerEventCcw = 0
 
       /**
        * Generate input event on Press of this kind.
-       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar|null|undefined} inputbrokerEventPress
+       * @member {meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar} inputbrokerEventPress
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.inputbrokerEventPress = null
+      CannedMessageConfig.prototype.inputbrokerEventPress = 0
 
       /**
        * Enable the Up/Down/Select input device. Can be RAK rotary encoder or 3 buttons. Uses the a/b/press definitions from inputbroker.
-       * @member {boolean|null|undefined} updown1Enabled
+       * @member {boolean} updown1Enabled
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.updown1Enabled = null
+      CannedMessageConfig.prototype.updown1Enabled = false
 
       /**
        * Enable/disable CannedMessageModule.
-       * @member {boolean|null|undefined} enabled
+       * @member {boolean} enabled
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.enabled = null
+      CannedMessageConfig.prototype.enabled = false
 
       /**
        * Input event origin accepted by the canned message module.
        * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
-       * @member {string|null|undefined} allowInputSource
+       * @member {string} allowInputSource
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.allowInputSource = null
+      CannedMessageConfig.prototype.allowInputSource = ''
 
       /**
        * CannedMessageModule also sends a bell character with the messages.
        * ExternalNotificationModule can benefit from this feature.
-       * @member {boolean|null|undefined} sendBell
+       * @member {boolean} sendBell
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
        */
-      CannedMessageConfig.prototype.sendBell = null
+      CannedMessageConfig.prototype.sendBell = false
 
       /**
        * Decodes a CannedMessageConfig message from the specified reader or buffer.
@@ -8925,43 +8927,43 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Sets LED to on or off.
-       * @member {boolean|null|undefined} ledState
+       * @member {boolean} ledState
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
        * @instance
        */
-      AmbientLightingConfig.prototype.ledState = null
+      AmbientLightingConfig.prototype.ledState = false
 
       /**
        * Sets the current for the LED output. Default is 10.
-       * @member {number|null|undefined} current
+       * @member {number} current
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
        * @instance
        */
-      AmbientLightingConfig.prototype.current = null
+      AmbientLightingConfig.prototype.current = 0
 
       /**
        * Sets the red LED level. Values are 0-255.
-       * @member {number|null|undefined} red
+       * @member {number} red
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
        * @instance
        */
-      AmbientLightingConfig.prototype.red = null
+      AmbientLightingConfig.prototype.red = 0
 
       /**
        * Sets the green LED level. Values are 0-255.
-       * @member {number|null|undefined} green
+       * @member {number} green
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
        * @instance
        */
-      AmbientLightingConfig.prototype.green = null
+      AmbientLightingConfig.prototype.green = 0
 
       /**
        * Sets the blue LED level. Values are 0-255.
-       * @member {number|null|undefined} blue
+       * @member {number} blue
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
        * @instance
        */
-      AmbientLightingConfig.prototype.blue = null
+      AmbientLightingConfig.prototype.blue = 0
 
       /**
        * Decodes an AmbientLightingConfig message from the specified reader or buffer.
@@ -9041,27 +9043,27 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * GPIO Pin number (must match Arduino)
-     * @member {number|null|undefined} gpioPin
+     * @member {number} gpioPin
      * @memberof meshtastic.RemoteHardwarePin
      * @instance
      */
-    RemoteHardwarePin.prototype.gpioPin = null
+    RemoteHardwarePin.prototype.gpioPin = 0
 
     /**
      * Name for the GPIO pin (i.e. Front gate, mailbox, etc)
-     * @member {string|null|undefined} name
+     * @member {string} name
      * @memberof meshtastic.RemoteHardwarePin
      * @instance
      */
-    RemoteHardwarePin.prototype.name = null
+    RemoteHardwarePin.prototype.name = ''
 
     /**
      * Type of GPIO access available to consumers on the mesh
-     * @member {meshtastic.RemoteHardwarePinType|null|undefined} type
+     * @member {meshtastic.RemoteHardwarePinType} type
      * @memberof meshtastic.RemoteHardwarePin
      * @instance
      */
-    RemoteHardwarePin.prototype.type = null
+    RemoteHardwarePin.prototype.type = 0
 
     /**
      * Decodes a RemoteHardwarePin message from the specified reader or buffer.
@@ -9283,43 +9285,43 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * 0-100 (>100 means powered)
-     * @member {number|null|undefined} batteryLevel
+     * @member {number} batteryLevel
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.batteryLevel = null
+    DeviceMetrics.prototype.batteryLevel = 0
 
     /**
      * Voltage measured
-     * @member {number|null|undefined} voltage
+     * @member {number} voltage
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.voltage = null
+    DeviceMetrics.prototype.voltage = 0
 
     /**
      * Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise).
-     * @member {number|null|undefined} channelUtilization
+     * @member {number} channelUtilization
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.channelUtilization = null
+    DeviceMetrics.prototype.channelUtilization = 0
 
     /**
      * Percent of airtime for transmission used within the last hour.
-     * @member {number|null|undefined} airUtilTx
+     * @member {number} airUtilTx
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.airUtilTx = null
+    DeviceMetrics.prototype.airUtilTx = 0
 
     /**
      * How long the device has been running since the last reboot (in seconds)
-     * @member {number|null|undefined} uptimeSeconds
+     * @member {number} uptimeSeconds
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.uptimeSeconds = null
+    DeviceMetrics.prototype.uptimeSeconds = 0
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -9412,141 +9414,141 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Temperature measured
-     * @member {number|null|undefined} temperature
+     * @member {number} temperature
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.temperature = null
+    EnvironmentMetrics.prototype.temperature = 0
 
     /**
      * Relative humidity percent measured
-     * @member {number|null|undefined} relativeHumidity
+     * @member {number} relativeHumidity
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.relativeHumidity = null
+    EnvironmentMetrics.prototype.relativeHumidity = 0
 
     /**
      * Barometric pressure in hPA measured
-     * @member {number|null|undefined} barometricPressure
+     * @member {number} barometricPressure
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.barometricPressure = null
+    EnvironmentMetrics.prototype.barometricPressure = 0
 
     /**
      * Gas resistance in MOhm measured
-     * @member {number|null|undefined} gasResistance
+     * @member {number} gasResistance
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.gasResistance = null
+    EnvironmentMetrics.prototype.gasResistance = 0
 
     /**
      * Voltage measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x)
-     * @member {number|null|undefined} voltage
+     * @member {number} voltage
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.voltage = null
+    EnvironmentMetrics.prototype.voltage = 0
 
     /**
      * Current measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x)
-     * @member {number|null|undefined} current
+     * @member {number} current
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.current = null
+    EnvironmentMetrics.prototype.current = 0
 
     /**
      * relative scale IAQ value as measured by Bosch BME680 . value 0-500.
      * Belongs to Air Quality but is not particle but VOC measurement. Other VOC values can also be put in here.
-     * @member {number|null|undefined} iaq
+     * @member {number} iaq
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.iaq = null
+    EnvironmentMetrics.prototype.iaq = 0
 
     /**
      * RCWL9620 Doppler Radar Distance Sensor, used for water level detection. Float value in mm.
-     * @member {number|null|undefined} distance
+     * @member {number} distance
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.distance = null
+    EnvironmentMetrics.prototype.distance = 0
 
     /**
      * VEML7700 high accuracy ambient light(Lux) digital 16-bit resolution sensor.
-     * @member {number|null|undefined} lux
+     * @member {number} lux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.lux = null
+    EnvironmentMetrics.prototype.lux = 0
 
     /**
      * VEML7700 high accuracy white light(irradiance) not calibrated digital 16-bit resolution sensor.
-     * @member {number|null|undefined} whiteLux
+     * @member {number} whiteLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.whiteLux = null
+    EnvironmentMetrics.prototype.whiteLux = 0
 
     /**
      * Infrared lux
-     * @member {number|null|undefined} irLux
+     * @member {number} irLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.irLux = null
+    EnvironmentMetrics.prototype.irLux = 0
 
     /**
      * Ultraviolet lux
-     * @member {number|null|undefined} uvLux
+     * @member {number} uvLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.uvLux = null
+    EnvironmentMetrics.prototype.uvLux = 0
 
     /**
      * Wind direction in degrees
      * 0 degrees = North, 90 = East, etc...
-     * @member {number|null|undefined} windDirection
+     * @member {number} windDirection
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windDirection = null
+    EnvironmentMetrics.prototype.windDirection = 0
 
     /**
      * Wind speed in m/s
-     * @member {number|null|undefined} windSpeed
+     * @member {number} windSpeed
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windSpeed = null
+    EnvironmentMetrics.prototype.windSpeed = 0
 
     /**
      * Weight in KG
-     * @member {number|null|undefined} weight
+     * @member {number} weight
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.weight = null
+    EnvironmentMetrics.prototype.weight = 0
 
     /**
      * Wind gust in m/s
-     * @member {number|null|undefined} windGust
+     * @member {number} windGust
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windGust = null
+    EnvironmentMetrics.prototype.windGust = 0
 
     /**
      * Wind lull in m/s
-     * @member {number|null|undefined} windLull
+     * @member {number} windLull
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windLull = null
+    EnvironmentMetrics.prototype.windLull = 0
 
     /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
@@ -9674,51 +9676,51 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Voltage (Ch1)
-     * @member {number|null|undefined} ch1Voltage
+     * @member {number} ch1Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch1Voltage = null
+    PowerMetrics.prototype.ch1Voltage = 0
 
     /**
      * Current (Ch1)
-     * @member {number|null|undefined} ch1Current
+     * @member {number} ch1Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch1Current = null
+    PowerMetrics.prototype.ch1Current = 0
 
     /**
      * Voltage (Ch2)
-     * @member {number|null|undefined} ch2Voltage
+     * @member {number} ch2Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch2Voltage = null
+    PowerMetrics.prototype.ch2Voltage = 0
 
     /**
      * Current (Ch2)
-     * @member {number|null|undefined} ch2Current
+     * @member {number} ch2Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch2Current = null
+    PowerMetrics.prototype.ch2Current = 0
 
     /**
      * Voltage (Ch3)
-     * @member {number|null|undefined} ch3Voltage
+     * @member {number} ch3Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch3Voltage = null
+    PowerMetrics.prototype.ch3Voltage = 0
 
     /**
      * Current (Ch3)
-     * @member {number|null|undefined} ch3Current
+     * @member {number} ch3Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch3Current = null
+    PowerMetrics.prototype.ch3Current = 0
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -9808,99 +9810,99 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Concentration Units Standard PM1.0
-     * @member {number|null|undefined} pm10Standard
+     * @member {number} pm10Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm10Standard = null
+    AirQualityMetrics.prototype.pm10Standard = 0
 
     /**
      * Concentration Units Standard PM2.5
-     * @member {number|null|undefined} pm25Standard
+     * @member {number} pm25Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm25Standard = null
+    AirQualityMetrics.prototype.pm25Standard = 0
 
     /**
      * Concentration Units Standard PM10.0
-     * @member {number|null|undefined} pm100Standard
+     * @member {number} pm100Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm100Standard = null
+    AirQualityMetrics.prototype.pm100Standard = 0
 
     /**
      * Concentration Units Environmental PM1.0
-     * @member {number|null|undefined} pm10Environmental
+     * @member {number} pm10Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm10Environmental = null
+    AirQualityMetrics.prototype.pm10Environmental = 0
 
     /**
      * Concentration Units Environmental PM2.5
-     * @member {number|null|undefined} pm25Environmental
+     * @member {number} pm25Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm25Environmental = null
+    AirQualityMetrics.prototype.pm25Environmental = 0
 
     /**
      * Concentration Units Environmental PM10.0
-     * @member {number|null|undefined} pm100Environmental
+     * @member {number} pm100Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm100Environmental = null
+    AirQualityMetrics.prototype.pm100Environmental = 0
 
     /**
      * 0.3um Particle Count
-     * @member {number|null|undefined} particles_03um
+     * @member {number} particles_03um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_03um = null
+    AirQualityMetrics.prototype.particles_03um = 0
 
     /**
      * 0.5um Particle Count
-     * @member {number|null|undefined} particles_05um
+     * @member {number} particles_05um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_05um = null
+    AirQualityMetrics.prototype.particles_05um = 0
 
     /**
      * 1.0um Particle Count
-     * @member {number|null|undefined} particles_10um
+     * @member {number} particles_10um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_10um = null
+    AirQualityMetrics.prototype.particles_10um = 0
 
     /**
      * 2.5um Particle Count
-     * @member {number|null|undefined} particles_25um
+     * @member {number} particles_25um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_25um = null
+    AirQualityMetrics.prototype.particles_25um = 0
 
     /**
      * 5.0um Particle Count
-     * @member {number|null|undefined} particles_50um
+     * @member {number} particles_50um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_50um = null
+    AirQualityMetrics.prototype.particles_50um = 0
 
     /**
      * 10.0um Particle Count
-     * @member {number|null|undefined} particles_100um
+     * @member {number} particles_100um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_100um = null
+    AirQualityMetrics.prototype.particles_100um = 0
 
     /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
@@ -10007,11 +10009,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Seconds since 1970 - or 0 for unknown/unset
-     * @member {number|null|undefined} time
+     * @member {number} time
      * @memberof meshtastic.Telemetry
      * @instance
      */
-    Telemetry.prototype.time = null
+    Telemetry.prototype.time = 0
 
     /**
      * Key native device metrics such as battery level
@@ -10196,19 +10198,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * The offset setting for the NAU7802
-     * @member {number|null|undefined} zeroOffset
+     * @member {number} zeroOffset
      * @memberof meshtastic.Nau7802Config
      * @instance
      */
-    Nau7802Config.prototype.zeroOffset = null
+    Nau7802Config.prototype.zeroOffset = 0
 
     /**
      * The calibration factor for the NAU7802
-     * @member {number|null|undefined} calibrationFactor
+     * @member {number} calibrationFactor
      * @memberof meshtastic.Nau7802Config
      * @instance
      */
-    Nau7802Config.prototype.calibrationFactor = null
+    Nau7802Config.prototype.calibrationFactor = 0
 
     /**
      * Decodes a Nau7802Config message from the specified reader or buffer.
@@ -10274,35 +10276,35 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * XModem control.
-     * @member {meshtastic.XModem.Control|null|undefined} control
+     * @member {meshtastic.XModem.Control} control
      * @memberof meshtastic.XModem
      * @instance
      */
-    XModem.prototype.control = null
+    XModem.prototype.control = 0
 
     /**
      * XModem seq.
-     * @member {number|null|undefined} seq
+     * @member {number} seq
      * @memberof meshtastic.XModem
      * @instance
      */
-    XModem.prototype.seq = null
+    XModem.prototype.seq = 0
 
     /**
      * XModem crc16.
-     * @member {number|null|undefined} crc16
+     * @member {number} crc16
      * @memberof meshtastic.XModem
      * @instance
      */
-    XModem.prototype.crc16 = null
+    XModem.prototype.crc16 = 0
 
     /**
      * XModem buffer.
-     * @member {Uint8Array|null|undefined} buffer
+     * @member {Uint8Array} buffer
      * @memberof meshtastic.XModem
      * @instance
      */
-    XModem.prototype.buffer = null
+    XModem.prototype.buffer = $util.newBuffer([])
 
     /**
      * Decodes a XModem message from the specified reader or buffer.

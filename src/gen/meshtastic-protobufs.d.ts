@@ -30,14 +30,14 @@ export namespace meshtastic {
     public packet?: meshtastic.IMeshPacket | null
 
     /** The global channel ID it was sent on */
-    public channelId?: string | null
+    public channelId: string
 
     /**
      * The sending gateway node ID. Can we use this to authenticate/prevent fake
      * nodeid impersonation for senders? - i.e. use gateway/mesh id (which is authenticated) + local node id as
      * the globally trusted nodenum
      */
-    public gatewayId?: string | null
+    public gatewayId: string
 
     /**
      * Decodes a ServiceEnvelope message from the specified reader or buffer.
@@ -107,49 +107,49 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IMapReport)
 
     /** A full name for this user, i.e. "Kevin Hester" */
-    public longName?: string | null
+    public longName: string
 
     /**
      * A VERY short name, ideally two characters.
      * Suitable for a tiny OLED screen
      */
-    public shortName?: string | null
+    public shortName: string
 
     /** Role of the node that applies specific settings for a particular use-case */
-    public role?: meshtastic.Config.DeviceConfig.Role | null
+    public role: meshtastic.Config.DeviceConfig.Role
 
     /** Hardware model of the node, i.e. T-Beam, Heltec V3, etc... */
-    public hwModel?: meshtastic.HardwareModel | null
+    public hwModel: meshtastic.HardwareModel
 
     /** Device firmware version string */
-    public firmwareVersion?: string | null
+    public firmwareVersion: string
 
     /** The region code for the radio (US, CN, EU433, etc...) */
-    public region?: meshtastic.Config.LoRaConfig.RegionCode | null
+    public region: meshtastic.Config.LoRaConfig.RegionCode
 
     /** Modem preset used by the radio (LongFast, MediumSlow, etc...) */
-    public modemPreset?: meshtastic.Config.LoRaConfig.ModemPreset | null
+    public modemPreset: meshtastic.Config.LoRaConfig.ModemPreset
 
     /**
      * Whether the node has a channel with default PSK and name (LongFast, MediumSlow, etc...)
      * and it uses the default frequency slot given the region and modem preset.
      */
-    public hasDefaultChannel?: boolean | null
+    public hasDefaultChannel: boolean
 
     /** Latitude: multiply by 1e-7 to get degrees in floating point */
-    public latitudeI?: number | null
+    public latitudeI: number
 
     /** Longitude: multiply by 1e-7 to get degrees in floating point */
-    public longitudeI?: number | null
+    public longitudeI: number
 
     /** Altitude in meters above MSL */
-    public altitude?: number | null
+    public altitude: number
 
     /** Indicates the bits of precision for latitude and longitude set by the sending node */
-    public positionPrecision?: number | null
+    public positionPrecision: number
 
     /** Number of online nodes (heard in the last 2 hours) this node has in its list that were received locally (not via MQTT) */
-    public numOnlineLocalNodes?: number | null
+    public numOnlineLocalNodes: number
 
     /**
      * Decodes a MapReport message from the specified reader or buffer.
@@ -293,55 +293,55 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.Config.IDeviceConfig)
 
       /** Sets the role of node */
-      public role?: meshtastic.Config.DeviceConfig.Role | null
+      public role: meshtastic.Config.DeviceConfig.Role
 
       /** Disabling this will disable the SerialConsole by not initilizing the StreamAPI */
-      public serialEnabled?: boolean | null
+      public serialEnabled: boolean
 
       /**
        * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
        * Set this to true to leave the debug log outputting even when API is active.
        */
-      public debugLogEnabled?: boolean | null
+      public debugLogEnabled: boolean
 
       /**
        * For boards without a hard wired button, this is the pin number that will be used
        * Boards that have more than one button can swap the function with this one. defaults to BUTTON_PIN if defined.
        */
-      public buttonGpio?: number | null
+      public buttonGpio: number
 
       /**
        * For boards without a PWM buzzer, this is the pin number that will be used
        * Defaults to PIN_BUZZER if defined.
        */
-      public buzzerGpio?: number | null
+      public buzzerGpio: number
 
       /** Sets the role of node */
-      public rebroadcastMode?: meshtastic.Config.DeviceConfig.RebroadcastMode | null
+      public rebroadcastMode: meshtastic.Config.DeviceConfig.RebroadcastMode
 
       /**
        * Send our nodeinfo this often
        * Defaults to 900 Seconds (15 minutes)
        */
-      public nodeInfoBroadcastSecs?: number | null
+      public nodeInfoBroadcastSecs: number
 
       /** Treat double tap interrupt on supported accelerometers as a button press if set to true */
-      public doubleTapAsButtonPress?: boolean | null
+      public doubleTapAsButtonPress: boolean
 
       /**
        * If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
        */
-      public isManaged?: boolean | null
+      public isManaged: boolean
 
       /** Disables the triple-press of user button to enable or disable GPS */
-      public disableTripleClick?: boolean | null
+      public disableTripleClick: boolean
 
       /** POSIX Timezone definition string from https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv. */
-      public tzdef?: string | null
+      public tzdef: string
 
       /** If true, disable the default blinking LED (LED_PIN) behavior on the device */
-      public ledHeartbeatDisabled?: boolean | null
+      public ledHeartbeatDisabled: boolean
 
       /**
        * Decodes a DeviceConfig message from the specified reader or buffer.
@@ -447,54 +447,54 @@ export namespace meshtastic {
        * We should send our position this often (but only if it has changed significantly)
        * Defaults to 15 minutes
        */
-      public positionBroadcastSecs?: number | null
+      public positionBroadcastSecs: number
 
       /** Adaptive position braoadcast, which is now the default. */
-      public positionBroadcastSmartEnabled?: boolean | null
+      public positionBroadcastSmartEnabled: boolean
 
       /**
        * If set, this node is at a fixed position.
        * We will generate GPS position updates at the regular interval, but use whatever the last lat/lon/alt we have for the node.
        * The lat/lon/alt can be set by an internal GPS or with the help of the app.
        */
-      public fixedPosition?: boolean | null
+      public fixedPosition: boolean
 
       /** Is GPS enabled for this node? */
-      public gpsEnabled?: boolean | null
+      public gpsEnabled: boolean
 
       /**
        * How often should we try to get GPS position (in seconds)
        * or zero for the default of once every 30 seconds
        * or a very large value (maxint) to update only once at boot.
        */
-      public gpsUpdateInterval?: number | null
+      public gpsUpdateInterval: number
 
       /** Deprecated in favor of using smart / regular broadcast intervals as implicit attempt time */
-      public gpsAttemptTime?: number | null
+      public gpsAttemptTime: number
 
       /**
        * Bit field of boolean configuration options for POSITION messages
        * (bitwise OR of PositionFlags)
        */
-      public positionFlags?: number | null
+      public positionFlags: number
 
       /** (Re)define GPS_RX_PIN for your board. */
-      public rxGpio?: number | null
+      public rxGpio: number
 
       /** (Re)define GPS_TX_PIN for your board. */
-      public txGpio?: number | null
+      public txGpio: number
 
       /** The minimum distance in meters traveled (since the last send) before we can send a position to the mesh if position_broadcast_smart_enabled */
-      public broadcastSmartMinimumDistance?: number | null
+      public broadcastSmartMinimumDistance: number
 
       /** The minimum number of seconds (since the last send) before we can send a position to the mesh if position_broadcast_smart_enabled */
-      public broadcastSmartMinimumIntervalSecs?: number | null
+      public broadcastSmartMinimumIntervalSecs: number
 
       /** (Re)define PIN_GPS_EN for your board. */
-      public gpsEnGpio?: number | null
+      public gpsEnGpio: number
 
       /** Set where GPS is enabled, disabled, or not present */
-      public gpsMode?: meshtastic.Config.PositionConfig.GpsMode | null
+      public gpsMode: meshtastic.Config.PositionConfig.GpsMode
 
       /**
        * Decodes a PositionConfig message from the specified reader or buffer.
@@ -610,10 +610,10 @@ export namespace meshtastic {
        * Don't use this setting if you want to use your device with the phone apps or are using a device without a user button.
        * Technical Details: Works for ESP32 devices and NRF52 devices in the Sensor or Tracker roles
        */
-      public isPowerSaving?: boolean | null
+      public isPowerSaving: boolean
 
       /** Description: If non-zero, the device will fully power off this many seconds after external power is removed. */
-      public onBatteryShutdownAfterSecs?: number | null
+      public onBatteryShutdownAfterSecs: number
 
       /**
        * Ratio of voltage divider for battery pin eg. 3.20 (R1=100k, R2=220k)
@@ -621,13 +621,13 @@ export namespace meshtastic {
        * https://meshtastic.org/docs/configuration/radio/power/#adc-multiplier-override
        * Should be set to floating point value between 2 and 6
        */
-      public adcMultiplierOverride?: number | null
+      public adcMultiplierOverride: number
 
       /**
        * Description: The number of seconds for to wait before turning off BLE in No Bluetooth states
        * Technical Details: ESP32 Only 0 for default of 1 minute
        */
-      public waitBluetoothSecs?: number | null
+      public waitBluetoothSecs: number
 
       /**
        * Super Deep Sleep Seconds
@@ -635,28 +635,28 @@ export namespace meshtastic {
        * for this value (default 1 year) or a button press
        * 0 for default of one year
        */
-      public sdsSecs?: number | null
+      public sdsSecs: number
 
       /**
        * Description: In light sleep the CPU is suspended, LoRa radio is on, BLE is off an GPS is on
        * Technical Details: ESP32 Only 0 for default of 300
        */
-      public lsSecs?: number | null
+      public lsSecs: number
 
       /**
        * Description: While in light sleep when we receive packets on the LoRa radio we will wake and handle them and stay awake in no BLE mode for this value
        * Technical Details: ESP32 Only 0 for default of 10 seconds
        */
-      public minWakeSecs?: number | null
+      public minWakeSecs: number
 
       /** I2C address of INA_2XX to use for reading device battery voltage */
-      public deviceBatteryInaAddress?: number | null
+      public deviceBatteryInaAddress: number
 
       /**
        * If non-zero, we want powermon log outputs.  With the particular (bitfield) sources enabled.
        * Note: we picked an ID of 32 so that lower more efficient IDs can be used for more frequently used options.
        */
-      public powermonEnables?: number | Long | null
+      public powermonEnables: number | Long
 
       /**
        * Decodes a PowerConfig message from the specified reader or buffer.
@@ -708,31 +708,31 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.Config.INetworkConfig)
 
       /** Enable WiFi (disables Bluetooth) */
-      public wifiEnabled?: boolean | null
+      public wifiEnabled: boolean
 
       /**
        * If set, this node will try to join the specified wifi network and
        * acquire an address via DHCP
        */
-      public wifiSsid?: string | null
+      public wifiSsid: string
 
       /** If set, will be use to authenticate to the named wifi */
-      public wifiPsk?: string | null
+      public wifiPsk: string
 
       /** NTP server to use if WiFi is conneced, defaults to `0.pool.ntp.org` */
-      public ntpServer?: string | null
+      public ntpServer: string
 
       /** Enable Ethernet */
-      public ethEnabled?: boolean | null
+      public ethEnabled: boolean
 
       /** acquire an address via DHCP or assign static */
-      public addressMode?: meshtastic.Config.NetworkConfig.AddressMode | null
+      public addressMode: meshtastic.Config.NetworkConfig.AddressMode
 
       /** struct to keep static address */
       public ipv4Config?: meshtastic.Config.NetworkConfig.IIpV4Config | null
 
       /** rsyslog Server and Port */
-      public rsyslogServer?: string | null
+      public rsyslogServer: string
 
       /**
        * Decodes a NetworkConfig message from the specified reader or buffer.
@@ -776,16 +776,16 @@ export namespace meshtastic {
         constructor(properties?: meshtastic.Config.NetworkConfig.IIpV4Config)
 
         /** Static IP address */
-        public ip?: number | null
+        public ip: number
 
         /** Static gateway address */
-        public gateway?: number | null
+        public gateway: number
 
         /** Static subnet mask */
-        public subnet?: number | null
+        public subnet: number
 
         /** Static DNS server address */
-        public dns?: number | null
+        public dns: number
 
         /**
          * Decodes an IpV4Config message from the specified reader or buffer.
@@ -856,43 +856,43 @@ export namespace meshtastic {
        * Number of seconds the screen stays on after pressing the user button or receiving a message
        * 0 for default of one minute MAXUINT for always on
        */
-      public screenOnSecs?: number | null
+      public screenOnSecs: number
 
       /** How the GPS coordinates are formatted on the OLED screen. */
-      public gpsFormat?: meshtastic.Config.DisplayConfig.GpsCoordinateFormat | null
+      public gpsFormat: meshtastic.Config.DisplayConfig.GpsCoordinateFormat
 
       /**
        * Automatically toggles to the next page on the screen like a carousel, based the specified interval in seconds.
        * Potentially useful for devices without user buttons.
        */
-      public autoScreenCarouselSecs?: number | null
+      public autoScreenCarouselSecs: number
 
       /**
        * If this is set, the displayed compass will always point north. if unset, the old behaviour
        * (top of display is heading direction) is used.
        */
-      public compassNorthTop?: boolean | null
+      public compassNorthTop: boolean
 
       /** Flip screen vertically, for cases that mount the screen upside down */
-      public flipScreen?: boolean | null
+      public flipScreen: boolean
 
       /** Perferred display units */
-      public units?: meshtastic.Config.DisplayConfig.DisplayUnits | null
+      public units: meshtastic.Config.DisplayConfig.DisplayUnits
 
       /** Override auto-detect in screen */
-      public oled?: meshtastic.Config.DisplayConfig.OledType | null
+      public oled: meshtastic.Config.DisplayConfig.OledType
 
       /** Display Mode */
-      public displaymode?: meshtastic.Config.DisplayConfig.DisplayMode | null
+      public displaymode: meshtastic.Config.DisplayConfig.DisplayMode
 
       /** Print first line in pseudo-bold? FALSE is original style, TRUE is bold */
-      public headingBold?: boolean | null
+      public headingBold: boolean
 
       /** Should we wake the screen up on accelerometer detected motion or tap */
-      public wakeOnTapOrMotion?: boolean | null
+      public wakeOnTapOrMotion: boolean
 
       /** Indicates how to rotate or invert the compass output to accurate display on the display. */
-      public compassOrientation?: meshtastic.Config.DisplayConfig.CompassOrientation | null
+      public compassOrientation: meshtastic.Config.DisplayConfig.CompassOrientation
 
       /**
        * Decodes a DisplayConfig message from the specified reader or buffer.
@@ -1074,7 +1074,7 @@ export namespace meshtastic {
        * When enabled, the `modem_preset` fields will be adhered to, else the `bandwidth`/`spread_factor`/`coding_rate`
        * will be taked from their respective manually defined fields
        */
-      public usePreset?: boolean | null
+      public usePreset: boolean
 
       /**
        * Either modem_config or bandwidth/spreading/coding will be specified - NOT BOTH.
@@ -1083,49 +1083,49 @@ export namespace meshtastic {
        * This value is replaced by bandwidth/spread_factor/coding_rate.
        * If you'd like to experiment with other options add them to MeshRadio.cpp in the device code.
        */
-      public modemPreset?: meshtastic.Config.LoRaConfig.ModemPreset | null
+      public modemPreset: meshtastic.Config.LoRaConfig.ModemPreset
 
       /**
        * Bandwidth in MHz
        * Certain bandwidth numbers are 'special' and will be converted to the
        * appropriate floating point value: 31 -> 31.25MHz
        */
-      public bandwidth?: number | null
+      public bandwidth: number
 
       /**
        * A number from 7 to 12.
        * Indicates number of chirps per symbol as 1<<spread_factor.
        */
-      public spreadFactor?: number | null
+      public spreadFactor: number
 
       /**
        * The denominator of the coding rate.
        * ie for 4/5, the value is 5. 4/8 the value is 8.
        */
-      public codingRate?: number | null
+      public codingRate: number
 
       /**
        * This parameter is for advanced users with advanced test equipment, we do not recommend most users use it.
        * A frequency offset that is added to to the calculated band center frequency.
        * Used to correct for crystal calibration errors.
        */
-      public frequencyOffset?: number | null
+      public frequencyOffset: number
 
       /** The region code for the radio (US, CN, EU433, etc...) */
-      public region?: meshtastic.Config.LoRaConfig.RegionCode | null
+      public region: meshtastic.Config.LoRaConfig.RegionCode
 
       /**
        * Maximum number of hops. This can't be greater than 7.
        * Default of 3
        * Attempting to set a value > 7 results in the default
        */
-      public hopLimit?: number | null
+      public hopLimit: number
 
       /**
        * Disable TX from the LoRa radio. Useful for hot-swapping antennas and other tests.
        * Defaults to false
        */
-      public txEnabled?: boolean | null
+      public txEnabled: boolean
 
       /**
        * If zero, then use default max legal continuous power (ie. something that won't
@@ -1133,7 +1133,7 @@ export namespace meshtastic {
        * In most cases you should use zero here.
        * Units are in dBm.
        */
-      public txPower?: number | null
+      public txPower: number
 
       /**
        * This controls the actual hardware frequency the radio transmits on.
@@ -1144,17 +1144,17 @@ export namespace meshtastic {
        * If using the hash algorithm the channel number will be: hash(channel_name) %
        * NUM_CHANNELS (Where num channels depends on the regulatory region).
        */
-      public channelNum?: number | null
+      public channelNum: number
 
       /**
        * If true, duty cycle limits will be exceeded and thus you're possibly not following
        * the local regulations if you're not a HAM.
        * Has no effect if the duty cycle of the used region is 100%.
        */
-      public overrideDutyCycle?: boolean | null
+      public overrideDutyCycle: boolean
 
       /** If true, sets RX boosted gain mode on SX126X based radios */
-      public sx126xRxBoostedGain?: boolean | null
+      public sx126xRxBoostedGain: boolean
 
       /**
        * This parameter is for advanced users and licensed HAM radio operators.
@@ -1163,10 +1163,10 @@ export namespace meshtastic {
        * Please respect your local laws and regulations. If you are a HAM, make sure you
        * enable HAM mode and turn off encryption.
        */
-      public overrideFrequency?: number | null
+      public overrideFrequency: number
 
       /** If true, disable the build-in PA FAN using pin define in RF95_FAN_EN. */
-      public paFanDisabled?: boolean | null
+      public paFanDisabled: boolean
 
       /**
        * For testing it is useful sometimes to force a node to never listen to
@@ -1176,7 +1176,7 @@ export namespace meshtastic {
       public ignoreIncoming: number[]
 
       /** If true, the device will not process any packets received via LoRa that passed via MQTT anywhere on the path towards it. */
-      public ignoreMqtt?: boolean | null
+      public ignoreMqtt: boolean
 
       /**
        * Decodes a LoRaConfig message from the specified reader or buffer.
@@ -1253,16 +1253,16 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.Config.IBluetoothConfig)
 
       /** Enable Bluetooth on the device */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** Determines the pairing strategy for the device */
-      public mode?: meshtastic.Config.BluetoothConfig.PairingMode | null
+      public mode: meshtastic.Config.BluetoothConfig.PairingMode
 
       /** Specified PIN for PairingMode.FixedPin */
-      public fixedPin?: number | null
+      public fixedPin: number
 
       /** Enables device (serial style logs) over Bluetooth */
-      public deviceLoggingEnabled?: boolean | null
+      public deviceLoggingEnabled: boolean
 
       /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
@@ -1402,13 +1402,13 @@ export namespace meshtastic {
      * The new preferred location encoding, multiply by 1e-7 to get degrees
      * in floating point
      */
-    public latitudeI?: number | null
+    public latitudeI: number
 
     /** TODO: REPLACE */
-    public longitudeI?: number | null
+    public longitudeI: number
 
     /** In meters above MSL (but see issue #359) */
-    public altitude?: number | null
+    public altitude: number
 
     /**
      * This is usually not sent over the mesh (to save space), but it is sent
@@ -1416,25 +1416,25 @@ export namespace meshtastic {
      * the mesh (because there are devices on the mesh without GPS or RTC).
      * seconds since 1970
      */
-    public time?: number | null
+    public time: number
 
     /** TODO: REPLACE */
-    public locationSource?: meshtastic.Position.LocSource | null
+    public locationSource: meshtastic.Position.LocSource
 
     /** TODO: REPLACE */
-    public altitudeSource?: meshtastic.Position.AltSource | null
+    public altitudeSource: meshtastic.Position.AltSource
 
     /** Positional timestamp (actual timestamp of GPS solution) in integer epoch seconds */
-    public timestamp?: number | null
+    public timestamp: number
 
     /** Pos. timestamp milliseconds adjustment (rarely available or required) */
-    public timestampMillisAdjust?: number | null
+    public timestampMillisAdjust: number
 
     /** HAE altitude in meters - can be used instead of MSL altitude */
-    public altitudeHae?: number | null
+    public altitudeHae: number
 
     /** Geoidal separation in meters */
-    public altitudeGeoidalSeparation?: number | null
+    public altitudeGeoidalSeparation: number
 
     /**
      * Horizontal, Vertical and Position Dilution of Precision, in 1/100 units
@@ -1443,20 +1443,20 @@ export namespace meshtastic {
      * in which case PDOP becomes redundant (PDOP=sqrt(HDOP^2 + VDOP^2))
      * TODO: REMOVE/INTEGRATE
      */
-    public PDOP?: number | null
+    public PDOP: number
 
     /** TODO: REPLACE */
-    public HDOP?: number | null
+    public HDOP: number
 
     /** TODO: REPLACE */
-    public VDOP?: number | null
+    public VDOP: number
 
     /**
      * GPS accuracy (a hardware specific constant) in mm
      * multiplied with DOP to calculate positional accuracy
      * Default: "'bout three meters-ish" :)
      */
-    public gpsAccuracy?: number | null
+    public gpsAccuracy: number
 
     /**
      * Ground speed in m/s and True North TRACK in 1/100 degrees
@@ -1466,22 +1466,22 @@ export namespace meshtastic {
      * - "yaw" indicates a relative rotation about the vertical axis
      * TODO: REMOVE/INTEGRATE
      */
-    public groundSpeed?: number | null
+    public groundSpeed: number
 
     /** TODO: REPLACE */
-    public groundTrack?: number | null
+    public groundTrack: number
 
     /** GPS fix quality (from NMEA GxGGA statement or similar) */
-    public fixQuality?: number | null
+    public fixQuality: number
 
     /** GPS fix type 2D/3D (from NMEA GxGSA statement) */
-    public fixType?: number | null
+    public fixType: number
 
     /** GPS "Satellites in View" number */
-    public satsInView?: number | null
+    public satsInView: number
 
     /** Sensor ID - in case multiple positioning sensors are being used */
-    public sensorId?: number | null
+    public sensorId: number
 
     /**
      * Estimated/expected time (in seconds) until next update:
@@ -1489,16 +1489,16 @@ export namespace meshtastic {
      * - if we update at dynamic intervals (based on relative movement etc),
      * but "AT LEAST every Y seconds", use Y
      */
-    public nextUpdate?: number | null
+    public nextUpdate: number
 
     /**
      * A sequence number, incremented with each Position message to help
      * detect lost updates if needed
      */
-    public seqNumber?: number | null
+    public seqNumber: number
 
     /** Indicates the bits of precision set by the sending node */
-    public precisionBits?: number | null
+    public precisionBits: number
 
     /**
      * Decodes a Position message from the specified reader or buffer.
@@ -1609,6 +1609,7 @@ export namespace meshtastic {
     HELTEC_VISION_MASTER_E213 = 67,
     HELTEC_VISION_MASTER_E290 = 68,
     HELTEC_MESH_NODE_T114 = 69,
+    SENSECAP_INDICATOR = 70,
     PRIVATE_HW = 255,
   }
 
@@ -1692,23 +1693,23 @@ export namespace meshtastic {
      * Note: app developers are encouraged to also use the following standard
      * node IDs "^all" (for broadcast), "^local" (for the locally connected node)
      */
-    public id?: string | null
+    public id: string
 
     /** A full name for this user, i.e. "Kevin Hester" */
-    public longName?: string | null
+    public longName: string
 
     /**
      * A VERY short name, ideally two characters.
      * Suitable for a tiny OLED screen
      */
-    public shortName?: string | null
+    public shortName: string
 
     /**
      * Deprecated in Meshtastic 2.1.x
      * This is the addr of the radio.
      * Not populated by the phone, but added by the esp32 when broadcasting
      */
-    public macaddr?: Uint8Array | null
+    public macaddr: Uint8Array
 
     /**
      * TBEAM, HELTEC, etc...
@@ -1716,17 +1717,17 @@ export namespace meshtastic {
      * Apps will still need the string here for older builds
      * (so OTA update can find the right image), but if the enum is available it will be used instead.
      */
-    public hwModel?: meshtastic.HardwareModel | null
+    public hwModel: meshtastic.HardwareModel
 
     /**
      * In some regions Ham radio operators have different bandwidth limitations than others.
      * If this user is a licensed operator, set this flag.
      * Also, "long_name" should be their licence number.
      */
-    public isLicensed?: boolean | null
+    public isLicensed: boolean
 
     /** Indicates that the user's role in the mesh */
-    public role?: meshtastic.Config.DeviceConfig.Role | null
+    public role: meshtastic.Config.DeviceConfig.Role
 
     /**
      * Decodes a User message from the specified reader or buffer.
@@ -1897,17 +1898,17 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IData)
 
     /** Formerly named typ and of type Type */
-    public portnum?: meshtastic.PortNum | null
+    public portnum: meshtastic.PortNum
 
     /** TODO: REPLACE */
-    public payload?: Uint8Array | null
+    public payload: Uint8Array
 
     /**
      * Not normally used, but for testing a sender can request that recipient
      * responds in kind (i.e. if it received a position, it should unicast back it's position).
      * Note: that if you set this on a broadcast you will receive many replies.
      */
-    public wantResponse?: boolean | null
+    public wantResponse: boolean
 
     /**
      * The address of the destination node.
@@ -1916,29 +1917,29 @@ export namespace meshtastic {
      * RouteDiscovery messages _must_ populate this.
      * Other message types might need to if they are doing multihop routing.
      */
-    public dest?: number | null
+    public dest: number
 
     /**
      * The address of the original sender for this message.
      * This field should _only_ be populated for reliable multihop packets (to keep
      * packets small).
      */
-    public source?: number | null
+    public source: number
 
     /**
      * Only used in routing or response messages.
      * Indicates the original message ID that this message is reporting failure on. (formerly called original_id)
      */
-    public requestId?: number | null
+    public requestId: number
 
     /** If set, this message is intened to be a reply to a previously sent message with the defined id. */
-    public replyId?: number | null
+    public replyId: number
 
     /**
      * Defaults to false. If true, then what is in the payload should be treated as an emoji like giving
      * a message a heart or poop emoji.
      */
-    public emoji?: number | null
+    public emoji: number
 
     /**
      * Decodes a Data message from the specified reader or buffer.
@@ -1990,31 +1991,31 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IWaypoint)
 
     /** Id of the waypoint */
-    public id?: number | null
+    public id: number
 
     /** latitude_i */
-    public latitudeI?: number | null
+    public latitudeI: number
 
     /** longitude_i */
-    public longitudeI?: number | null
+    public longitudeI: number
 
     /** Time the waypoint is to expire (epoch) */
-    public expire?: number | null
+    public expire: number
 
     /**
      * If greater than zero, treat the value as a nodenum only allowing them to update the waypoint.
      * If zero, the waypoint is open to be edited by any member of the mesh.
      */
-    public lockedTo?: number | null
+    public lockedTo: number
 
     /** Name of the waypoint - max 30 chars */
-    public name?: string | null
+    public name: string
 
     /** Description of the waypoint - max 100 chars */
-    public description?: string | null
+    public description: string
 
     /** Designator icon for the waypoint in the form of a unicode emoji */
-    public icon?: number | null
+    public icon: number
 
     /**
      * Decodes a Waypoint message from the specified reader or buffer.
@@ -2051,7 +2052,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IMqttClientProxyMessage)
 
     /** The MQTT topic this message will be sent /received on */
-    public topic?: string | null
+    public topic: string
 
     /** Bytes */
     public data?: Uint8Array | null
@@ -2060,7 +2061,7 @@ export namespace meshtastic {
     public text?: string | null
 
     /** Whether the message should be retained (or not) */
-    public retained?: boolean | null
+    public retained: boolean
 
     /** The actual service envelope payload or text for mqtt pub / sub */
     public payloadVariant?: 'data' | 'text'
@@ -2192,10 +2193,10 @@ export namespace meshtastic {
      * Note: Our crypto implementation uses this field as well.
      * See [crypto](/docs/overview/encryption) for details.
      */
-    public from?: number | null
+    public from: number
 
     /** The (immediate) destination for this packet */
-    public to?: number | null
+    public to: number
 
     /**
      * (Usually) If set, this indicates the index in the secondary_channels table that this packet was sent/received on.
@@ -2206,7 +2207,7 @@ export namespace meshtastic {
      * contains the 'channel hash' instead of the index.
      * This 'trick' is only used while the payload_variant is an 'encrypted'.
      */
-    public channel?: number | null
+    public channel: number
 
     /** TODO: REPLACE */
     public decoded?: meshtastic.IData | null
@@ -2224,7 +2225,7 @@ export namespace meshtastic {
      * Note: Our crypto implementation uses this id as well.
      * See [crypto](/docs/overview/encryption) for details.
      */
-    public id?: number | null
+    public id: number
 
     /**
      * The time this message was received by the esp32 (secs since 1970).
@@ -2232,14 +2233,14 @@ export namespace meshtastic {
      * are typically not sent over the mesh, but they will be added to any Packet
      * (chain of SubPacket) sent to the phone (so the phone can know exact time of reception)
      */
-    public rxTime?: number | null
+    public rxTime: number
 
     /**
      * *Never* sent over the radio links.
      * Set during reception to indicate the SNR of this packet.
      * Used to collect statistics on current link quality.
      */
-    public rxSnr?: number | null
+    public rxSnr: number
 
     /**
      * If unset treated as zero (no forwarding, send to adjacent nodes only)
@@ -2247,7 +2248,7 @@ export namespace meshtastic {
      * For our usecase real world topologies probably have a max of about 3.
      * This field is normally placed into a few of bits in the header.
      */
-    public hopLimit?: number | null
+    public hopLimit: number
 
     /**
      * This packet is being sent as a reliable message, we would prefer it to arrive at the destination.
@@ -2260,28 +2261,28 @@ export namespace meshtastic {
      * If after some time we don't hear anyone rebroadcast our packet, we will timeout and retransmit, using the regular resend logic.
      * Note: This flag is normally sent in a flag bit in the header when sent over the wire
      */
-    public wantAck?: boolean | null
+    public wantAck: boolean
 
     /**
      * The priority of this message for sending.
      * See MeshPacket.Priority description for more details.
      */
-    public priority?: meshtastic.MeshPacket.Priority | null
+    public priority: meshtastic.MeshPacket.Priority
 
     /** rssi of received packet. Only sent to phone for dispay purposes. */
-    public rxRssi?: number | null
+    public rxRssi: number
 
     /** Describe if this message is delayed */
-    public delayed?: meshtastic.MeshPacket.Delayed | null
+    public delayed: meshtastic.MeshPacket.Delayed
 
     /** Describes whether this packet passed via MQTT somewhere along the path it currently took. */
-    public viaMqtt?: boolean | null
+    public viaMqtt: boolean
 
     /**
      * Hop limit with which the original packet started. Sent via LoRa using three bits in the unencrypted header.
      * When receiving a packet, the difference between hop_start and hop_limit gives how many hops it traveled.
      */
-    public hopStart?: number | null
+    public hopStart: number
 
     /** MeshPacket payloadVariant. */
     public payloadVariant?: 'decoded' | 'encrypted'
@@ -2410,7 +2411,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.INodeInfo)
 
     /** The node number */
-    public num?: number | null
+    public num: number
 
     /** The user info for this node */
     public user?: meshtastic.IUser | null
@@ -2425,28 +2426,28 @@ export namespace meshtastic {
      * Returns the Signal-to-noise ratio (SNR) of the last received message,
      * as measured by the receiver. Return SNR of the last received message in dB
      */
-    public snr?: number | null
+    public snr: number
 
     /** Set to indicate the last time we received a packet from this node */
-    public lastHeard?: number | null
+    public lastHeard: number
 
     /** The latest device metrics for the node. */
     public deviceMetrics?: meshtastic.IDeviceMetrics | null
 
     /** local channel index we heard that node on. Only populated if its not the default channel. */
-    public channel?: number | null
+    public channel: number
 
     /** True if we witnessed the node over MQTT instead of LoRA transport */
-    public viaMqtt?: boolean | null
+    public viaMqtt: boolean
 
     /** Number of hops away from us this node is (0 if adjacent) */
-    public hopsAway?: number | null
+    public hopsAway: number
 
     /**
      * True if node is in our favorites list
      * Persists between NodeDB internal clean ups
      */
-    public isFavorite?: boolean | null
+    public isFavorite: boolean
 
     /**
      * Decodes a NodeInfo message from the specified reader or buffer.
@@ -2517,19 +2518,19 @@ export namespace meshtastic {
      * Tells the phone what our node number is, default starting value is
      * lowbyte of macaddr, but it will be fixed if that is already in use
      */
-    public myNodeNum?: number | null
+    public myNodeNum: number
 
     /**
      * The total number of reboots this node has ever encountered
      * (well - since the last time we discarded preferences)
      */
-    public rebootCount?: number | null
+    public rebootCount: number
 
     /**
      * The minimum app version that can talk to this device.
      * Phone/PC apps should compare this to their build number and if too low tell the user they must update their app
      */
-    public minAppVersion?: number | null
+    public minAppVersion: number
 
     /**
      * Decodes a MyNodeInfo message from the specified reader or buffer.
@@ -2572,16 +2573,16 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.ILogRecord)
 
     /** Log levels, chosen to match python logging conventions. */
-    public message?: string | null
+    public message: string
 
     /** Seconds since 1970 - or 0 for unknown/unset */
-    public time?: number | null
+    public time: number
 
     /** Usually based on thread name - if known */
-    public source?: string | null
+    public source: string
 
     /** Not yet set */
-    public level?: meshtastic.LogRecord.Level | null
+    public level: meshtastic.LogRecord.Level
 
     /**
      * Decodes a LogRecord message from the specified reader or buffer.
@@ -2631,16 +2632,16 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IQueueStatus)
 
     /** Last attempt to queue status, ErrorCode */
-    public res?: number | null
+    public res: number
 
     /** Free entries in the outgoing queue */
-    public free?: number | null
+    public free: number
 
     /** Maximum entries in the outgoing queue */
-    public maxlen?: number | null
+    public maxlen: number
 
     /** What was mesh packet id that generated this response? */
-    public meshPacketId?: number | null
+    public meshPacketId: number
 
     /**
      * Decodes a QueueStatus message from the specified reader or buffer.
@@ -2737,7 +2738,7 @@ export namespace meshtastic {
      * The packet id, used to allow the phone to request missing read packets from the FIFO,
      * see our bluetooth docs
      */
-    public id?: number | null
+    public id: number
 
     /** Log levels, chosen to match python logging conventions. */
     public packet?: meshtastic.IMeshPacket | null
@@ -2843,10 +2844,10 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IFileInfo)
 
     /** The fully qualified path of the file */
-    public fileName?: string | null
+    public fileName: string
 
     /** The size of the file in bytes */
-    public sizeBytes?: number | null
+    public sizeBytes: number
 
     /**
      * Decodes a FileInfo message from the specified reader or buffer.
@@ -2967,10 +2968,10 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.ICompressed)
 
     /** PortNum to determine the how to handle the compressed payload. */
-    public portnum?: meshtastic.PortNum | null
+    public portnum: meshtastic.PortNum
 
     /** Compressed data. */
-    public data?: Uint8Array | null
+    public data: Uint8Array
 
     /**
      * Decodes a Compressed message from the specified reader or buffer.
@@ -3007,13 +3008,13 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.INeighborInfo)
 
     /** The node ID of the node sending info on its neighbors */
-    public nodeId?: number | null
+    public nodeId: number
 
     /** Field to pass neighbor info for the next sending cycle */
-    public lastSentById?: number | null
+    public lastSentById: number
 
     /** Broadcast interval of the represented node (in seconds) */
-    public nodeBroadcastIntervalSecs?: number | null
+    public nodeBroadcastIntervalSecs: number
 
     /** The list of out edges from this node */
     public neighbors: meshtastic.INeighbor[]
@@ -3059,22 +3060,22 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.INeighbor)
 
     /** Node ID of neighbor */
-    public nodeId?: number | null
+    public nodeId: number
 
     /** SNR of last heard message */
-    public snr?: number | null
+    public snr: number
 
     /**
      * Reception time (in secs since 1970) of last message that was last sent by this ID.
      * Note: this is for local storage only and will not be sent out over the mesh.
      */
-    public lastRxTime?: number | null
+    public lastRxTime: number
 
     /**
      * Broadcast interval of this neighbor (in seconds).
      * Note: this is for local storage only and will not be sent out over the mesh.
      */
-    public nodeBroadcastIntervalSecs?: number | null
+    public nodeBroadcastIntervalSecs: number
 
     /**
      * Decodes a Neighbor message from the specified reader or buffer.
@@ -3129,34 +3130,34 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IDeviceMetadata)
 
     /** Device firmware version string */
-    public firmwareVersion?: string | null
+    public firmwareVersion: string
 
     /** Device state version */
-    public deviceStateVersion?: number | null
+    public deviceStateVersion: number
 
     /** Indicates whether the device can shutdown CPU natively or via power management chip */
-    public canShutdown?: boolean | null
+    public canShutdown: boolean
 
     /** Indicates that the device has native wifi capability */
-    public hasWifi?: boolean | null
+    public hasWifi: boolean
 
     /** Indicates that the device has native bluetooth capability */
-    public hasBluetooth?: boolean | null
+    public hasBluetooth: boolean
 
     /** Indicates that the device has an ethernet peripheral */
-    public hasEthernet?: boolean | null
+    public hasEthernet: boolean
 
     /** Indicates that the device's role in the mesh */
-    public role?: meshtastic.Config.DeviceConfig.Role | null
+    public role: meshtastic.Config.DeviceConfig.Role
 
     /** Indicates the device's current enabled position flags */
-    public positionFlags?: number | null
+    public positionFlags: number
 
     /** Device hardware model */
-    public hwModel?: meshtastic.HardwareModel | null
+    public hwModel: meshtastic.HardwareModel
 
     /** Has Remote Hardware enabled */
-    public hasRemoteHardware?: boolean | null
+    public hasRemoteHardware: boolean
 
     /**
      * Decodes a DeviceMetadata message from the specified reader or buffer.
@@ -3212,7 +3213,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.INodeRemoteHardwarePin)
 
     /** The node_num exposing the available gpio pin */
-    public nodeNum?: number | null
+    public nodeNum: number
 
     /** The the available gpio pin for usage with RemoteHardware module */
     public pin?: meshtastic.IRemoteHardwarePin | null
@@ -3252,16 +3253,16 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IChunkedPayload)
 
     /** The ID of the entire payload */
-    public payloadId?: number | null
+    public payloadId: number
 
     /** The total number of chunks in the payload */
-    public chunkCount?: number | null
+    public chunkCount: number
 
     /** The current chunk index in the total */
-    public chunkIndex?: number | null
+    public chunkIndex: number
 
     /** The binary data of the current chunk */
-    public payloadChunk?: Uint8Array | null
+    public payloadChunk: Uint8Array
 
     /**
      * Decodes a ChunkedPayload message from the specified reader or buffer.
@@ -3326,7 +3327,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IChunkedPayloadResponse)
 
     /** The ID of the entire payload */
-    public payloadId?: number | null
+    public payloadId: number
 
     /** Request to transfer chunked payload */
     public requestTransfer?: boolean | null
@@ -3432,7 +3433,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IChannelSettings)
 
     /** Deprecated in favor of LoraConfig.channel_num */
-    public channelNum?: number | null
+    public channelNum: number
 
     /**
      * A simple pre-shared key for now for crypto.
@@ -3446,7 +3447,7 @@ export namespace meshtastic {
      * `2` through 10 = The default channel key, except with 1 through 9 added to the last byte.
      * Shown to user as simple1 through 10
      */
-    public psk?: Uint8Array | null
+    public psk: Uint8Array
 
     /**
      * A SHORT name that will be packed into the URL.
@@ -3458,7 +3459,7 @@ export namespace meshtastic {
      * For channel_num hashing empty string will be treated as "X".
      * Where "X" is selected based on the English words listed above for ModemPreset
      */
-    public name?: string | null
+    public name: string
 
     /**
      * Used to construct a globally unique channel ID.
@@ -3473,13 +3474,13 @@ export namespace meshtastic {
      * a table of well known IDs.
      * (see Well Known Channels FIXME)
      */
-    public id?: number | null
+    public id: number
 
     /** If true, messages on the mesh will be sent to the *public* internet by any gateway ndoe */
-    public uplinkEnabled?: boolean | null
+    public uplinkEnabled: boolean
 
     /** If true, messages seen on the internet will be forwarded to the local mesh. */
-    public downlinkEnabled?: boolean | null
+    public downlinkEnabled: boolean
 
     /** Per-channel module settings. */
     public moduleSettings?: meshtastic.IModuleSettings | null
@@ -3516,13 +3517,13 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IModuleSettings)
 
     /** Bits of precision for the location sent in position packets. */
-    public positionPrecision?: number | null
+    public positionPrecision: number
 
     /**
      * Controls whether or not the phone / clients should mute the current channel
      * Useful for noisy public channels you don't necessarily want to disable
      */
-    public isClientMuted?: boolean | null
+    public isClientMuted: boolean
 
     /**
      * Decodes a ModuleSettings message from the specified reader or buffer.
@@ -3564,13 +3565,13 @@ export namespace meshtastic {
      * (Someday - not currently implemented) An index of -1 could be used to mean "set by name",
      * in which case the target node will find and set the channel by settings.name.
      */
-    public index?: number | null
+    public index: number
 
     /** The new settings, or NULL to disable that channel */
     public settings?: meshtastic.IChannelSettings | null
 
     /** TODO: REPLACE */
-    public role?: meshtastic.Channel.Role | null
+    public role: meshtastic.Channel.Role
 
     /**
      * Decodes a Channel message from the specified reader or buffer.
@@ -3789,27 +3790,27 @@ export namespace meshtastic {
        * If a meshtastic node is able to reach the internet it will normally attempt to gateway any channels that are marked as
        * is_uplink_enabled or is_downlink_enabled.
        */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /**
        * The server to use for our MQTT global message gateway feature.
        * If not set, the default server will be used
        */
-      public address?: string | null
+      public address: string
 
       /**
        * MQTT username to use (most useful for a custom MQTT server).
        * If using a custom server, this will be honoured even if empty.
        * If using the default server, this will only be honoured if set, otherwise the device will use the default username
        */
-      public username?: string | null
+      public username: string
 
       /**
        * MQTT password to use (most useful for a custom MQTT server).
        * If using a custom server, this will be honoured even if empty.
        * If using the default server, this will only be honoured if set, otherwise the device will use the default password
        */
-      public password?: string | null
+      public password: string
 
       /**
        * Whether to send encrypted or decrypted packets to MQTT.
@@ -3817,25 +3818,25 @@ export namespace meshtastic {
        * (the default official mqtt.meshtastic.org server can handle encrypted packets)
        * Decrypted packets may be useful for external systems that want to consume meshtastic packets
        */
-      public encryptionEnabled?: boolean | null
+      public encryptionEnabled: boolean
 
       /** Whether to send / consume json packets on MQTT */
-      public jsonEnabled?: boolean | null
+      public jsonEnabled: boolean
 
       /** If true, we attempt to establish a secure connection using TLS */
-      public tlsEnabled?: boolean | null
+      public tlsEnabled: boolean
 
       /**
        * The root topic to use for MQTT messages. Default is "msh".
        * This is useful if you want to use a single MQTT server for multiple meshtastic networks and separate them via ACLs
        */
-      public root?: string | null
+      public root: string
 
       /** If true, we can use the connected phone / client to proxy messages to MQTT instead of a direct connection */
-      public proxyToClientEnabled?: boolean | null
+      public proxyToClientEnabled: boolean
 
       /** If true, we will periodically report unencrypted information about our node to a map via MQTT */
-      public mapReportingEnabled?: boolean | null
+      public mapReportingEnabled: boolean
 
       /** Settings for reporting information about our node to a map via MQTT */
       public mapReportSettings?: meshtastic.ModuleConfig.IMapReportSettings | null
@@ -3869,10 +3870,10 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IMapReportSettings)
 
       /** How often we should report our info to the map (in seconds) */
-      public publishIntervalSecs?: number | null
+      public publishIntervalSecs: number
 
       /** Bits of precision for the location sent (default of 32 is full precision). */
-      public positionPrecision?: number | null
+      public positionPrecision: number
 
       /**
        * Decodes a MapReportSettings message from the specified reader or buffer.
@@ -3906,10 +3907,10 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IRemoteHardwareConfig)
 
       /** Whether the Module is enabled */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** Whether the Module allows consumers to read / write to pins not defined in available_pins */
-      public allowUndefinedPinAccess?: boolean | null
+      public allowUndefinedPinAccess: boolean
 
       /** Exposes the available pins to the mesh for reading and writing */
       public availablePins: meshtastic.IRemoteHardwarePin[]
@@ -3946,13 +3947,13 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.INeighborInfoConfig)
 
       /** Whether the Module is enabled */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /**
        * Interval in seconds of how often we should try to send our
        * Neighbor Info to the mesh
        */
-      public updateInterval?: number | null
+      public updateInterval: number
 
       /**
        * Decodes a NeighborInfoConfig message from the specified reader or buffer.
@@ -4018,45 +4019,45 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IDetectionSensorConfig)
 
       /** Whether the Module is enabled */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** Interval in seconds of how often we can send a message to the mesh when a state change is detected */
-      public minimumBroadcastSecs?: number | null
+      public minimumBroadcastSecs: number
 
       /**
        * Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
        * When set to 0, only state changes will be broadcasted
        * Works as a sort of status heartbeat for peace of mind
        */
-      public stateBroadcastSecs?: number | null
+      public stateBroadcastSecs: number
 
       /**
        * Send ASCII bell with alert message
        * Useful for triggering ext. notification on bell
        */
-      public sendBell?: boolean | null
+      public sendBell: boolean
 
       /**
        * Friendly name used to format message sent to mesh
        * Example: A name "Motion" would result in a message "Motion detected"
        * Maximum length of 20 characters
        */
-      public name?: string | null
+      public name: string
 
       /** GPIO pin to monitor for state changes */
-      public monitorPin?: number | null
+      public monitorPin: number
 
       /**
        * Whether or not the GPIO pin state detection is triggered on HIGH (1)
        * Otherwise LOW (0)
        */
-      public detectionTriggeredHigh?: boolean | null
+      public detectionTriggeredHigh: boolean
 
       /**
        * Whether or not use INPUT_PULLUP mode for GPIO pin
        * Only applicable if the board uses pull-up resistors on the pin
        */
-      public usePullup?: boolean | null
+      public usePullup: boolean
 
       /**
        * Decodes a DetectionSensorConfig message from the specified reader or buffer.
@@ -4102,25 +4103,25 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IAudioConfig)
 
       /** Whether Audio is enabled */
-      public codec2Enabled?: boolean | null
+      public codec2Enabled: boolean
 
       /** PTT Pin */
-      public pttPin?: number | null
+      public pttPin: number
 
       /** The audio sample rate to use for codec2 */
-      public bitrate?: meshtastic.ModuleConfig.AudioConfig.Audio_Baud | null
+      public bitrate: meshtastic.ModuleConfig.AudioConfig.Audio_Baud
 
       /** I2S Word Select */
-      public i2sWs?: number | null
+      public i2sWs: number
 
       /** I2S Data IN */
-      public i2sSd?: number | null
+      public i2sSd: number
 
       /** I2S Data OUT */
-      public i2sDin?: number | null
+      public i2sDin: number
 
       /** I2S Clock */
-      public i2sSck?: number | null
+      public i2sSck: number
 
       /**
        * Decodes an AudioConfig message from the specified reader or buffer.
@@ -4172,16 +4173,16 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IPaxcounterConfig)
 
       /** Enable the Paxcounter Module */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** PaxcounterConfig paxcounterUpdateInterval. */
-      public paxcounterUpdateInterval?: number | null
+      public paxcounterUpdateInterval: number
 
       /** WiFi RSSI threshold. Defaults to -80 */
-      public wifiThreshold?: number | null
+      public wifiThreshold: number
 
       /** BLE RSSI threshold. Defaults to -80 */
-      public bleThreshold?: number | null
+      public bleThreshold: number
 
       /**
        * Decodes a PaxcounterConfig message from the specified reader or buffer.
@@ -4234,32 +4235,32 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.ISerialConfig)
 
       /** Preferences for the SerialModule */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** TODO: REPLACE */
-      public echo?: boolean | null
+      public echo: boolean
 
       /** RX pin (should match Arduino gpio pin number) */
-      public rxd?: number | null
+      public rxd: number
 
       /** TX pin (should match Arduino gpio pin number) */
-      public txd?: number | null
+      public txd: number
 
       /** Serial baud rate */
-      public baud?: meshtastic.ModuleConfig.SerialConfig.Serial_Baud | null
+      public baud: meshtastic.ModuleConfig.SerialConfig.Serial_Baud
 
       /** TODO: REPLACE */
-      public timeout?: number | null
+      public timeout: number
 
       /** Mode for serial module operation */
-      public mode?: meshtastic.ModuleConfig.SerialConfig.Serial_Mode | null
+      public mode: meshtastic.ModuleConfig.SerialConfig.Serial_Mode
 
       /**
        * Overrides the platform's defacto Serial port instance to use with Serial module config settings
        * This is currently only usable in output modes like NMEA / CalTopo and may behave strangely or not work at all in other modes
        * Existing logging over the Serial Console will still be present
        */
-      public overrideConsoleSerialPort?: boolean | null
+      public overrideConsoleSerialPort: boolean
 
       /**
        * Decodes a SerialConfig message from the specified reader or buffer.
@@ -4389,76 +4390,76 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IExternalNotificationConfig)
 
       /** Enable the ExternalNotificationModule */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /**
        * When using in On/Off mode, keep the output on for this many
        * milliseconds. Default 1000ms (1 second).
        */
-      public outputMs?: number | null
+      public outputMs: number
 
       /**
        * Define the output pin GPIO setting Defaults to
        * EXT_NOTIFY_OUT if set for the board.
        * In standalone devices this pin should drive the LED to match the UI.
        */
-      public output?: number | null
+      public output: number
 
       /**
        * Optional: Define a secondary output pin for a vibra motor
        * This is used in standalone devices to match the UI.
        */
-      public outputVibra?: number | null
+      public outputVibra: number
 
       /**
        * Optional: Define a tertiary output pin for an active buzzer
        * This is used in standalone devices to to match the UI.
        */
-      public outputBuzzer?: number | null
+      public outputBuzzer: number
 
       /**
        * IF this is true, the 'output' Pin will be pulled active high, false
        * means active low.
        */
-      public active?: boolean | null
+      public active: boolean
 
       /** True: Alert when a text message arrives (output) */
-      public alertMessage?: boolean | null
+      public alertMessage: boolean
 
       /** True: Alert when a text message arrives (output_vibra) */
-      public alertMessageVibra?: boolean | null
+      public alertMessageVibra: boolean
 
       /** True: Alert when a text message arrives (output_buzzer) */
-      public alertMessageBuzzer?: boolean | null
+      public alertMessageBuzzer: boolean
 
       /** True: Alert when the bell character is received (output) */
-      public alertBell?: boolean | null
+      public alertBell: boolean
 
       /** True: Alert when the bell character is received (output_vibra) */
-      public alertBellVibra?: boolean | null
+      public alertBellVibra: boolean
 
       /** True: Alert when the bell character is received (output_buzzer) */
-      public alertBellBuzzer?: boolean | null
+      public alertBellBuzzer: boolean
 
       /**
        * use a PWM output instead of a simple on/off output. This will ignore
        * the 'output', 'output_ms' and 'active' settings and use the
        * device.buzzer_gpio instead.
        */
-      public usePwm?: boolean | null
+      public usePwm: boolean
 
       /**
        * The notification will toggle with 'output_ms' for this time of seconds.
        * Default is 0 which means don't repeat at all. 60 would mean blink
        * and/or beep for 60 seconds
        */
-      public nagTimeout?: number | null
+      public nagTimeout: number
 
       /**
        * When true, enables devices with native I2S audio output to use the RTTTL over speaker like a buzzer
        * T-Watch S3 and T-Deck for example have this capability
        */
-      public useI2sAsBuzzer?: boolean | null
+      public useI2sAsBuzzer: boolean
 
       /**
        * Decodes an ExternalNotificationConfig message from the specified reader or buffer.
@@ -4501,22 +4502,22 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IStoreForwardConfig)
 
       /** Enable the Store and Forward Module */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** TODO: REPLACE */
-      public heartbeat?: boolean | null
+      public heartbeat: boolean
 
       /** TODO: REPLACE */
-      public records?: number | null
+      public records: number
 
       /** TODO: REPLACE */
-      public historyReturnMax?: number | null
+      public historyReturnMax: number
 
       /** TODO: REPLACE */
-      public historyReturnWindow?: number | null
+      public historyReturnWindow: number
 
       /** Set to true to let this node act as a server that stores received messages and resends them upon request. */
-      public isServer?: boolean | null
+      public isServer: boolean
 
       /**
        * Decodes a StoreForwardConfig message from the specified reader or buffer.
@@ -4553,16 +4554,16 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IRangeTestConfig)
 
       /** Enable the Range Test Module */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /** Send out range test messages from this node */
-      public sender?: number | null
+      public sender: number
 
       /**
        * Bool value indicating that this node should save a RangeTest.csv file.
        * ESP32 Only
        */
-      public save?: boolean | null
+      public save: boolean
 
       /**
        * Decodes a RangeTestConfig message from the specified reader or buffer.
@@ -4641,52 +4642,52 @@ export namespace meshtastic {
        * Interval in seconds of how often we should try to send our
        * device metrics to the mesh
        */
-      public deviceUpdateInterval?: number | null
+      public deviceUpdateInterval: number
 
       /** TelemetryConfig environmentUpdateInterval. */
-      public environmentUpdateInterval?: number | null
+      public environmentUpdateInterval: number
 
       /**
        * Preferences for the Telemetry Module (Environment)
        * Enable/Disable the telemetry measurement module measurement collection
        */
-      public environmentMeasurementEnabled?: boolean | null
+      public environmentMeasurementEnabled: boolean
 
       /** Enable/Disable the telemetry measurement module on-device display */
-      public environmentScreenEnabled?: boolean | null
+      public environmentScreenEnabled: boolean
 
       /**
        * We'll always read the sensor in Celsius, but sometimes we might want to
        * display the results in Fahrenheit as a "user preference".
        */
-      public environmentDisplayFahrenheit?: boolean | null
+      public environmentDisplayFahrenheit: boolean
 
       /** Enable/Disable the air quality metrics */
-      public airQualityEnabled?: boolean | null
+      public airQualityEnabled: boolean
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
        */
-      public airQualityInterval?: number | null
+      public airQualityInterval: number
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
        */
-      public powerMeasurementEnabled?: boolean | null
+      public powerMeasurementEnabled: boolean
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
        */
-      public powerUpdateInterval?: number | null
+      public powerUpdateInterval: number
 
       /**
        * Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
        */
-      public powerScreenEnabled?: boolean | null
+      public powerScreenEnabled: boolean
 
       /**
        * Decodes a TelemetryConfig message from the specified reader or buffer.
@@ -4750,43 +4751,43 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.ICannedMessageConfig)
 
       /** Enable the rotary encoder #1. This is a 'dumb' encoder sending pulses on both A and B pins while rotating. */
-      public rotary1Enabled?: boolean | null
+      public rotary1Enabled: boolean
 
       /** GPIO pin for rotary encoder A port. */
-      public inputbrokerPinA?: number | null
+      public inputbrokerPinA: number
 
       /** GPIO pin for rotary encoder B port. */
-      public inputbrokerPinB?: number | null
+      public inputbrokerPinB: number
 
       /** GPIO pin for rotary encoder Press port. */
-      public inputbrokerPinPress?: number | null
+      public inputbrokerPinPress: number
 
       /** Generate input event on CW of this kind. */
-      public inputbrokerEventCw?: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar | null
+      public inputbrokerEventCw: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar
 
       /** Generate input event on CCW of this kind. */
-      public inputbrokerEventCcw?: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar | null
+      public inputbrokerEventCcw: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar
 
       /** Generate input event on Press of this kind. */
-      public inputbrokerEventPress?: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar | null
+      public inputbrokerEventPress: meshtastic.ModuleConfig.CannedMessageConfig.InputEventChar
 
       /** Enable the Up/Down/Select input device. Can be RAK rotary encoder or 3 buttons. Uses the a/b/press definitions from inputbroker. */
-      public updown1Enabled?: boolean | null
+      public updown1Enabled: boolean
 
       /** Enable/disable CannedMessageModule. */
-      public enabled?: boolean | null
+      public enabled: boolean
 
       /**
        * Input event origin accepted by the canned message module.
        * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
        */
-      public allowInputSource?: string | null
+      public allowInputSource: string
 
       /**
        * CannedMessageModule also sends a bell character with the messages.
        * ExternalNotificationModule can benefit from this feature.
        */
-      public sendBell?: boolean | null
+      public sendBell: boolean
 
       /**
        * Decodes a CannedMessageConfig message from the specified reader or buffer.
@@ -4843,19 +4844,19 @@ export namespace meshtastic {
       constructor(properties?: meshtastic.ModuleConfig.IAmbientLightingConfig)
 
       /** Sets LED to on or off. */
-      public ledState?: boolean | null
+      public ledState: boolean
 
       /** Sets the current for the LED output. Default is 10. */
-      public current?: number | null
+      public current: number
 
       /** Sets the red LED level. Values are 0-255. */
-      public red?: number | null
+      public red: number
 
       /** Sets the green LED level. Values are 0-255. */
-      public green?: number | null
+      public green: number
 
       /** Sets the blue LED level. Values are 0-255. */
-      public blue?: number | null
+      public blue: number
 
       /**
        * Decodes an AmbientLightingConfig message from the specified reader or buffer.
@@ -4890,13 +4891,13 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IRemoteHardwarePin)
 
     /** GPIO Pin number (must match Arduino) */
-    public gpioPin?: number | null
+    public gpioPin: number
 
     /** Name for the GPIO pin (i.e. Front gate, mailbox, etc) */
-    public name?: string | null
+    public name: string
 
     /** Type of GPIO access available to consumers on the mesh */
-    public type?: meshtastic.RemoteHardwarePinType | null
+    public type: meshtastic.RemoteHardwarePinType
 
     /**
      * Decodes a RemoteHardwarePin message from the specified reader or buffer.
@@ -4988,19 +4989,19 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IDeviceMetrics)
 
     /** 0-100 (>100 means powered) */
-    public batteryLevel?: number | null
+    public batteryLevel: number
 
     /** Voltage measured */
-    public voltage?: number | null
+    public voltage: number
 
     /** Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise). */
-    public channelUtilization?: number | null
+    public channelUtilization: number
 
     /** Percent of airtime for transmission used within the last hour. */
-    public airUtilTx?: number | null
+    public airUtilTx: number
 
     /** How long the device has been running since the last reboot (in seconds) */
-    public uptimeSeconds?: number | null
+    public uptimeSeconds: number
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -5082,61 +5083,61 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IEnvironmentMetrics)
 
     /** Temperature measured */
-    public temperature?: number | null
+    public temperature: number
 
     /** Relative humidity percent measured */
-    public relativeHumidity?: number | null
+    public relativeHumidity: number
 
     /** Barometric pressure in hPA measured */
-    public barometricPressure?: number | null
+    public barometricPressure: number
 
     /** Gas resistance in MOhm measured */
-    public gasResistance?: number | null
+    public gasResistance: number
 
     /** Voltage measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x) */
-    public voltage?: number | null
+    public voltage: number
 
     /** Current measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x) */
-    public current?: number | null
+    public current: number
 
     /**
      * relative scale IAQ value as measured by Bosch BME680 . value 0-500.
      * Belongs to Air Quality but is not particle but VOC measurement. Other VOC values can also be put in here.
      */
-    public iaq?: number | null
+    public iaq: number
 
     /** RCWL9620 Doppler Radar Distance Sensor, used for water level detection. Float value in mm. */
-    public distance?: number | null
+    public distance: number
 
     /** VEML7700 high accuracy ambient light(Lux) digital 16-bit resolution sensor. */
-    public lux?: number | null
+    public lux: number
 
     /** VEML7700 high accuracy white light(irradiance) not calibrated digital 16-bit resolution sensor. */
-    public whiteLux?: number | null
+    public whiteLux: number
 
     /** Infrared lux */
-    public irLux?: number | null
+    public irLux: number
 
     /** Ultraviolet lux */
-    public uvLux?: number | null
+    public uvLux: number
 
     /**
      * Wind direction in degrees
      * 0 degrees = North, 90 = East, etc...
      */
-    public windDirection?: number | null
+    public windDirection: number
 
     /** Wind speed in m/s */
-    public windSpeed?: number | null
+    public windSpeed: number
 
     /** Weight in KG */
-    public weight?: number | null
+    public weight: number
 
     /** Wind gust in m/s */
-    public windGust?: number | null
+    public windGust: number
 
     /** Wind lull in m/s */
-    public windLull?: number | null
+    public windLull: number
 
     /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
@@ -5179,22 +5180,22 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IPowerMetrics)
 
     /** Voltage (Ch1) */
-    public ch1Voltage?: number | null
+    public ch1Voltage: number
 
     /** Current (Ch1) */
-    public ch1Current?: number | null
+    public ch1Current: number
 
     /** Voltage (Ch2) */
-    public ch2Voltage?: number | null
+    public ch2Voltage: number
 
     /** Current (Ch2) */
-    public ch2Current?: number | null
+    public ch2Current: number
 
     /** Voltage (Ch3) */
-    public ch3Voltage?: number | null
+    public ch3Voltage: number
 
     /** Current (Ch3) */
-    public ch3Current?: number | null
+    public ch3Current: number
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -5255,40 +5256,40 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IAirQualityMetrics)
 
     /** Concentration Units Standard PM1.0 */
-    public pm10Standard?: number | null
+    public pm10Standard: number
 
     /** Concentration Units Standard PM2.5 */
-    public pm25Standard?: number | null
+    public pm25Standard: number
 
     /** Concentration Units Standard PM10.0 */
-    public pm100Standard?: number | null
+    public pm100Standard: number
 
     /** Concentration Units Environmental PM1.0 */
-    public pm10Environmental?: number | null
+    public pm10Environmental: number
 
     /** Concentration Units Environmental PM2.5 */
-    public pm25Environmental?: number | null
+    public pm25Environmental: number
 
     /** Concentration Units Environmental PM10.0 */
-    public pm100Environmental?: number | null
+    public pm100Environmental: number
 
     /** 0.3um Particle Count */
-    public particles_03um?: number | null
+    public particles_03um: number
 
     /** 0.5um Particle Count */
-    public particles_05um?: number | null
+    public particles_05um: number
 
     /** 1.0um Particle Count */
-    public particles_10um?: number | null
+    public particles_10um: number
 
     /** 2.5um Particle Count */
-    public particles_25um?: number | null
+    public particles_25um: number
 
     /** 5.0um Particle Count */
-    public particles_50um?: number | null
+    public particles_50um: number
 
     /** 10.0um Particle Count */
-    public particles_100um?: number | null
+    public particles_100um: number
 
     /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
@@ -5328,7 +5329,7 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.ITelemetry)
 
     /** Seconds since 1970 - or 0 for unknown/unset */
-    public time?: number | null
+    public time: number
 
     /** Key native device metrics such as battery level */
     public deviceMetrics?: meshtastic.IDeviceMetrics | null
@@ -5404,10 +5405,10 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.INau7802Config)
 
     /** The offset setting for the NAU7802 */
-    public zeroOffset?: number | null
+    public zeroOffset: number
 
     /** The calibration factor for the NAU7802 */
-    public calibrationFactor?: number | null
+    public calibrationFactor: number
 
     /**
      * Decodes a Nau7802Config message from the specified reader or buffer.
@@ -5444,16 +5445,16 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IXModem)
 
     /** XModem control. */
-    public control?: meshtastic.XModem.Control | null
+    public control: meshtastic.XModem.Control
 
     /** XModem seq. */
-    public seq?: number | null
+    public seq: number
 
     /** XModem crc16. */
-    public crc16?: number | null
+    public crc16: number
 
     /** XModem buffer. */
-    public buffer?: Uint8Array | null
+    public buffer: Uint8Array
 
     /**
      * Decodes a XModem message from the specified reader or buffer.

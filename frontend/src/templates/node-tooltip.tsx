@@ -151,15 +151,15 @@ export function nodeTooltip(node: Node) {
     foo++
   }
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
-  const nodeRole = node.role === undefined || node.role === null ? 'UNKNOWN' : NodeRoleIDToName[node.role] || 'UNKNOWN'
+  const nodeRole = node.role === undefined || node.role === null ? null: NodeRoleIDToName[node.role] || null
   const hardwareModel =
-    node.hardwareModel === undefined || node.hardwareModel === null ? 'UNKNOWN' : HardwareModelIDToName[node.hardwareModel]
+    node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
 
   const padding = () => <li key={window.crypto.randomUUID()} className="mt-3"></li>
 
   const nodeName = (
     <li key="longName">
-      <span className="font-extrabold me-2">{node.longName}</span> ({nodeRole})
+      <span className="font-extrabold me-2">Long Name: {node.longName || `(UNKNOWN)`}</span> {nodeRole}
     </li>
   )
 

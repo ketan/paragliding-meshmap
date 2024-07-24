@@ -19,7 +19,8 @@
     "schema-to-ts": "bin/schema-to-ts",
     "docker:build": "docker build . --progress plain --tag paragliding-meshmap --build-arg GIT_SHA=$(git rev-parse --short HEAD) --tag ghcr.io/ketan/paragliding-meshmap:latest",
     "test": "mocha",
-    "test:watch": "nodemon --config nodemon.test.json --exec mocha"
+    "test:watch": "nodemon --config nodemon.test.json --exec mocha",
+    "precommit": "yarn run lint && yarn run test"
   },
   "imports": {
     "#entity/*": "./src/entity/*.ts",

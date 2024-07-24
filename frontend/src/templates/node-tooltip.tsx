@@ -202,7 +202,7 @@ export function nodeTooltip(node: Node) {
     keyValue({ key: 'Ch Util', value: node.channelUtilization, unit: '%', precision: 2 }),
     keyValue({ key: 'Air Util', value: node.airUtilTx, unit: '%', precision: 2 }),
     padding(),
-    keyValue({ key: 'ID', value: `${node.nodeId} (0x${node.nodeId.toString(15)})` }),
+    keyValue({ key: 'ID', value: `${node.nodeId} (!${node.nodeId.toString(16)})` }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     showDetailsButton,
   ]

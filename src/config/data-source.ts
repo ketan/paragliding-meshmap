@@ -6,41 +6,46 @@ export function createDB(purgeDataOlderThan: Duration) {
   return new PrismaClient().$extends({
     model: {
       node: {
-        async outboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'to'>) {
+        async outboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'to' | 'from'>) {
           const now = DateTime.now()
-          const node =
+          const senderNode =
+            (await trx.node.findFirst({ where: { nodeId: tm.from } })) ||
+            ({
+              nodeId: tm.from,
+            } as Prisma.NodeCreateInput)
+
+          if (!Array.isArray(senderNode.outbox)) {
+            senderNode.outbox = []
+          }
+
+          senderNode.outbox = (senderNode.outbox as PrismaJson.MessageOut[]).filter((msg) => {
+            return now.diff(DateTime.fromISO(msg.time)) < purgeDataOlderThan
+          })
+
+          senderNode.outbox.unshift({ to: tm.to, text: tm.text, time: now.toJSON() })
+
+          await Prisma.getExtensionContext(this).createOrUpdate(trx, senderNode)
+        },
+
+        async inboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'to' | 'from'>) {
+          const now = DateTime.now()
+          const receiverNode =
             (await trx.node.findFirst({ where: { nodeId: tm.to } })) ||
             ({
               nodeId: tm.to,
             } as Prisma.NodeCreateInput)
 
-          node.outbox ||= []
+          if (!Array.isArray(receiverNode.inbox)) {
+            receiverNode.inbox = []
+          }
 
-          node.outbox = (node.outbox as PrismaJson.MessageOut[]).filter((msg) => {
+          receiverNode.inbox = (receiverNode.inbox as PrismaJson.MessageIn[]).filter((msg) => {
             return now.diff(DateTime.fromISO(msg.time)) < purgeDataOlderThan
           })
 
-          node.outbox.unshift({ to: tm.to, text: tm.text, time: now.toJSON() })
+          receiverNode.inbox.unshift({ from: tm.from, text: tm.text, time: now.toJSON() })
 
-          await Prisma.getExtensionContext(this).createOrUpdate(trx, node)
-        },
-
-        async inboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'from'>) {
-          const now = DateTime.now()
-          const node =
-            (await trx.node.findFirst({ where: { nodeId: tm.from } })) ||
-            ({
-              nodeId: tm.from,
-            } as Prisma.NodeCreateInput)
-          node.inbox ||= []
-
-          const inbox = (node.inbox as PrismaJson.MessageIn[]).filter((msg) => {
-            return now.diff(DateTime.fromISO(msg.time)) < purgeDataOlderThan
-          })
-
-          inbox.unshift({ from: tm.from, text: tm.text, time: now.toJSON() })
-
-          await Prisma.getExtensionContext(this).createOrUpdate(trx, node)
+          await Prisma.getExtensionContext(this).createOrUpdate(trx, receiverNode)
         },
 
         async updateMapReports(trx: Prisma.TransactionClient, mr: Prisma.MapReportCreateInput) {

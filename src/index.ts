@@ -36,7 +36,7 @@ if (!isDevelopment) {
 
 app.set('json replacer', (_: unknown, v: unknown) => {
   if (typeof v === 'bigint') {
-    return v.toString()
+    return Number(v.toString())
   } else if (v instanceof Prisma.Decimal) {
     return v.toNumber()
   } else {

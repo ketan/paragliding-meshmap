@@ -5,7 +5,7 @@ import 'dotenv/config'
 import { createDB, Database } from '#config/data-source'
 import { webCLIParse } from '#helpers/cli'
 import { mqttProcessor } from '#mqtt/main'
-import { Decimal } from '@prisma/client/runtime/library'
+import { Prisma } from '@prisma/client'
 import bodyParser from 'body-parser'
 import express, { Request, Response } from 'express'
 import { DateTime, Duration } from 'luxon'
@@ -15,15 +15,6 @@ import { fileURLToPath } from 'url'
 const cliOptions = webCLIParse()
 
 const db: Database = createDB(cliOptions.purgeDataOlderThan)
-
-// @ts-expect-error - this is monkey patched
-Decimal.prototype.toJSON = function () {
-  return this.toNumber()
-}
-// @ts-expect-error - this is monkey patched
-BigInt.prototype.toJSON = function () {
-  return Number(this.toString())
-}
 
 if (cliOptions.mqtt) {
   mqttProcessor(db, cliOptions)
@@ -46,8 +37,11 @@ if (!isDevelopment) {
 app.set('json replacer', (_: unknown, v: unknown) => {
   if (typeof v === 'bigint') {
     return v.toString()
+  } else if (v instanceof Prisma.Decimal) {
+    return v.toNumber()
+  } else {
+    return v
   }
-  return v
 })
 
 app.get('/api/nodes', async (_req: Request, res: Response) => {

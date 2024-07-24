@@ -34,10 +34,10 @@ model Node {
   latitude                       Int?
   longitude                      Int?
   positionUpdatedAt              DateTime?
-  airUtilTx                      Decimal?
+  airUtilTx                      Float?
   batteryLevel                   Int?
-  channelUtilization             Decimal?
-  voltage                        Decimal?
+  channelUtilization             Float?
+  voltage                        Float?
   neighbourBroadcastIntervalSecs Int?
   neighboursUpdatedAt            DateTime?
   mqttConnectionState            String?   @db.Text
@@ -49,9 +49,9 @@ model Node {
   positionPrecision              Int?
   region                         Int?
   uptimeSeconds                  BigInt?
-  barometricPressure             Decimal?
-  relativeHumidity               Decimal?
-  temperature                    Decimal?
+  barometricPressure             Float?
+  relativeHumidity               Float?
+  temperature                    Float?
 
   /// [Neighbours]
   neighbours Json[]
@@ -118,9 +118,9 @@ model DeviceMetric {
   nodeId BigInt
 
   batteryLevel       Int?
-  voltage            Decimal?
-  channelUtilization Decimal?
-  airUtilTx          Decimal?
+  voltage            Float?
+  channelUtilization Float?
+  airUtilTx          Float?
   uptimeSeconds      BigInt?
 
   createdAt DateTime @default(now())
@@ -136,12 +136,12 @@ model EnvironmentMetric {
   id     BigInt @id @default(autoincrement())
   nodeId BigInt
 
-  temperature        Decimal?
-  relativeHumidity   Decimal?
-  barometricPressure Decimal?
-  gasResistance      Decimal?
-  voltage            Decimal?
-  current            Decimal?
+  temperature        Float?
+  relativeHumidity   Float?
+  barometricPressure Float?
+  gasResistance      Float?
+  voltage            Float?
+  current            Float?
   iaq                Int?
 
   createdAt DateTime @default(now())
@@ -157,12 +157,12 @@ model PowerMetric {
   id     BigInt @id @default(autoincrement())
   nodeId BigInt
 
-  ch1Voltage Decimal?
-  ch1Current Decimal?
-  ch2Voltage Decimal?
-  ch2Current Decimal?
-  ch3Voltage Decimal?
-  ch3Current Decimal?
+  ch1Voltage Float?
+  ch1Current Float?
+  ch2Voltage Float?
+  ch2Current Float?
+  ch3Voltage Float?
+  ch3Current Float?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -229,7 +229,7 @@ model TextMessages {
   wantResponse Boolean?
   hopLimit     Int?
 
-  rxSnr  Decimal?
+  rxSnr  Float?
   rxRssi Int?
   rxTime BigInt?
 

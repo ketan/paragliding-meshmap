@@ -203,10 +203,13 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
 
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
+
+    const iconSize = getTextSize(eachNode)
+
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
         className: getIconFor(eachNode),
-        iconSize: getTextSize(eachNode),
+        iconSize: iconSize,
         html: nodePositionView(eachNode),
       }),
 
@@ -225,7 +228,7 @@ function redraw(map: Map) {
     }
 
     if (!isMobile()) {
-      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true })
+      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: [iconSize[0]/2 + 5, 0] })
     }
     marker.on('click', () => {
       marker.closeTooltip()
@@ -238,6 +241,7 @@ function redraw(map: Map) {
       map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip
         permanent: true, // don't dismiss when clicking
+        offset: [iconSize[0]/2 + 5, 0]
       })
     })
   })

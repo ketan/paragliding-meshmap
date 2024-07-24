@@ -2,7 +2,7 @@
 import './index.scss'
 
 // leaflet stuff
-import L, { Map } from 'leaflet'
+import L, { Map, Tooltip } from 'leaflet'
 import 'leaflet-arrowheads'
 import 'leaflet-geometryutil'
 import 'leaflet-groupedlayercontrol'
@@ -203,7 +203,6 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
 
 function redraw(map: Map) {
   allData.newerNodesWithPosition.forEach((eachNode) => {
-
     const iconSize = getTextSize(eachNode)
 
     const marker = L.marker(eachNode.offsetLatLng!, {
@@ -212,7 +211,6 @@ function redraw(map: Map) {
         iconSize: iconSize,
         html: nodePositionView(eachNode),
       }),
-
       zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
     })
 
@@ -227,8 +225,10 @@ function redraw(map: Map) {
       allRouterNodesLayerGroup.addLayer(marker)
     }
 
+    const tooltipOffset = !isMobile() ? new L.Point(iconSize[0] / 2 + 5, 0) : new L.Point(0, 0)
+
     if (!isMobile()) {
-      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: [iconSize[0]/2 + 5, 0] })
+      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: tooltipOffset })
     }
     marker.on('click', () => {
       marker.closeTooltip()
@@ -241,7 +241,7 @@ function redraw(map: Map) {
       map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip
         permanent: true, // don't dismiss when clicking
-        offset: [iconSize[0]/2 + 5, 0]
+        offset: tooltipOffset,
       })
     })
   })

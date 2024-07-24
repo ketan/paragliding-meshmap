@@ -4,7 +4,6 @@ import { processMessage } from '#mqtt/decoder'
 import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
-import PQueue from 'p-queue'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
@@ -17,10 +16,6 @@ export function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {
     username: cliOptions.mqttUsername,
     password: cliOptions.mqttPassword,
-  })
-
-  const queue = new PQueue({
-    concurrency: 5,
   })
 
   if (cliOptions.dumpStatsEvery) {
@@ -67,6 +62,6 @@ export function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   }
 
   client.on('message', async (topic, payload) => {
-    queue.add(() => handleMessageWithRetry(topic, payload))
+    await handleMessageWithRetry(topic, payload)
   })
 }

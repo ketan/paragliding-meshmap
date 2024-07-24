@@ -2,18 +2,25 @@
 import 'dotenv/config'
 
 //
+import { createDB, Database } from '#config/data-source'
 import { webCLIParse } from '#helpers/cli'
 import { mqttProcessor } from '#mqtt/main'
+import { Decimal } from '@prisma/client/runtime/library'
 import bodyParser from 'body-parser'
 import express, { Request, Response } from 'express'
+import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { createDB, Database } from '#config/data-source'
-import { DateTime, Duration } from 'luxon'
+
 const cliOptions = webCLIParse()
 
 const db: Database = createDB(cliOptions.purgeDataOlderThan)
-
+Decimal.prototype.toJSON = function () {
+  return this.toNumber()
+}
+BigInt.prototype.toJSON = function () {
+  return Number(this.toString())
+}
 if (cliOptions.mqtt) {
   mqttProcessor(db, cliOptions)
 }

@@ -16,7 +16,6 @@ const cliOptions = webCLIParse()
 
 const db: Database = createDB(cliOptions.purgeDataOlderThan)
 
-
 // @ts-expect-error - this is monkey patched
 Decimal.prototype.toJSON = function () {
   return this.toNumber()

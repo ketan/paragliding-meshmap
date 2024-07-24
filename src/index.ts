@@ -15,12 +15,17 @@ import { fileURLToPath } from 'url'
 const cliOptions = webCLIParse()
 
 const db: Database = createDB(cliOptions.purgeDataOlderThan)
+
+
+// @ts-expect-error - this is monkey patched
 Decimal.prototype.toJSON = function () {
   return this.toNumber()
 }
+// @ts-expect-error - this is monkey patched
 BigInt.prototype.toJSON = function () {
   return Number(this.toString())
 }
+
 if (cliOptions.mqtt) {
   mqttProcessor(db, cliOptions)
 }

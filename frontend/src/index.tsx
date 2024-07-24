@@ -185,7 +185,8 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
   if (!node) {
     return
   }
-
+  const iconSize = getTextSize(node)
+  const tooltipOffset = !isMobile() ? new L.Point(iconSize[0] / 2 + 5, 0) : new L.Point(0, 0)
   if (node.offsetLatLng) {
     // const latlng = [node.latitude, node.longitude] as [number, number]
 
@@ -197,6 +198,7 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
     map.openTooltip(nodeTooltip(node), node.offsetLatLng, {
       interactive: true, // allow clicking etc inside tooltip
       permanent: true, // don't dismiss when clicking
+      offset: tooltipOffset,
     })
   }
 }

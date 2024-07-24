@@ -144,12 +144,7 @@ function lastMessages(node: Node) {
   )
 }
 
-// eslint-disable react/jsx-key
 export function nodeTooltip(node: Node) {
-  let foo = 0
-  if (foo) {
-    foo++
-  }
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
   const nodeRole = node.role === undefined || node.role === null ? null : NodeRoleIDToName[node.role] || null
   const hardwareModel =

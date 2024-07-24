@@ -2,7 +2,7 @@
 import './index.scss'
 
 // leaflet stuff
-import L, { Map, Tooltip } from 'leaflet'
+import L, { Map } from 'leaflet'
 import 'leaflet-arrowheads'
 import 'leaflet-geometryutil'
 import 'leaflet-groupedlayercontrol'
@@ -10,6 +10,7 @@ import 'leaflet-polylineoffset'
 import 'leaflet.markercluster'
 
 // our stuff
+import debug from 'debug'
 import _ from 'lodash'
 import { DateTime, Duration } from 'luxon'
 import React from 'react'
@@ -23,7 +24,6 @@ import { cssClassFor, mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
 import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
-import debug from 'debug'
 
 const logger = debug('meshmap')
 logger.enabled = true

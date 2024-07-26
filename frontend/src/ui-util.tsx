@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { NodesEntity } from './database'
 import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
+import { DateTime } from 'luxon'
 
 export function googleMapsLink(point: PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
@@ -83,4 +84,20 @@ function getCharWidth(c: string) {
     charSizes[c] = [span.offsetWidth, span.offsetHeight]
   }
   return charSizes[c]
+}
+
+export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
+  if (timestamp) {
+    const dateTime = DateTime.fromISO(timestamp)
+    return (
+      <>
+        <span className="has-tooltip font-light" aria-label={dateTime.toFormat('dd LLL, yyyy hh:mm a')} data-cooltipz-dir="bottom">
+          {addParens ? '(' : null}
+          {dateTime.toRelative()}
+          {addParens ? ')' : null}
+        </span>
+      </>
+    )
+  }
+  return
 }

@@ -31,9 +31,7 @@ export default defineConfig({
           }
         },
       },
-      input: {
-        index: resolve(__dirname, `index.html`),
-      },
+      input: [resolve(__dirname, `index.html`), resolve(__dirname, `messages.html`)],
     },
   },
 

@@ -59,3 +59,7 @@ body {
     @apply font-serif text-4xl leading-[0];
   }
 }
+
+.leaflet-container a {
+  color: inherit;
+}

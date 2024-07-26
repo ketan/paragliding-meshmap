@@ -6,23 +6,7 @@ import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { MessageIn, MessageOut } from '../interfaces'
 import { Node } from '../nodes-entity'
-import { googleMapsLink } from '../ui-util'
-
-const timeAgo = (timestamp?: string | null, addParens: boolean = false) => {
-  if (timestamp) {
-    const dateTime = DateTime.fromISO(timestamp)
-    return (
-      <>
-        <span className="has-tooltip font-light" aria-label={dateTime.toFormat('dd LLL, yyyy hh:mm a')} data-cooltipz-dir="bottom">
-          {addParens ? '(' : null}
-          {dateTime.toRelative()}
-          {addParens ? ')' : null}
-        </span>
-      </>
-    )
-  }
-  return
-}
+import { googleMapsLink, timeAgo } from '../ui-util'
 
 function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {
@@ -160,9 +144,22 @@ export function nodeTooltip(node: Node) {
 
   const showDetailsButton = (
     <p className="text-center mt-3" key="showDetails">
-      <button className="w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
+      <a className="block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
         Show details
-      </button>
+      </a>
+    </p>
+  )
+
+  const showMessagesButton = (
+    <p className="text-center mt-3" key="showMessages" data-id="showMessagesButton">
+      <a
+        href={`/messages.html?from=${node.nodeId}`}
+        target="_blank"
+        rel="noreferrer"
+        className="block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
+      >
+        Show Messages
+      </a>
     </p>
   )
 
@@ -200,6 +197,7 @@ export function nodeTooltip(node: Node) {
     keyValue({ key: 'ID', value: `${node.nodeId} (!${node.nodeId.toString(16)})` }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     showDetailsButton,
+    showMessagesButton,
   ]
 
   return renderToString(

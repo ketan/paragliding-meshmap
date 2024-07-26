@@ -20,6 +20,16 @@ if (cliOptions.mqtt) {
   mqttProcessor(db, cliOptions)
 }
 
+// @ts-expect-error we're patching
+BigInt.prototype.toJSON = function () {
+  return Number(this.toString())
+}
+
+// @ts-expect-error we're patching
+Prisma.Decimal.prototype.toJSON = function () {
+  return Number(this.toString())
+}
+
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
@@ -34,16 +44,6 @@ if (!isDevelopment) {
   app.use(express.static(`${__dirname}/public`))
 }
 
-app.set('json replacer', (_: unknown, v: unknown) => {
-  if (typeof v === 'bigint') {
-    return Number(v.toString())
-  } else if (v instanceof Prisma.Decimal) {
-    return v.toNumber()
-  } else {
-    return v
-  }
-})
-
 app.get('/api/nodes', async (_req: Request, res: Response) => {
   res.setHeader('cache-control', 'max-age=60')
   const allNodes = await db.node.findMany()
@@ -51,11 +51,10 @@ app.get('/api/nodes', async (_req: Request, res: Response) => {
 })
 
 app.get('/api/positions/:nodeId', async (req, res) => {
-  res.setHeader('cache-control', 'max-age=60')
   const nodeId = req.params.nodeId
   const positions = await db.position.findMany({
     where: {
-      nodeId: BigInt(nodeId),
+      nodeId: Number(nodeId),
       createdAt: {
         gte: DateTime.now().minus(Duration.fromISO('P1D')).toJSDate(),
       },
@@ -65,12 +64,46 @@ app.get('/api/positions/:nodeId', async (req, res) => {
     },
   })
   if (positions.length > 0) {
+    res.setHeader('cache-control', 'max-age=60')
     res.json(positions)
   } else {
     res.status(404).json({
       message: `Node with ID ${nodeId} not found!`,
     })
   }
+})
+
+app.get(`/api/node/:nodeId`, async (req, res) => {
+  const nodeId = req.params.nodeId
+  const node = await db.node.findFirst({ where: { nodeId: Number(nodeId) } })
+  if (node) {
+    res.setHeader('cache-control', 'max-age=60')
+    res.json(node)
+  } else {
+    res.status(404).json({
+      message: `Node with ID ${nodeId} not found!`,
+    })
+  }
+})
+
+app.get('/api/node/:nodeId/outgoing-messages', async (req, res) => {
+  res.setHeader('cache-control', 'max-age=60')
+  const nodeId = req.params.nodeId
+  const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
+
+  const outgoingMessages = await db.textMessages.findMany({
+    where: {
+      from: Number(nodeId),
+      createdAt: {
+        gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(outgoingMessages)
 })
 
 app.get('/api/hardware-models', async function (_req: Request, res: Response) {

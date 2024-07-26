@@ -9,8 +9,8 @@ addEventListener('load', function () {
   const to = queryParams.get('to')
 
   if (from) {
-    ReactDOM.createRoot(document.querySelector('#messages-app')!).render(<MessagesApp from={Number(from)} />)
-  } else if (to) {
-    ReactDOM.createRoot(document.querySelector('#messages-app')!).render(<MessagesApp to={Number(to)} />)
+    ReactDOM.createRoot(document.querySelector('#messages-app')!).render(
+      <MessagesApp from={Number(from)} to={to ? Number(to) : undefined} />
+    )
   }
 })

@@ -8,4 +8,4 @@ export interface Node extends Omit<NodesEntity, 'latitude' | 'longitude'> {
   nodeIdHex: string
 }
 
-export type NodeNameAttributes = Pick<Node, 'shortName' | 'longName' | 'nodeIdHex'>
+export type NodeNameAttributes = Pick<Node, 'shortName' | 'longName' | 'nodeId' | 'nodeIdHex'>

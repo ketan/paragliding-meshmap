@@ -60,6 +60,10 @@ body {
   }
 }
 
-.leaflet-container a {
+.leaflet-tooltip-pane a.button {
   color: inherit;
+}
+
+.leaflet-tooltip-pane a {
+  color: unset;
 }

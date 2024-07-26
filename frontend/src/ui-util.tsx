@@ -1,8 +1,9 @@
 import _ from 'lodash'
+import { DateTime } from 'luxon'
 import { NodesEntity } from './database'
 import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
-import { DateTime } from 'luxon'
+import { Tooltip } from './tooltip'
 
 export function googleMapsLink(point: PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
@@ -53,7 +54,25 @@ export function sanitizeNodeProperties(node: NodesEntity): Node {
 }
 
 export function nodeName(node: Partial<NodeNameAttributes>) {
-  return _.compact([node.shortName, node.longName, node.nodeIdHex]).at(0) || '<NO NAME>'
+  return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
+}
+
+export function nodeUrl(node: Node | number) {
+  const nodeId = typeof node === 'number' ? node : node.nodeId
+  return `/?nodeId=${nodeId}`
+}
+
+export function describeNode(node: Partial<NodeNameAttributes>) {
+  return _([
+    node.longName,
+    node.shortName ? ` // Short Name: ${node.shortName}` : null,
+    node.nodeIdHex ? ` // Hex ID ${node.nodeIdHex}` : null,
+    node.nodeId ? ` // Hex ID: !${node.nodeId.toString(16)}` : null,
+    node.nodeId ? ` // Node ID: ${node.nodeId}` : null,
+  ])
+    .compact()
+    .uniq()
+    .join(' ')
 }
 
 export function isMobile() {
@@ -90,13 +109,11 @@ export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
   if (timestamp) {
     const dateTime = DateTime.fromISO(timestamp)
     return (
-      <>
-        <span className="has-tooltip font-light" aria-label={dateTime.toFormat('dd LLL, yyyy hh:mm a')} data-cooltipz-dir="bottom">
-          {addParens ? '(' : null}
-          {dateTime.toRelative()}
-          {addParens ? ')' : null}
-        </span>
-      </>
+      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')}>
+        {addParens ? '(' : null}
+        {dateTime.toRelative()}
+        {addParens ? ')' : null}
+      </Tooltip>
     )
   }
   return

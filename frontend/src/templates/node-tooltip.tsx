@@ -6,7 +6,8 @@ import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { MessageIn, MessageOut } from '../interfaces'
 import { Node } from '../nodes-entity'
-import { googleMapsLink, timeAgo } from '../ui-util'
+import { Tooltip } from '../tooltip'
+import { googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
 
 function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {
@@ -130,7 +131,7 @@ function lastMessages(node: Node) {
 
 export function nodeTooltip(node: Node) {
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
-  const nodeRole = node.role === undefined || node.role === null ? null : NodeRoleIDToName[node.role] || null
+  const nodeRole = node.role ? NodeRoleIDToName[node.role] : null
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
 
@@ -144,7 +145,7 @@ export function nodeTooltip(node: Node) {
 
   const showDetailsButton = (
     <p className="text-center mt-3" key="showDetails">
-      <a className="block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
+      <a className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
         Show details
       </a>
     </p>
@@ -156,7 +157,7 @@ export function nodeTooltip(node: Node) {
         href={`/messages.html?from=${node.nodeId}`}
         target="_blank"
         rel="noreferrer"
-        className="block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
+        className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
       >
         Show Messages
       </a>
@@ -194,7 +195,34 @@ export function nodeTooltip(node: Node) {
     keyValue({ key: 'Ch Util', value: node.channelUtilization, unit: '%', precision: 2 }),
     keyValue({ key: 'Air Util', value: node.airUtilTx, unit: '%', precision: 2 }),
     padding(),
-    keyValue({ key: 'ID', value: `${node.nodeId} (!${node.nodeId.toString(16)})` }),
+    keyValue({
+      key: 'ID',
+      renderer: () => {
+        const link = nodeUrl(node)
+        return (
+          <>
+            <a href={link}>
+              {node.nodeId} (!{node.nodeId.toString(16)})
+            </a>
+            <Tooltip tooltipText="Copy link to clipboard" className="button border-sm inline-block rounded border ml-3">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="w-8 h-8 inline-block"
+                data-copy={link}
+              >
+                <path d="M13 10.75h-1.25a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h8.5a2 2 0 0 0 2-2v-8.5a2 2 0 0 0-2-2H19"></path>
+                <path d="M18 12.25h-4a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1ZM13.75 16.25h4.5M13.75 19.25h4.5"></path>
+              </svg>
+            </Tooltip>
+          </>
+        )
+      },
+    }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     showDetailsButton,
     showMessagesButton,
@@ -207,3 +235,16 @@ export function nodeTooltip(node: Node) {
     </div>
   )
 }
+
+function handleButtonClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  if (target.matches('[data-copy]')) {
+    target.classList.add('motion-safe:animate-ping')
+    const currentURL = new URL(target.getAttribute('data-copy')!, window.location.href)
+    currentURL.hash = ''
+    navigator.clipboard.writeText(currentURL.toString())
+    setTimeout(() => target.classList.remove('motion-safe:animate-ping'), 500)
+  }
+}
+
+document.addEventListener('click', handleButtonClick)

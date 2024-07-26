@@ -86,14 +86,16 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
   }
 })
 
-app.get('/api/node/:nodeId/outgoing-messages', async (req, res) => {
+app.get('/api/node/:nodeId/messages', async (req, res) => {
   res.setHeader('cache-control', 'max-age=60')
-  const nodeId = req.params.nodeId
+  const nodeId = Number(req.params.nodeId)
   const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
+  const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : Number('0xffffffff')
 
   const outgoingMessages = await db.textMessages.findMany({
     where: {
-      from: Number(nodeId),
+      from: nodeId,
+      to: to,
       createdAt: {
         gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
       },

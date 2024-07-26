@@ -12,10 +12,10 @@ export interface Node {
   latitude: number | null
   longitude: number | null
   positionUpdatedAt: string | null
-  airUtilTx: Decimal | null
+  airUtilTx: number | null
   batteryLevel: number | null
-  channelUtilization: Decimal | null
-  voltage: Decimal | null
+  channelUtilization: number | null
+  voltage: number | null
   neighbourBroadcastIntervalSecs: number | null
   neighboursUpdatedAt: string | null
   mqttConnectionState: string | null
@@ -27,9 +27,9 @@ export interface Node {
   positionPrecision: number | null
   region: number | null
   uptimeSeconds: bigint | null
-  barometricPressure: Decimal | null
-  relativeHumidity: Decimal | null
-  temperature: Decimal | null
+  barometricPressure: number | null
+  relativeHumidity: number | null
+  temperature: number | null
   neighbours: JsonValue[]
   inbox: JsonValue[]
   outbox: JsonValue[]
@@ -70,9 +70,9 @@ export interface DeviceMetric {
   id: bigint
   nodeId: bigint
   batteryLevel: number | null
-  voltage: Decimal | null
-  channelUtilization: Decimal | null
-  airUtilTx: Decimal | null
+  voltage: number | null
+  channelUtilization: number | null
+  airUtilTx: number | null
   uptimeSeconds: bigint | null
   createdAt: string
   updatedAt: string
@@ -81,12 +81,12 @@ export interface DeviceMetric {
 export interface EnvironmentMetric {
   id: bigint
   nodeId: bigint
-  temperature: Decimal | null
-  relativeHumidity: Decimal | null
-  barometricPressure: Decimal | null
-  gasResistance: Decimal | null
-  voltage: Decimal | null
-  current: Decimal | null
+  temperature: number | null
+  relativeHumidity: number | null
+  barometricPressure: number | null
+  gasResistance: number | null
+  voltage: number | null
+  current: number | null
   iaq: number | null
   createdAt: string
   updatedAt: string
@@ -95,12 +95,12 @@ export interface EnvironmentMetric {
 export interface PowerMetric {
   id: bigint
   nodeId: bigint
-  ch1Voltage: Decimal | null
-  ch1Current: Decimal | null
-  ch2Voltage: Decimal | null
-  ch2Current: Decimal | null
-  ch3Voltage: Decimal | null
-  ch3Current: Decimal | null
+  ch1Voltage: number | null
+  ch1Current: number | null
+  ch2Voltage: number | null
+  ch2Current: number | null
+  ch3Voltage: number | null
+  ch3Current: number | null
   createdAt: string
   updatedAt: string
 }
@@ -144,7 +144,7 @@ export interface TextMessages {
   text: string
   wantResponse: boolean | null
   hopLimit: number | null
-  rxSnr: Decimal | null
+  rxSnr: number | null
   rxRssi: number | null
   rxTime: bigint | null
   createdAt: string
@@ -184,7 +184,5 @@ export interface Waypoint {
   createdAt: string
   updatedAt: string
 }
-
-type Decimal = { valueOf(): string }
 
 type JsonValue = string | number | boolean | { [key in string]?: JsonValue } | Array<JsonValue> | null

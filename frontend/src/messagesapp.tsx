@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from './database'
-import { describeNode, nodeUrl, timeAgo } from './ui-util'
+import { BROADCAST_ADDR, describeNode, nodeUrl, timeAgo } from './ui-util'
 
 import icon from './assets/images/icon.png'
 
@@ -35,10 +35,8 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
     this.scrollToBottom()
   }
 
-  BROADCAST_ADDR = Number('0xffffffff')
-
   async fetchNode(nodeId: number) {
-    if (nodeId === this.BROADCAST_ADDR) {
+    if (nodeId === BROADCAST_ADDR) {
       return
     }
     if (!this.state.nodes[nodeId]) {

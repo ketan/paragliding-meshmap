@@ -1,8 +1,7 @@
+import { BROADCAST_ADDR } from '#helpers/utils'
 import { sanitizeNumber } from '#mqtt/protobuf-to-dto'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { DateTime, Duration } from 'luxon'
-
-const BROADCAST_ADDR = Number('0xffffffff')
 
 export function createDB(purgeDataOlderThan: Duration) {
   return new PrismaClient().$extends({

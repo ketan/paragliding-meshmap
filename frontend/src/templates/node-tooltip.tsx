@@ -7,7 +7,7 @@ import { imageForModel } from '../image-for-model'
 import { MessageIn, MessageOut } from '../interfaces'
 import { Node } from '../nodes-entity'
 import { Tooltip } from '../tooltip'
-import { googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
+import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
 
 function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {
@@ -97,7 +97,6 @@ const keyValue = function <T>(args: KeyValueType<T>) {
   }
 }
 
-const MINUS_ONE_HEX = Number('0xffffffff')
 function renderMessage(message: MessageIn | MessageOut) {
   return (
     <li className="message-bubble" key={message.time}>
@@ -112,7 +111,7 @@ function lastMessages(node: Node) {
   }
 
   const top5RecentMessages = node.outbox
-    .filter((msg) => ('from' in msg && msg.from === MINUS_ONE_HEX) || ('to' in msg && msg.to === MINUS_ONE_HEX))
+    .filter((msg) => ('from' in msg && msg.from === BROADCAST_ADDR) || ('to' in msg && msg.to === BROADCAST_ADDR))
     .sort((a, b) => DateTime.fromISO(a.time).diff(DateTime.fromISO(b.time)).toMillis())
     .reverse()
     .slice(0, 5)
@@ -139,7 +138,8 @@ export function nodeTooltip(node: Node) {
 
   const nodeName = (
     <li key="longName">
-      <span className="font-extrabold me-2">Long Name:</span><span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span>
+      <span className="font-extrabold me-2">Long Name:</span>
+      <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span>
     </li>
   )
 

@@ -11,6 +11,7 @@ import express, { Request, Response } from 'express'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { BROADCAST_ADDR } from '#helpers/utils'
 
 const cliOptions = webCLIParse()
 
@@ -90,7 +91,7 @@ app.get('/api/node/:nodeId/messages', async (req, res) => {
   res.setHeader('cache-control', 'max-age=60')
   const nodeId = Number(req.params.nodeId)
   const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
-  const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : Number('0xffffffff')
+  const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : BROADCAST_ADDR
 
   const outgoingMessages = await db.textMessages.findMany({
     where: {

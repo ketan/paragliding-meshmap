@@ -5,6 +5,8 @@ import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
 import { Tooltip } from './tooltip'
 
+export const BROADCAST_ADDR = Number('0xffffffff')
+
 export function googleMapsLink(point: PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
 }

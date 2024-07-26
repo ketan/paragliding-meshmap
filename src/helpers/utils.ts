@@ -35,3 +35,5 @@ export function parseProtobuf<T>(f: () => T): T {
     throw new AbortError(e)
   }
 }
+
+export const BROADCAST_ADDR = Number('0xffffffff')

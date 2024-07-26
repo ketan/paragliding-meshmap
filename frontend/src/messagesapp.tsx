@@ -39,7 +39,7 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
 
   async fetchNode(nodeId: number) {
     if (nodeId === this.BROADCAST_ADDR) {
-      // return
+      return
     }
     if (!this.state.nodes[nodeId]) {
       const nodeResponse = await fetch(`/api/node/${nodeId}`)
@@ -100,25 +100,23 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
               const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
 
               return (
-                <>
-                  <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md">
-                    <span className="font-semibold text-sm">
-                      <a href={nodeUrl(msg.from)}>
-                        {fromNode.shortName} ({fromNode.longName})
-                      </a>{' '}
-                      →{' '}
-                      {4294967295 === msg.to ? (
-                        'Everyone'
-                      ) : (
-                        <a href={nodeUrl(msg.to)}>
-                          {toNode.shortName} ({toNode.longName})
-                        </a>
-                      )}
-                    </span>
-                    <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
-                    <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
-                  </div>
-                </>
+                <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
+                  <span className="font-semibold text-sm">
+                    <a href={nodeUrl(msg.from)}>
+                      {fromNode.shortName} ({fromNode.longName})
+                    </a>{' '}
+                    →{' '}
+                    {4294967295 === msg.to ? (
+                      'Everyone'
+                    ) : (
+                      <a href={nodeUrl(msg.to)}>
+                        {toNode.shortName} ({toNode.longName})
+                      </a>
+                    )}
+                  </span>
+                  <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
+                  <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
+                </div>
               )
             })}
           </div>

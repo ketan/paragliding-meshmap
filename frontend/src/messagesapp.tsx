@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from './database'
 import { describeNode, nodeUrl, timeAgo } from './ui-util'
 
+import icon from './assets/images/icon.png'
+
 export type MessagesAppProps = { from: number; to?: number }
 
 interface MessagesAppState {
@@ -69,7 +71,7 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
             {/* icon */}
             <div className="hidden sm:block my-auto mr-3 relative">
               <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-              <img className="w-10 h-10 rounded bg-opacity-90" src="./src/assets/images/icon.png" />
+              <img className="w-10 h-10 rounded bg-opacity-90" src={icon} />
             </div>
             {/* app info */}
             <div className="my-auto leading-tight">

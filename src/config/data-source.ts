@@ -2,6 +2,8 @@ import { sanitizeNumber } from '#mqtt/protobuf-to-dto'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { DateTime, Duration } from 'luxon'
 
+const BROADCAST_ADDR = Number('0xffffffff')
+
 export function createDB(purgeDataOlderThan: Duration) {
   return new PrismaClient().$extends({
     model: {
@@ -28,6 +30,9 @@ export function createDB(purgeDataOlderThan: Duration) {
         },
 
         async inboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'to' | 'from'>) {
+          if (tm.to === BROADCAST_ADDR) {
+            return
+          }
           const now = DateTime.now()
           const receiverNode =
             (await trx.node.findFirst({ where: { nodeId: tm.to } })) ||

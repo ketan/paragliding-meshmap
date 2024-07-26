@@ -13,13 +13,13 @@ function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {
     return (
       <>
-        <span className="text-green-700">Online</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
+        <span className="text-green-600">Online</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
       </>
     )
   } else {
     return (
       <>
-        <span className="text-blue-700">Offline</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
+        <span className="text-purple-600">Offline</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
       </>
     )
   }
@@ -33,7 +33,7 @@ const location = (node: Node) => {
   return (
     <li key="location">
       <span className="font-extrabold me-2">Location:</span>
-      <a target="_blank" className="external link text-blue-600" href={googleMapsLink(node.latLng)} rel="noreferrer">
+      <a target="_blank" href={googleMapsLink(node.latLng)} rel="noreferrer">
         {node.latLng.join(', ')}
       </a>{' '}
       {timeAgo(node.positionUpdatedAt, true)}
@@ -131,7 +131,7 @@ function lastMessages(node: Node) {
 
 export function nodeTooltip(node: Node) {
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
-  const nodeRole = node.role ? NodeRoleIDToName[node.role] : null
+  const role = node.role ? NodeRoleIDToName[node.role] : null
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
 
@@ -139,7 +139,13 @@ export function nodeTooltip(node: Node) {
 
   const nodeName = (
     <li key="longName">
-      <span className="font-extrabold me-2">Long Name: {node.longName || `(UNKNOWN)`}</span> {nodeRole}
+      <span className="font-extrabold me-2">Long Name:</span><span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span>
+    </li>
+  )
+
+  const nodeRole = (
+    <li key="nodeRole">
+      <span className="font-extrabold me-2">Role:</span> {role}
     </li>
   )
 
@@ -168,6 +174,7 @@ export function nodeTooltip(node: Node) {
     nodeName,
     keyValue({ key: 'Short Name', value: node.shortName }),
     keyValue({ key: 'MQTT Status', renderer: () => mqttStatus(node) }),
+    nodeRole,
     padding(),
     location(node),
     keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),

@@ -65,5 +65,17 @@ body {
 }
 
 .leaflet-tooltip-pane a {
-  color: unset;
+  @apply text-blue-700;
+}
+
+a {
+  @apply text-blue-700;
+
+  &:hover {
+    @apply text-blue-500;
+  }
+}
+
+.header a {
+  @apply text-black;
 }

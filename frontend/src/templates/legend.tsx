@@ -10,7 +10,7 @@ export const mapLegendTemplate = renderToString(
       Connected
     </div>
     <div className="relative pl-4">
-      <span className={`absolute h-3 w-3 rounded-full bg-blue-600 border-3 top-0.5 left-0`}></span>
+      <span className={`absolute h-3 w-3 rounded-full bg-purple-600 border-3 top-0.5 left-0`}></span>
       Disconnected
     </div>
     <div className="relative pl-4">
@@ -26,7 +26,7 @@ export function cssClassFor(str: 'online' | 'offline' | 'disconnected') {
   if (str === 'online') {
     return `ring-green-600 ${commonClasses}`
   } else if (str === 'disconnected') {
-    return `ring-blue-600 ${commonClasses}`
+    return `ring-purple-600 ${commonClasses}`
   } else if (str === 'offline') {
     return `ring-red-600 ${commonClasses}`
   }

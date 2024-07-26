@@ -78,11 +78,11 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
               <div className="font-bold">Meshtastic map</div>
               <div className="text-sm">
                 By{' '}
-                <a className="external link text-blue-600" target="_blank" rel="noreferrer" href="https://github.com/ketan">
+                <a target="_blank" rel="noreferrer" href="https://github.com/ketan">
                   Ketan Padegaonkar
                 </a>{' '}
                 (inspiration{' '}
-                <a target="_blank" className="external link text-blue-600" rel="noreferrer" href="https://meshtastic.liamcottle.net/">
+                <a target="_blank" rel="noreferrer" href="https://meshtastic.liamcottle.net/">
                   Liam Cottle
                 </a>
                 )
@@ -103,14 +103,14 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
                 <>
                   <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md">
                     <span className="font-semibold text-sm">
-                      <a className="external link text-blue-600" href={nodeUrl(msg.from)}>
+                      <a href={nodeUrl(msg.from)}>
                         {fromNode.shortName} ({fromNode.longName})
                       </a>{' '}
                       →{' '}
                       {4294967295 === msg.to ? (
                         'Everyone'
                       ) : (
-                        <a className="external link text-blue-600" href={nodeUrl(msg.to)}>
+                        <a href={nodeUrl(msg.to)}>
                           {toNode.shortName} ({toNode.longName})
                         </a>
                       )}

@@ -1,6 +1,7 @@
 import './index.scss'
 import ReactDOM from 'react-dom/client'
 import { MessagesApp } from './messagesapp'
+import ModalApp from './modalapp'
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')
@@ -13,4 +14,9 @@ addEventListener('load', function () {
       <MessagesApp from={Number(from)} to={to ? Number(to) : undefined} />
     )
   }
+
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+
+  ReactDOM.createRoot(div).render(<ModalApp />)
 })

@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from './database'
 import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
-
 import FilterCircleXMark from './assets/images/icons/filter-circle-xmark.svg?component'
+import CircleInfoIcon from './assets/images/icons/circle-info.svg?component'
 
 import icon from './assets/images/icon.png'
 
@@ -92,6 +92,18 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
             {this.banner()}
             {/* header action buttons */}
             <div className="header flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">
+              <a
+                href="#"
+                className="has-tooltip rounded-full hidden sm:block"
+                aria-label="About"
+                data-cooltipz-dir="bottom"
+                id="about-button"
+              >
+                <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
+                  <CircleInfoIcon className="w-6 h-6" />
+                </div>
+              </a>
+
               <a
                 className="has-tooltip rounded-full hidden sm:block"
                 aria-label="Show all messages sent/received by this node"

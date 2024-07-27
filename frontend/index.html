@@ -11,6 +11,7 @@
     <meta property="og:url" content="https://meshmap.aws.ketan.dev/" />
     <meta property="og:title" content="Meshtastic Map for Paragliding in India" />
     <meta property="og:description" content="A map of all meshtastic paragliding pilots in India." />
+    <script type="module" async src="./src/index.tsx"></script>
   </head>
 
   <body class="h-full bg-gray-200" style="visibility: hidden">
@@ -19,9 +20,11 @@
         <!-- begin header -->
         <div class="flex bg-white p-2 border-gray-300 border-b h-16">
           <!-- icon -->
-          <div class="hidden sm:block my-auto mr-3 relative">
-            <div class="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-            <img class="w-10 h-10 rounded bg-opacity-90" src="./src/assets/images/icon.png" />
+          <div class="hidden sm:block my-auto mr-3">
+            <div class="relative">
+              <div class="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
+              <img class="w-10 h-10 rounded bg-opacity-90" src="./src/assets/images/icon.png" />
+            </div>
           </div>
           <!-- app info -->
           <div class="my-auto leading-tight">
@@ -38,27 +41,33 @@
           <div class="header-action-buttons flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">
             <!-- about -->
 
-            <a href="javascript:void(0)" class="has-tooltip rounded-full hidden sm:block" aria-label="About" data-cooltipz-dir="bottom">
+            <a
+              href="javascript:void(0)"
+              class="has-tooltip rounded-full hidden sm:block"
+              aria-label="About"
+              data-cooltipz-dir="bottom"
+              id="about-button"
+            >
               <div class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
-                <load src="./src/assets/images/icons/circle-info.svg"/>
+                <load src="./src/assets/images/icons/circle-info.svg" />
               </div>
             </a>
             <!-- search -->
             <a href="javascript:void(0)" class="has-tooltip rounded-full block lg:hidden" aria-label="Search" data-cooltipz-dir="bottom">
               <div id="search-button" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                <load src="./src/assets/images/icons/magnifying-glass.svg"/>
+                <load src="./src/assets/images/icons/magnifying-glass.svg" />
               </div>
             </a>
             <!-- settings -->
             <a href="javascript:void(0)" class="has-tooltip rounded-full" aria-label="Settings" data-cooltipz-dir="bottom">
               <div class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                <load src="./src/assets/images/icons/gears.svg"/>
+                <load src="./src/assets/images/icons/gears.svg" />
               </div>
             </a>
             <!-- reload -->
             <a href="#" class="has-tooltip rounded-full" href="javascript:void(0)" aria-label="Reload" data-cooltipz-dir="bottom">
               <div id="reload-button" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                <load src="./src/assets/images/icons/arrow-rotate-right.svg"/>
+                <load src="./src/assets/images/icons/arrow-rotate-right.svg" />
               </div>
             </a>
           </div>
@@ -69,9 +78,6 @@
         <div id="map" style="width: 100%; height: 100%"></div>
       </div>
     </div>
-
-    <div id="test-node-size" class="absolute -left-[1000] -top-[-1000] w-auto whitespace-nowrap"></div>
-
-    <script type="module" src="./src/index.tsx"></script>
+    <div id="test-node-size" class="invisible -z-1000 relative -left-[1000px] -top-[1000px] w-auto whitespace-nowrap"></div>
   </body>
 </html>

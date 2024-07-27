@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom/client'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
+import ModalApp from './modalapp'
 import { Node } from './nodes-entity'
 import { AllData, SearchBarApp } from './searchbarapp'
 import { cssClassFor, mapLegendTemplate } from './templates/legend'
@@ -56,7 +57,6 @@ _.merge(window, { allData })
 const defaultTileLayer = 'Google Hybrid'
 const mapTiles = new MapTiles(defaultTileLayer)
 
-const map = L.map(document.getElementById('map')!)
 const allNodesLayerGroup = new L.LayerGroup()
 const allRouterNodesLayerGroup = L.markerClusterGroup({
   showCoverageOnHover: false,
@@ -261,11 +261,11 @@ function redraw(map: Map) {
 
   const queryParams = new URLSearchParams(window.location.search)
   const nodeIdParam = queryParams.get('nodeId')
-
+  map.invalidateSize()
   flyToNode(map, nodeIdParam)
 }
 
-function initializeMap() {
+function initializeMap(map: Map) {
   const latLngZoom = getQueryLatLngZoom()
 
   if (latLngZoom) {
@@ -329,9 +329,14 @@ function initializeMap() {
   allClusteredLayerGroup.addTo(map)
 }
 
-initializeMap()
-
 addEventListener('load', function () {
   document.body.removeAttribute('style')
+  const map = L.map(document.getElementById('map')!)
+  initializeMap(map)
   loadAllData(map)
+
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+
+  ReactDOM.createRoot(div).render(<ModalApp />)
 })

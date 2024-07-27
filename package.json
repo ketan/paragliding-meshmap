@@ -1,7 +1,7 @@
 {
   "name": "paragliding-meshmap",
   "type": "module",
-  "license": "",
+  "license": "MIT",
   "scripts": {
     "clean": "rm -rf build frontend/dist",
     "build": "yarn run clean && concurrently yarn:build:fe yarn:build:be && cp -rf frontend/dist build/public",

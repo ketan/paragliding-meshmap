@@ -1,6 +1,8 @@
 import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from './database'
-import { BROADCAST_ADDR, describeNode, nodeUrl, timeAgo } from './ui-util'
+import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
+
+import FilterCircleXMark from './assets/images/icons/filter-circle-xmark.svg?component'
 
 import icon from './assets/images/icon.png'
 
@@ -86,9 +88,20 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
                 )
               </div>
             </div>
-            {/* search bar */}
+            {/* banner */}
             {this.banner()}
             {/* header action buttons */}
+            <div className="header flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">
+              <a
+                className="has-tooltip rounded-full hidden sm:block"
+                aria-label="Show all messages sent/received by this node"
+                data-cooltipz-dir="bottom-right"
+              >
+                <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
+                  <FilterCircleXMark className="w-6 h-6" />
+                </div>
+              </a>
+            </div>
           </div>
           {/* end header */}
 
@@ -127,7 +140,11 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
 
   private banner() {
     const fromNode = { ...this.state.nodes[this.props.from], nodeId: this.props.from }
-    const bannerText = <>Messages sent by {describeNode(fromNode)}</>
+    const bannerText = (
+      <>
+        Messages sent by {fromNode.longName} ({fromNode.shortName})
+      </>
+    )
     return (
       <div className="mx-auto grid content-evenly">
         <span className="text-center align-middle font-bold mx-auto">{bannerText}</span>

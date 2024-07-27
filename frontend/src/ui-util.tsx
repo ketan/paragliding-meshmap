@@ -64,19 +64,6 @@ export function nodeUrl(node: Node | number) {
   return `/?nodeId=${nodeId}`
 }
 
-export function describeNode(node: Partial<NodeNameAttributes>) {
-  return _([
-    node.longName,
-    node.shortName ? ` // Short Name: ${node.shortName}` : null,
-    node.nodeIdHex ? ` // Hex ID ${node.nodeIdHex}` : null,
-    node.nodeId ? ` // Hex ID: !${node.nodeId.toString(16)}` : null,
-    node.nodeId ? ` // Node ID: ${node.nodeId}` : null,
-  ])
-    .compact()
-    .uniq()
-    .join(' ')
-}
-
 export function isMobile() {
   return /Android|webOS|phone|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }

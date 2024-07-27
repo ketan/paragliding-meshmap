@@ -76,6 +76,11 @@ a {
   }
 }
 
-.header a {
-  @apply text-black;
+.header-action-buttons {
+  a {
+    @apply text-black;
+  }
+  svg {
+    @apply w-6 h-6;
+  }
 }

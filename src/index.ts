@@ -4,6 +4,7 @@ import 'dotenv/config'
 //
 import { createDB, Database } from '#config/data-source'
 import { webCLIParse } from '#helpers/cli'
+import { BROADCAST_ADDR } from '#helpers/utils'
 import { mqttProcessor } from '#mqtt/main'
 import { Prisma } from '@prisma/client'
 import bodyParser from 'body-parser'
@@ -11,7 +12,6 @@ import express, { Request, Response } from 'express'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { BROADCAST_ADDR } from '#helpers/utils'
 
 const cliOptions = webCLIParse()
 
@@ -41,12 +41,16 @@ app.use(bodyParser.json())
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+if (isDevelopment) {
+  app.use((await import('compression')).default())
+}
+
 if (!isDevelopment) {
   app.use(express.static(`${__dirname}/public`))
 }
 
 app.get('/api/nodes', async (_req: Request, res: Response) => {
-  res.setHeader('cache-control', 'max-age=60')
+  res.setHeader('cache-control', 'public,max-age=60')
   const allNodes = await db.node.findMany()
   res.json(allNodes)
 })
@@ -65,7 +69,7 @@ app.get('/api/positions/:nodeId', async (req, res) => {
     },
   })
   if (positions.length > 0) {
-    res.setHeader('cache-control', 'max-age=60')
+    res.setHeader('cache-control', 'public,max-age=60')
     res.json(positions)
   } else {
     res.status(404).json({
@@ -78,7 +82,7 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
   const nodeId = req.params.nodeId
   const node = await db.node.findFirst({ where: { nodeId: Number(nodeId) } })
   if (node) {
-    res.setHeader('cache-control', 'max-age=60')
+    res.setHeader('cache-control', 'public,max-age=60')
     res.json(node)
   } else {
     res.status(404).json({
@@ -88,7 +92,7 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
 })
 
 app.get('/api/node/:nodeId/messages', async (req, res) => {
-  res.setHeader('cache-control', 'max-age=60')
+  res.setHeader('cache-control', 'public,max-age=60')
   const nodeId = Number(req.params.nodeId)
   const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
   const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : BROADCAST_ADDR
@@ -122,7 +126,7 @@ app.get('/api/hardware-models', async function (_req: Request, res: Response) {
     },
   })
 
-  res.setHeader('cache-control', 'max-age=60')
+  res.setHeader('cache-control', 'public,max-age=60')
   res.json(hardwareModels)
 })
 

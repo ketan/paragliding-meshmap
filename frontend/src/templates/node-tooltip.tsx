@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { ReactNode } from 'react'
 import { renderToString } from 'react-dom/server'
+import CopyIcon from '../assets/images/icons/copy.svg?component'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { MessageIn, MessageOut } from '../interfaces'
@@ -211,20 +212,8 @@ export function nodeTooltip(node: Node) {
             <a href={link}>
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
-            <Tooltip tooltipText="Copy link to clipboard" className="button border-sm inline-block rounded border ml-3">
-              <svg
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-                className="w-8 h-8 inline-block"
-                data-copy={link}
-              >
-                <path d="M13 10.75h-1.25a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h8.5a2 2 0 0 0 2-2v-8.5a2 2 0 0 0-2-2H19"></path>
-                <path d="M18 12.25h-4a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1ZM13.75 16.25h4.5M13.75 19.25h4.5"></path>
-              </svg>
+            <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3" data-copy={link}>
+              <CopyIcon className="w-6 h-6 inline-block p-1" />
             </Tooltip>
           </>
         )
@@ -236,7 +225,7 @@ export function nodeTooltip(node: Node) {
   ]
 
   return renderToString(
-    <div className="text-base tabular-nums max-w-sm hover:max-w-lg">
+    <div className="lg:text-sm sm:text-xs tabular-nums max-w-sm hover:max-w-lg">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>
@@ -245,12 +234,13 @@ export function nodeTooltip(node: Node) {
 
 function handleButtonClick(event: MouseEvent) {
   const target = event.target as HTMLElement
-  if (target.matches('[data-copy]')) {
-    target.classList.add('motion-safe:animate-ping')
-    const currentURL = new URL(target.getAttribute('data-copy')!, window.location.href)
+  const copyElement = target.closest('[data-copy]')
+  if (copyElement) {
+    copyElement.classList.add('motion-safe:animate-ping')
+    const currentURL = new URL(copyElement.getAttribute('data-copy')!, window.location.href)
     currentURL.hash = ''
     navigator.clipboard.writeText(currentURL.toString())
-    setTimeout(() => target.classList.remove('motion-safe:animate-ping'), 500)
+    setTimeout(() => copyElement.classList.remove('motion-safe:animate-ping'), 500)
   }
 }
 

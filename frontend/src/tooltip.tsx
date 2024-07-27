@@ -7,11 +7,11 @@ type TooltipProps = React.HTMLAttributes<HTMLSpanElement> & {
 
 export class Tooltip extends React.Component<TooltipProps> {
   render() {
-    const { children, tooltipText, className } = this.props
+    const { children, tooltipText, className, ...rest } = this.props
 
     return (
       <>
-        <span className={`has-tooltip font-light ${className || ''}`} aria-label={tooltipText} data-cooltipz-dir="bottom">
+        <span className={`has-tooltip font-light ${className || ''}`} aria-label={tooltipText} data-cooltipz-dir="bottom" {...rest}>
           {children}
         </span>
       </>

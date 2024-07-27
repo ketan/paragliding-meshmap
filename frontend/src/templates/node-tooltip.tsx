@@ -34,7 +34,7 @@ const location = (node: Node) => {
   return (
     <li key="location">
       <span className="font-extrabold me-2">Location:</span>
-      <a target="_blank" href={googleMapsLink(node.latLng)} rel="noreferrer">
+      <a target="_blank" rel="noreferrer" href={googleMapsLink(node.latLng)}>
         {node.latLng.join(', ')}
       </a>{' '}
       {timeAgo(node.positionUpdatedAt, true)}

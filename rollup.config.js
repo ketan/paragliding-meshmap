@@ -47,5 +47,6 @@ export default defineConfig({
     'path',
     'protobufjs/minimal.js',
     'url',
+    'compression',
   ],
 })

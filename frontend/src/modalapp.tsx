@@ -1,4 +1,5 @@
 import { Component, ReactNode } from 'react'
+import icon from './assets/images/icon.png'
 import GitHubIcon from './assets/images/icons/github.svg?component'
 import XMarkIcon from './assets/images/icons/x-mark.svg?component'
 
@@ -68,7 +69,7 @@ export default class ModalApp extends Component<unknown, ModalState> {
                   <div className="w-full mx-auto text-center">
                     <div className="relative mx-auto w-16 h-16 mb-1">
                       <div className="text-4xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-                      <img className="w-16 h-16 rounded bg-opacity-90" src="./src/assets/images/icon.png" />
+                      <img className="w-16 h-16 rounded bg-opacity-90" src={icon} />
                     </div>
                     <h1 className="font-bold">Paragliding Meshtastic Map</h1>
                     <h2>

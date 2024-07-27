@@ -1,6 +1,7 @@
 {
   "name": "paragliding-meshmap",
   "type": "module",
+  "license": "",
   "scripts": {
     "clean": "rm -rf build frontend/dist",
     "build": "yarn run clean && concurrently yarn:build:fe yarn:build:be && cp -rf frontend/dist build/public",
@@ -20,7 +21,7 @@
     "docker:build": "docker build . --progress plain --tag paragliding-meshmap --build-arg GIT_SHA=$(git rev-parse --short HEAD) --tag ghcr.io/ketan/paragliding-meshmap:latest",
     "test": "mocha",
     "test:watch": "nodemon --config nodemon.test.json --exec mocha",
-    "precommit": "yarn run fmt && yarn run lint && yarn run build && yarn run test"
+    "precommit": "concurrently yarn:fmt yarn:lint yarn:build yarn:test"
   },
   "imports": {
     "#entity/*": "./src/entity/*.ts",

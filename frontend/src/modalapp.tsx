@@ -32,7 +32,7 @@ export default class ModalApp extends Component<unknown, ModalState> {
   }
 
   componentWillUnmount(): void {
-    const link = document.querySelector('#about-button')! as HTMLAnchorElement
+    const link = document.querySelector('#about-button') as HTMLAnchorElement
     if (!link) {
       alert(`No about button found!`)
     }

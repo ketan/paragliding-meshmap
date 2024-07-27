@@ -91,16 +91,25 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
   }
 })
 
-app.get('/api/node/:nodeId/messages', async (req, res) => {
+app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
+  function parseTo(to: string | import('qs').ParsedQs | string[] | import('qs').ParsedQs[] | undefined): number | undefined {
+    if (to === 'all') {
+      return
+    } else if (isNaN(Number(to))) {
+      return BROADCAST_ADDR
+    } else {
+      return Number(to)
+    }
+  }
   res.setHeader('cache-control', 'public,max-age=60')
   const nodeId = Number(req.params.nodeId)
   const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
-  const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : BROADCAST_ADDR
+  // const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : BROADCAST_ADDR
 
   const outgoingMessages = await db.textMessages.findMany({
     where: {
       from: nodeId,
-      to: to,
+      to: parseTo(req.query.to),
       createdAt: {
         gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
       },

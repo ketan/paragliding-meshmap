@@ -161,7 +161,7 @@ export function nodeTooltip(node: Node) {
   const showMessagesButton = (
     <p className="text-center mt-3" key="showMessages" data-id="showMessagesButton">
       <a
-        href={`/messages.html?from=${node.nodeId}`}
+        href={`/messages.html?from=${node.nodeId}&to=${BROADCAST_ADDR}`}
         target="_blank"
         rel="noreferrer"
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"

@@ -2,27 +2,96 @@ import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from './database'
 import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
 import FilterCircleXMark from './assets/images/icons/filter-circle-xmark.svg?component'
+import Filter from './assets/images/icons/filter.svg?component'
 import CircleInfoIcon from './assets/images/icons/circle-info.svg?component'
 
 import icon from './assets/images/icon.png'
-
-export type MessagesAppProps = { from: number; to?: number }
-
+import _ from 'lodash'
+import qs from 'qs'
 interface MessagesAppState {
   messages: TextMessagesEntity[]
   nodes: Record<number, NodesEntity>
+  from: number
+  to?: number | string
 }
 
-export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppState> {
+export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   state: MessagesAppState = {
     messages: [],
+    from: 0,
     nodes: {},
   }
 
-  messagesEndRef = React.createRef<HTMLDivElement>()
+  private elementRefForEndOfPage = React.createRef<HTMLDivElement>()
+
+  parseTo(to: string | null): number | string {
+    if (to === 'all') {
+      return `all`
+    } else if (isNaN(Number(to))) {
+      return BROADCAST_ADDR
+    } else {
+      return Number(to)
+    }
+  }
 
   async componentDidMount() {
-    const messagesResponse = await fetch(`/api/node/${this.props.from}/messages?since=P7D&to=${this.props.to || ''}`)
+    const queryParams = new URLSearchParams(window.location.search)
+    const from = queryParams.get('from')
+    const to = queryParams.get('to')
+
+    this.setState(
+      {
+        from: Number(from),
+        to: this.parseTo(to),
+      },
+      async () => {
+        await this.loadData()
+      }
+    )
+
+    this.scrollToBottom()
+  }
+
+  toggleFilter() {
+    this.setState(
+      (current) => {
+        if (current.to === 'all') {
+          return { ...current, to: BROADCAST_ADDR }
+        } else {
+          return { ...current, to: `all` }
+        }
+      },
+      async () => {
+        const queryString = qs.stringify(
+          _.omitBy(
+            {
+              to: this.state.to,
+              from: this.state.from,
+            },
+            _.isNil
+          )
+        )
+
+        const url = new URL(window.location.href)
+        url.search = queryString
+        window.history.replaceState(null, '', url.toString())
+
+        await this.loadData()
+      }
+    )
+  }
+
+  async loadData() {
+    const queryString = qs.stringify(
+      _.omitBy(
+        {
+          since: `P7D`,
+          to: this.state.to,
+        },
+        _.isNil
+      )
+    )
+    const messagesResponse = await fetch(`/api/node/${this.state.from}/sent-messages?${queryString}`)
     if (messagesResponse.status == 200 || messagesResponse.status == 304) {
       const messages = (await messagesResponse.json()) as TextMessagesEntity[]
       this.setState({ messages })
@@ -33,8 +102,6 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
         await this.fetchNode(eachMessage.to)
       }
     }
-
-    this.scrollToBottom()
   }
 
   async fetchNode(nodeId: number) {
@@ -59,7 +126,7 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
   }
 
   scrollToBottom = () => {
-    this.messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    this.elementRefForEndOfPage.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   render(): ReactNode {
@@ -105,12 +172,16 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
               </a>
 
               <a
+                href="#"
                 className="has-tooltip rounded-full hidden sm:block"
-                aria-label="Show all messages sent/received by this node"
+                aria-label={
+                  this.state.to === BROADCAST_ADDR ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`
+                }
                 data-cooltipz-dir="bottom-right"
+                onClick={this.toggleFilter.bind(this)}
               >
                 <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                  <FilterCircleXMark className="w-6 h-6" />
+                  {this.state.to === BROADCAST_ADDR ? <FilterCircleXMark className="w-6 h-6" /> : <Filter className="w-6 h-6" />}
                 </div>
               </a>
             </div>
@@ -145,13 +216,13 @@ export class MessagesApp extends React.Component<MessagesAppProps, MessagesAppSt
           </div>
         </div>
 
-        <div ref={this.messagesEndRef} />
+        <div ref={this.elementRefForEndOfPage} />
       </div>
     )
   }
 
   private banner() {
-    const fromNode = { ...this.state.nodes[this.props.from], nodeId: this.props.from }
+    const fromNode = { ...this.state.nodes[this.state.from], nodeId: this.state.from }
     const bannerText = (
       <>
         Messages sent by {fromNode.longName} ({fromNode.shortName})

@@ -214,7 +214,7 @@ export function nodeTooltip(node: Node) {
   ]
 
   return renderToString(
-    <div className="lg:text-sm sm:text-xs tabular-nums max-w-[300px] hover:max-w-[300px] text-balance">
+    <div className="lg:text-sm sm:text-xs max-w-[300px] hover:max-w-[300px] min-w-[300px] hover:min-w-[300px] text-wrap">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

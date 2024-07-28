@@ -113,7 +113,7 @@ async function loadAllData(map: Map) {
   )
 }
 
-function getIconFor(node: Node) {
+function getIconClassFor(node: Node) {
   let icon = cssClassFor('disconnected')
   if (node.mqttConnectionState === 'online') {
     icon = cssClassFor('online')
@@ -186,7 +186,7 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
     return
   }
   const iconSize = getTextSize(node)
-  const tooltipOffset = !isMobile() ? new L.Point(iconSize[0] / 2 + 5, 0) : new L.Point(0, 0)
+  const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 5, 0) : new L.Point(0, 0)
   if (node.offsetLatLng) {
     // const latlng = [node.latitude, node.longitude] as [number, number]
 
@@ -209,9 +209,10 @@ function redraw(map: Map) {
 
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
-        className: getIconFor(eachNode),
+        className: getIconClassFor(eachNode),
         iconSize: iconSize,
         html: nodePositionView(eachNode),
+        iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
       }),
       zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
     })
@@ -227,7 +228,7 @@ function redraw(map: Map) {
       allRouterNodesLayerGroup.addLayer(marker)
     }
 
-    const tooltipOffset = !isMobile() ? new L.Point(iconSize[0] / 2 + 5, 0) : new L.Point(0, 0)
+    const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 5, 0) : new L.Point(0, 0)
 
     if (!isMobile()) {
       marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: tooltipOffset })

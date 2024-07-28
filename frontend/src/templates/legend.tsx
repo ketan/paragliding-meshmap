@@ -21,13 +21,13 @@ export const mapLegendTemplate = renderToString(
 )
 
 export function cssClassFor(str: 'online' | 'offline' | 'disconnected') {
-  const commonClasses = `bg-white rounded-full border-4 border-none ring-offset-4 ring-4`
+  const commonClasses = `text-white rounded-full border-4 border-none marker-location node-status-${str}`
 
   if (str === 'online') {
-    return `ring-green-600 ${commonClasses}`
+    return `bg-green-600 ${commonClasses}`
   } else if (str === 'disconnected') {
-    return `ring-purple-600 ${commonClasses}`
+    return `bg-purple-600 ${commonClasses}`
   } else if (str === 'offline') {
-    return `ring-red-600 ${commonClasses}`
+    return `bg-red-600 ${commonClasses}`
   }
 }

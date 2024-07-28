@@ -1,3 +1,4 @@
+import L from 'leaflet'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { NodesEntity } from './database'
@@ -79,7 +80,7 @@ export function getTextSize(node: Node) {
     height = Math.max(height, h)
   }
 
-  return [width + 10, height - 4] as [number, number]
+  return new L.Point(width + 15, height)
 }
 
 const charSizes: Record<string, [number, number]> = {}

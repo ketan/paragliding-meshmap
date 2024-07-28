@@ -66,3 +66,21 @@ a.button {
 .z-sidebar {
   @apply z-[1005];
 }
+
+.marker-location {
+  &::after {
+    @apply block w-0 border-[8px] border-solid border-transparent border-b-0 absolute -bottom-[8px];
+    content: '';
+    left: calc(50% - 8px);
+
+    &.node-status-offline {
+      @apply border-t-red-600;
+    }
+    &.node-status-online {
+      @apply border-t-green-600;
+    }
+    &.node-status-disconnected {
+      @apply border-t-purple-600;
+    }
+  }
+}

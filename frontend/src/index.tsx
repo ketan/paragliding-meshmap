@@ -337,6 +337,7 @@ addEventListener('load', function () {
   loadAllData(map)
 
   const div = document.createElement('div')
+  div.classList.add('modal-app')
   document.body.appendChild(div)
 
   ReactDOM.createRoot(div).render(<ModalApp />)

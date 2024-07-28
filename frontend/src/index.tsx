@@ -239,7 +239,6 @@ function redraw(map: Map) {
     marker.on('click', () => {
       closeAllTooltips(map)
       closeAllPopups(map)
-      logger(`Selected node`, eachNode)
 
       map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip

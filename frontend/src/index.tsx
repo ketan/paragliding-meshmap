@@ -186,7 +186,7 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
     return
   }
   const iconSize = getTextSize(node)
-  const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 5, 0) : new L.Point(0, 0)
+  const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
   if (node.offsetLatLng) {
     // const latlng = [node.latitude, node.longitude] as [number, number]
 
@@ -228,12 +228,13 @@ function redraw(map: Map) {
       allRouterNodesLayerGroup.addLayer(marker)
     }
 
-    const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 5, 0) : new L.Point(0, 0)
+    const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
 
     if (!isMobile()) {
       marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: tooltipOffset })
     }
     marker.on('click', () => {
+      // close tooltip on click to prevent tooltip and popup showing at same time
       marker.closeTooltip()
     })
     marker.on('click', () => {

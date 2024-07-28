@@ -5,7 +5,6 @@ import { renderToString } from 'react-dom/server'
 import CopyIcon from '../assets/images/icons/copy.svg?component'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
-import { MessageIn, MessageOut } from '../interfaces'
 import { Node } from '../nodes-entity'
 import { Tooltip } from '../tooltip'
 import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
@@ -27,19 +26,26 @@ function mqttStatus(node: Node) {
 }
 
 const location = (node: Node) => {
-  if (!node.latLng) {
-    return
-  }
-
-  return (
-    <li key="location">
-      <span className="font-extrabold me-2">Location:</span>
-      <a target="_blank" rel="noreferrer" href={googleMapsLink(node.latLng)}>
-        {node.latLng.join(', ')}
-      </a>{' '}
-      {timeAgo(node.positionUpdatedAt, true)}
-    </li>
-  )
+  const items = [
+    keyValue({
+      key: `Location`,
+      renderer: () => {
+        if (!node.latLng) {
+          return
+        }
+        return (
+          <>
+            <a target="_blank" rel="noreferrer" href={googleMapsLink(node.latLng)}>
+              {node.latLng.join(', ')}
+            </a>{' '}
+            {timeAgo(node.positionUpdatedAt, true)}
+          </>
+        )
+      },
+    }),
+    keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
+  ]
+  return items
 }
 
 type Value = string | number | ReactNode | ReactNode[]
@@ -51,6 +57,8 @@ type KeyValueType<T> = {
 } & ({ renderer: () => Value } | { value: T })
 
 const keyValue = function <T>(args: KeyValueType<T>) {
+  const title = <span className="font-extrabold me-1">{args.key}:</span>
+
   if ('renderer' in args) {
     const value = args.renderer()
     if (value === null || value === undefined) {
@@ -58,7 +66,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
     }
     return (
       <li key={args.key}>
-        <span className="font-extrabold me-2">{args.key}:</span>
+        {title}
         {value}
       </li>
     )
@@ -72,7 +80,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
     if (typeof args.value === 'string') {
       return (
         <li key={args.key}>
-          <span className="font-extrabold me-2">{args.key}:</span>
+          {title}
           {args.value}
         </li>
       )
@@ -80,7 +88,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
       if (Number.isInteger(args.value)) {
         return (
           <li key={args.key}>
-            <span className="font-extrabold me-2">{args.key}:</span>
+            {title}
             {args.value}
             {args.unit}
           </li>
@@ -88,7 +96,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
       } else {
         return (
           <li key={args.key}>
-            <span className="font-extrabold me-2">{args.key}:</span>
+            {title}
             {Number(args.value).toFixed(args.precision)}
             {args.unit}
           </li>
@@ -98,57 +106,39 @@ const keyValue = function <T>(args: KeyValueType<T>) {
   }
 }
 
-function renderMessage(message: MessageIn | MessageOut) {
-  return (
-    <li className="message-bubble" key={message.time}>
-      <span className="text-sm">{message.text}</span> {timeAgo(message.time, true)}
-    </li>
-  )
-}
-
-function lastMessages(node: Node) {
+function lastMessage(node: Node) {
   if (!node.outbox || node.outbox.length === 0) {
     return
   }
 
-  const top5RecentMessages = node.outbox
+  const mostRecentMessage = node.outbox
     .filter((msg) => ('from' in msg && msg.from === BROADCAST_ADDR) || ('to' in msg && msg.to === BROADCAST_ADDR))
     .sort((a, b) => DateTime.fromISO(a.time).diff(DateTime.fromISO(b.time)).toMillis())
     .reverse()
-    .slice(0, 5)
+    .at(0)
 
-  if (top5RecentMessages.length === 0) {
+  if (!mostRecentMessage) {
     return
   }
 
-  return (
-    <li className="text-wrap" key="lastMessages">
-      <span className="font-extrabold me-2">Recent outgoing LongFast messages</span>
-      <ul className="list-inside ml-1">{top5RecentMessages.map(renderMessage)}</ul>
-    </li>
-  )
+  return keyValue({
+    key: 'Last message',
+    renderer: () => (
+      <>
+        {mostRecentMessage.text} {timeAgo(mostRecentMessage.time, true)}
+      </>
+    ),
+  })
 }
 
 export function nodeTooltip(node: Node) {
-  const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-40 mx-auto" src={imageForModel(node.hardwareModel)} /> : null
-  const role = node.role ? NodeRoleIDToName[node.role] : null
+  const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} /> : null
+  const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
+  const padding = () => <li key={window.crypto.randomUUID()} className="mt-1.5"></li>
 
-  const padding = () => <li key={window.crypto.randomUUID()} className="mt-3"></li>
-
-  const nodeName = (
-    <li key="longName">
-      <span className="font-extrabold me-2">Long Name:</span>
-      <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span>
-    </li>
-  )
-
-  const nodeRole = (
-    <li key="nodeRole">
-      <span className="font-extrabold me-2">Role:</span> {role}
-    </li>
-  )
+  const nodeName = keyValue({ key: 'Long Name', renderer: () => <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span> })
 
   const showDetailsButton = (
     <p className="text-center mt-3" key="showDetails">
@@ -175,12 +165,10 @@ export function nodeTooltip(node: Node) {
     nodeName,
     keyValue({ key: 'Short Name', value: node.shortName }),
     keyValue({ key: 'MQTT Status', renderer: () => mqttStatus(node) }),
-    nodeRole,
     padding(),
     location(node),
-    keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
     padding(),
-    lastMessages(node),
+    lastMessage(node),
     padding(),
     keyValue({ key: 'Hardware', value: hardwareModel }),
     keyValue({ key: 'Firmware', value: node.firmwareVersion }),
@@ -213,19 +201,20 @@ export function nodeTooltip(node: Node) {
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
             <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3" data-copy={link}>
-              <CopyIcon className="w-6 h-6 inline-block p-1" />
+              <CopyIcon className="w-5 h-5 inline-block p-0.5" />
             </Tooltip>
           </>
         )
       },
     }),
+    keyValue({ key: 'Role', value: role }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     showDetailsButton,
     showMessagesButton,
   ]
 
   return renderToString(
-    <div className="lg:text-sm sm:text-xs tabular-nums max-w-sm hover:max-w-lg">
+    <div className="lg:text-sm sm:text-xs tabular-nums max-w-[300px] hover:max-w-[300px] text-balance">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

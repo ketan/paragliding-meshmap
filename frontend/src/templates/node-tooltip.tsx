@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { ReactNode } from 'react'
-import { renderToString } from 'react-dom/server'
 import CopyIcon from '../assets/images/icons/copy.svg?component'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
@@ -213,8 +212,8 @@ export function nodeTooltip(node: Node) {
     showMessagesButton,
   ]
 
-  return renderToString(
-    <div className="lg:text-sm sm:text-xs max-w-[300px] hover:max-w-[300px] min-w-[300px] hover:min-w-[300px] text-wrap">
+  return (
+    <div className="lg:text-sm sm:text-xs text-wrap">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

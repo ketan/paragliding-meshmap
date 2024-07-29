@@ -1,7 +1,7 @@
 import L from 'leaflet'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
-import { NodesEntity } from './database'
+import { NodesEntity } from './db-entities'
 import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
 import { Tooltip } from './tooltip'

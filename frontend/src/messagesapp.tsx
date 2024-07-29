@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react'
-import { NodesEntity, TextMessagesEntity } from './database'
 import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
 import FilterCircleXMark from './assets/images/icons/filter-circle-xmark.svg?component'
 import Filter from './assets/images/icons/filter.svg?component'
@@ -8,6 +7,7 @@ import CircleInfoIcon from './assets/images/icons/circle-info.svg?component'
 import icon from './assets/images/icon.png'
 import _ from 'lodash'
 import qs from 'qs'
+import { NodesEntity, TextMessagesEntity } from './db-entities'
 
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
 

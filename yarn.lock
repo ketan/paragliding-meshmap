@@ -552,13 +552,6 @@
   dependencies:
     "@prisma/debug" "5.9.1"
 
-"@prisma/generator-helper@^5.7.0":
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/@prisma/generator-helper/-/generator-helper-5.17.0.tgz#e499b748f77225f4bf78ad3694a5c58a5ece27bd"
-  integrity sha512-UcYpNjjQNVHAjIxgjfXnF4fcKU7B2vuzG1L27xIV81xQoGSbxg7v670URBhd0/ZoE8v2Itj2bbuyezY1ViHVaA==
-  dependencies:
-    "@prisma/debug" "5.17.0"
-
 "@prisma/get-platform@5.17.0":
   version "5.17.0"
   resolved "https://registry.yarnpkg.com/@prisma/get-platform/-/get-platform-5.17.0.tgz#89fdcae2adddebbbf0e7bd0474a6c49d6023519b"
@@ -4298,13 +4291,6 @@ prettier@^3.3.2:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.3.3.tgz#30c54fe0be0d8d12e6ae61dbb10109ea00d53105"
   integrity sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==
-
-prisma-generator-typescript-interfaces@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/prisma-generator-typescript-interfaces/-/prisma-generator-typescript-interfaces-1.4.0.tgz#dc87927ad460e610a0fd0eeb90d080c22143fa03"
-  integrity sha512-wPzkXn+dovhsMr5SJYZpg7Eo9O5625YuN7OSX/5FiWxDfMmHOTBcnufo0mFGBKC7YVwhMRGOjsOvItRdxkaPvw==
-  dependencies:
-    "@prisma/generator-helper" "^5.7.0"
 
 prisma-json-types-generator@^3.0.4:
   version "3.0.4"

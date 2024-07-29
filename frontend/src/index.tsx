@@ -15,6 +15,7 @@ import _ from 'lodash'
 import { DateTime, Duration } from 'luxon'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { renderToString } from 'react-dom/server'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { MapTiles } from './map-providers'
@@ -195,7 +196,7 @@ function flyToNode(map: L.Map, nodeId?: string | number | null) {
       duration: 1,
     })
 
-    map.openTooltip(nodeTooltip(node), node.offsetLatLng, {
+    map.openTooltip(renderToString(nodeTooltip(node)), node.offsetLatLng, {
       interactive: true, // allow clicking etc inside tooltip
       permanent: true, // don't dismiss when clicking
       offset: tooltipOffset,
@@ -231,17 +232,18 @@ function redraw(map: Map) {
     const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
 
     if (!isMobile()) {
-      marker.bindTooltip(() => nodeTooltip(eachNode), { interactive: true, offset: tooltipOffset })
+      marker.bindTooltip(() => renderToString(nodeTooltip(eachNode)), { interactive: true, offset: tooltipOffset })
     }
     marker.on('click', () => {
       // close tooltip on click to prevent tooltip and popup showing at same time
       marker.closeTooltip()
     })
+
     marker.on('click', () => {
       closeAllTooltips(map)
       closeAllPopups(map)
 
-      map.openTooltip(nodeTooltip(eachNode), eachNode.offsetLatLng!, {
+      map.openTooltip(renderToString(nodeTooltip(eachNode)), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip
         permanent: true, // don't dismiss when clicking
         offset: tooltipOffset,
@@ -340,5 +342,6 @@ addEventListener('load', function () {
   div.classList.add('modal-app')
   document.body.appendChild(div)
 
-  ReactDOM.createRoot(div).render(<ModalApp />)
+  const root = ReactDOM.createRoot(div)
+  root.render(<ModalApp />)
 })

@@ -2,6 +2,6 @@
   "client": "postgresql",
   "useNullAsDefault": true,
   "connection": {
-    "database": "paragliding-meshmap"
+    "database": "meshmap-prisma"
   }
 }

@@ -1,4 +1,4 @@
-import { NodesEntity } from './database'
+import { NodesEntity } from './db-entities'
 
 export type PointTuple = [number, number]
 

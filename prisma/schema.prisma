@@ -12,11 +12,6 @@ generator json {
   provider = "prisma-json-types-generator"
 }
 
-generator typescriptInterfaces {
-  provider = "prisma-generator-typescript-interfaces"
-  dateType = "string"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

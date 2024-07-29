@@ -8,8 +8,11 @@ import CircleInfoIcon from './assets/images/icons/circle-info.svg?component'
 import icon from './assets/images/icon.png'
 import _ from 'lodash'
 import qs from 'qs'
+
+type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
+
 interface MessagesAppState {
-  messages: TextMessagesEntity[]
+  messages: Messages[]
   nodes: Record<number, NodesEntity>
   from: number
   to?: number | string
@@ -93,7 +96,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     )
     const messagesResponse = await fetch(`/api/node/${this.state.from}/sent-messages?${queryString}`)
     if (messagesResponse.status == 200 || messagesResponse.status == 304) {
-      const messages = (await messagesResponse.json()) as TextMessagesEntity[]
+      const messages = (await messagesResponse.json()) as Messages[]
       this.setState({ messages })
 
       for (let index = 0; index < messages.length; index++) {

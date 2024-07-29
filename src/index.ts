@@ -104,9 +104,15 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
   res.setHeader('cache-control', 'public,max-age=60')
   const nodeId = Number(req.params.nodeId)
   const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
-  // const to = typeof req.query.to === 'string' && Number(req.query.to) > 0 ? Number(req.query.to) : BROADCAST_ADDR
 
   const outgoingMessages = await db.textMessages.findMany({
+    select: {
+      id: true,
+      from: true,
+      to: true,
+      text: true,
+      createdAt: true,
+    },
     where: {
       from: nodeId,
       to: parseTo(req.query.to),

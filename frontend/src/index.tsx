@@ -26,6 +26,8 @@ import { cssClassFor, mapLegendTemplate } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { nodeTooltip } from './templates/node-tooltip'
 import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import { NodeDetailsApp } from './nodedetailsapp'
+import MapApp from './mapapp'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -271,11 +273,13 @@ function redraw(map: Map) {
 function initializeMap(map: Map) {
   const latLngZoom = getQueryLatLngZoom()
 
+  // copied
   if (latLngZoom) {
     map.setView([latLngZoom.lat, latLngZoom.lng], latLngZoom.zoom || 5)
   } else {
     map.setView([21, 79 + 360], 5)
   }
+  // copied
 
   map.on('moveend zoomend', function () {
     const latLng = map.getCenter()
@@ -334,14 +338,45 @@ function initializeMap(map: Map) {
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')
-  const map = L.map(document.getElementById('map')!)
-  initializeMap(map)
-  loadAllData(map)
+  const mapElem = document.getElementById('map')!
+  ReactDOM.createRoot(mapElem).render(<MapApp mapType="Google Hybrid" />)
+  // initializeMap(map)
+  // loadAllData(map)
 
-  const div = document.createElement('div')
-  div.classList.add('modal-app')
-  document.body.appendChild(div)
+  // const div = document.createElement('div')
+  // div.classList.add('modal-app')
+  // document.body.appendChild(div)
 
-  const root = ReactDOM.createRoot(div)
-  root.render(<ModalApp />)
+  // const root = ReactDOM.createRoot(div)
+  // root.render(<ModalApp />)
 })
+
+function handleButtonClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+
+  const showDetailsButton = target.closest('[data-node-id]')
+  if (showDetailsButton) {
+    const nodeId = Number(showDetailsButton.getAttribute('data-node-id')!)
+    const div = document.createElement('div')
+    div.classList.add('node-details')
+    document.body.appendChild(div)
+    const node = allData.allNodes.find((eachNode) => eachNode.nodeId === nodeId)!
+
+    const root = ReactDOM.createRoot(div)
+    root.render(
+      <NodeDetailsApp
+        node={node}
+        ondismiss={() =>
+          setTimeout(() => {
+            root.unmount()
+            div.remove()
+          }, 100)
+        }
+      >
+        {nodeTooltip(node)}
+      </NodeDetailsApp>
+    )
+  }
+}
+
+document.addEventListener('click', handleButtonClick)

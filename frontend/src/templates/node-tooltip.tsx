@@ -141,7 +141,10 @@ export function nodeTooltip(node: Node) {
 
   const showDetailsButton = (
     <p className="text-center mt-3" key="showDetails">
-      <a className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
+      <a
+        className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
+        data-node-id={node.nodeId}
+      >
         Show details
       </a>
     </p>

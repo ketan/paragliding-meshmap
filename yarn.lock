@@ -4438,6 +4438,13 @@ react-is@^16.13.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-leaflet-custom-control@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-leaflet-custom-control/-/react-leaflet-custom-control-1.4.0.tgz#3f3a644c26bdedd10a44e57671d6958c6ff0a2ad"
+  integrity sha512-E5sM7avHdFApzXTW7GvdPbhgBonu3j0lr1/DzZWz9OMzGbnSTkYPhE0VIYHAyOBvUoZU/TWjtkyVPS68GyeDiw==
+  dependencies:
+    react-leaflet "^4.2.1"
+
 react-leaflet@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-4.2.1.tgz#c300e9eccaf15cb40757552e181200aa10b94780"

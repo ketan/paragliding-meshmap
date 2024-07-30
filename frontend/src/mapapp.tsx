@@ -3,6 +3,7 @@ import React, { Component, ReactNode } from 'react'
 import { LayersControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { MapEventHandler } from './map-events-handler'
 import { sanitizeLatLong, sanitizeNumber } from './ui-util'
+import Control from 'react-leaflet-custom-control'
 
 interface LatLngZoom {
   lat: number
@@ -83,12 +84,39 @@ export default class MapApp extends Component<MapProps, MapState> {
           })}
         </LayersControl>
         <MapEventHandler closeAllToolTipsAndPopupsAndPopups={(map) => this.closeAllToolTipsAndPopupsAndPopups(map)} />
+
         <Marker position={[this.state.mapCenter.lat, this.state.mapCenter.lng]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
+
+        {this.legendControl()}
       </MapContainer>
+    )
+  }
+
+  private legendControl() {
+    return (
+      <Control position="bottomleft">
+        <div className="leaflet-control-layers p-4">
+          <div>
+            <h3 className="text-2xl">Legend</h3>
+          </div>
+          <div className="relative pl-4">
+            <span className={`absolute h-3 w-3 rounded-full bg-green-600 border-3 top-0.5 left-0`}></span>
+            Connected
+          </div>
+          <div className="relative pl-4">
+            <span className={`absolute h-3 w-3 rounded-full bg-purple-600 border-3 top-0.5 left-0`}></span>
+            Disconnected
+          </div>
+          <div className="relative pl-4">
+            <span className={`absolute h-3 w-3 rounded-full bg-red-600 border-3 top-0.5 left-0`}></span>
+            Offline Too Long
+          </div>
+        </div>
+      </Control>
     )
   }
 

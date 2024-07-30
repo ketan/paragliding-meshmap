@@ -69,7 +69,7 @@ const allClusteredLayerGroup = L.markerClusterGroup({
   showCoverageOnHover: false,
   disableClusteringAtZoom: 10,
 })
-const legendOverlayGroup = new L.LayerGroup()
+// const legendOverlayGroup = new L.LayerGroup()
 const legend = new L.Control({ position: 'bottomleft' })
 legend.onAdd = function (_map) {
   const div = L.DomUtil.create('div', 'leaflet-control-layers')
@@ -136,42 +136,6 @@ export interface LatLngZoom {
   lat: number
   lng: number
   zoom?: number
-}
-
-function getQueryLatLngZoom() {
-  const queryParams = new URLSearchParams(window.location.search)
-  const queryLat = queryParams.get('lat')
-  const queryLng = queryParams.get('lng')
-  const queryZoom = sanitizeNumber(queryParams.get('zoom'))
-
-  const latLng = sanitizeLatLong(queryLat, queryLng)
-  if (latLng) {
-    const result: LatLngZoom = {
-      lat: latLng[0],
-      lng: latLng[1],
-    }
-
-    if (queryZoom) {
-      result.zoom = queryZoom
-    }
-    return result
-  }
-}
-
-function closeAllPopups(map: Map) {
-  map.eachLayer(function (layer) {
-    if (layer.options.pane === 'popupPane') {
-      layer.removeFrom(map)
-    }
-  })
-}
-
-function closeAllTooltips(map: Map) {
-  map.eachLayer(function (layer) {
-    if (layer.options.pane === 'tooltipPane') {
-      layer.removeFrom(map)
-    }
-  })
 }
 
 function findNodeById(nodes: Node[], nodeId?: number | string | null) {
@@ -242,8 +206,8 @@ function redraw(map: Map) {
     })
 
     marker.on('click', () => {
-      closeAllTooltips(map)
-      closeAllPopups(map)
+      X__closeAllTooltips(map)
+      X__closeAllPopups(map)
 
       map.openTooltip(renderToString(nodeTooltip(eachNode)), eachNode.offsetLatLng!, {
         interactive: true, // allow clicking etc inside tooltip
@@ -253,9 +217,9 @@ function redraw(map: Map) {
     })
   })
 
-  if (!getQueryLatLngZoom()) {
+  if (!X__getQueryLatLngZoom()) {
     navigator.geolocation.getCurrentPosition((pos) => {
-      if (!getQueryLatLngZoom()) {
+      if (!X__getQueryLatLngZoom()) {
         const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
         if (latLng) {
           map.flyTo(latLng, 20, { animate: false })
@@ -271,15 +235,15 @@ function redraw(map: Map) {
 }
 
 function initializeMap(map: Map) {
-  const latLngZoom = getQueryLatLngZoom()
+  const latLngZoom = X__getQueryLatLngZoom()
 
-  // copied
   if (latLngZoom) {
-    map.setView([latLngZoom.lat, latLngZoom.lng], latLngZoom.zoom || 5)
+    // copied
+    map.setView([latLngZoom.lat, latLngZoom.lng], latLngZoom.zoom || 5) // copied
   } else {
-    map.setView([21, 79 + 360], 5)
-  }
-  // copied
+    // copied
+    map.setView([21, 79 + 360], 5) // copied
+  } // copied
 
   map.on('moveend zoomend', function () {
     const latLng = map.getCenter()
@@ -300,16 +264,17 @@ function initializeMap(map: Map) {
       return
     }
 
-    closeAllTooltips(map)
-    closeAllPopups(map)
+    X__closeAllTooltips(map)
+    X__closeAllPopups(map)
   })
 
   mapTiles.tileLayer().addTo(map)
-  legendOverlayGroup.addTo(map)
-  map.addControl(legend)
 
-  const neighboursOverlayGroup = new L.LayerGroup()
-  const waypointsLayerGroup = new L.LayerGroup()
+  // legendOverlayGroup.addTo(map)
+  // map.addControl(legend)
+
+  // const neighboursOverlayGroup = new L.LayerGroup()
+  // const waypointsLayerGroup = new L.LayerGroup()
 
   L.control
     .groupedLayers(
@@ -323,8 +288,8 @@ function initializeMap(map: Map) {
         },
         Overlays: {
           // Legend: legendOverlayGroup,
-          Neighbours: neighboursOverlayGroup,
-          Waypoints: waypointsLayerGroup,
+          // Neighbours: neighboursOverlayGroup,
+          // Waypoints: waypointsLayerGroup,
         },
       },
       {
@@ -380,3 +345,46 @@ function handleButtonClick(event: MouseEvent) {
 }
 
 document.addEventListener('click', handleButtonClick)
+
+////////////////
+////////////////
+////////////////
+////////////////
+////////////////
+////////////////
+
+function X__getQueryLatLngZoom() {
+  const queryParams = new URLSearchParams(window.location.search)
+  const queryLat = queryParams.get('lat')
+  const queryLng = queryParams.get('lng')
+  const queryZoom = sanitizeNumber(queryParams.get('zoom'))
+
+  const latLng = sanitizeLatLong(queryLat, queryLng)
+  if (latLng) {
+    const result: LatLngZoom = {
+      lat: latLng[0],
+      lng: latLng[1],
+    }
+
+    if (queryZoom) {
+      result.zoom = queryZoom
+    }
+    return result
+  }
+}
+
+function X__closeAllPopups(map: Map) {
+  map.eachLayer(function (layer) {
+    if (layer.options.pane === 'popupPane') {
+      layer.removeFrom(map)
+    }
+  })
+}
+
+function X__closeAllTooltips(map: Map) {
+  map.eachLayer(function (layer) {
+    if (layer.options.pane === 'tooltipPane') {
+      layer.removeFrom(map)
+    }
+  })
+}

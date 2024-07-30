@@ -83,7 +83,7 @@
     "protobufjs-cli": "^1.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-leaflet-custom-control": "^1.4.0",
+    "react-leaflet": "^4.2.1",
     "rollup": "^4.18.1",
     "sass": "^1.77.6",
     "tailwindcss": "^3.4.4",
@@ -112,7 +112,6 @@
     "prisma": "^5.17.0",
     "prisma-json-types-generator": "^3.0.4",
     "protobufjs": "^7.3.2",
-    "react-leaflet": "^4.2.1",
     "reflect-metadata": "^0.2.2",
     "supports-color": "^9.4.0"
   },

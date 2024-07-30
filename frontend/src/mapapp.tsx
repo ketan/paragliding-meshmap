@@ -1,10 +1,12 @@
-import { Map } from 'leaflet'
+import L, { Map } from 'leaflet'
 import { DateTime, Duration } from 'luxon'
-import React, { Component, ReactNode } from 'react'
-import { LayersControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import React, { Component } from 'react'
+import { LayersControl } from 'react-leaflet'
 import Control from 'react-leaflet-custom-control'
+import { CreateMarkers } from './clusteredgroup'
 import { HardwareModel } from './interfaces'
-import { MapEventHandler } from './map-events-handler'
+import { mapEventsHandler } from './map-events-handler'
+import { FastMap, MapTypes, MAX_ZOOM } from './map-fast'
 import { Node } from './nodes-entity'
 import { sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 
@@ -14,20 +16,8 @@ interface LatLngZoom {
   zoom?: number
 }
 
-type MapTypes = 'Open Street Map' | 'Google Satellite' | 'Google Hybrid'
-
 interface MapProps {
   mapType: MapTypes
-}
-
-enum GoogleMapLayers {
-  roadsBuildings = 'm',
-  roadsTerrain = 'p',
-  alteredRoadmap = 'r',
-  satelliteOnly = 's',
-  terrainOnly = 't',
-  hybridRoadsSatellite = 'y',
-  roadsOnly = 'h',
 }
 
 interface UIConfig {
@@ -51,8 +41,11 @@ interface MapState extends Partial<AllData>, UIConfig {
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
-  readonly MAX_ZOOM = 22
   map = React.createRef<L.Map>()
+  readonly allClusteredLayerGroup = L.markerClusterGroup({
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 10,
+  })
 
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
@@ -115,37 +108,23 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   render() {
-    if (!this.state.mapCenter) {
-      return <div>Initializing map...</div>
+    if (!this.state.mapCenter || !this.state.newerNodesWithPosition) {
+      return <div>Loading map...</div>
     }
 
     return (
-      <MapContainer
-        ref={this.map}
+      <FastMap
         center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
         zoom={this.state.mapCenter.zoom}
-        maxZoom={this.MAX_ZOOM}
-        style={{ width: '100%', height: '100%' }}
+        maxZoom={MAX_ZOOM}
+        closeAllToolTipsAndPopupsAndPopups={this.closeAllToolTipsAndPopupsAndPopups}
       >
-        <MapEventHandler closeAllToolTipsAndPopupsAndPopups={(map) => this.closeAllToolTipsAndPopupsAndPopups(map)} />
-        {this.layers()}
-        {this.legendControl()}
+        {/* <MapEventHandler closeAllToolTipsAndPopupsAndPopups={(map) => this.closeAllToolTipsAndPopupsAndPopups(map)} /> */}
 
-        {this.state.newerNodesWithPosition?.map((eachNode) => {
-          return (
-            <Marker key={eachNode.id} position={eachNode.latLng!}>
-              <Popup>
-                <div>
-                  <h3 className="text-2xl">{eachNode.longName || eachNode.shortName || eachNode.nodeIdHex}</h3>
-                  <div>
-                    <a href={`/node/${eachNode.nodeId}`}>Details</a>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          )
-        })}
-      </MapContainer>
+        {/* {this.layers()}
+        {this.legendControl()} */}
+        {/* <CreateMarkers nodes={this.state.newerNodesWithPosition} configNodesOfflineAge={this.state.configNodesOfflineAge} /> */}
+      </FastMap>
     )
   }
 
@@ -197,39 +176,6 @@ export default class MapApp extends Component<MapProps, MapState> {
 
   private layerForName(name: MapTypes) {
     return this.allLayers[name]
-  }
-
-  allLayers: Record<MapTypes, ReactNode> = {
-    'Open Street Map': (
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        maxZoom={this.MAX_ZOOM} // increase from 18 to 22
-        maxNativeZoom={this.MAX_ZOOM}
-        minZoom={2}
-        attribution={`Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Data from <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | Version - ${__GIT_SHA__}`}
-      />
-    ),
-
-    'Google Satellite': (
-      <TileLayer
-        url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-        maxZoom={this.MAX_ZOOM}
-        maxNativeZoom={this.MAX_ZOOM}
-        minZoom={2}
-        subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-        attribution={`Tiles &copy; Google | Data from <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | Version - ${__GIT_SHA__}`}
-      />
-    ),
-    'Google Hybrid': (
-      <TileLayer
-        url={`https://{s}.google.com/vt/lyrs=${GoogleMapLayers.hybridRoadsSatellite}&x={x}&y={y}&z={z}`}
-        maxZoom={this.MAX_ZOOM}
-        maxNativeZoom={this.MAX_ZOOM}
-        minZoom={2}
-        subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-        attribution={`Tiles &copy; Google | Data from <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | Version - ${__GIT_SHA__}`}
-      />
-    ),
   }
 
   private getQueryLatLngZoom() {

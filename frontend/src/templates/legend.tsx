@@ -1,10 +1,10 @@
 import { renderToString } from 'react-dom/server'
 
 export const mapLegendTemplate = renderToString(
-  <div className="p-4">
-    <div>
-      <h3 className="text-2xl">Legend</h3>
-    </div>
+  <div className="p-3">
+    {/* <div> */}
+    <h3 className="text-2xl pb-2">Legend</h3>
+    {/* </div> */}
     <div className="relative pl-4">
       <span className={`absolute h-3 w-3 rounded-full bg-green-600 border-3 top-0.5 left-0`}></span>
       Connected

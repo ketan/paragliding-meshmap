@@ -1,9 +1,12 @@
 import { Map } from 'leaflet'
+import { DateTime, Duration } from 'luxon'
 import React, { Component, ReactNode } from 'react'
 import { LayersControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import { MapEventHandler } from './map-events-handler'
-import { sanitizeLatLong, sanitizeNumber } from './ui-util'
 import Control from 'react-leaflet-custom-control'
+import { HardwareModel } from './interfaces'
+import { MapEventHandler } from './map-events-handler'
+import { Node } from './nodes-entity'
+import { sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 
 interface LatLngZoom {
   lat: number
@@ -17,10 +20,6 @@ interface MapProps {
   mapType: MapTypes
 }
 
-interface MapState {
-  mapCenter?: LatLngZoom
-}
-
 enum GoogleMapLayers {
   roadsBuildings = 'm',
   roadsTerrain = 'p',
@@ -31,13 +30,37 @@ enum GoogleMapLayers {
   roadsOnly = 'h',
 }
 
+interface UIConfig {
+  defaultZoomLevelForNode: number
+
+  // Don't show nodes older than this
+  configNodesMaxAge: Duration
+
+  // Nodes older than this are considered offline
+  configNodesOfflineAge: Duration
+}
+interface AllData {
+  allNodes: Node[]
+  newerNodes: Node[]
+  newerNodesWithPosition: Node[]
+  hardwareModels: HardwareModel[]
+}
+
+interface MapState extends Partial<AllData>, UIConfig {
+  mapCenter?: LatLngZoom
+}
+
 export default class MapApp extends Component<MapProps, MapState> {
   readonly MAX_ZOOM = 22
   map = React.createRef<L.Map>()
 
-  state: MapState = {}
+  state: MapState = {
+    defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
+    configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P2D'),
+    configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'PT1D'),
+  }
 
-  componentDidMount(): void {
+  async componentDidMount() {
     const mapCenter = this.getQueryLatLngZoom()
 
     if (mapCenter) {
@@ -47,6 +70,36 @@ export default class MapApp extends Component<MapProps, MapState> {
     }
 
     this.maybeFlyToCurrentLocation()
+
+    const [nodesResponse, hardwareModelsResponse] = await Promise.all([fetch('/api/nodes'), fetch('/api/hardware-models')])
+
+    if (hardwareModelsResponse.status == 200 || hardwareModelsResponse.status == 304) {
+      const hardwareModels = (await hardwareModelsResponse.json()) as HardwareModel[]
+      this.setState({ hardwareModels })
+    }
+
+    const now = DateTime.now()
+
+    if (nodesResponse.status == 200 || nodesResponse.status == 304) {
+      const allNodes = sanitizeNodesProperties(await nodesResponse.json()) as Node[]
+
+      this.setState({ allNodes }, () => {
+        const newerNodes = allNodes.filter((eachNode) => {
+          const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
+          return age < this.state.configNodesMaxAge
+        })
+
+        const newerNodesWithPosition = newerNodes.filter((eachNode) => {
+          return eachNode.latLng
+        })
+
+        this.setState({ newerNodes, newerNodesWithPosition }, () => {
+          console.info(`Total nodes - ${this.state.allNodes?.length}`)
+          console.info(`Newer nodes - ${this.state.newerNodes?.length}`)
+          console.info(`Newer nodes with position - ${this.state.newerNodesWithPosition?.length}`)
+        })
+      })
+    }
   }
 
   private maybeFlyToCurrentLocation() {
@@ -74,25 +127,39 @@ export default class MapApp extends Component<MapProps, MapState> {
         maxZoom={this.MAX_ZOOM}
         style={{ width: '100%', height: '100%' }}
       >
-        <LayersControl position="topright">
-          {Object.keys(this.allLayers).map((key) => {
-            return (
-              <LayersControl.BaseLayer key={key} name={key} checked={key === this.props.mapType}>
-                {this.layerForName(key as MapTypes)}
-              </LayersControl.BaseLayer>
-            )
-          })}
-        </LayersControl>
         <MapEventHandler closeAllToolTipsAndPopupsAndPopups={(map) => this.closeAllToolTipsAndPopupsAndPopups(map)} />
-
-        <Marker position={[this.state.mapCenter.lat, this.state.mapCenter.lng]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-
+        {this.layers()}
         {this.legendControl()}
+
+        {this.state.newerNodesWithPosition?.map((eachNode) => {
+          return (
+            <Marker key={eachNode.id} position={eachNode.latLng!}>
+              <Popup>
+                <div>
+                  <h3 className="text-2xl">{eachNode.longName || eachNode.shortName || eachNode.nodeIdHex}</h3>
+                  <div>
+                    <a href={`/node/${eachNode.nodeId}`}>Details</a>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })}
       </MapContainer>
+    )
+  }
+
+  private layers() {
+    return (
+      <LayersControl position="topright">
+        {Object.keys(this.allLayers).map((key) => {
+          return (
+            <LayersControl.BaseLayer key={key} name={key} checked={key === this.props.mapType}>
+              {this.layerForName(key as MapTypes)}
+            </LayersControl.BaseLayer>
+          )
+        })}
+      </LayersControl>
     )
   }
 

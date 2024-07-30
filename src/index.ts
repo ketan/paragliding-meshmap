@@ -128,6 +128,31 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
   res.json(outgoingMessages)
 })
 
+app.get(`/api/node/:nodeId/positions`, async (req, res) => {
+  res.setHeader('cache-control', 'public,max-age=60')
+  const nodeId = Number(req.params.nodeId)
+  const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
+
+  const positions = await db.position.findMany({
+    select: {
+      latitude: true,
+      longitude: true,
+      createdAt: true,
+    },
+    where: {
+      nodeId: nodeId,
+      createdAt: {
+        gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(positions)
+})
+
 app.get('/api/hardware-models', async function (_req: Request, res: Response) {
   const hardwareModels = await db.node.groupBy({
     by: ['hardwareModel'],

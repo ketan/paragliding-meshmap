@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react'
+import React, { Component } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { sanitizeLatLong, sanitizeNumber } from './ui-util'
 
@@ -15,24 +15,46 @@ interface MapProps {
 }
 
 interface MapState {
-  mapCenter: LatLngZoom
+  mapCenter?: LatLngZoom
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
-  state: MapState = {
-    mapCenter: { lat: 21, lng: 79 + 360, zoom: 5 },
-  }
+  map = React.createRef<L.Map>()
+
+  state: MapState = {}
+
   componentDidMount(): void {
     const mapCenter = this.getQueryLatLngZoom()
 
     if (mapCenter) {
       this.setState({ mapCenter })
+    } else {
+      this.setState({ mapCenter: { lat: 21, lng: 79 + 360, zoom: 5 } })
     }
+
+    this.maybeFlyToCurrentLocation()
   }
 
-  render(): ReactNode {
+  private maybeFlyToCurrentLocation() {
+    const mapCenter = this.getQueryLatLngZoom()
+    navigator.geolocation.getCurrentPosition((pos) => {
+      if (!mapCenter) {
+        const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
+        if (latLng) {
+          this.map.current?.flyTo(latLng, 20, { animate: false })
+        }
+      }
+    })
+  }
+
+  render() {
+    if (!this.state.mapCenter) {
+      return <div>Initializing map...</div>
+    }
+    console.log(this.state.mapCenter)
     return (
       <MapContainer
+        ref={this.map}
         center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
         zoom={this.state.mapCenter.zoom}
         style={{ width: '100%', height: '100%' }}

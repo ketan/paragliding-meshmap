@@ -1,9 +1,8 @@
 import { Map } from 'leaflet'
 import React, { Component, ReactNode } from 'react'
-import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { LayersControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { MapEventHandler } from './map-events-handler'
 import { sanitizeLatLong, sanitizeNumber } from './ui-util'
-import _ from 'lodash'
 
 interface LatLngZoom {
   lat: number

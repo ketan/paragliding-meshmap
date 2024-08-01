@@ -1,13 +1,10 @@
 import React, { ReactNode } from 'react'
 import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
-import FilterCircleXMark from './assets/images/icons/filter-circle-xmark.svg?component'
-import Filter from './assets/images/icons/filter.svg?component'
-import CircleInfoIcon from './assets/images/icons/circle-info.svg?component'
-
 import icon from './assets/images/icon.png'
 import _ from 'lodash'
 import qs from 'qs'
 import { NodesEntity, TextMessagesEntity } from './db-entities'
+import { CircleInfoIcon, FilterCircleXmarkIcon, FilterIcon } from './icon-constants'
 
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
 
@@ -184,7 +181,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
                 onClick={this.toggleFilter.bind(this)}
               >
                 <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                  {this.state.to === BROADCAST_ADDR ? <FilterCircleXMark className="w-6 h-6" /> : <Filter className="w-6 h-6" />}
+                  {this.state.to === BROADCAST_ADDR ? <FilterCircleXmarkIcon className="w-6 h-6" /> : <FilterIcon className="w-6 h-6" />}
                 </div>
               </a>
             </div>

@@ -1,12 +1,12 @@
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
-import CopyIcon from '../assets/images/icons/copy.svg?component'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { Node } from '../nodes-entity'
 import { Tooltip } from '../tooltip'
 import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
+import { CopyIcon } from '../icon-constants'
 
 function mqttStatus(node: Node) {
   if (node.mqttConnectionState === 'online') {

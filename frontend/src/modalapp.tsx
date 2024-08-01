@@ -1,7 +1,6 @@
 import { Component, ReactNode } from 'react'
 import icon from './assets/images/icon.png'
-import GitHubIcon from './assets/images/icons/github.svg?component'
-import XMarkIcon from './assets/images/icons/x-mark.svg?component'
+import { GithubIcon, XMarkIcon } from './icon-constants'
 
 interface ModalState {
   visible: boolean
@@ -91,7 +90,7 @@ export default class ModalApp extends Component<unknown, ModalState> {
                         title="GitHub"
                         className="inline-flex items-center p-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#333333] bg-gray-100 hover:bg-gray-200"
                       >
-                        <GitHubIcon className="w-4 h-4" />
+                        <GithubIcon className="w-4 h-4" />
                       </a>
                     </div>
                   </div>

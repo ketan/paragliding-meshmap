@@ -1,6 +1,6 @@
 import { Component, PropsWithChildren } from 'react'
-import XMarkIcon from './assets/images/icons/x-mark.svg?component'
 import { Node } from './nodes-entity'
+import { XMarkIcon } from './icon-constants'
 
 interface Props {
   node: Node

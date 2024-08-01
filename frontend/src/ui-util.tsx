@@ -2,13 +2,13 @@ import L from 'leaflet'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { NodesEntity } from './db-entities'
-import { Node, NodeNameAttributes, PointTuple } from './nodes-entity'
+import { Node, NodeNameAttributes } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
 import { Tooltip } from './tooltip'
 
 export const BROADCAST_ADDR = Number('0xffffffff')
 
-export function googleMapsLink(point: PointTuple) {
+export function googleMapsLink(point: L.PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
 }
 
@@ -35,7 +35,7 @@ export function sanitizeLatLong(lat: number | string | undefined | null, lon: nu
     if (lon <= 100) {
       lon += 360
     }
-    return [lat, lon] as [number, number]
+    return [lat, lon] as L.PointTuple
   }
 }
 

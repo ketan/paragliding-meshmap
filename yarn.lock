@@ -3433,15 +3433,7 @@ knex@^3.1.0:
     tarn "^3.0.2"
     tildify "2.0.0"
 
-leaflet-arrowheads@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/leaflet-arrowheads/-/leaflet-arrowheads-1.4.0.tgz#2a92711c4ca89e6a63014f552cc0d6c67653a773"
-  integrity sha512-aIjsmoWe1VJXaGOpKpS6E8EzN2vpx3GGCNP/FxQteLVzAg5xMID7elf9hj/1CWLJo8FuGRjSvKkUQDj7mocrYA==
-  dependencies:
-    leaflet "^1.7.1"
-    leaflet-geometryutil "^0.10.0"
-
-leaflet-geometryutil@^0.10.0, leaflet-geometryutil@^0.10.3:
+leaflet-geometryutil@^0.10.3:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/leaflet-geometryutil/-/leaflet-geometryutil-0.10.3.tgz#dda78546abc58723a46b47fd6ffb081f5b63cec4"
   integrity sha512-Qeas+KsnenE0Km/ydt8km3AqFe7kJhVwuLdbCYM2xe2epsxv5UFEaVJiagvP9fnxS8QvBNbm7DJlDA0tkKo9VA==
@@ -3455,17 +3447,12 @@ leaflet-groupedlayercontrol@^0.6.1:
   dependencies:
     leaflet "^1.0.1"
 
-leaflet-polylineoffset@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/leaflet-polylineoffset/-/leaflet-polylineoffset-1.1.1.tgz#021b717d4f7d462f742c1ac1ac0e83e8eef74615"
-  integrity sha512-WcEjAROx9IhIVwSMoFy9p2QBCG9YeuGtJl4ZdunIgj4xbCdTrUkBj8JdonUeCyLPnD2/Vrem/raOPHm5LvebSw==
-
 leaflet.markercluster@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/leaflet.markercluster/-/leaflet.markercluster-1.5.3.tgz#9cdb52a4eab92671832e1ef9899669e80efc4056"
   integrity sha512-vPTw/Bndq7eQHjLBVlWpnGeLa3t+3zGiuM7fJwCkiMFq+nmRuG3RI3f7f4N4TDX7T4NpbAXpR2+NTRSEGfCSeA==
 
-leaflet@^1.0.1, leaflet@^1.6.0, leaflet@^1.7.1, leaflet@^1.9.4:
+leaflet@^1.0.1, leaflet@^1.6.0, leaflet@^1.9.4:
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.4.tgz#23fae724e282fa25745aff82ca4d394748db7d8d"
   integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==

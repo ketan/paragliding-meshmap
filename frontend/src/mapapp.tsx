@@ -1,19 +1,37 @@
-import L, { Map } from 'leaflet'
+import debug from 'debug'
+import L from 'leaflet'
+import 'leaflet-groupedlayercontrol'
+import 'leaflet.markercluster'
 import { DateTime, Duration } from 'luxon'
-import React, { Component } from 'react'
-import { LayersControl } from 'react-leaflet'
-import Control from 'react-leaflet-custom-control'
-import { CreateMarkers } from './clusteredgroup'
+import { Component } from 'react'
+import { renderToString } from 'react-dom/server'
+import { MapContainer } from 'react-leaflet'
+import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { mapEventsHandler } from './map-events-handler'
-import { FastMap, MapTypes, MAX_ZOOM } from './map-fast'
+import { MapTiles, MapTypes } from './map-providers'
 import { Node } from './nodes-entity'
-import { sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import { addLegendToMap, cssClassFor } from './templates/legend'
+import { nodePositionView } from './templates/node-position'
+import { nodeTooltip } from './templates/node-tooltip'
+import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 
-interface LatLngZoom {
+const logger = debug('meshmap')
+logger.enabled = true
+const MAX_ZOOM = 22
+
+interface LatLng {
   lat: number
   lng: number
+}
+
+interface LatLngZoom {
+  coords?: LatLng
   zoom?: number
+}
+
+interface QueryParams extends LatLngZoom {
+  nodeId?: number
 }
 
 interface MapProps {
@@ -36,165 +54,308 @@ interface AllData {
   hardwareModels: HardwareModel[]
 }
 
-interface MapState extends Partial<AllData>, UIConfig {
-  mapCenter?: LatLngZoom
+interface MapState extends Partial<AllData>, UIConfig, QueryParams {
+  map?: L.Map
+  dataLoaded: PromiseWithResolvers<void>
+  mapInitialized: PromiseWithResolvers<void>
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
-  map = React.createRef<L.Map>()
+  state: MapState = {
+    defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
+    configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P7D'),
+    configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'P71D'),
+    mapInitialized: Promise.withResolvers(),
+    dataLoaded: Promise.withResolvers(),
+  }
+
   readonly allClusteredLayerGroup = L.markerClusterGroup({
     showCoverageOnHover: false,
     disableClusteringAtZoom: 10,
   })
 
-  state: MapState = {
-    defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
-    configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P2D'),
-    configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'PT1D'),
-  }
+  readonly allNodesLayerGroup = new L.LayerGroup()
+
+  readonly allRouterNodesLayerGroup = L.markerClusterGroup({
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 10,
+  })
+
+  readonly groupedLayers = new L.Control.GroupedLayers(
+    MapTiles.allLayers(),
+    {
+      Nodes: {
+        All: this.allNodesLayerGroup,
+        Routers: this.allRouterNodesLayerGroup,
+        Clustered: this.allClusteredLayerGroup,
+        None: new L.LayerGroup(),
+      },
+    },
+    {
+      exclusiveGroups: ['Nodes'],
+    }
+  )
 
   async componentDidMount() {
-    const mapCenter = this.getQueryLatLngZoom()
+    const { coords, zoom, nodeId } = this.getQueryParams()
 
-    if (mapCenter) {
-      this.setState({ mapCenter })
+    if (coords) {
+      this.setState({ coords, zoom })
     } else {
-      this.setState({ mapCenter: { lat: 21, lng: 79 + 360, zoom: 5 } })
+      this.setState({ coords: { lat: 21, lng: 79 + 360 }, zoom: 5 })
     }
 
-    this.maybeFlyToCurrentLocation()
-
-    const [nodesResponse, hardwareModelsResponse] = await Promise.all([fetch('/api/nodes'), fetch('/api/hardware-models')])
-
-    if (hardwareModelsResponse.status == 200 || hardwareModelsResponse.status == 304) {
-      const hardwareModels = (await hardwareModelsResponse.json()) as HardwareModel[]
-      this.setState({ hardwareModels })
+    if (nodeId) {
+      this.setState({ nodeId })
     }
+
+    // this.maybeFlyToCurrentLocation()
 
     const now = DateTime.now()
 
-    if (nodesResponse.status == 200 || nodesResponse.status == 304) {
-      const allNodes = sanitizeNodesProperties(await nodesResponse.json()) as Node[]
+    try {
+      const [nodesResponse, hardwareModelsResponse] = await Promise.all([fetch('/api/nodes'), fetch('/api/hardware-models')])
+      if (
+        hardwareModelsResponse.status == 200 ||
+        (hardwareModelsResponse.status == 304 && nodesResponse.status == 200) ||
+        nodesResponse.status == 304
+      ) {
+        const [hardwareModels, rawNodes]: [HardwareModel[], Node[]] = await Promise.all([
+          hardwareModelsResponse.json(),
+          nodesResponse.json(),
+        ])
+        const allNodes = sanitizeNodesProperties(rawNodes)
+        console.log(`allnodes ${allNodes.length}`)
 
-      this.setState({ allNodes }, () => {
-        const newerNodes = allNodes.filter((eachNode) => {
-          const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
-          return age < this.state.configNodesMaxAge
-        })
+        this.setState({ hardwareModels, allNodes }, () => {
+          console.log(`hardwremodels, allnodes`, this.state)
+          const newerNodes = this.state.allNodes?.filter((eachNode) => {
+            const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
+            return age < this.state.configNodesMaxAge
+          })
 
-        const newerNodesWithPosition = newerNodes.filter((eachNode) => {
-          return eachNode.latLng
-        })
+          const newerNodesWithPosition = newerNodes?.filter((eachNode) => {
+            return eachNode.latLng
+          })
 
-        this.setState({ newerNodes, newerNodesWithPosition }, () => {
-          console.info(`Total nodes - ${this.state.allNodes?.length}`)
-          console.info(`Newer nodes - ${this.state.newerNodes?.length}`)
-          console.info(`Newer nodes with position - ${this.state.newerNodesWithPosition?.length}`)
+          console.log(`after filtering`, newerNodes?.length, newerNodesWithPosition?.length)
+
+          this.setState({ newerNodes, newerNodesWithPosition }, () => {
+            console.log(`newernodes`, this.state)
+            console.log(`Data loaded`)
+            this.state.dataLoaded.resolve()
+            console.info(`Total nodes - ${this.state.allNodes?.length}`)
+            console.info(`Newer nodes - ${this.state.newerNodes?.length}`)
+            console.info(`Newer nodes with position - ${this.state.newerNodesWithPosition?.length}`)
+          })
         })
-      })
+      } else {
+        console.log(`Error fetching data`)
+        this.state.dataLoaded.reject()
+      }
+    } catch (err) {
+      logger(`Error fetching data`, { err })
+      this.state.dataLoaded.reject()
     }
-  }
 
-  private maybeFlyToCurrentLocation() {
-    const mapCenter = this.getQueryLatLngZoom()
-    navigator.geolocation.getCurrentPosition((pos) => {
-      if (!mapCenter) {
-        const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
-        if (latLng) {
-          this.map.current?.flyTo(latLng, 20, { animate: false })
-        }
+    console.log(`Waiting for data and map to load...`)
+    Promise.all([this.state.dataLoaded.promise, this.state.mapInitialized.promise]).then(() => {
+      this.mapAndDataLoaded()
+      const queryParams = this.getQueryParams()
+      this.maybeFlyToCurrentLocation()
+      if (queryParams.nodeId) {
+        this.flyToNode(this.state.map!, queryParams.nodeId)
       }
     })
   }
 
   render() {
-    if (!this.state.mapCenter || !this.state.newerNodesWithPosition) {
+    if (!this.state.coords || !this.state.newerNodesWithPosition) {
       return <div>Loading map...</div>
     }
 
     return (
-      <FastMap
-        center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-        zoom={this.state.mapCenter.zoom}
+      <MapContainer
+        center={this.state.coords}
+        zoom={this.state.zoom}
         maxZoom={MAX_ZOOM}
-        closeAllToolTipsAndPopupsAndPopups={this.closeAllToolTipsAndPopupsAndPopups}
-      >
-        {/* <MapEventHandler closeAllToolTipsAndPopupsAndPopups={(map) => this.closeAllToolTipsAndPopupsAndPopups(map)} /> */}
-
-        {/* {this.layers()}
-        {this.legendControl()} */}
-        {/* <CreateMarkers nodes={this.state.newerNodesWithPosition} configNodesOfflineAge={this.state.configNodesOfflineAge} /> */}
-      </FastMap>
+        whenReady={(...args) => this.mapReady(args)}
+        style={{ height: '100%', width: '100%' }}
+      />
     )
   }
 
-  private layers() {
-    return (
-      <LayersControl position="topright">
-        {Object.keys(this.allLayers).map((key) => {
-          return (
-            <LayersControl.BaseLayer key={key} name={key} checked={key === this.props.mapType}>
-              {this.layerForName(key as MapTypes)}
-            </LayersControl.BaseLayer>
-          )
-        })}
-      </LayersControl>
-    )
+  private mapReady(args: unknown[]): void {
+    if (Array.isArray(args) && args.length > 0) {
+      const arg = (args as unknown[])[0]
+
+      if (arg && typeof arg === 'object' && 'target' in arg && arg.target instanceof L.Map) {
+        this.setState({ map: arg.target }, () => {
+          console.log(`map initialized`)
+          this.mapInitialized()
+        })
+      } else {
+        alert(`Something went wrong. Was expecting to initialize a map`)
+      }
+    }
   }
 
-  private legendControl() {
-    return (
-      <Control position="bottomleft">
-        <div className="leaflet-control-layers p-4">
-          <div>
-            <h3 className="text-2xl">Legend</h3>
-          </div>
-          <div className="relative pl-4">
-            <span className={`absolute h-3 w-3 rounded-full bg-green-600 border-3 top-0.5 left-0`}></span>
-            Connected
-          </div>
-          <div className="relative pl-4">
-            <span className={`absolute h-3 w-3 rounded-full bg-purple-600 border-3 top-0.5 left-0`}></span>
-            Disconnected
-          </div>
-          <div className="relative pl-4">
-            <span className={`absolute h-3 w-3 rounded-full bg-red-600 border-3 top-0.5 left-0`}></span>
-            Offline Too Long
-          </div>
-        </div>
-      </Control>
-    )
+  private mapInitialized() {
+    mapEventsHandler({ map: this.state.map!, closeAllToolTipsAndPopupsAndPopups: this.closeAllToolTipsAndPopupsAndPopups.bind(this) })
+    this.configureGroupedLayers()
+    this.allClusteredLayerGroup.addTo(this.state.map!)
+    new MapTiles(this.props.mapType).addDefaultLayerToMap(this.state.map!)
+    addLegendToMap(this.state.map!)
+    console.log(`resolving map`)
+    this.state.mapInitialized.resolve()
   }
 
-  closeAllToolTipsAndPopupsAndPopups(map: Map): void {
-    map.eachLayer(function (layer) {
+  private configureGroupedLayers() {
+    this.groupedLayers.addTo(this.state.map!)
+  }
+
+  private closeAllToolTipsAndPopupsAndPopups(): void {
+    const map = this.state.map
+    map?.eachLayer(function (layer) {
       if (layer.options.pane === 'tooltipPane' || layer.options.pane === 'popupPane') {
         layer.removeFrom(map)
       }
     })
   }
 
-  private layerForName(name: MapTypes) {
-    return this.allLayers[name]
-  }
-
-  private getQueryLatLngZoom() {
+  private getQueryParams(): QueryParams {
     const queryParams = new URLSearchParams(window.location.search)
+
     const queryLat = queryParams.get('lat')
     const queryLng = queryParams.get('lng')
-    const queryZoom = sanitizeNumber(queryParams.get('zoom'))
 
-    const latLng = sanitizeLatLong(queryLat, queryLng)
-    if (latLng) {
-      const result: LatLngZoom = {
-        lat: latLng[0],
-        lng: latLng[1],
+    const coords = sanitizeLatLong(queryLat, queryLng)
+    const zoom = sanitizeNumber(queryParams.get('zoom'))
+    const nodeId = sanitizeNumber(queryParams.get('nodeId'))
+
+    const retval: QueryParams = {}
+
+    if (coords) {
+      retval.coords = { lat: coords[0], lng: coords[1] }
+    }
+    if (zoom) {
+      retval.zoom = zoom
+    }
+    if (nodeId) {
+      retval.nodeId = nodeId
+    }
+    return retval
+  }
+
+  private maybeFlyToCurrentLocation() {
+    const queryParams = this.getQueryParams()
+
+    // if no coords in query params, get current location, and fly to it
+    if (!queryParams.coords) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
+        if (latLng) {
+          this.state.map?.flyTo(latLng, MAX_ZOOM, { animate: false })
+        }
+      })
+    }
+  }
+
+  private getIconClassFor(node: Node) {
+    let icon = cssClassFor('disconnected')
+    if (node.mqttConnectionState === 'online') {
+      icon = cssClassFor('online')
+    }
+
+    const now = DateTime.now()
+    const age = now.diff(DateTime.fromISO(node.updatedAt))
+
+    if (age > this.state.configNodesOfflineAge) {
+      icon = cssClassFor('offline')
+    }
+
+    return icon
+  }
+
+  private mapAndDataLoaded() {
+    this.state.newerNodesWithPosition!.forEach((eachNode) => {
+      const iconSize = getTextSize(eachNode)
+
+      const marker = L.marker(eachNode.offsetLatLng!, {
+        icon: L.divIcon({
+          className: this.getIconClassFor(eachNode),
+          iconSize: iconSize,
+          html: nodePositionView(eachNode),
+          iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
+        }),
+        zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
+      })
+
+      const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
+
+      if (!isMobile()) {
+        marker.bindTooltip(() => renderToString(nodeTooltip(eachNode)), { interactive: true, offset: tooltipOffset })
       }
 
-      if (queryZoom) {
-        result.zoom = queryZoom
+      marker.on('click', () => {
+        // close tooltip on click to prevent tooltip and popup showing at same time
+        marker.closeTooltip()
+      })
+
+      marker.on('click', () => {
+        this.closeAllToolTipsAndPopupsAndPopups()
+
+        this.state.map?.openTooltip(renderToString(nodeTooltip(eachNode)), eachNode.offsetLatLng!, {
+          interactive: true, // allow clicking etc inside tooltip
+          permanent: true, // don't dismiss when clicking
+          offset: tooltipOffset,
+        })
+      })
+
+      marker.bindTooltip(() => renderToString(nodeTooltip(eachNode)), { interactive: true, offset: tooltipOffset })
+
+      if (
+        eachNode.role == NodeRoleNameToID.ROUTER ||
+        eachNode.role == NodeRoleNameToID.ROUTER_CLIENT ||
+        eachNode.role == NodeRoleNameToID.REPEATER
+      ) {
+        marker.addTo(this.allRouterNodesLayerGroup)
       }
-      return result
+
+      marker.addTo(this.allNodesLayerGroup)
+      marker.addTo(this.allClusteredLayerGroup)
+    })
+  }
+
+  private findNodeById(nodes: Node[], nodeId?: number | string | null) {
+    // find node by id
+    nodeId = sanitizeNumber(nodeId)
+    if (!nodeId) {
+      return
+    }
+    return nodes.find((node) => node.nodeId === nodeId)
+  }
+
+  private flyToNode(map: L.Map, nodeId?: string | number | null) {
+    const node = this.findNodeById(this.state.newerNodesWithPosition!, nodeId)
+    if (!node) {
+      return
+    }
+    const iconSize = getTextSize(node)
+    const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
+    if (node.offsetLatLng) {
+      // const latlng = [node.latitude, node.longitude] as [number, number]
+
+      map.flyTo(node.offsetLatLng, this.state.defaultZoomLevelForNode, {
+        animate: true,
+        duration: 1,
+      })
+
+      map.openTooltip(renderToString(nodeTooltip(node)), node.offsetLatLng, {
+        interactive: true, // allow clicking etc inside tooltip
+        permanent: true, // don't dismiss when clicking
+        offset: tooltipOffset,
+      })
     }
   }
 }

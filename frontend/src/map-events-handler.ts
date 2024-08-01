@@ -5,7 +5,7 @@ export interface Props {
   closeAllToolTipsAndPopupsAndPopups: (map: Map) => void
 }
 
-function onClick(props: Props, event: LeafletMouseEvent): void {
+function onClick({ map, closeAllToolTipsAndPopupsAndPopups }: Props, event: LeafletMouseEvent): void {
   const clickedElement = event.originalEvent.target as Element
 
   if (clickedElement.closest('.leaflet-tooltip')) {
@@ -13,7 +13,7 @@ function onClick(props: Props, event: LeafletMouseEvent): void {
     return
   }
 
-  props.closeAllToolTipsAndPopupsAndPopups(props.map)
+  closeAllToolTipsAndPopupsAndPopups(map)
 }
 
 function onZoomPan(map: Map): void {
@@ -27,10 +27,10 @@ function onZoomPan(map: Map): void {
   window.history.replaceState(null, '', url.toString())
 }
 
-export function mapEventsHandler(props: Props) {
-  props.map.on('zoomend', () => onZoomPan(props.map))
-  props.map.on('moveend', () => onZoomPan(props.map))
-  props.map.on('click', (e) => onClick(props, e))
+export function mapEventsHandler({ map, closeAllToolTipsAndPopupsAndPopups }: Props) {
+  map.on('zoomend', () => onZoomPan(map))
+  map.on('moveend', () => onZoomPan(map))
+  map.on('click', (e) => onClick({ map, closeAllToolTipsAndPopupsAndPopups }, e))
 
   return null
 }

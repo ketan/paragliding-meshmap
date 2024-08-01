@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server'
+import L from 'leaflet'
 
-export const mapLegendTemplate = renderToString(
+export const legendReactDOM = (
   <div className="p-3">
     {/* <div> */}
     <h3 className="text-2xl pb-2">Legend</h3>
@@ -19,6 +20,20 @@ export const mapLegendTemplate = renderToString(
     </div>
   </div>
 )
+
+export const mapLegendTemplate = renderToString(legendReactDOM)
+
+export function addLegendToMap(map: L.Map) {
+  const legend = new L.Control({ position: 'bottomleft' })
+
+  legend.onAdd = function (_map) {
+    const div = L.DomUtil.create('div', 'leaflet-control-layers')
+    div.innerHTML = mapLegendTemplate
+    return div
+  }
+
+  legend.addTo(map)
+}
 
 export function cssClassFor(str: 'online' | 'offline' | 'disconnected') {
   const commonClasses = `text-white rounded-full border-4 border-none marker-location node-status-${str}`

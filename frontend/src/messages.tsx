@@ -1,7 +1,7 @@
 import './index.scss'
 import ReactDOM from 'react-dom/client'
 import { MessagesApp } from './messagesapp'
-import ModalApp from './modalapp'
+import ModalComponent from './components/modal'
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')
@@ -12,5 +12,5 @@ addEventListener('load', function () {
   div.classList.add('modal-app')
   document.body.appendChild(div)
 
-  ReactDOM.createRoot(div).render(<ModalApp />)
+  ReactDOM.createRoot(div).render(<ModalComponent />)
 })

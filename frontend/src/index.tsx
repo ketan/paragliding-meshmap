@@ -1,13 +1,6 @@
 // application css
 import './index.scss'
 
-// leaflet stuff
-// import 'leaflet-arrowheads'
-// import 'leaflet-geometryutil'
-// import 'leaflet-groupedlayercontrol'
-// import 'leaflet-polylineoffset'
-// import 'leaflet.markercluster'
-
 // our stuff
 import debug from 'debug'
 import ReactDOM from 'react-dom/client'

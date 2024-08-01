@@ -125,10 +125,8 @@ export default class MapApp extends Component<MapProps, MapState> {
           nodesResponse.json(),
         ])
         const allNodes = sanitizeNodesProperties(rawNodes)
-        console.log(`allnodes ${allNodes.length}`)
 
         this.setState({ hardwareModels, allNodes }, () => {
-          console.log(`hardwremodels, allnodes`, this.state)
           const newerNodes = this.state.allNodes?.filter((eachNode) => {
             const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
             return age < this.state.configNodesMaxAge
@@ -138,11 +136,8 @@ export default class MapApp extends Component<MapProps, MapState> {
             return eachNode.latLng
           })
 
-          console.log(`after filtering`, newerNodes?.length, newerNodesWithPosition?.length)
 
           this.setState({ newerNodes, newerNodesWithPosition }, () => {
-            console.log(`newernodes`, this.state)
-            console.log(`Data loaded`)
             this.state.dataLoaded.resolve()
             console.info(`Total nodes - ${this.state.allNodes?.length}`)
             console.info(`Newer nodes - ${this.state.newerNodes?.length}`)

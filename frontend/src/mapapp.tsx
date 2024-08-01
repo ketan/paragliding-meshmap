@@ -5,7 +5,6 @@ import 'leaflet.markercluster'
 import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
-import { renderToString } from 'react-dom/server'
 import { MapContainer } from 'react-leaflet'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
@@ -111,8 +110,6 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.setState({ nodeId })
     }
 
-    // this.maybeFlyToCurrentLocation()
-
     const now = DateTime.now()
 
     try {
@@ -172,12 +169,15 @@ export default class MapApp extends Component<MapProps, MapState> {
 
     Promise.all([this.state.dataLoaded.promise, this.state.mapInitialized.promise]).then(() => {
       logger(`Map and data loaded`)
-      this.mapAndDataLoaded()
-      const queryParams = this.getQueryParams()
-      this.maybeFlyToCurrentLocation()
-      if (queryParams.nodeId) {
-        this.flyToNode(this.state.map!, queryParams.nodeId)
-      }
+      const markers = this.createMarkers()
+      this.setState({ markers }, () => {
+        const queryParams = this.getQueryParams()
+        if (queryParams.nodeId) {
+          this.flyToNode(this.state.map!, queryParams.nodeId)
+        } else {
+          this.maybeFlyToCurrentLocation()
+        }
+      })
     })
   }
 
@@ -287,7 +287,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     return icon
   }
 
-  private mapAndDataLoaded() {
+  private createMarkers() {
     const markers: Record<number, L.Marker> = {}
     Object.values(this.state.newerNodesWithPosition!).forEach(
       (eachNode) => {
@@ -296,7 +296,9 @@ export default class MapApp extends Component<MapProps, MapState> {
       {} as Record<number, L.Marker>
     )
 
-    this.setState({ markers })
+    console.log(`markers being set to `, markers)
+
+    return markers
   }
 
   private createMarker(eachNode: Node) {
@@ -439,21 +441,18 @@ export default class MapApp extends Component<MapProps, MapState> {
     if (!node) {
       return
     }
-    const iconSize = getTextSize(node)
-    const tooltipOffset = isDesktop() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
-    if (node.offsetLatLng) {
-      // const latlng = [node.latitude, node.longitude] as [number, number]
 
+    if (node.offsetLatLng) {
       map.flyTo(node.offsetLatLng, this.state.defaultZoomLevelForNode, {
         animate: true,
         duration: 1,
       })
 
-      map.openTooltip(renderToString(NodeTooltip(node)), node.offsetLatLng, {
-        interactive: true, // allow clicking etc inside tooltip
-        permanent: true, // don't dismiss when clicking
-        offset: tooltipOffset,
-      })
+      const marker = (this.state.markers || [])[node.nodeId]
+
+      if (marker) {
+        marker.openTooltip()
+      }
     }
   }
 }

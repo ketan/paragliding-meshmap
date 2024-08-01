@@ -221,7 +221,7 @@ export function NodeTooltip({ node, callback }: Props) {
   ]
 
   useEffect(() => {
-    callback()
+    callback && callback()
   })
 
   return (

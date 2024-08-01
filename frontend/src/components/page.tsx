@@ -4,7 +4,8 @@ import { CircleInfoIcon } from '../icon-constants'
 import { AboutModal } from './about-modal'
 
 interface PageProps extends React.PropsWithChildren {
-  headerIcons: React.ReactNode[] | undefined
+  headerIcons: React.ReactNode
+  bannerMain: React.ReactNode
 }
 
 export function Page(props: PageProps) {
@@ -18,7 +19,7 @@ export function Page(props: PageProps) {
             <IconInHeader />
             <ApplicationName />
             {/* banner */}
-
+            {props.bannerMain}
             {/* header action buttons */}
             <HeaderActionButtons>
               <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => setShowModal(true)} />
@@ -27,9 +28,7 @@ export function Page(props: PageProps) {
           </div>
           {/* end header */}
 
-          <div className="flex flex-col gap-4 p-8">
-            <div className="flex flex-col gap-4">{props.children}</div>
-          </div>
+          <div className="flex flex-col gap-4 p-8">{props.children}</div>
         </div>
       </div>
       {showModal && <AboutModal setShowModal={setShowModal} />}
@@ -41,7 +40,7 @@ function HeaderActionButtons(props: React.PropsWithChildren) {
   return <div className="header flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">{props.children}</div>
 }
 
-function HeaderIcon({
+export function HeaderIcon({
   icon,
   tooltip,
   onClick,

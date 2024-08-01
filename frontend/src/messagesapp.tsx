@@ -1,18 +1,19 @@
-import React, { ReactNode } from 'react'
-import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
-import icon from './assets/images/icon.png'
 import _ from 'lodash'
 import qs from 'qs'
+import React, { ReactNode } from 'react'
+import { HeaderIcon, Page } from './components/page'
 import { NodesEntity, TextMessagesEntity } from './db-entities'
-import { CircleInfoIcon, FilterCircleXmarkIcon, FilterIcon } from './icon-constants'
+import { FilterCircleXmarkIcon, FilterIcon } from './icon-constants'
+import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
 
+type All = `all`
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
 
 interface MessagesAppState {
   messages: Messages[]
   nodes: Record<number, NodesEntity>
   from: number
-  to?: number | string
+  to?: number | All
 }
 
 export class MessagesApp extends React.Component<unknown, MessagesAppState> {
@@ -23,16 +24,6 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   }
 
   private elementRefForEndOfPage = React.createRef<HTMLDivElement>()
-
-  parseTo(to: string | null): number | string {
-    if (to === 'all') {
-      return `all`
-    } else if (isNaN(Number(to))) {
-      return BROADCAST_ADDR
-    } else {
-      return Number(to)
-    }
-  }
 
   async componentDidMount() {
     const queryParams = new URLSearchParams(window.location.search)
@@ -52,36 +43,44 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     this.scrollToBottom()
   }
 
-  toggleFilter() {
-    this.setState(
-      (current) => {
-        if (current.to === 'all') {
-          return { ...current, to: BROADCAST_ADDR }
-        } else {
-          return { ...current, to: `all` }
-        }
-      },
-      async () => {
-        const queryString = qs.stringify(
-          _.omitBy(
-            {
-              to: this.state.to,
-              from: this.state.from,
-            },
-            _.isNil
+  componentDidUpdate() {
+    this.scrollToBottom()
+  }
+
+  render(): ReactNode {
+    const headerIcon = <ToggleFilterHeaderIcon onclick={() => this.toggleFilter()} showAll={this.state.to === 'all'} />
+    return (
+      <Page bannerMain={this.banner()} headerIcons={headerIcon}>
+        {this.state.messages.map((msg) => {
+          const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
+          const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
+
+          return (
+            <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
+              <span className="font-semibold text-sm">
+                <a href={nodeUrl(msg.from)}>
+                  {fromNode.shortName} ({fromNode.longName})
+                </a>{' '}
+                →{' '}
+                {4294967295 === msg.to ? (
+                  'Everyone'
+                ) : (
+                  <a href={nodeUrl(msg.to)}>
+                    {toNode.shortName} ({toNode.longName})
+                  </a>
+                )}
+              </span>
+              <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
+              <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
+            </div>
           )
-        )
-
-        const url = new URL(window.location.href)
-        url.search = queryString
-        window.history.replaceState(null, '', url.toString())
-
-        await this.loadData()
-      }
+        })}
+        <div ref={this.elementRefForEndOfPage} />
+      </Page>
     )
   }
 
-  async loadData() {
+  private async loadData() {
     const queryString = qs.stringify(
       _.omitBy(
         {
@@ -104,7 +103,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     }
   }
 
-  async fetchNode(nodeId: number) {
+  private async fetchNode(nodeId: number) {
     if (nodeId === BROADCAST_ADDR) {
       return
     }
@@ -121,104 +120,47 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     return this.state.nodes[nodeId]
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom()
+  private toggleFilter() {
+    this.setState(
+      (current) => {
+        if (current.to === 'all') {
+          return { ...current, to: BROADCAST_ADDR }
+        } else {
+          return { ...current, to: 'all' }
+        }
+      },
+      async () => {
+        const queryString = qs.stringify(
+          _.omitBy(
+            {
+              to: this.state.to,
+              from: this.state.from,
+            },
+            _.isNil
+          )
+        )
+
+        const url = new URL(window.location.href)
+        url.search = queryString
+        window.history.replaceState(null, '', url.toString())
+
+        await this.loadData()
+      }
+    )
   }
 
-  scrollToBottom = () => {
+  private scrollToBottom = () => {
     this.elementRefForEndOfPage.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  render(): ReactNode {
-    return (
-      <div className="flex flex-col h-full w-full overflow-hidden">
-        <div className="flex flex-col h-full">
-          {/* begin header */}
-          <div className="flex bg-white p-2 border-gray-300 border-b h-16">
-            {/* icon */}
-            <div className="hidden sm:block my-auto mr-3 relative">
-              <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-              <img className="w-10 h-10 rounded bg-opacity-90" src={icon} />
-            </div>
-            {/* app info */}
-            <div className="my-auto leading-tight">
-              <div className="font-bold">Meshtastic map</div>
-              <div className="text-sm">
-                By{' '}
-                <a target="_blank" rel="noreferrer" href="https://github.com/ketan">
-                  Ketan Padegaonkar
-                </a>{' '}
-                (inspiration{' '}
-                <a target="_blank" rel="noreferrer" href="https://meshtastic.liamcottle.net/">
-                  Liam Cottle
-                </a>
-                )
-              </div>
-            </div>
-            {/* banner */}
-            {this.banner()}
-            {/* header action buttons */}
-            <div className="header flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">
-              <a
-                href="#"
-                className="has-tooltip rounded-full hidden sm:block"
-                aria-label="About"
-                data-cooltipz-dir="bottom"
-                id="about-button"
-              >
-                <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
-                  <CircleInfoIcon className="w-6 h-6" />
-                </div>
-              </a>
-
-              <a
-                href="#"
-                className="has-tooltip rounded-full hidden sm:block"
-                aria-label={
-                  this.state.to === BROADCAST_ADDR ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`
-                }
-                data-cooltipz-dir="bottom-right"
-                onClick={this.toggleFilter.bind(this)}
-              >
-                <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                  {this.state.to === BROADCAST_ADDR ? <FilterCircleXmarkIcon className="w-6 h-6" /> : <FilterIcon className="w-6 h-6" />}
-                </div>
-              </a>
-            </div>
-          </div>
-          {/* end header */}
-
-          <div className="flex flex-col gap-4 p-8">
-            {this.state.messages.map((msg) => {
-              const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
-              const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
-
-              return (
-                <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
-                  <span className="font-semibold text-sm">
-                    <a href={nodeUrl(msg.from)}>
-                      {fromNode.shortName} ({fromNode.longName})
-                    </a>{' '}
-                    →{' '}
-                    {4294967295 === msg.to ? (
-                      'Everyone'
-                    ) : (
-                      <a href={nodeUrl(msg.to)}>
-                        {toNode.shortName} ({toNode.longName})
-                      </a>
-                    )}
-                  </span>
-                  <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
-                  <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        <div ref={this.elementRefForEndOfPage} />
-      </div>
-    )
+  private parseTo(to: string | null): number | All {
+    if (to === 'all') {
+      return 'all'
+    } else if (isNaN(Number(to))) {
+      return BROADCAST_ADDR
+    } else {
+      return Number(to)
+    }
   }
 
   private banner() {
@@ -234,4 +176,15 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
       </div>
     )
   }
+}
+
+function ToggleFilterHeaderIcon({ onclick, showAll }: { showAll: boolean; onclick: () => void }) {
+  return (
+    <HeaderIcon
+      tooltip={showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`}
+      tooltipDir="bottom-right"
+      icon={showAll ? FilterCircleXmarkIcon : FilterIcon}
+      onClick={() => onclick()}
+    />
+  )
 }

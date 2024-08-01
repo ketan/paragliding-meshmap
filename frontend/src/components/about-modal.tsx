@@ -5,7 +5,7 @@ interface ModalProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function ModalComponent({ setShowModal }: ModalProps) {
+export function AboutModal({ setShowModal }: ModalProps) {
   return (
     <div className="relative z-sidebar">
       {/* overlay */}

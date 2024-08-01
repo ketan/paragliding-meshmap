@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import icon from '../assets/images/icon.png'
 import { CircleInfoIcon } from '../icon-constants'
-import { ModalComponent } from './modal'
+import { AboutModal } from './about-modal'
 
-export function Page(props: React.PropsWithChildren) {
+interface PageProps extends React.PropsWithChildren {
+  headerIcons: React.ReactNode[] | undefined
+}
+
+export function Page(props: PageProps) {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
@@ -18,6 +22,7 @@ export function Page(props: React.PropsWithChildren) {
             {/* header action buttons */}
             <HeaderActionButtons>
               <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => setShowModal(true)} />
+              {props.headerIcons}
             </HeaderActionButtons>
           </div>
           {/* end header */}
@@ -27,7 +32,7 @@ export function Page(props: React.PropsWithChildren) {
           </div>
         </div>
       </div>
-      {showModal && <ModalComponent setShowModal={setShowModal} />}
+      {showModal && <AboutModal setShowModal={setShowModal} />}
     </>
   )
 }

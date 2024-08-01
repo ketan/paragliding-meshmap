@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { DateTime } from 'luxon'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import CopyIcon from '../assets/images/icons/copy.svg?component'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
@@ -130,7 +130,12 @@ function lastMessage(node: Node) {
   })
 }
 
-export function nodeTooltip(node: Node) {
+interface Props {
+  node: Node
+  callback?: () => void
+}
+
+export function NodeTooltip({ node, callback }: Props) {
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} /> : null
   const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
@@ -215,8 +220,12 @@ export function nodeTooltip(node: Node) {
     showMessagesButton,
   ]
 
+  useEffect(() => {
+    callback()
+  })
+
   return (
-    <div className="lg:text-sm sm:text-xs text-wrap">
+    <div className="lg:text-sm sm:text-xs text-wrap" onClick={() => console.log(`div clicked`)}>
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

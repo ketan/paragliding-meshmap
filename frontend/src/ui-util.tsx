@@ -69,6 +69,10 @@ export function isMobile() {
   return /Android|webOS|phone|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
+export function isDesktop() {
+  return !isMobile()
+}
+
 export function getTextSize(node: Node) {
   const name = nodeName(node)
   let width = 0

@@ -4,6 +4,7 @@ import 'leaflet-groupedlayercontrol'
 import 'leaflet.markercluster'
 import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
+import ReactDOM from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
 import { MapContainer } from 'react-leaflet'
 import { NodeRoleNameToID } from './hardware-modules'
@@ -13,8 +14,8 @@ import { MapTiles, MapTypes } from './map-providers'
 import { Node } from './nodes-entity'
 import { addLegendToMap, cssClassFor } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
-import { nodeTooltip } from './templates/node-tooltip'
-import { getTextSize, isMobile, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import { NodeTooltip } from './templates/node-tooltip'
+import { getTextSize, isDesktop, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -48,9 +49,10 @@ interface UIConfig {
   configNodesOfflineAge: Duration
 }
 interface AllData {
-  allNodes: Node[]
-  newerNodes: Node[]
-  newerNodesWithPosition: Node[]
+  allNodes: Record<number, Node>
+  newerNodes: Record<number, Node>
+  newerNodesWithPosition: Record<number, Node>
+  markers: Record<number, L.Marker>
   hardwareModels: HardwareModel[]
 }
 
@@ -124,28 +126,43 @@ export default class MapApp extends Component<MapProps, MapState> {
           hardwareModelsResponse.json(),
           nodesResponse.json(),
         ])
-        const allNodes = sanitizeNodesProperties(rawNodes)
+
+        const allNodes = sanitizeNodesProperties(rawNodes).reduce(
+          (acc, eachNode) => {
+            acc[eachNode.nodeId] = eachNode
+            return acc
+          },
+          {} as Record<number, Node>
+        )
 
         this.setState({ hardwareModels, allNodes }, () => {
-          const newerNodes = this.state.allNodes?.filter((eachNode) => {
-            const age = now.diff(DateTime.fromISO(eachNode.updatedAt))
-            return age < this.state.configNodesMaxAge
+          const newerNodes: Record<number, Node> = {}
+          const newerNodesWithPosition: Record<number, Node> = {}
+
+          Object.values(allNodes).forEach((node) => {
+            const age = now.diff(DateTime.fromISO(node.updatedAt))
+            if (age < this.state.configNodesMaxAge) {
+              newerNodes[node.nodeId] = node
+            }
           })
 
-          const newerNodesWithPosition = newerNodes?.filter((eachNode) => {
-            return eachNode.latLng
+          Object.values(newerNodes).forEach((eachNode) => {
+            if (eachNode.latLng) {
+              newerNodesWithPosition[eachNode.nodeId] = eachNode
+            }
           })
-
 
           this.setState({ newerNodes, newerNodesWithPosition }, () => {
             this.state.dataLoaded.resolve()
-            console.info(`Total nodes - ${this.state.allNodes?.length}`)
-            console.info(`Newer nodes - ${this.state.newerNodes?.length}`)
-            console.info(`Newer nodes with position - ${this.state.newerNodesWithPosition?.length}`)
+            console.info(`Total nodes - ${Object.keys(this.state.allNodes!).length}`)
+            console.info(`Newer nodes - ${Object.keys(this.state.newerNodes!).length}`)
+            console.info(`Newer nodes with position - ${Object.keys(this.state.newerNodesWithPosition!).length}`)
           })
         })
       } else {
-        console.log(`Error fetching data`)
+        logger(
+          `Error fetching data, node response was ${nodesResponse.status}, hardware models response was ${hardwareModelsResponse.status}`
+        )
         this.state.dataLoaded.reject()
       }
     } catch (err) {
@@ -153,8 +170,8 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.state.dataLoaded.reject()
     }
 
-    console.log(`Waiting for data and map to load...`)
     Promise.all([this.state.dataLoaded.promise, this.state.mapInitialized.promise]).then(() => {
+      logger(`Map and data loaded`)
       this.mapAndDataLoaded()
       const queryParams = this.getQueryParams()
       this.maybeFlyToCurrentLocation()
@@ -186,7 +203,6 @@ export default class MapApp extends Component<MapProps, MapState> {
 
       if (arg && typeof arg === 'object' && 'target' in arg && arg.target instanceof L.Map) {
         this.setState({ map: arg.target }, () => {
-          console.log(`map initialized`)
           this.mapInitialized()
         })
       } else {
@@ -201,7 +217,6 @@ export default class MapApp extends Component<MapProps, MapState> {
     this.allClusteredLayerGroup.addTo(this.state.map!)
     new MapTiles(this.props.mapType).addDefaultLayerToMap(this.state.map!)
     addLegendToMap(this.state.map!)
-    console.log(`resolving map`)
     this.state.mapInitialized.resolve()
   }
 
@@ -273,62 +288,150 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   private mapAndDataLoaded() {
-    this.state.newerNodesWithPosition!.forEach((eachNode) => {
-      const iconSize = getTextSize(eachNode)
+    const markers: Record<number, L.Marker> = {}
+    Object.values(this.state.newerNodesWithPosition!).forEach(
+      (eachNode) => {
+        markers[eachNode.nodeId] = this.createMarker(eachNode)
+      },
+      {} as Record<number, L.Marker>
+    )
 
-      const marker = L.marker(eachNode.offsetLatLng!, {
-        icon: L.divIcon({
-          className: this.getIconClassFor(eachNode),
-          iconSize: iconSize,
-          html: nodePositionView(eachNode),
-          iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
-        }),
-        zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
-      })
-
-      const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
-
-      if (!isMobile()) {
-        marker.bindTooltip(() => renderToString(nodeTooltip(eachNode)), { interactive: true, offset: tooltipOffset })
-      }
-
-      marker.on('click', () => {
-        // close tooltip on click to prevent tooltip and popup showing at same time
-        marker.closeTooltip()
-      })
-
-      marker.on('click', () => {
-        this.closeAllToolTipsAndPopupsAndPopups()
-
-        this.state.map?.openTooltip(renderToString(nodeTooltip(eachNode)), eachNode.offsetLatLng!, {
-          interactive: true, // allow clicking etc inside tooltip
-          permanent: true, // don't dismiss when clicking
-          offset: tooltipOffset,
-        })
-      })
-
-      marker.bindTooltip(() => renderToString(nodeTooltip(eachNode)), { interactive: true, offset: tooltipOffset })
-
-      if (
-        eachNode.role == NodeRoleNameToID.ROUTER ||
-        eachNode.role == NodeRoleNameToID.ROUTER_CLIENT ||
-        eachNode.role == NodeRoleNameToID.REPEATER
-      ) {
-        marker.addTo(this.allRouterNodesLayerGroup)
-      }
-
-      marker.addTo(this.allNodesLayerGroup)
-      marker.addTo(this.allClusteredLayerGroup)
-    })
+    this.setState({ markers })
   }
 
-  private findNodeById(nodes: Node[], nodeId?: number | string | null) {
+  private createMarker(eachNode: Node) {
+    const iconSize = getTextSize(eachNode)
+
+    const marker = L.marker(eachNode.offsetLatLng!, {
+      icon: L.divIcon({
+        className: this.getIconClassFor(eachNode),
+        iconSize: iconSize,
+        html: nodePositionView(eachNode),
+        iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
+      }),
+      zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
+    })
+
+    const tooltipOffset = isDesktop() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
+
+    let popupDiv: HTMLElement | undefined
+    let popupReactRoot: ReactDOM.Root | undefined
+
+    function maybeCloseExistingPopup() {
+      if (popupReactRoot) {
+        popupReactRoot.unmount()
+        popupReactRoot = undefined
+      }
+
+      if (popupDiv) {
+        popupDiv.remove()
+        popupDiv = undefined
+      }
+    }
+
+    function maybeCreateTooltip() {
+      maybeCloseExistingPopup()
+      popupDiv = document.createElement('div')
+      popupDiv.setAttribute('data-purpose', 'node-popup-permanent')
+      popupDiv.setAttribute('data-node-id', eachNode.nodeId.toString())
+      popupDiv.setAttribute('data-node-hexid', eachNode.nodeIdHex)
+      popupDiv.setAttribute('data-node-shortName', eachNode.shortName?.toString() || '')
+      popupReactRoot = ReactDOM.createRoot(popupDiv)
+    }
+
+    if (isDesktop()) {
+      let tooltipDiv: HTMLElement | undefined
+      let tooltipReactRoot: ReactDOM.Root | undefined
+
+      marker.bindTooltip(
+        () => {
+          if (!tooltipDiv || !tooltipDiv.isConnected) {
+            tooltipDiv = document.createElement('div')
+            tooltipDiv.setAttribute('node-hover-tooltip-id', eachNode.nodeId.toString())
+            tooltipDiv.setAttribute('node-hover-tooltip-hexid', eachNode.nodeIdHex)
+            tooltipDiv.setAttribute('node-hover-tooltip-shortName', eachNode.shortName?.toString() || '')
+          }
+          return tooltipDiv
+        },
+        { interactive: true, offset: tooltipOffset }
+      )
+
+      marker.on('tooltipopen', () => {
+        // debugger
+        if (tooltipReactRoot) {
+          tooltipReactRoot.unmount()
+          tooltipReactRoot = undefined
+        }
+
+        if (tooltipDiv) {
+          tooltipReactRoot = ReactDOM.createRoot(tooltipDiv)
+        } else {
+          throw new Error(`No tooltip div found`)
+        }
+
+        tooltipReactRoot.render(
+          <NodeTooltip
+            node={eachNode}
+            callback={() => {
+              marker.getTooltip()?.update()
+              marker.getTooltip()?.update()
+            }}
+          />
+        )
+      })
+
+      marker.on('tooltipclose', () => {
+        if (tooltipReactRoot) {
+          tooltipReactRoot.unmount()
+          tooltipReactRoot = undefined
+        }
+        if (tooltipDiv) {
+          tooltipDiv.remove()
+          tooltipDiv = undefined
+        }
+      })
+    }
+
+    marker.on('click', () => {
+      this.closeAllToolTipsAndPopupsAndPopups()
+      maybeCreateTooltip()
+
+      const tooltip = new L.Tooltip(eachNode.offsetLatLng!, { interactive: true, permanent: true, offset: tooltipOffset })
+
+      popupReactRoot?.render(
+        <NodeTooltip
+          node={eachNode}
+          callback={() => {
+            tooltip.update()
+          }}
+        />
+      )
+
+      tooltip.setContent(popupDiv!)
+
+      this.state.map?.openTooltip(tooltip)
+    })
+
+    if (
+      eachNode.role == NodeRoleNameToID.ROUTER ||
+      eachNode.role == NodeRoleNameToID.ROUTER_CLIENT ||
+      eachNode.role == NodeRoleNameToID.REPEATER
+    ) {
+      marker.addTo(this.allRouterNodesLayerGroup)
+    }
+
+    marker.addTo(this.allNodesLayerGroup)
+    marker.addTo(this.allClusteredLayerGroup)
+    return marker
+  }
+
+  private findNodeById(nodes: Record<number, Node>, nodeId?: number | string | null) {
     // find node by id
     nodeId = sanitizeNumber(nodeId)
     if (!nodeId) {
       return
     }
-    return nodes.find((node) => node.nodeId === nodeId)
+    return nodes[nodeId]
   }
 
   private flyToNode(map: L.Map, nodeId?: string | number | null) {
@@ -337,7 +440,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       return
     }
     const iconSize = getTextSize(node)
-    const tooltipOffset = !isMobile() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
+    const tooltipOffset = isDesktop() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
     if (node.offsetLatLng) {
       // const latlng = [node.latitude, node.longitude] as [number, number]
 
@@ -346,7 +449,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         duration: 1,
       })
 
-      map.openTooltip(renderToString(nodeTooltip(node)), node.offsetLatLng, {
+      map.openTooltip(renderToString(NodeTooltip(node)), node.offsetLatLng, {
         interactive: true, // allow clicking etc inside tooltip
         permanent: true, // don't dismiss when clicking
         offset: tooltipOffset,

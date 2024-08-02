@@ -32,7 +32,7 @@ export function Page(props: PageProps) {
           {props.children}
         </div>
       </div>
-      {showModal && <AboutModal setShowModal={setShowModal} />}
+      <AboutModal setShowModal={setShowModal} showModal={showModal} />
     </>
   )
 }

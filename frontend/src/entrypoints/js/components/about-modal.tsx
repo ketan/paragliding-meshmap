@@ -2,10 +2,14 @@ import icon from '../../../assets/images/icon.png'
 import { GithubIcon, XMarkIcon } from '../utils/icon-constants'
 
 interface ModalProps {
+  showModal: boolean
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function AboutModal({ setShowModal }: ModalProps) {
+export function AboutModal({ setShowModal, showModal }: ModalProps) {
+  if (!showModal) {
+    return
+  }
   return (
     <div className="relative z-sidebar">
       {/* overlay */}

@@ -55,7 +55,7 @@ export async function dumpStats(db: Database, logger: debug.Debugger) {
     const eachModel = models[index]
 
     // @ts-expect-error We're duck typing here
-    const count = await db[eachModel].count()
+    const count = await db[eachModel].count({ where: { id: { gte: 0 } } })
 
     counts[eachModel] = count
   }

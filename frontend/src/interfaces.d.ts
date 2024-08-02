@@ -25,3 +25,5 @@ export interface MessageIn extends Message {
 export interface MessageOut extends Message {
   to: number
 }
+
+export type All = `all`

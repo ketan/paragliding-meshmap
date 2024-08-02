@@ -30,3 +30,4 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 vite.config.ts.timestamp*
+frontend/src/entrypoints/js/utils/icon-constants.ts

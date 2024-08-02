@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { NodeNameAttributes } from '../nodes-entity'
-import { nodeName } from '../ui-util'
+import { nodeName } from '../entrypoints/js/utils/ui-util'
 
 export function nodePositionView(node: Partial<NodeNameAttributes>) {
   const view = (

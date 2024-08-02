@@ -1,14 +1,16 @@
 import _ from 'lodash'
 import { DateTime } from 'luxon'
-import { ReactNode } from 'react'
-import CopyIcon from '../assets/images/icons/copy.svg?component'
+import { ReactNode, useEffect } from 'react'
+import { Tooltip } from '../entrypoints/js/components/tooltip'
+import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
+import { BROADCAST_ADDR, googleMapsLink, timeAgo } from '../entrypoints/js/utils/ui-util'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
-import { Node } from '../nodes-entity'
-import { Tooltip } from '../tooltip'
-import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
+import { NodesEntityForUI } from '../nodes-entity'
+import { mainRouterNavigate } from '../entrypoints/js/router-event-listener'
+import { messageLink, nodeUrl } from '../entrypoints/js/utils/link-utils'
 
-function mqttStatus(node: Node) {
+function mqttStatus(node: NodesEntityForUI) {
   if (node.mqttConnectionState === 'online') {
     return (
       <>
@@ -24,7 +26,7 @@ function mqttStatus(node: Node) {
   }
 }
 
-const location = (node: Node) => {
+const location = (node: NodesEntityForUI) => {
   const items = [
     keyValue({
       key: `Location`,
@@ -47,7 +49,7 @@ const location = (node: Node) => {
   return items
 }
 
-type Value = string | number | ReactNode | ReactNode[]
+type Value = ReactNode | ReactNode[]
 
 type KeyValueType<T> = {
   key: string
@@ -105,7 +107,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
   }
 }
 
-function lastMessage(node: Node) {
+function lastMessage(node: NodesEntityForUI) {
   if (!node.outbox || node.outbox.length === 0) {
     return
   }
@@ -130,7 +132,13 @@ function lastMessage(node: Node) {
   })
 }
 
-export function nodeTooltip(node: Node) {
+interface Props {
+  node: NodesEntityForUI
+  callback?: () => void
+  showDetail: (node: NodesEntityForUI) => void
+}
+
+export function NodeTooltip({ node, callback, showDetail }: Props) {
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} /> : null
   const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
@@ -141,7 +149,11 @@ export function nodeTooltip(node: Node) {
 
   const showDetailsButton = (
     <p className="text-center mt-3" key="showDetails">
-      <a className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100">
+      <a
+        className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
+        onClick={() => showDetail(node)}
+        data-node-id={node.nodeId}
+      >
         Show details
       </a>
     </p>
@@ -150,8 +162,10 @@ export function nodeTooltip(node: Node) {
   const showMessagesButton = (
     <p className="text-center mt-3" key="showMessages" data-id="showMessagesButton">
       <a
-        href={`/messages.html?from=${node.nodeId}&to=${BROADCAST_ADDR}`}
-        target="_blank"
+        href={messageLink(node.nodeId)}
+        onClick={() => {
+          mainRouterNavigate(messageLink(node.nodeId))
+        }}
         rel="noreferrer"
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
       >
@@ -196,7 +210,12 @@ export function nodeTooltip(node: Node) {
         const link = nodeUrl(node)
         return (
           <>
-            <a href={link}>
+            <a
+              href={link}
+              onClick={() => {
+                mainRouterNavigate(link)
+              }}
+            >
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
             <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3" data-copy={link}>
@@ -212,24 +231,14 @@ export function nodeTooltip(node: Node) {
     showMessagesButton,
   ]
 
+  useEffect(() => {
+    callback && callback()
+  })
+
   return (
-    <div className="lg:text-sm sm:text-xs text-wrap">
+    <div className="lg:text-sm sm:text-xs text-wrap" onClick={() => console.log(`div clicked`)}>
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>
   )
 }
-
-function handleButtonClick(event: MouseEvent) {
-  const target = event.target as HTMLElement
-  const copyElement = target.closest('[data-copy]')
-  if (copyElement) {
-    copyElement.classList.add('motion-safe:animate-ping')
-    const currentURL = new URL(copyElement.getAttribute('data-copy')!, window.location.href)
-    currentURL.hash = ''
-    navigator.clipboard.writeText(currentURL.toString())
-    setTimeout(() => copyElement.classList.remove('motion-safe:animate-ping'), 500)
-  }
-}
-
-document.addEventListener('click', handleButtonClick)

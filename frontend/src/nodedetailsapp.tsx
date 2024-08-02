@@ -1,9 +1,9 @@
 import { Component, PropsWithChildren } from 'react'
-import { Node } from './nodes-entity'
+import { NodesEntityForUI } from './nodes-entity'
 import { XMarkIcon } from './icon-constants'
 
 interface Props {
-  node: Node
+  node: NodesEntityForUI
   ondismiss: () => void
 }
 

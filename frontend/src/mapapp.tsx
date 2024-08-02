@@ -6,11 +6,13 @@ import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
 import { MapContainer } from 'react-leaflet'
+import { Page } from './components/page'
 import { NodeRoleNameToID } from './hardware-modules'
 import { HardwareModel } from './interfaces'
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
-import { Node } from './nodes-entity'
+import { NodesEntityForUI } from './nodes-entity'
+import { SearchBarApp } from './searchbarapp'
 import { addLegendToMap, cssClassFor } from './templates/legend'
 import { nodePositionView } from './templates/node-position'
 import { NodeTooltip } from './templates/node-tooltip'
@@ -48,9 +50,9 @@ interface UIConfig {
   configNodesOfflineAge: Duration
 }
 interface AllData {
-  allNodes: Record<number, Node>
-  newerNodes: Record<number, Node>
-  newerNodesWithPosition: Record<number, Node>
+  allNodes: Record<number, NodesEntityForUI>
+  newerNodes: Record<number, NodesEntityForUI>
+  newerNodesWithPosition: Record<number, NodesEntityForUI>
   markers: Record<number, L.Marker>
   hardwareModels: HardwareModel[]
 }
@@ -119,7 +121,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         (hardwareModelsResponse.status == 304 && nodesResponse.status == 200) ||
         nodesResponse.status == 304
       ) {
-        const [hardwareModels, rawNodes]: [HardwareModel[], Node[]] = await Promise.all([
+        const [hardwareModels, rawNodes]: [HardwareModel[], NodesEntityForUI[]] = await Promise.all([
           hardwareModelsResponse.json(),
           nodesResponse.json(),
         ])
@@ -129,12 +131,12 @@ export default class MapApp extends Component<MapProps, MapState> {
             acc[eachNode.nodeId] = eachNode
             return acc
           },
-          {} as Record<number, Node>
+          {} as Record<number, NodesEntityForUI>
         )
 
         this.setState({ hardwareModels, allNodes }, () => {
-          const newerNodes: Record<number, Node> = {}
-          const newerNodesWithPosition: Record<number, Node> = {}
+          const newerNodes: Record<number, NodesEntityForUI> = {}
+          const newerNodesWithPosition: Record<number, NodesEntityForUI> = {}
 
           Object.values(allNodes).forEach((node) => {
             const age = now.diff(DateTime.fromISO(node.updatedAt))
@@ -173,7 +175,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.setState({ markers }, () => {
         const queryParams = this.getQueryParams()
         if (queryParams.nodeId) {
-          this.flyToNode(this.state.map!, queryParams.nodeId)
+          this.flyToNode(queryParams.nodeId)
         } else {
           this.maybeFlyToCurrentLocation()
         }
@@ -186,14 +188,22 @@ export default class MapApp extends Component<MapProps, MapState> {
       return <div>Loading map...</div>
     }
 
+    const searchBar = (
+      <SearchBarApp nodes={Object.values(this.state.newerNodesWithPosition)} selectCallback={(node) => this.flyToNode(node)} />
+    )
+
     return (
-      <MapContainer
-        center={this.state.coords}
-        zoom={this.state.zoom}
-        maxZoom={MAX_ZOOM}
-        whenReady={(...args) => this.mapReady(args)}
-        style={{ height: '100%', width: '100%' }}
-      />
+      <Page bannerMain={searchBar}>
+        <div style={{ width: '100%', height: '100%' }}>
+          <MapContainer
+            center={this.state.coords}
+            zoom={this.state.zoom}
+            maxZoom={MAX_ZOOM}
+            whenReady={(...args) => this.mapReady(args)}
+            style={{ height: '100%', width: '100%' }}
+          />
+        </div>
+      </Page>
     )
   }
 
@@ -271,7 +281,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     }
   }
 
-  private getIconClassFor(node: Node) {
+  private getIconClassFor(node: NodesEntityForUI) {
     let icon = cssClassFor('disconnected')
     if (node.mqttConnectionState === 'online') {
       icon = cssClassFor('online')
@@ -299,7 +309,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     return markers
   }
 
-  private createMarker(eachNode: Node) {
+  private createMarker(eachNode: NodesEntityForUI) {
     const iconSize = getTextSize(eachNode)
 
     const marker = L.marker(eachNode.offsetLatLng!, {
@@ -425,7 +435,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     return marker
   }
 
-  private findNodeById(nodes: Record<number, Node>, nodeId?: number | string | null) {
+  private findNodeById(nodes: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {
     // find node by id
     nodeId = sanitizeNumber(nodeId)
     if (!nodeId) {
@@ -434,14 +444,23 @@ export default class MapApp extends Component<MapProps, MapState> {
     return nodes[nodeId]
   }
 
-  private flyToNode(map: L.Map, nodeId?: string | number | null) {
-    const node = this.findNodeById(this.state.newerNodesWithPosition!, nodeId)
+  private flyToNode(nodeOrNodeId: string | number | null | NodesEntityForUI) {
+    let node: NodesEntityForUI | null | undefined
+    if (!nodeOrNodeId) {
+      return
+    }
+    if (typeof nodeOrNodeId === 'string' || typeof nodeOrNodeId === 'number') {
+      node = this.findNodeById(this.state.newerNodesWithPosition!, nodeOrNodeId)
+    } else {
+      node = nodeOrNodeId
+    }
+
     if (!node) {
       return
     }
 
     if (node.offsetLatLng) {
-      map.flyTo(node.offsetLatLng, this.state.defaultZoomLevelForNode, {
+      this.state.map?.flyTo(node.offsetLatLng, this.state.defaultZoomLevelForNode, {
         animate: true,
         duration: 1,
       })

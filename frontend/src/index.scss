@@ -27,7 +27,7 @@ body {
   @apply z-[10001];
 }
 
-[aria-label][data-cooltipz-dir][data-cooltipz-dir="bottom-right"]::before {
+[aria-label][data-cooltipz-dir][data-cooltipz-dir='bottom-right']::before {
   right: calc(var(--cooltipz-arrow-size, 0.3125rem) * 3);
   transform: translate(var(--cooltipz-arrow-offset, 0px), calc(var(--cooltipz-slide, 6px) * -1));
 }

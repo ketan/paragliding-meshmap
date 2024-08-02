@@ -3,12 +3,12 @@ import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
-import { Node } from '../nodes-entity'
+import { NodesEntityForUI } from '../nodes-entity'
 import { Tooltip } from '../tooltip'
 import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
 import { CopyIcon } from '../icon-constants'
 
-function mqttStatus(node: Node) {
+function mqttStatus(node: NodesEntityForUI) {
   if (node.mqttConnectionState === 'online') {
     return (
       <>
@@ -24,7 +24,7 @@ function mqttStatus(node: Node) {
   }
 }
 
-const location = (node: Node) => {
+const location = (node: NodesEntityForUI) => {
   const items = [
     keyValue({
       key: `Location`,
@@ -105,7 +105,7 @@ const keyValue = function <T>(args: KeyValueType<T>) {
   }
 }
 
-function lastMessage(node: Node) {
+function lastMessage(node: NodesEntityForUI) {
   if (!node.outbox || node.outbox.length === 0) {
     return
   }
@@ -131,7 +131,7 @@ function lastMessage(node: Node) {
 }
 
 interface Props {
-  node: Node
+  node: NodesEntityForUI
   callback?: () => void
 }
 

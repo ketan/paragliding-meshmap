@@ -1,27 +1,23 @@
 import _ from 'lodash'
 import { PureComponent } from 'react'
-import { HardwareModel } from './interfaces'
-import { Node } from './nodes-entity'
+import { NodesEntityForUI } from './nodes-entity'
 
 export interface AllData {
-  allNodes: Node[]
-  newerNodes: Node[]
-  newerNodesWithPosition: Node[]
-  hardwareModels: HardwareModel[]
+  nodes: NodesEntityForUI[]
 }
 
 interface SearchBarAppState {
   searchText: string
-  filteredNodes: Node[]
+  filteredNodes: NodesEntityForUI[]
 }
 
-export class SearchBarApp extends PureComponent<AllData & { selectCallback: (node: Node) => void }, SearchBarAppState> {
+export class SearchBarApp extends PureComponent<AllData & { selectCallback: (node: NodesEntityForUI) => void }, SearchBarAppState> {
   state: SearchBarAppState = {
     searchText: '',
     filteredNodes: [],
   }
 
-  private selectNode(node: Node) {
+  private selectNode(node: NodesEntityForUI) {
     this.setState({ searchText: '' })
     this.props.selectCallback(node)
   }
@@ -36,7 +32,7 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
   }
   private filterList(): void {
     const searchText = this.state.searchText.toLowerCase()
-    const filteredNodes = this.props.newerNodesWithPosition.filter((node) => {
+    const filteredNodes = this.props.nodes.filter((node) => {
       return (
         node.nodeId.toString().includes(searchText) ||
         node.nodeIdHex.includes(searchText) ||
@@ -76,14 +72,16 @@ export class SearchBarApp extends PureComponent<AllData & { selectCallback: (nod
   render() {
     return (
       <>
-        <input
-          type="text"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          value={this.state.searchText}
-          onInput={this.applyFilter.bind(this)}
-          placeholder={`Search ${this.props.newerNodesWithPosition.length} nodes...`}
-        />
-        {this.showSearchResults()}
+        <div className="w-full mx-3 my-auto block relative">
+          <input
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
+            value={this.state.searchText}
+            onInput={this.applyFilter.bind(this)}
+            placeholder={`Search ${this.props.nodes.length} nodes...`}
+          />
+          {this.showSearchResults()}
+        </div>
       </>
     )
   }

@@ -2,7 +2,7 @@ import L from 'leaflet'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { NodesEntity } from './db-entities'
-import { Node, NodeNameAttributes } from './nodes-entity'
+import { NodesEntityForUI, NodeNameAttributes } from './nodes-entity'
 import { nodePositionView } from './templates/node-position'
 import { Tooltip } from './tooltip'
 
@@ -39,12 +39,12 @@ export function sanitizeLatLong(lat: number | string | undefined | null, lon: nu
   }
 }
 
-export function sanitizeNodesProperties(nodes: NodesEntity[]): Node[] {
-  return nodes.map((eachNode) => sanitizeNodeProperties(eachNode)) as Node[]
+export function sanitizeNodesProperties(nodes: NodesEntity[]): NodesEntityForUI[] {
+  return nodes.map((eachNode) => sanitizeNodeProperties(eachNode)) as NodesEntityForUI[]
 }
 
-export function sanitizeNodeProperties(node: NodesEntity): Node {
-  const returnValue = { ...node } as Node
+export function sanitizeNodeProperties(node: NodesEntity): NodesEntityForUI {
+  const returnValue = { ...node } as NodesEntityForUI
 
   returnValue.nodeIdHex = `!${node.nodeId?.toString(16)}`
 
@@ -60,7 +60,7 @@ export function nodeName(node: Partial<NodeNameAttributes>) {
   return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
 }
 
-export function nodeUrl(node: Node | number) {
+export function nodeUrl(node: NodesEntityForUI | number) {
   const nodeId = typeof node === 'number' ? node : node.nodeId
   return `/?nodeId=${nodeId}`
 }
@@ -73,7 +73,7 @@ export function isDesktop() {
   return !isMobile()
 }
 
-export function getTextSize(node: Node) {
+export function getTextSize(node: NodesEntityForUI) {
   const name = nodeName(node)
   let width = 0
   let height = 0
@@ -92,7 +92,6 @@ const charSizes: Record<string, [number, number]> = {}
 let nodeSizeElement: HTMLElement | null = null
 // no validation in place for perf reason, so make sure to just pass a single character
 function getCharWidth(c: string) {
-
   if (!charSizes[c]) {
     if (!nodeSizeElement) {
       nodeSizeElement = document.createElement('div')

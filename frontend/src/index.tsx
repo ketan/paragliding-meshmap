@@ -7,6 +7,6 @@ import MapApp from './mapapp'
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')
-  const mapElem = document.getElementById('map')!
+  const mapElem = document.getElementById('app')!
   ReactDOM.createRoot(mapElem).render(<MapApp mapType="Google Hybrid" />)
 })

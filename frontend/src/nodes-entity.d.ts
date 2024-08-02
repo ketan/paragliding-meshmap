@@ -1,9 +1,9 @@
 import { NodesEntity } from './db-entities'
 
-export interface Node extends Omit<NodesEntity, 'latitude' | 'longitude'> {
+export interface NodesEntityForUI extends Omit<NodesEntity, 'latitude' | 'longitude'> {
   latLng?: L.PointTuple
   offsetLatLng?: L.PointTuple
   nodeIdHex: string
 }
 
-export type NodeNameAttributes = Pick<Node, 'shortName' | 'longName' | 'nodeId' | 'nodeIdHex'>
+export type NodeNameAttributes = Pick<NodesEntityForUI, 'shortName' | 'longName' | 'nodeId' | 'nodeIdHex'>

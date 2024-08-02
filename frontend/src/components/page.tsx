@@ -55,13 +55,7 @@ export function HeaderIcon({
   className?: string | undefined
 }) {
   return (
-    <a
-      href="#"
-      className={`has-tooltip rounded-full ${className}`}
-      aria-label={tooltip}
-      data-cooltipz-dir={tooltipDir}
-      onClick={onClick}
-    >
+    <a href="#" className={`has-tooltip rounded-full ${className}`} aria-label={tooltip} data-cooltipz-dir={tooltipDir} onClick={onClick}>
       <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
         {React.createElement(icon, { className: 'w-6 h-6' })}
       </div>
@@ -72,7 +66,7 @@ export function HeaderIcon({
 function ApplicationName() {
   return (
     <div className="my-auto leading-tight hidden md:block">
-      <a className="font-bold sm:text-sm md:text-base lg:text-xl" href="/">
+      <a className="font-bold sm:text-sm md:text-base lg:text-xl text-nowrap" href="/">
         Meshtastic map
       </a>
     </div>

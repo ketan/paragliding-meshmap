@@ -51,30 +51,32 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     const headerIcon = <ToggleFilterHeaderIcon onclick={() => this.toggleFilter()} showAll={this.state.to === 'all'} />
     return (
       <Page bannerMain={this.banner()} headerIcons={headerIcon}>
-        {this.state.messages.map((msg) => {
-          const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
-          const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
+        <div className="flex flex-col gap-4 p-8">
+          {this.state.messages.map((msg) => {
+            const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
+            const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
 
-          return (
-            <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
-              <span className="font-semibold text-sm">
-                <a href={nodeUrl(msg.from)}>
-                  {fromNode.shortName} ({fromNode.longName})
-                </a>{' '}
-                →{' '}
-                {4294967295 === msg.to ? (
-                  'Everyone'
-                ) : (
-                  <a href={nodeUrl(msg.to)}>
-                    {toNode.shortName} ({toNode.longName})
-                  </a>
-                )}
-              </span>
-              <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
-              <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
-            </div>
-          )
-        })}
+            return (
+              <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
+                <span className="font-semibold text-sm">
+                  <a href={nodeUrl(msg.from)}>
+                    {fromNode.shortName} ({fromNode.longName})
+                  </a>{' '}
+                  →{' '}
+                  {4294967295 === msg.to ? (
+                    'Everyone'
+                  ) : (
+                    <a href={nodeUrl(msg.to)}>
+                      {toNode.shortName} ({toNode.longName})
+                    </a>
+                  )}
+                </span>
+                <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
+                <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
+              </div>
+            )
+          })}
+        </div>
         <div ref={this.elementRefForEndOfPage} />
       </Page>
     )

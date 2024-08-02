@@ -296,8 +296,6 @@ export default class MapApp extends Component<MapProps, MapState> {
       {} as Record<number, L.Marker>
     )
 
-    console.log(`markers being set to `, markers)
-
     return markers
   }
 

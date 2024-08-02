@@ -5,8 +5,8 @@ import { TooltipDirection } from '../tooltip'
 import { AboutModal } from './about-modal'
 
 interface PageProps extends React.PropsWithChildren {
-  headerIcons: React.ReactNode
-  bannerMain: React.ReactNode
+  headerIcons?: React.ReactNode
+  bannerMain?: React.ReactNode
 }
 
 export function Page(props: PageProps) {
@@ -29,7 +29,7 @@ export function Page(props: PageProps) {
           </div>
           {/* end header */}
 
-          <div className="flex flex-col gap-4 p-8">{props.children}</div>
+          {props.children}
         </div>
       </div>
       {showModal && <AboutModal setShowModal={setShowModal} />}

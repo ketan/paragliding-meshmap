@@ -13,7 +13,7 @@ export function Page(props: PageProps) {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
-      <div className="flex flex-col h-full w-full overflow-hidden">
+      <div className="flex flex-col h-full w-full">
         <div className="flex flex-col h-full">
           {/* begin header */}
           <div className="flex bg-white p-2 border-gray-300 border-b h-16">

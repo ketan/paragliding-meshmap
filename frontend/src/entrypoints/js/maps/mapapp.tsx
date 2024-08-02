@@ -273,7 +273,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       navigator.geolocation.getCurrentPosition((pos) => {
         const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
         if (latLng) {
-          this.state.map?.flyTo(latLng, MAX_ZOOM, { animate: false })
+          this.state.map?.flyTo(latLng, 17, { animate: false })
         }
       })
     }

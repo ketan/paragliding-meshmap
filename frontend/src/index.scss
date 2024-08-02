@@ -19,12 +19,17 @@ body {
 [aria-label][data-cooltipz-dir]::after,
 [aria-label][class*='cooltipz']::after {
   @apply z-[10000];
-  @apply font-medium text-white rounded-lg shadow-sm bg-black text-sm;
+  @apply font-medium text-white rounded-md shadow-sm bg-black text-sm;
 }
 
 [aria-label][data-cooltipz-dir]::before,
 [aria-label][class*='cooltipz']::before {
   @apply z-[10001];
+}
+
+[aria-label][data-cooltipz-dir][data-cooltipz-dir="bottom-right"]::before {
+  right: calc(var(--cooltipz-arrow-size, 0.3125rem) * 3);
+  transform: translate(var(--cooltipz-arrow-offset, 0px), calc(var(--cooltipz-slide, 6px) * -1));
 }
 
 .message-bubble {

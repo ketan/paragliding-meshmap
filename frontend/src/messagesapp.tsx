@@ -166,9 +166,9 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   private banner() {
     const fromNode = { ...this.state.nodes[this.state.from], nodeId: this.state.from }
     const bannerText = (
-      <>
+      <span className="text-sm md:text-lg">
         Messages sent by {fromNode.longName} ({fromNode.shortName})
-      </>
+      </span>
     )
     return (
       <div className="mx-auto grid content-evenly">
@@ -181,6 +181,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
 function ToggleFilterHeaderIcon({ onclick, showAll }: { showAll: boolean; onclick: () => void }) {
   return (
     <HeaderIcon
+      className="block"
       tooltip={showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`}
       tooltipDir="bottom-right"
       icon={showAll ? FilterCircleXmarkIcon : FilterIcon}

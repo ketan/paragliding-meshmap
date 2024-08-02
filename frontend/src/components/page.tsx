@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import icon from '../assets/images/icon.png'
 import { CircleInfoIcon } from '../icon-constants'
+import { TooltipDirection } from '../tooltip'
 import { AboutModal } from './about-modal'
 
 interface PageProps extends React.PropsWithChildren {
@@ -45,15 +46,22 @@ export function HeaderIcon({
   tooltip,
   onClick,
   tooltipDir,
+  className = '',
 }: {
   icon: React.FunctionComponent<React.SVGAttributes<SVGElement>>
   onClick?: () => void
   tooltip: string
-  tooltipDir: 'left' | 'top' | 'right' | 'bottom' | 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+  tooltipDir: TooltipDirection
+  className?: string | undefined
 }) {
-  // const newLocal = <CircleInfoIcon className="w-6 h-6" />
   return (
-    <a href="#" className="has-tooltip rounded-full hidden sm:block" aria-label={tooltip} data-cooltipz-dir={tooltipDir} onClick={onClick}>
+    <a
+      href="#"
+      className={`has-tooltip rounded-full ${className}`}
+      aria-label={tooltip}
+      data-cooltipz-dir={tooltipDir}
+      onClick={onClick}
+    >
       <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
         {React.createElement(icon, { className: 'w-6 h-6' })}
       </div>
@@ -63,7 +71,7 @@ export function HeaderIcon({
 
 function ApplicationName() {
   return (
-    <div className="my-auto leading-tight block sm:hidden lg:block">
+    <div className="my-auto leading-tight hidden md:block">
       <a className="font-bold sm:text-sm md:text-base lg:text-xl" href="/">
         Meshtastic map
       </a>
@@ -73,7 +81,7 @@ function ApplicationName() {
 
 function IconInHeader() {
   return (
-    <a className="hidden sm:block my-auto mr-3 relative" href="/">
+    <a className="block my-auto mr-3 relative" href="/">
       <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
       <img className="w-10 h-10 rounded bg-opacity-90" src={icon} />
     </a>

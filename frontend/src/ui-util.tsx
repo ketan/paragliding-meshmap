@@ -103,7 +103,7 @@ export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
   if (timestamp) {
     const dateTime = DateTime.fromISO(timestamp)
     return (
-      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')}>
+      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-right">
         {addParens ? '(' : null}
         {dateTime.toRelative()}
         {addParens ? ')' : null}

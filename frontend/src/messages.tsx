@@ -5,6 +5,10 @@ import { MessagesApp } from './messagesapp'
 addEventListener('load', function () {
   document.body.removeAttribute('style')
 
-  ReactDOM.createRoot(document.querySelector('#app')!).render(<MessagesApp />)
-
+  const domElem = document.querySelector('#app')
+  if (domElem) {
+    ReactDOM.createRoot(domElem).render(<MessagesApp />)
+  } else {
+    this.alert(`Dom Element not found`)
+  }
 })

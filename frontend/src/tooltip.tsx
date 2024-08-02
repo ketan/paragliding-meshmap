@@ -3,18 +3,15 @@ import React from 'react'
 type TooltipProps = React.HTMLAttributes<HTMLSpanElement> & {
   tooltipText: string
   className?: string
+  tooltipDir?: TooltipDirection
 }
 
-export class Tooltip extends React.Component<TooltipProps> {
-  render() {
-    const { children, tooltipText, className, ...rest } = this.props
+export type TooltipDirection = 'left' | 'top' | 'right' | 'bottom' | 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
 
-    return (
-      <>
-        <span className={`has-tooltip font-light ${className || ''}`} aria-label={tooltipText} data-cooltipz-dir="bottom" {...rest}>
-          {children}
-        </span>
-      </>
-    )
-  }
+export function Tooltip({ children, tooltipText, className, tooltipDir = 'bottom', ...rest }: TooltipProps) {
+  return (
+    <span className={`has-tooltip font-light ${className || ''}`} aria-label={tooltipText} data-cooltipz-dir={tooltipDir} {...rest}>
+      {children}
+    </span>
+  )
 }

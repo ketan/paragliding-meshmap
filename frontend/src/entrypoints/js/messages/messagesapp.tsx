@@ -3,8 +3,8 @@ import qs from 'qs'
 import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from '../../../db-entities'
 import { HeaderIcon, Page } from '../components/page'
-import { BROADCAST_ADDR, nodeUrl, timeAgo } from '../utils/ui-util'
 import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants'
+import { BROADCAST_ADDR, nodeUrl, timeAgo } from '../utils/ui-util'
 
 type All = `all`
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
@@ -48,9 +48,8 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   }
 
   render(): ReactNode {
-    const headerIcon = <ToggleFilterHeaderIcon onclick={() => this.toggleFilter()} showAll={this.state.to === 'all'} />
     return (
-      <Page bannerMain={this.banner()} headerIcons={headerIcon}>
+      <Page bannerMain={this.banner()} headerIcons={this.toggleFilterHeaderIcon()}>
         <div className="flex flex-col gap-4 p-8">
           {this.state.messages.map((msg) => {
             const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
@@ -178,16 +177,17 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
       </div>
     )
   }
-}
 
-function ToggleFilterHeaderIcon({ onclick, showAll }: { showAll: boolean; onclick: () => void }) {
-  return (
-    <HeaderIcon
-      className="block"
-      tooltip={showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`}
-      tooltipDir="bottom-right"
-      icon={showAll ? FilterCircleXmarkIcon : FilterIcon}
-      onClick={() => onclick()}
-    />
-  )
+  private toggleFilterHeaderIcon() {
+    const showAll = this.state.to === 'all'
+    return (
+      <HeaderIcon
+        className="block"
+        tooltip={showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`}
+        tooltipDir="bottom-right"
+        icon={showAll ? FilterCircleXmarkIcon : FilterIcon}
+        onClick={() => this.toggleFilter()}
+      />
+    )
+  }
 }

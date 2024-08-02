@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import qs from 'qs'
 import React, { ReactNode } from 'react'
-import { HeaderIcon, Page } from './components/page'
-import { NodesEntity, TextMessagesEntity } from './db-entities'
-import { FilterCircleXmarkIcon, FilterIcon } from './icon-constants'
-import { BROADCAST_ADDR, nodeUrl, timeAgo } from './ui-util'
+import { NodesEntity, TextMessagesEntity } from '../../../db-entities'
+import { HeaderIcon, Page } from '../components/page'
+import { BROADCAST_ADDR, nodeUrl, timeAgo } from '../utils/ui-util'
+import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants'
 
 type All = `all`
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>

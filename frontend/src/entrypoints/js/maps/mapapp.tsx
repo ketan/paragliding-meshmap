@@ -6,17 +6,17 @@ import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
 import { MapContainer } from 'react-leaflet'
-import { Page } from './components/page'
-import { NodeRoleNameToID } from './hardware-modules'
-import { HardwareModel } from './interfaces'
+import { NodeRoleNameToID } from '../../../hardware-modules'
+import { HardwareModel } from '../../../interfaces'
+import { NodesEntityForUI } from '../../../nodes-entity'
+import { addLegendToMap, cssClassFor } from '../../../templates/legend'
+import { nodePositionView } from '../../../templates/node-position'
+import { NodeTooltip } from '../../../templates/node-tooltip'
+import { Page } from '../components/page'
+import { isDesktop, nodeName, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from '../utils/ui-util'
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
-import { NodesEntityForUI } from './nodes-entity'
-import { SearchBarApp } from './searchbarapp'
-import { addLegendToMap, cssClassFor } from './templates/legend'
-import { nodePositionView } from './templates/node-position'
-import { NodeTooltip } from './templates/node-tooltip'
-import { getTextSize, isDesktop, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from './ui-util'
+import { SearchBar } from './search-bar'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -188,9 +188,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       return <div>Loading map...</div>
     }
 
-    const searchBar = (
-      <SearchBarApp nodes={Object.values(this.state.newerNodesWithPosition)} selectCallback={(node) => this.flyToNode(node)} />
-    )
+    const searchBar = <SearchBar nodes={Object.values(this.state.newerNodesWithPosition)} selectCallback={(node) => this.flyToNode(node)} />
 
     return (
       <Page bannerMain={searchBar}>
@@ -310,7 +308,7 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   private createMarker(eachNode: NodesEntityForUI) {
-    const iconSize = getTextSize(eachNode)
+    const iconSize = this.getTextSize(eachNode)
 
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
@@ -471,5 +469,49 @@ export default class MapApp extends Component<MapProps, MapState> {
         marker.openTooltip()
       }
     }
+  }
+
+  getTextSize(node: NodesEntityForUI) {
+    const name = nodeName(node)
+    let width = 0
+    let height = 0
+    for (let i = 0; i < name.length; i++) {
+      const char = name[i]
+      const [w, h] = this.getCharWidth(char)
+      width += w
+      height = Math.max(height, h)
+    }
+
+    return new L.Point(width + 15, height)
+  }
+
+  readonly charSizes: Record<string, [number, number]> = {}
+
+  nodeSizeElement: HTMLElement | null = null
+
+  // no validation in place for perf reason, so make sure to just pass a single character
+  getCharWidth(c: string) {
+    if (!this.charSizes[c]) {
+      if (!this.nodeSizeElement) {
+        this.nodeSizeElement = document.createElement('div')
+        this.nodeSizeElement.setAttribute('id', 'test-node-size')
+        this.nodeSizeElement.classList.add(
+          'invisible',
+          '-z-1000',
+          'relative',
+          '-left-[1000px]',
+          '-top-[1000px]',
+          'w-auto',
+          'whitespace-nowrap'
+        )
+        document.body.appendChild(this.nodeSizeElement)
+      }
+      if (this.nodeSizeElement) {
+        this.nodeSizeElement.innerHTML = nodePositionView({ shortName: c })
+        const span = this.nodeSizeElement.querySelector('span')!
+        this.charSizes[c] = [span.offsetWidth, span.offsetHeight]
+      }
+    }
+    return this.charSizes[c]
   }
 }

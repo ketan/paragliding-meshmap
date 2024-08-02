@@ -1,9 +1,9 @@
 // application css
-import './index.scss'
+import '../css/index.scss'
 
 // our stuff
 import ReactDOM from 'react-dom/client'
-import MapApp from './mapapp'
+import MapApp from './maps/mapapp'
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')

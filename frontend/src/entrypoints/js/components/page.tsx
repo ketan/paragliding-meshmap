@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import icon from '../assets/images/icon.png'
-import { CircleInfoIcon } from '../icon-constants'
-import { TooltipDirection } from '../tooltip'
+import icon from '../../../assets/images/icon.png'
+import { CircleInfoIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
+import { TooltipDirection } from './tooltip'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode

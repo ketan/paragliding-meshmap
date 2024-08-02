@@ -4,9 +4,9 @@ import { ReactNode, useEffect } from 'react'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
-import { Tooltip } from '../tooltip'
-import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../ui-util'
-import { CopyIcon } from '../icon-constants'
+import { Tooltip } from '../entrypoints/js/components/tooltip'
+import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
+import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../entrypoints/js/utils/ui-util'
 
 function mqttStatus(node: NodesEntityForUI) {
   if (node.mqttConnectionState === 'online') {

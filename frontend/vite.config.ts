@@ -78,11 +78,11 @@ function defineIconConstants(): Plugin {
       globSync(images).map((file) => {
         const name = path.basename(file, '.svg')
         const constant = `${_.upperFirst(_.camelCase(_.snakeCase(name)))}Icon`
-        lines.push(`export { default as ${constant} } from '../${file}?component'`)
+        lines.push(`export { default as ${constant} } from '../../../../${file}?component'`)
       })
 
       const content = lines.join('\n')
-      const target = './src/icon-constants.ts'
+      const target = './src/entrypoints/js/utils/icon-constants.ts'
       console.log(`Writing to ${target}`)
       writeFileSync(target, content)
     },

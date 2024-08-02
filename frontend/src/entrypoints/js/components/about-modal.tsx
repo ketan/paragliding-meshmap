@@ -1,5 +1,5 @@
-import { GithubIcon, XMarkIcon } from '../icon-constants'
-import icon from '../assets/images/icon.png'
+import icon from '../../../assets/images/icon.png'
+import { GithubIcon, XMarkIcon } from '../utils/icon-constants'
 
 interface ModalProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>

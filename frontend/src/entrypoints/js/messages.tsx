@@ -1,6 +1,9 @@
+// application css
+import '../css/index.scss'
+
+// our stuff
 import ReactDOM from 'react-dom/client'
-import './index.scss'
-import { MessagesApp } from './messagesapp'
+import { MessagesApp } from './messages/messagesapp'
 
 addEventListener('load', function () {
   document.body.removeAttribute('style')

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { PureComponent } from 'react'
-import { NodesEntityForUI } from './nodes-entity'
+import { NodesEntityForUI } from '../../../nodes-entity'
 
 export interface AllData {
   nodes: NodesEntityForUI[]
@@ -11,7 +11,7 @@ interface SearchBarAppState {
   filteredNodes: NodesEntityForUI[]
 }
 
-export class SearchBarApp extends PureComponent<AllData & { selectCallback: (node: NodesEntityForUI) => void }, SearchBarAppState> {
+export class SearchBar extends PureComponent<AllData & { selectCallback: (node: NodesEntityForUI) => void }, SearchBarAppState> {
   state: SearchBarAppState = {
     searchText: '',
     filteredNodes: [],

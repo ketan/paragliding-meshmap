@@ -1,12 +1,14 @@
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
+import { Tooltip } from '../entrypoints/js/components/tooltip'
+import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
+import { BROADCAST_ADDR, googleMapsLink, timeAgo } from '../entrypoints/js/utils/ui-util'
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
-import { Tooltip } from '../entrypoints/js/components/tooltip'
-import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
-import { BROADCAST_ADDR, googleMapsLink, nodeUrl, timeAgo } from '../entrypoints/js/utils/ui-util'
+import { mainRouterNavigate } from '../entrypoints/js/router-event-listener'
+import { messageLink, nodeUrl } from '../entrypoints/js/utils/link-utils'
 
 function mqttStatus(node: NodesEntityForUI) {
   if (node.mqttConnectionState === 'online') {
@@ -158,8 +160,10 @@ export function NodeTooltip({ node, callback }: Props) {
   const showMessagesButton = (
     <p className="text-center mt-3" key="showMessages" data-id="showMessagesButton">
       <a
-        href={`/messages.html?from=${node.nodeId}&to=${BROADCAST_ADDR}`}
-        target="_blank"
+        href={messageLink(node.nodeId)}
+        onClick={() => {
+          mainRouterNavigate(messageLink(node.nodeId))
+        }}
         rel="noreferrer"
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
       >
@@ -204,7 +208,12 @@ export function NodeTooltip({ node, callback }: Props) {
         const link = nodeUrl(node)
         return (
           <>
-            <a href={link}>
+            <a
+              href={link}
+              onClick={() => {
+                mainRouterNavigate(link)
+              }}
+            >
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
             <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3" data-copy={link}>
@@ -231,17 +240,3 @@ export function NodeTooltip({ node, callback }: Props) {
     </div>
   )
 }
-
-function handleButtonClick(event: MouseEvent) {
-  const target = event.target as HTMLElement
-  const copyElement = target.closest('[data-copy]')
-  if (copyElement) {
-    copyElement.classList.add('motion-safe:animate-ping')
-    const currentURL = new URL(copyElement.getAttribute('data-copy')!, window.location.href)
-    currentURL.hash = ''
-    navigator.clipboard.writeText(currentURL.toString())
-    setTimeout(() => copyElement.classList.remove('motion-safe:animate-ping'), 500)
-  }
-}
-
-document.addEventListener('click', handleButtonClick)

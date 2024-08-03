@@ -110,7 +110,7 @@ export default defineConfig({
           }
         },
       },
-      input: [resolve(__dirname, `index.html`), resolve(__dirname, `messages.html`)],
+      input: [resolve(__dirname, `index.html`)],
     },
   },
 

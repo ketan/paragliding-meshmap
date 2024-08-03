@@ -4,9 +4,10 @@ import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from '../../../db-entities'
 import { HeaderIcon, Page } from '../components/page'
 import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants'
-import { BROADCAST_ADDR, nodeUrl, timeAgo } from '../utils/ui-util'
+import { BROADCAST_ADDR, timeAgo } from '../utils/ui-util'
+import { All } from '../../../interfaces'
+import { nodeUrl } from '../utils/link-utils'
 
-type All = `all`
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
 
 interface MessagesAppState {

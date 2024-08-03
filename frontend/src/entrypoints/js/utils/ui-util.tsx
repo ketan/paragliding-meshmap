@@ -59,11 +59,6 @@ export function nodeName(node: Partial<NodeNameAttributes>) {
   return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
 }
 
-export function nodeUrl(node: NodesEntityForUI | number) {
-  const nodeId = typeof node === 'number' ? node : node.nodeId
-  return `/?nodeId=${nodeId}`
-}
-
 export function isMobile() {
   return /Android|webOS|phone|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }

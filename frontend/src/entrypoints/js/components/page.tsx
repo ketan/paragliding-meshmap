@@ -3,6 +3,7 @@ import icon from '../../../assets/images/icon.png'
 import { CircleInfoIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
 import { TooltipDirection } from './tooltip'
+import { Link } from 'react-router-dom'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -66,18 +67,18 @@ export function HeaderIcon({
 function ApplicationName() {
   return (
     <div className="my-auto leading-tight hidden md:block">
-      <a className="font-bold sm:text-sm md:text-base lg:text-xl text-nowrap" href="/">
+      <Link className="font-bold sm:text-sm md:text-base lg:text-xl text-nowrap" to="/">
         Meshtastic map
-      </a>
+      </Link>
     </div>
   )
 }
 
 function IconInHeader() {
   return (
-    <a className="block my-auto mr-3 relative" href="/">
+    <Link className="block my-auto mr-3 relative" to="/">
       <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
       <img className="w-10 h-10 rounded bg-opacity-90" src={icon} />
-    </a>
+    </Link>
   )
 }

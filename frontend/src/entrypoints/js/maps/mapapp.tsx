@@ -382,7 +382,6 @@ export default class MapApp extends Component<MapProps, MapState> {
             node={eachNode}
             callback={() => {
               marker.getTooltip()?.update()
-              marker.getTooltip()?.update()
             }}
           />
         )

@@ -76,9 +76,9 @@ function ApplicationName() {
 
 function IconInHeader() {
   return (
-    <Link className="block my-auto mr-3 relative" to="/">
+    <Link className="min-w-10 min-h-10 max-w-10 max-h-10 block m-auto relative mr-2.5" to="/">
       <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-      <img className="w-10 h-10 rounded bg-opacity-90" src={icon} />
+      <img className="w-full h-full rounded bg-opacity-90" src={icon} />
     </Link>
   )
 }

@@ -7,7 +7,7 @@ import debug from 'debug'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 
-export function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
+export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
@@ -19,10 +19,10 @@ export function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   })
 
   if (cliOptions.dumpStatsEvery) {
-    setInterval(() => {
-      dumpStats(db, logger)
+    setInterval(async () => {
+      await dumpStats(db, logger)
     }, cliOptions.dumpStatsEvery.as('millisecond'))
-    dumpStats(db, logger)
+    await dumpStats(db, logger)
   }
 
   if (cliOptions.purgeEvery) {

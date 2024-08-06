@@ -10,4 +10,4 @@ const cliOptions: MQTTCLIOptions = mqttCLIParse()
 
 const db: Database = createDB(cliOptions.purgeDataOlderThan)
 
-mqttProcessor(db, cliOptions)
+await mqttProcessor(db, cliOptions)

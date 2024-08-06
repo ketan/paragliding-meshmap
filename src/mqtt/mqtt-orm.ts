@@ -52,16 +52,18 @@ const models: Models = [
 export async function dumpStats(db: Database, logger: debug.Debugger) {
   logger(`Starting record counts`)
   const counts: Record<string, number> = {}
-  await db.$transaction(async (trx) => {
-    for (let index = 0; index < models.length; index++) {
-      const eachModel = models[index]
+  for (let index = 0; index < models.length; index++) {
+    const eachModel = models[index]
 
-      // @ts-expect-error We're duck typing here
-      const count = await trx[eachModel].count({ where: { id: { gte: 0 } } })
-
-      counts[eachModel] = count
-    }
-  })
+    await db.$transaction(
+      async (trx) => {
+        // @ts-expect-error We're duck typing here
+        const count = await trx[eachModel].count({ where: { id: { gte: 0 } } })
+        counts[eachModel] = count
+      },
+      { timeout: 30000 }
+    )
+  }
   logger(`Record counts`, counts)
 }
 

@@ -66,9 +66,9 @@ export async function dumpStats(db: Database, logger: debug.Debugger) {
 
 export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {
   if (cliOptions.purgeDataOlderThan) {
+    logger(`Counting before purging data`)
     await dumpStats(db, logger)
-    logger(`Purging data now`)
-
+    logger(`Starting purge`)
     const purgeCutoff = DateTime.now().toLocal().minus(cliOptions.purgeDataOlderThan)
     await db.$transaction(async (trx) => {
       for (let index = 0; index < models.length; index++) {

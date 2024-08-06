@@ -52,15 +52,16 @@ const models: Models = [
 export async function dumpStats(db: Database, logger: debug.Debugger) {
   logger(`Starting record counts`)
   const counts: Record<string, number> = {}
-  for (let index = 0; index < models.length; index++) {
-    const eachModel = models[index]
+  db.$transaction(async (trx) => {
+    for (let index = 0; index < models.length; index++) {
+      const eachModel = models[index]
 
-    // @ts-expect-error We're duck typing here
-    const count = await db[eachModel].count({ where: { id: { gte: 0 } } })
+      // @ts-expect-error We're duck typing here
+      const count = await trx[eachModel].count({ where: { id: { gte: 0 } } })
 
-    counts[eachModel] = count
-  }
-
+      counts[eachModel] = count
+    }
+  })
   logger(`Record counts`, counts)
 }
 
@@ -75,13 +76,17 @@ export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger
         const eachModel = models[index]
 
         // @ts-expect-error We're duck typing here
-        await trx[eachModel].deleteMany({
+        const deletedRecords = await trx[eachModel].deleteMany({
           where: {
             updatedAt: {
               lt: purgeCutoff.toJSDate(),
             },
           },
         })
+
+        if (deletedRecords > 0) {
+          logger(`Purged ${deletedRecords} records from ${eachModel}`)
+        }
       }
     })
     await dumpStats(db, logger)

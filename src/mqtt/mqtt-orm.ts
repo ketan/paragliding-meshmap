@@ -50,6 +50,7 @@ const models: Models = [
 ]
 
 export async function dumpStats(db: Database, logger: debug.Debugger) {
+  logger(`Starting record counts`)
   const counts: Record<string, number> = {}
   for (let index = 0; index < models.length; index++) {
     const eachModel = models[index]

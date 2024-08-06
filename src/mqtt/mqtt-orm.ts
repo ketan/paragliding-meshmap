@@ -54,7 +54,7 @@ export async function dumpStats(db: Database, logger: debug.Debugger) {
   const counts: Record<string, number> = {}
   for (let index = 0; index < models.length; index++) {
     const eachModel = models[index]
-
+    logger(`About to count ${eachModel}`)
     await db.$transaction(
       async (trx) => {
         // @ts-expect-error We're duck typing here

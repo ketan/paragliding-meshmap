@@ -45,10 +45,6 @@ if (isDevelopment) {
   app.use((await import('compression')).default())
 }
 
-if (!isDevelopment) {
-  app.use(express.static(`${__dirname}/public`))
-}
-
 function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
   const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
   return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
@@ -267,6 +263,13 @@ app.get('/api/hardware-models', async function (_req: Request, res: Response) {
   res.setHeader('cache-control', 'public,max-age=60')
   res.json(hardwareModels)
 })
+
+if (!isDevelopment) {
+  app.use(express.static(`${__dirname}/public`))
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  })
+}
 
 const port = process.env.PORT || 3333
 app.listen(port)

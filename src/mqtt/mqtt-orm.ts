@@ -52,7 +52,7 @@ const models: Models = [
 export async function dumpStats(db: Database, logger: debug.Debugger) {
   logger(`Starting record counts`)
   const counts: Record<string, number> = {}
-  db.$transaction(async (trx) => {
+  await db.$transaction(async (trx) => {
     for (let index = 0; index < models.length; index++) {
       const eachModel = models[index]
 
@@ -71,24 +71,27 @@ export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger
     await dumpStats(db, logger)
     logger(`Starting purge`)
     const purgeCutoff = DateTime.now().toLocal().minus(cliOptions.purgeDataOlderThan)
-    await db.$transaction(async (trx) => {
-      for (let index = 0; index < models.length; index++) {
-        const eachModel = models[index]
-
-        // @ts-expect-error We're duck typing here
-        const deletedRecords = await trx[eachModel].deleteMany({
-          where: {
-            updatedAt: {
-              lt: purgeCutoff.toJSDate(),
+    for (let index = 0; index < models.length; index++) {
+      const eachModel = models[index]
+      logger(`Purging ${eachModel}`)
+      await db.$transaction(
+        async (trx) => {
+          // @ts-expect-error We're duck typing here
+          const deletedRecords = await trx[eachModel].deleteMany({
+            where: {
+              updatedAt: {
+                lt: purgeCutoff.toJSDate(),
+              },
             },
-          },
-        })
+          })
 
-        if (deletedRecords > 0) {
-          logger(`Purged ${deletedRecords} records from ${eachModel}`)
-        }
-      }
-    })
+          if (deletedRecords > 0) {
+            logger(`Purged ${deletedRecords} records from ${eachModel}`)
+          }
+        },
+        { timeout: 30000 }
+      )
+    }
     await dumpStats(db, logger)
     logger(`Next purge in ${cliOptions.purgeEvery.toHuman()}`)
   }

@@ -31,7 +31,7 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
       await purgeData(db, cliOptions, logger)
     }, cliOptions.purgeEvery.as('millisecond'))
   }
-  purgeData(db, cliOptions, logger)
+  await purgeData(db, cliOptions, logger)
 
   client.on('connect', async () => {
     logger(`Connected to ${cliOptions.mqttBrokerUrl}`)

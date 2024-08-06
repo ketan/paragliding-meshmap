@@ -49,7 +49,7 @@ const location = (node: NodesEntityForUI) => {
   return items
 }
 
-type Value = string | number | ReactNode | ReactNode[]
+type Value = ReactNode | ReactNode[]
 
 type KeyValueType<T> = {
   key: string
@@ -135,9 +135,10 @@ function lastMessage(node: NodesEntityForUI) {
 interface Props {
   node: NodesEntityForUI
   callback?: () => void
+  showDetail: (node: NodesEntityForUI) => void
 }
 
-export function NodeTooltip({ node, callback }: Props) {
+export function NodeTooltip({ node, callback, showDetail }: Props) {
   const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} /> : null
   const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
@@ -150,6 +151,7 @@ export function NodeTooltip({ node, callback }: Props) {
     <p className="text-center mt-3" key="showDetails">
       <a
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
+        onClick={() => showDetail(node)}
         data-node-id={node.nodeId}
       >
         Show details

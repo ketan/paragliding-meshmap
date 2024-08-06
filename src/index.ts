@@ -49,6 +49,11 @@ if (!isDevelopment) {
   app.use(express.static(`${__dirname}/public`))
 }
 
+function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
+  const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
+  return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
+}
+
 app.get('/api/nodes', async (_req: Request, res: Response) => {
   res.setHeader('cache-control', 'public,max-age=60')
   const allNodes = await db.node.findMany()
@@ -103,7 +108,6 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
   }
   res.setHeader('cache-control', 'public,max-age=60')
   const nodeId = Number(req.params.nodeId)
-  const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
 
   const outgoingMessages = await db.textMessages.findMany({
     select: {
@@ -117,7 +121,7 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
       from: nodeId,
       to: parseTo(req.query.to),
       createdAt: {
-        gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
+        gte: parseSinceParam(req),
       },
     },
     orderBy: {
@@ -128,10 +132,104 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
   res.json(outgoingMessages)
 })
 
+app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
+  res.setHeader('cache-control', 'public,max-age=60')
+  const nodeId = req.params.nodeId
+  const deviceMetrics = await db.deviceMetric.findMany({
+    select: {
+      batteryLevel: true,
+      voltage: true,
+      channelUtilization: true,
+      airUtilTx: true,
+      createdAt: true,
+    },
+    where: {
+      nodeId: Number(nodeId),
+      createdAt: {
+        gte: parseSinceParam(req),
+      },
+    },
+
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(deviceMetrics)
+})
+
+app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
+  res.setHeader('cache-control', 'public,max-age=60')
+  const nodeId = req.params.nodeId
+  const environmentMetrics = await db.environmentMetric.findMany({
+    select: {
+      temperature: true,
+      relativeHumidity: true,
+      barometricPressure: true,
+      createdAt: true,
+    },
+    where: {
+      nodeId: Number(nodeId),
+      createdAt: {
+        gte: parseSinceParam(req),
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(environmentMetrics)
+})
+
+app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
+  res.setHeader('cache-control', 'public,max-age=60')
+  const nodeId = req.params.nodeId
+  const neighbours = await db.neighbourInfo.findMany({
+    select: {
+      neighbours: true,
+      createdAt: true,
+    },
+    where: {
+      nodeId: Number(nodeId),
+      createdAt: {
+        gte: parseSinceParam(req),
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(neighbours)
+})
+
+app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
+  res.setHeader('cache-control', 'public,max-age=60')
+  const nodeId = req.params.nodeId
+  const traceRoutes = await db.traceRoute.findMany({
+    select: {
+      route: true,
+      to: true,
+      createdAt: true,
+    },
+    where: {
+      from: Number(nodeId),
+      createdAt: {
+        gte: parseSinceParam(req),
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  res.json(traceRoutes)
+})
+
 app.get(`/api/node/:nodeId/positions`, async (req, res) => {
   res.setHeader('cache-control', 'public,max-age=60')
   const nodeId = Number(req.params.nodeId)
-  const since = typeof req.query.since === 'string' ? req.query.since : `P1D`
 
   const positions = await db.position.findMany({
     select: {
@@ -142,7 +240,7 @@ app.get(`/api/node/:nodeId/positions`, async (req, res) => {
     where: {
       nodeId: nodeId,
       createdAt: {
-        gte: DateTime.now().minus(Duration.fromISO(since)).toJSDate(),
+        gte: parseSinceParam(req),
       },
     },
     orderBy: {

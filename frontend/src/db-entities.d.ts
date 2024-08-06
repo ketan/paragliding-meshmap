@@ -165,9 +165,7 @@ export interface TraceroutesEntity {
   gatewayId?: number
   id: number
   packetId?: number
-
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  route?: any
+  route?: number[]
   to: number
   updatedAt: string
   wantResponse: boolean

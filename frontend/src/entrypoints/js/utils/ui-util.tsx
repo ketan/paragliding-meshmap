@@ -1,6 +1,6 @@
 import L from 'leaflet'
 import _ from 'lodash'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { NodesEntity } from '../../../db-entities'
 import { NodeNameAttributes, NodesEntityForUI } from '../../../nodes-entity'
 import { Tooltip } from '../components/tooltip'
@@ -71,7 +71,7 @@ export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
   if (timestamp) {
     const dateTime = DateTime.fromISO(timestamp)
     return (
-      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-right" className='text-nowrap'>
+      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-right" className="text-nowrap">
         {addParens ? '(' : null}
         {dateTime.toRelative()}
         {addParens ? ')' : null}
@@ -79,4 +79,11 @@ export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
     )
   }
   return
+}
+
+export function duration(seconds?: number | null) {
+  if (!seconds) {
+    return
+  }
+  return Duration.fromObject({ seconds }).rescale().toHuman()
 }

@@ -17,6 +17,7 @@ import { isDesktop, nodeName, sanitizeLatLong, sanitizeNodesProperties, sanitize
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
 import { SearchBar } from './search-bar'
+import { NodeDetailsModal } from './node-details-modal'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -61,6 +62,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   map?: L.Map
   dataLoaded: PromiseWithResolvers<void>
   mapInitialized: PromiseWithResolvers<void>
+  nodeToShow?: NodesEntityForUI
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
@@ -201,6 +203,11 @@ export default class MapApp extends Component<MapProps, MapState> {
             style={{ height: '100%', width: '100%' }}
           />
         </div>
+        <NodeDetailsModal
+          allNodes={this.state.allNodes}
+          node={this.state.nodeToShow}
+          onClose={() => this.setState({ nodeToShow: undefined })}
+        />
       </Page>
     )
   }
@@ -379,6 +386,7 @@ export default class MapApp extends Component<MapProps, MapState> {
 
         tooltipReactRoot.render(
           <NodeTooltip
+            showDetail={() => this.showDetails(eachNode)}
             node={eachNode}
             callback={() => {
               marker.getTooltip()?.update()
@@ -408,6 +416,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       popupReactRoot?.render(
         <NodeTooltip
           node={eachNode}
+          showDetail={() => this.showDetails(eachNode)}
           callback={() => {
             tooltip.update()
           }}
@@ -430,6 +439,10 @@ export default class MapApp extends Component<MapProps, MapState> {
     marker.addTo(this.allNodesLayerGroup)
     marker.addTo(this.allClusteredLayerGroup)
     return marker
+  }
+
+  private showDetails(node: NodesEntityForUI) {
+    this.setState({ nodeToShow: node })
   }
 
   private findNodeById(nodes: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {
@@ -489,7 +502,7 @@ export default class MapApp extends Component<MapProps, MapState> {
   nodeSizeElement: HTMLElement | null = null
 
   // no validation in place for perf reason, so make sure to just pass a single character
-  getCharWidth(c: string) {
+  private getCharWidth(c: string) {
     if (!this.charSizes[c]) {
       if (!this.nodeSizeElement) {
         this.nodeSizeElement = document.createElement('div')

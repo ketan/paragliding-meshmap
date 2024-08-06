@@ -38,7 +38,9 @@ export async function processMessage(db: Database, cliOptions: MQTTCLIOptions, t
     envelope.packet.decoded = payloadVariant
   }
 
-  await createServiceEnvelope(db, topic, payload, envelope)
+  if (cliOptions.collectServiceEnvelopes) {
+    await createServiceEnvelope(db, topic, payload, envelope)
+  }
 
   if (envelope.packet.decoded) {
     switch (envelope.packet.decoded.portnum) {

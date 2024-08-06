@@ -50,21 +50,18 @@ const models: Models = [
 ]
 
 export async function dumpStats(db: Database, logger: debug.Debugger) {
-  logger(`Starting record counts`)
   const counts: Record<string, number> = {}
-  for (let index = 0; index < models.length; index++) {
-    const eachModel = models[index]
-    logger(`About to count ${eachModel}`)
-    await db.$transaction(
-      async (trx) => {
-        // @ts-expect-error We're duck typing here
-        const count = await trx[eachModel].count({ where: { id: { gte: 0 } } })
-        counts[eachModel] = count
-      },
-      { timeout: 30000, maxWait: 30000 }
-    )
-  }
-  logger(`Record counts`, counts)
+  const response = await db.$queryRaw<
+    {
+      relname: string
+      n_live_tup: bigint
+      n_dead_tup: bigint
+    }[]
+  >`SELECT relname, n_live_tup, n_dead_tup FROM pg_stat_user_tables`
+  response.forEach((row) => {
+    counts[row.relname] = Number(row.n_live_tup)
+  })
+  logger(`Record count (estimates)`, counts)
 }
 
 export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {

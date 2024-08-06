@@ -18,21 +18,6 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
     password: cliOptions.mqttPassword,
   })
 
-  if (cliOptions.dumpStatsEvery) {
-    setInterval(async () => {
-      await dumpStats(db, logger)
-    }, cliOptions.dumpStatsEvery.as('millisecond'))
-    await dumpStats(db, logger)
-  }
-
-  if (cliOptions.purgeEvery) {
-    logger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
-    setInterval(async () => {
-      await purgeData(db, cliOptions, logger)
-    }, cliOptions.purgeEvery.as('millisecond'))
-  }
-  await purgeData(db, cliOptions, logger)
-
   client.on('connect', async () => {
     logger(`Connected to ${cliOptions.mqttBrokerUrl}`)
     await client.subscribe(cliOptions.mqttTopic)
@@ -64,4 +49,19 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   client.on('message', async (topic, payload) => {
     await handleMessageWithRetry(topic, payload)
   })
+
+  if (cliOptions.dumpStatsEvery) {
+    setInterval(async () => {
+      await dumpStats(db, logger)
+    }, cliOptions.dumpStatsEvery.as('millisecond'))
+    await dumpStats(db, logger)
+  }
+
+  if (cliOptions.purgeEvery) {
+    logger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
+    setInterval(async () => {
+      await purgeData(db, cliOptions, logger)
+    }, cliOptions.purgeEvery.as('millisecond'))
+  }
+  await purgeData(db, cliOptions, logger)
 }

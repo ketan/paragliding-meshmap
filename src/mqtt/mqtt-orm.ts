@@ -50,7 +50,6 @@ const models: Models = [
 ]
 
 export async function dumpStats(db: Database, logger: debug.Debugger) {
-  const counts: Record<string, number> = {}
   const response = await db.$queryRaw<
     {
       relname: string
@@ -58,10 +57,7 @@ export async function dumpStats(db: Database, logger: debug.Debugger) {
       n_dead_tup: bigint
     }[]
   >`SELECT relname, n_live_tup, n_dead_tup FROM pg_stat_user_tables`
-  response.forEach((row) => {
-    counts[row.relname] = Number(row.n_live_tup)
-  })
-  logger(`Record count (estimates)`, counts)
+  logger(`Record count (estimates)`, response)
 }
 
 export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {

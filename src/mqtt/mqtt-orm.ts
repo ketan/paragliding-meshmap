@@ -61,7 +61,7 @@ export async function dumpStats(db: Database, logger: debug.Debugger) {
         const count = await trx[eachModel].count({ where: { id: { gte: 0 } } })
         counts[eachModel] = count
       },
-      { timeout: 30000 }
+      { timeout: 30000, maxWait: 30000 }
     )
   }
   logger(`Record counts`, counts)
@@ -91,7 +91,7 @@ export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger
             logger(`Purged ${deletedRecords} records from ${eachModel}`)
           }
         },
-        { timeout: 30000 }
+        { timeout: 30000, maxWait: 30000 }
       )
     }
     await dumpStats(db, logger)

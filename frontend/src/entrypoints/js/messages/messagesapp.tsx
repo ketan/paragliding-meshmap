@@ -127,7 +127,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
     const queryString = qs.stringify(
       _.omitBy(
         {
-          since: `P7D`,
+          since: this.state.since.toISO(),
           to: this.state.to,
         },
         _.isNil

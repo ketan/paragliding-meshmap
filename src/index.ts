@@ -15,7 +15,13 @@ import { fileURLToPath } from 'url'
 
 const cliOptions = webCLIParse()
 
-const db: Database = createDB(cliOptions.purgeDataOlderThan)
+const db: Database = createDB(cliOptions.purgeDataOlderThan, {
+  transactionOptions: {
+    maxWait: 5000,
+    timeout: 5000,
+    isolationLevel: 'ReadUncommitted',
+  },
+})
 
 if (cliOptions.mqtt) {
   mqttProcessor(db, cliOptions)

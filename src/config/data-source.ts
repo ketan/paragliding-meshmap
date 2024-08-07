@@ -3,8 +3,8 @@ import { sanitizeNumber } from '#mqtt/protobuf-to-dto'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { DateTime, Duration } from 'luxon'
 
-export function createDB(purgeDataOlderThan: Duration) {
-  return new PrismaClient().$extends({
+export function createDB(purgeDataOlderThan: Duration, options?: Prisma.PrismaClientOptions) {
+  return new PrismaClient(options).$extends({
     model: {
       node: {
         async outboundMessage(trx: Prisma.TransactionClient, tm: Pick<Prisma.TextMessagesCreateInput, 'text' | 'to' | 'from'>) {

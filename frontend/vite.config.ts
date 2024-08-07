@@ -80,6 +80,7 @@ function defineIconConstants(): Plugin {
         const constant = `${_.upperFirst(_.camelCase(_.snakeCase(name)))}Icon`
         lines.push(`export { default as ${constant} } from '../../../../${file}?component'`)
       })
+      lines.push('')
 
       const content = lines.join('\n')
       const target = './src/entrypoints/js/utils/icon-constants.ts'

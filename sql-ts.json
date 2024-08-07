@@ -2,6 +2,6 @@
   "client": "postgresql",
   "useNullAsDefault": true,
   "connection": {
-    "database": "meshmap-prisma"
+    "database": "meshmap-typeorm"
   }
 }

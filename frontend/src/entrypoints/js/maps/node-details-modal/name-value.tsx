@@ -4,10 +4,15 @@ type Value = ReactNode
 
 type KeyValueType<T> = {
   name: string
-  precision?: number
-  unit?: ReactNode
   className?: string
-} & ({ renderer: () => Value } | { value: T })
+} & (
+  | { renderer: () => Value }
+  | {
+      value: T
+      precision?: number
+      unit?: ReactNode
+    }
+)
 
 export function NameValue<T>(props: KeyValueType<T>) {
   const title = <span className="font-extrabold me-1">{props.name}:</span>

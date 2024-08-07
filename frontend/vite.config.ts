@@ -9,9 +9,10 @@ import { globSync } from 'glob'
 import _ from 'lodash'
 import path, { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { Plugin, defineConfig, transformWithEsbuild } from 'vite'
+import { defineConfig, Plugin, transformWithEsbuild } from 'vite'
 import injectHTML from 'vite-plugin-html-inject'
 import Inspect from 'vite-plugin-inspect'
+import viteCompression from 'vite-plugin-compression'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -25,7 +26,7 @@ function svgToReact(_options?: SVGToReactOptions): Plugin {
     return path.endsWith('.svg')
   }
 
-  const retVal: Plugin = {
+  return {
     name: 'svg-to-react-component',
     enforce: 'pre',
 
@@ -61,7 +62,6 @@ function svgToReact(_options?: SVGToReactOptions): Plugin {
       }
     },
   }
-  return retVal
 }
 
 function defineIconConstants(): Plugin {
@@ -87,12 +87,12 @@ function defineIconConstants(): Plugin {
       console.log(`Writing to ${target}`)
       writeFileSync(target, content)
     },
-  }
+  } as Plugin
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [defineIconConstants(), react(), svgToReact(), injectHTML(), Inspect()],
+  plugins: [defineIconConstants(), react(), svgToReact(), injectHTML(), Inspect(), viteCompression()],
 
   define: {
     __GIT_SHA__: JSON.stringify(commitHash),

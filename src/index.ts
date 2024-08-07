@@ -2,47 +2,38 @@
 import 'dotenv/config'
 
 //
-import { createDB, Database } from '#config/data-source'
+import { AppDataSource } from '#config/data-source'
+import DeviceMetric from '#entity/device_metric'
+import EnvironmentMetric from '#entity/environment_metric'
+import NeighbourInfo from '#entity/neighbour_info'
+import Node from '#entity/node'
+import Position from '#entity/position'
+import TextMessage from '#entity/text_message'
+import Traceroute from '#entity/traceroute'
 import { webCLIParse } from '#helpers/cli'
 import { BROADCAST_ADDR } from '#helpers/utils'
 import { mqttProcessor } from '#mqtt/main'
-import { Prisma } from '@prisma/client'
-import bodyParser from 'body-parser'
-import express, { Request, Response } from 'express'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import express, { NextFunction, Request, Response } from 'express'
+import expressStaticGzip from 'express-static-gzip'
+import responseTime from 'response-time'
+import 'express-async-errors'
 
 const cliOptions = webCLIParse()
 
-const db: Database = createDB(cliOptions.purgeDataOlderThan, {
-  transactionOptions: {
-    maxWait: 5000,
-    timeout: 5000,
-    isolationLevel: 'ReadUncommitted',
-  },
+const db = await AppDataSource.initialize()
+
+await AppDataSource.runMigrations({
+  transaction: 'each',
 })
-
-if (cliOptions.mqtt) {
-  mqttProcessor(db, cliOptions)
-}
-
-// @ts-expect-error we're patching
-BigInt.prototype.toJSON = function () {
-  return Number(this.toString())
-}
-
-// @ts-expect-error we're patching
-Prisma.Decimal.prototype.toJSON = function () {
-  return Number(this.toString())
-}
 
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
 const app = express()
-
-app.use(bodyParser.json())
+app.use(responseTime())
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -56,40 +47,49 @@ function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
   return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
 }
 
-app.get('/api/nodes', async (_req: Request, res: Response) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const allNodes = await db.node.findMany()
+class HttpError extends Error {
+  status: number
+
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+  }
+}
+
+function parseNodeIdParam(req: Request) {
+  const nodeIdParam = req.params.nodeId
+
+  const nodeId = Number(nodeIdParam)
+  if (!isNaN(nodeId)) {
+    return nodeId
+  }
+
+  throw new HttpError(400, `Invalid node ID ${nodeIdParam}`)
+}
+
+app.get('/api/nodes', async (_req, res) => {
+  const allNodes = await Node.find(db)
+
+  res.header('cache-control', 'public,max-age=60')
   res.json(allNodes)
 })
 
 app.get('/api/positions/:nodeId', async (req, res) => {
-  const nodeId = req.params.nodeId
-  const positions = await db.position.findMany({
-    where: {
-      nodeId: Number(nodeId),
-      createdAt: {
-        gte: DateTime.now().minus(Duration.fromISO('P1D')).toJSDate(),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
-  if (positions.length > 0) {
-    res.setHeader('cache-control', 'public,max-age=60')
-    res.json(positions)
-  } else {
-    res.status(404).json({
-      message: `Node with ID ${nodeId} not found!`,
-    })
-  }
+  const nodeId = parseNodeIdParam(req)
+
+  const since = parseSinceParam(req)
+  const positions = await Position.forNode(db, nodeId, since)
+
+  res.header('cache-control', 'public,max-age=60')
+  res.json(positions)
 })
 
 app.get(`/api/node/:nodeId`, async (req, res) => {
-  const nodeId = req.params.nodeId
-  const node = await db.node.findFirst({ where: { nodeId: Number(nodeId) } })
+  const nodeId = parseNodeIdParam(req)
+
+  const node = await Node.findOne(db, { where: { nodeId } })
   if (node) {
-    res.setHeader('cache-control', 'public,max-age=60')
+    res.header('cache-control', 'public,max-age=60')
     res.json(node)
   } else {
     res.status(404).json({
@@ -99,7 +99,9 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
 })
 
 app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
-  function parseTo(to: string | import('qs').ParsedQs | string[] | import('qs').ParsedQs[] | undefined): number | undefined {
+  const nodeId = parseNodeIdParam(req)
+
+  function parseTo(to: unknown): number | undefined {
     if (to === 'all') {
       return
     } else if (isNaN(Number(to))) {
@@ -108,176 +110,101 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
       return Number(to)
     }
   }
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = Number(req.params.nodeId)
 
-  const outgoingMessages = await db.textMessages.findMany({
-    select: {
-      id: true,
-      from: true,
-      to: true,
-      text: true,
-      createdAt: true,
-    },
-    where: {
-      from: nodeId,
-      to: parseTo(req.query.to),
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
 
+  res.header('cache-control', 'public,max-age=60')
   res.json(outgoingMessages)
 })
 
 app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = req.params.nodeId
-  const deviceMetrics = await db.deviceMetric.findMany({
-    select: {
-      batteryLevel: true,
-      voltage: true,
-      channelUtilization: true,
-      airUtilTx: true,
-      createdAt: true,
-    },
-    where: {
-      nodeId: Number(nodeId),
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
+  const nodeId = parseNodeIdParam(req)
 
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, parseSinceParam(req))
 
+  res.header('cache-control', 'public,max-age=60')
   res.json(deviceMetrics)
 })
 
 app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = req.params.nodeId
-  const environmentMetrics = await db.environmentMetric.findMany({
-    select: {
-      temperature: true,
-      relativeHumidity: true,
-      barometricPressure: true,
-      createdAt: true,
-    },
-    where: {
-      nodeId: Number(nodeId),
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const nodeId = parseNodeIdParam(req)
 
+  const since = parseSinceParam(req)
+
+  const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since)
+
+  res.header('cache-control', 'public,max-age=60')
   res.json(environmentMetrics)
 })
 
 app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = req.params.nodeId
-  const neighbours = await db.neighbourInfo.findMany({
-    select: {
-      neighbours: true,
-      createdAt: true,
-    },
-    where: {
-      nodeId: Number(nodeId),
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const nodeId = parseNodeIdParam(req)
 
+  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(req))
+
+  res.header('cache-control', 'public,max-age=60')
   res.json(neighbours)
 })
 
 app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = req.params.nodeId
-  const traceRoutes = await db.traceRoute.findMany({
-    select: {
-      route: true,
-      to: true,
-      createdAt: true,
-    },
-    where: {
-      from: Number(nodeId),
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const nodeId = parseNodeIdParam(req)
 
+  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(req))
+
+  res.header('cache-control', 'public,max-age=60')
   res.json(traceRoutes)
 })
 
 app.get(`/api/node/:nodeId/positions`, async (req, res) => {
-  res.setHeader('cache-control', 'public,max-age=60')
-  const nodeId = Number(req.params.nodeId)
+  const nodeId = parseNodeIdParam(req)
 
-  const positions = await db.position.findMany({
-    select: {
-      latitude: true,
-      longitude: true,
-      createdAt: true,
-    },
-    where: {
-      nodeId: nodeId,
-      createdAt: {
-        gte: parseSinceParam(req),
-      },
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
+  const positions = await Position.forNode(db, nodeId, parseSinceParam(req))
 
+  res.header('cache-control', 'public,max-age=60')
   res.json(positions)
 })
 
-app.get('/api/hardware-models', async function (_req: Request, res: Response) {
-  const hardwareModels = await db.node.groupBy({
-    by: ['hardwareModel'],
-    orderBy: {
-      _count: {
-        hardwareModel: 'desc',
-      },
-    },
-    _count: {
-      hardwareModel: true,
-    },
-  })
+app.get('/api/hardware-models', async function (_req, res) {
+  const hardwareModels = await Node.hardwareModels(db)
 
-  res.setHeader('cache-control', 'public,max-age=60')
+  res.header('cache-control', 'public,max-age=60')
   res.json(hardwareModels)
 })
 
 if (!isDevelopment) {
-  app.use(express.static(`${__dirname}/public`))
-  app.get('*', (_req, res) => {
+  app.use(
+    expressStaticGzip(`${__dirname}/public`, {
+      serveStatic: {
+        etag: true,
+        setHeaders: (res, path) => {
+          if (path.includes(`/assets/`)) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000')
+          } else if (path.endsWith(`/index.html`)) {
+            res.setHeader('Cache-Control', 'public, max-age=60')
+          }
+        },
+      },
+    })
+  )
+  app.get('*', async (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
   })
 }
 
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof HttpError) {
+    res.status(err.status).json({
+      error: err.message,
+    })
+  }
+  res.status(500).send('Internal server error')
+})
+
 const port = process.env.PORT || 3333
 app.listen(port)
 
-console.log(`Express server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+console.log(`Meshmap server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+
+if (cliOptions.mqtt) {
+  await mqttProcessor(db, cliOptions)
+}

@@ -27,7 +27,7 @@ function mqttStatus(node: NodesEntityForUI) {
 }
 
 const location = (node: NodesEntityForUI) => {
-  const items = [
+  return [
     keyValue({
       key: `Location`,
       renderer: () => {
@@ -46,7 +46,6 @@ const location = (node: NodesEntityForUI) => {
     }),
     keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
   ]
-  return items
 }
 
 type Value = ReactNode | ReactNode[]
@@ -139,7 +138,9 @@ interface Props {
 }
 
 export function NodeTooltip({ node, callback, showDetail }: Props) {
-  const image = imageForModel(node.hardwareModel) ? <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} /> : null
+  const image = imageForModel(node.hardwareModel) ? (
+    <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
+  ) : null
   const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
@@ -236,7 +237,7 @@ export function NodeTooltip({ node, callback, showDetail }: Props) {
   })
 
   return (
-    <div className="lg:text-sm sm:text-xs text-wrap" onClick={() => console.log(`div clicked`)}>
+    <div className="lg:text-sm sm:text-xs text-wrap min-w-[250px]">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

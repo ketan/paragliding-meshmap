@@ -10,7 +10,7 @@ export function AboutModal({ setShowModal, showModal }: ModalBaseProps) {
         <div className="w-full mx-auto text-center">
           <div className="relative mx-auto w-16 h-16 mb-1">
             <div className="text-4xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-            <img className="w-16 h-16 rounded bg-opacity-90" src={icon} />
+            <img className="w-16 h-16 rounded bg-opacity-90" src={icon} alt="Meshtastic icon" />
           </div>
           <h1 className="font-bold">Paragliding Meshtastic Map</h1>
           <h2>

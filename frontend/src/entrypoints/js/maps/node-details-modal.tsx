@@ -55,7 +55,11 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   })
 
   const image = imageForModel(node.hardwareModel) ? (
-    <img className="mb-4 min-w-[250px] max-w-[250px] m-auto" src={imageForModel(node.hardwareModel)} />
+    <img
+      className="mb-4 min-w-[250px] max-w-[250px] m-auto"
+      src={imageForModel(node.hardwareModel)}
+      alt={`Image for ${node.hardwareModel}`}
+    />
   ) : null
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]

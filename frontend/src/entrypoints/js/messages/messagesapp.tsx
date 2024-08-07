@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import qs from 'qs'
 import React, { ReactNode } from 'react'
 import { NodesEntity, TextMessagesEntity } from '../../../db-entities'
 import { HeaderIcon, Page } from '../components/page'
@@ -9,6 +8,7 @@ import { All } from '../../../interfaces'
 import { messageLink, nodeUrl } from '../utils/link-utils'
 import { Duration } from 'luxon'
 import { Link } from 'react-router-dom'
+import qs from 'qs'
 
 type Messages = Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'>
 
@@ -18,6 +18,20 @@ interface MessagesAppState {
   since: Duration
   from: number
   to?: number | All
+}
+
+function nodeName(node: NodesEntity) {
+  const retString = []
+  if (node.shortName) {
+    retString.push(node.shortName)
+    if (node.longName) {
+      retString.push(` (${node.longName})`)
+    }
+  } else {
+    retString.push(`<UNKNOWN> (!${node.nodeId?.toString(16)})`)
+  }
+
+  return retString
 }
 
 export class MessagesApp extends React.Component<unknown, MessagesAppState> {
@@ -33,7 +47,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   async componentDidMount() {
     const queryParams = new URLSearchParams(window.location.search)
     const from = queryParams.get('from')
-    const to = queryParams.get('to')
+    const to = queryParams.get('to') || BROADCAST_ADDR.toString()
     const since = queryParams.get('since')
 
     this.setState(
@@ -65,6 +79,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
       </Page>
     )
   }
+
   renderNoMessagesIfNone(): React.ReactNode {
     if (this.state.messages.length === 0) {
       const currentDurationDoubled = Duration.fromMillis(this.state.since.toMillis() * 2, { conversionAccuracy: 'casual' }).rescale()
@@ -98,23 +113,14 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
 
   private renderMessagesIfAny(): React.ReactNode {
     return this.state.messages.map((msg) => {
-      const fromNode = { ...this.state.nodes[msg.from], nodeId: msg.from }
-      const toNode = { ...this.state.nodes[msg.to], nodeId: msg.to }
+      const fromNode: NodesEntity = { ...this.state.nodes[msg.from], nodeId: msg.from }
+      const toNode: NodesEntity = { ...this.state.nodes[msg.to], nodeId: msg.to }
 
       return (
         <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
           <span className="font-semibold text-sm">
-            <a href={nodeUrl(msg.from)}>
-              {fromNode.shortName} ({fromNode.longName})
-            </a>{' '}
-            →{' '}
-            {4294967295 === msg.to ? (
-              'Everyone'
-            ) : (
-              <a href={nodeUrl(msg.to)}>
-                {toNode.shortName} ({toNode.longName})
-              </a>
-            )}
+            <a href={nodeUrl(msg.from)}>{nodeName(fromNode)}</a> →{' '}
+            {4294967295 === msg.to ? 'Everyone' : <a href={nodeUrl(msg.to)}>{nodeName(toNode)}</a>}
           </span>
           <div className="clear-both text-sm text-slate-700 pt-2">{msg.text}</div>
           <div className="ml-auto text-sm text-right pt-2">{timeAgo(msg.createdAt, true)}</div>
@@ -153,12 +159,11 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   }
 
   private async fetchNodes(nodeIds: number[]) {
-    for (let index = 0; index < nodeIds.length; index++) {
-      const nodeId = nodeIds[index]
-
+    for (const nodeId of nodeIds) {
       if (nodeId === BROADCAST_ADDR) {
-        return
+        continue
       }
+
       if (!this.state.nodes[nodeId]) {
         const nodeResponse = await fetch(`/api/node/${nodeId}`)
         if (nodeResponse.status === 200 || nodeResponse.status === 304) {
@@ -169,7 +174,6 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
           })
         }
       }
-      return this.state.nodes[nodeId]
     }
   }
 

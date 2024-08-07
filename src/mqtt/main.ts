@@ -1,15 +1,15 @@
-import { Database } from '#config/data-source'
 import { errLog, perfLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
 import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
 import pRetry from 'p-retry'
-import { MQTTCLIOptions } from '../helpers/cli.js'
+import { MQTTCLIOptions } from '#helpers/cli'
 import PQueue from 'p-queue'
 import os from 'os'
+import { DataSource } from 'typeorm'
 
-export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
+export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
   logger.enabled = true
 
@@ -31,6 +31,7 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   })
 
   let messageId = 0
+
   async function handleMessageWithRetry(topic: string, payload: Buffer) {
     messageId++
     perfLog(`Begin msg - ${messageId} - ${topic}`)

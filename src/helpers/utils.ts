@@ -5,7 +5,7 @@ export function toBigInt(str: number | string | undefined | null): number | unde
     return str
   }
 
-  if (str === undefined || str === null || (typeof str === 'string' && str.trim().length === 0)) {
+  if (str === undefined || str === null || str.trim().length === 0) {
     return
   }
 

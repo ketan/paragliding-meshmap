@@ -18,13 +18,13 @@ _.forEach(meshtastic.Config.DeviceConfig.Role, (key, value) => {
   NodeRoleNameToID[value] = key
 })
 
-console.log('export const HardwareModelIDToName = ' + JSON.stringify(HardwareModelIDToName, true, 2) + ' as Record<number, string>;')
+console.log('export const HardwareModelIDToName = ' + JSON.stringify(HardwareModelIDToName, null, 2) + ' as Record<number, string>;')
 console.log()
 console.log()
-console.log('export const HardwareModelNameToID = ' + JSON.stringify(HardwareModelNameToID, true, 2) + ' as Record<string, number> ;')
+console.log('export const HardwareModelNameToID = ' + JSON.stringify(HardwareModelNameToID, null, 2) + ' as Record<string, number> ;')
 console.log()
 console.log()
-console.log('export const NodeRoleIDToName = ' + JSON.stringify(NodeRoleIDToName, true, 2) + ' as Record<number, string>;')
+console.log('export const NodeRoleIDToName = ' + JSON.stringify(NodeRoleIDToName, null, 2) + ' as Record<number, string>;')
 console.log()
 console.log()
-console.log('export const NodeRoleNameToID = ' + JSON.stringify(NodeRoleNameToID, true, 2) + ' as Record<string, number> ;')
+console.log('export const NodeRoleNameToID = ' + JSON.stringify(NodeRoleNameToID, null, 2) + ' as Record<string, number> ;')

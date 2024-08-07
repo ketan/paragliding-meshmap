@@ -1,6 +1,6 @@
-import { parseProtobuf, toBigInt } from '../helpers/utils.js'
+import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { decrypt } from './decryption.js'
-import { MQTTCLIOptions } from '../helpers/cli.js'
+import { MQTTCLIOptions } from '#helpers/cli'
 import {
   createMapReports,
   createOrUpdateNeighborInfo,
@@ -14,9 +14,9 @@ import {
   updateNodeWithPosition,
 } from './mqtt-orm.js'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { Database } from '#config/data-source'
+import { DataSource } from 'typeorm'
 
-export async function processMessage(db: Database, cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
+export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
     await handleNodeStatusMessage(db, topic, payload)
     return
@@ -64,7 +64,7 @@ export async function processMessage(db: Database, cliOptions: MQTTCLIOptions, t
   }
 }
 
-export async function handleNodeStatusMessage(db: Database, topic: string, payload: Buffer) {
+export async function handleNodeStatusMessage(db: DataSource, topic: string, payload: Buffer) {
   const nodeIdHex = topic.split('/').at(-1)
   const nodeId = toBigInt(nodeIdHex)
   if (nodeId) {

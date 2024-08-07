@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 bin/emit-hardware-models >  frontend/src/hardware-modules.ts
 bin/emit-schema-ts >  frontend/src/db-entities.d.ts

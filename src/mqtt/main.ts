@@ -7,6 +7,7 @@ import debug from 'debug'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
 import PQueue from 'p-queue'
+import os from 'os'
 
 export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
@@ -26,7 +27,7 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   })
 
   const queue = new PQueue({
-    concurrency: 5,
+    concurrency: Number(process.env.DB_CONNECTION_CONCURRENCY) || os.cpus().length,
   })
 
   let messageId = 0

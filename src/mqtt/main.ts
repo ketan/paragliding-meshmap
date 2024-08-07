@@ -6,6 +6,7 @@ import mqtt from 'async-mqtt'
 import debug from 'debug'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '../helpers/cli.js'
+import PQueue from 'p-queue'
 
 export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
@@ -22,6 +23,10 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
     logger(`Connected to ${cliOptions.mqttBrokerUrl}`)
     await client.subscribe(cliOptions.mqttTopic)
     logger(`Subscribed to ${cliOptions.mqttTopic}`)
+  })
+
+  const queue = new PQueue({
+    concurrency: 5,
   })
 
   let messageId = 0
@@ -47,7 +52,7 @@ export async function mqttProcessor(db: Database, cliOptions: MQTTCLIOptions) {
   }
 
   client.on('message', async (topic, payload) => {
-    await handleMessageWithRetry(topic, payload)
+    await queue.add(() => handleMessageWithRetry(topic, payload))
   })
 
   if (cliOptions.dumpStatsEvery) {

@@ -114,7 +114,9 @@
     "prisma-json-types-generator": "^3.0.4",
     "protobufjs": "^7.3.2",
     "reflect-metadata": "^0.2.2",
-    "supports-color": "^9.4.0"
+    "sqlite3": "^5.1.7",
+    "supports-color": "^9.4.0",
+    "typeorm": "^0.3.20"
   },
   "engines": {
     "node": ">=22.0"

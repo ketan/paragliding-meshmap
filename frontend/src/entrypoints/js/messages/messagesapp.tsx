@@ -31,7 +31,6 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   private elementRefForEndOfPage = React.createRef<HTMLDivElement>()
 
   async componentDidMount() {
-    console.log(`MessagesApp: componentDidMount`)
     const queryParams = new URLSearchParams(window.location.search)
     const from = queryParams.get('from')
     const to = queryParams.get('to')
@@ -52,7 +51,6 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   }
 
   componentDidUpdate() {
-    console.log(`MessagesApp: componentDidMount`)
     this.scrollToBottom()
   }
 
@@ -190,7 +188,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
             {
               to: this.state.to,
               from: this.state.from,
-              since: this.state.since.toHuman(),
+              since: this.state.since.toISO(),
             },
             _.isNil
           )

@@ -8,10 +8,10 @@ import os from 'os'
 import path from 'path'
 import pluralize from 'pluralize'
 import 'reflect-metadata'
-import parseDatabaseUrl from 'ts-parse-database-url'
 import { DataSource, DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
 import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
+import { dbConnectionOptions } from '#config/db-connection-opts-parser'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -31,25 +31,9 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const dbConfig = parseDatabaseUrl.default(process.env.DB_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`)
-const dbConnectionOpts = { ...dbConfig, username: dbConfig.user }
+const dbUrl = process.env.DATABASE_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`
 
-let driver = dbConnectionOpts.driver
-if (driver === 'postgresql') {
-  driver = 'postgres'
-}
-
-if (driver === 'sqlite3') {
-  driver = 'sqlite'
-}
-
-// remove driver
-delete dbConnectionOpts.driver
-
-// remove port if empty
-if (!dbConnectionOpts.port) {
-  delete dbConnectionOpts.driver
-}
+const { dbConnectionOpts, driver } = dbConnectionOptions(dbUrl)
 
 export const connString = <DataSourceOptions>{
   ...dbConnectionOpts,

@@ -65,6 +65,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
       </Page>
     )
   }
+
   renderNoMessagesIfNone(): React.ReactNode {
     if (this.state.messages.length === 0) {
       const currentDurationDoubled = Duration.fromMillis(this.state.since.toMillis() * 2, { conversionAccuracy: 'casual' }).rescale()
@@ -153,12 +154,11 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   }
 
   private async fetchNodes(nodeIds: number[]) {
-    for (let index = 0; index < nodeIds.length; index++) {
-      const nodeId = nodeIds[index]
-
+    for (const nodeId of nodeIds) {
       if (nodeId === BROADCAST_ADDR) {
-        return
+        continue
       }
+
       if (!this.state.nodes[nodeId]) {
         const nodeResponse = await fetch(`/api/node/${nodeId}`)
         if (nodeResponse.status === 200 || nodeResponse.status === 304) {
@@ -169,7 +169,6 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
           })
         }
       }
-      return this.state.nodes[nodeId]
     }
   }
 

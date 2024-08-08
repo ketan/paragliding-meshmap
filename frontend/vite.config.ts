@@ -9,7 +9,7 @@ import { globSync } from 'glob'
 import _ from 'lodash'
 import path, { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { Plugin, defineConfig, transformWithEsbuild } from 'vite'
+import { defineConfig, Plugin, transformWithEsbuild } from 'vite'
 import injectHTML from 'vite-plugin-html-inject'
 import Inspect from 'vite-plugin-inspect'
 
@@ -25,7 +25,7 @@ function svgToReact(_options?: SVGToReactOptions): Plugin {
     return path.endsWith('.svg')
   }
 
-  const retVal: Plugin = {
+  return {
     name: 'svg-to-react-component',
     enforce: 'pre',
 
@@ -61,7 +61,6 @@ function svgToReact(_options?: SVGToReactOptions): Plugin {
       }
     },
   }
-  return retVal
 }
 
 function defineIconConstants(): Plugin {
@@ -87,7 +86,7 @@ function defineIconConstants(): Plugin {
       console.log(`Writing to ${target}`)
       writeFileSync(target, content)
     },
-  }
+  } as Plugin
 }
 
 // https://vitejs.dev/config/

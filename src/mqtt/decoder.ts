@@ -1,6 +1,6 @@
-import { parseProtobuf, toBigInt } from '../helpers/utils.js'
+import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { decrypt } from './decryption.js'
-import { MQTTCLIOptions } from '../helpers/cli.js'
+import { MQTTCLIOptions } from '#helpers/cli'
 import {
   createMapReports,
   createOrUpdateNeighborInfo,

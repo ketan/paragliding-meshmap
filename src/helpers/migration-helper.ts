@@ -1,4 +1,4 @@
-import { QueryRunner, TableColumn, TableIndex } from 'typeorm'
+import { ColumnType, QueryRunner, TableColumn, TableIndex } from 'typeorm'
 import { AppDataSource } from '#config/data-source'
 
 export function primaryKeyType(queryRunner: QueryRunner) {
@@ -95,11 +95,11 @@ export async function makeColumnNonNullable(queryRunner: QueryRunner, tableName:
   }
 }
 
-export function dateTimeType() {
+export function dateTimeType(): { type: ColumnType & string } | { type: ColumnType & string; precision: number } {
   if (AppDataSource.driver.supportedDataTypes.includes('datetime')) {
-    return 'datetime'
+    return { type: 'datetime' }
   } else if (AppDataSource.driver.supportedDataTypes.includes('timestamp')) {
-    return 'timestamp'
+    return { type: 'timestamp', precision: 3 }
   }
   throw new Error(
     `Unsupported datetime type for ${AppDataSource.options.type}. Supported types are ${AppDataSource.driver.supportedDataTypes}`
@@ -115,13 +115,13 @@ export function blobType() {
   throw new Error(`Unsupported blob type for ${AppDataSource.options.type}. Supported types are ${AppDataSource.driver.supportedDataTypes}`)
 }
 
-export function jsonType(queryRunner: QueryRunner) {
-  if (queryRunner.connection.driver.supportedDataTypes.includes('json')) {
-    return 'json'
-  } else if (queryRunner.connection.driver.supportedDataTypes.includes('jsonb')) {
+export function jsonType(): ColumnType & string {
+  if (AppDataSource.driver.supportedDataTypes.includes('jsonb')) {
     return 'jsonb'
+  } else if (AppDataSource.driver.supportedDataTypes.includes('json')) {
+    return 'json'
   }
   throw new Error(
-    `Unsupported json type for ${queryRunner.connection.options.type}. Supported types are ${queryRunner.connection.driver.supportedDataTypes}`
+    `Unsupported json type for ${AppDataSource.driver.options.type}. Supported types are ${AppDataSource.driver.supportedDataTypes}`
   )
 }

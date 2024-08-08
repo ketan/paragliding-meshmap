@@ -38,13 +38,13 @@ export class CreateMapReportsTable1719575161036 implements MigrationInterface {
 
           {
             name: 'created_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

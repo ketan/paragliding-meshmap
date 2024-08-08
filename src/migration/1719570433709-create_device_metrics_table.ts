@@ -28,13 +28,13 @@ export class CreateDeviceMetricsTable1719570433709 implements MigrationInterface
 
           {
             name: 'created_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

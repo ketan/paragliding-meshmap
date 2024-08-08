@@ -6,14 +6,16 @@ import {
   TextMessagesEntity,
   TraceroutesEntity,
 } from './db-entities'
+import { PointTuple } from 'leaflet'
 
 export interface NodesEntityForUI extends Omit<NodesEntity, 'latitude' | 'longitude'> {
-  latLng?: L.PointTuple
-  offsetLatLng?: L.PointTuple
+  latLng?: PointTuple
+  offsetLatLng?: PointTuple
   nodeIdHex: string
 }
 
 export type TextMessagesEntityForUI = Pick<TextMessagesEntity, 'id' | 'to' | 'from' | 'text' | 'createdAt'>
+
 export type DeviceMetricsEntityForUI = Pick<
   DeviceMetricsEntity,
   'batteryLevel' | 'voltage' | 'channelUtilization' | 'airUtilTx' | 'createdAt'

@@ -7,9 +7,11 @@ import {
   EntityManager,
   FindManyOptions,
   FindOneOptions,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { dateTimeType } from '#helpers/migration-helper'
 
 @Entity()
 export abstract class BaseTypeWithoutPrimaryKey {
@@ -19,9 +21,11 @@ export abstract class BaseTypeWithoutPrimaryKey {
   static purgeEvery: Duration
   static purgeDataOlderThan: Duration
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ ...dateTimeType() })
+  @Index()
   updatedAt: Date
-  @CreateDateColumn()
+  @CreateDateColumn({ ...dateTimeType() })
+  @Index()
   createdAt: Date
 
   static sanitizeNumber(num: number | undefined | null) {

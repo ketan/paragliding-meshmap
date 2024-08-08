@@ -20,7 +20,7 @@ export class CreatePositionsTable1719575830499 implements MigrationInterface {
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'to', type: 'bigint', isNullable: true },
+          { name: 'to', type: 'bigint', isNullable: false },
           { name: 'from', type: 'bigint', isNullable: false },
 
           { name: 'channel', type: 'integer', isNullable: true },
@@ -33,13 +33,13 @@ export class CreatePositionsTable1719575830499 implements MigrationInterface {
 
           {
             name: 'created_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

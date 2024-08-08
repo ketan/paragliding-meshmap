@@ -18,29 +18,30 @@ export class CreateTextMessagesTable1719576103688 implements MigrationInterface 
             generationStrategy: 'increment',
           },
 
-          { name: 'channel', type: 'integer', isNullable: true },
-          { name: 'channel_id', type: 'text', isNullable: true },
+          { name: 'channel', type: 'integer', isNullable: false },
+          { name: 'channel_id', type: 'text', isNullable: false },
           { name: 'gateway_id', type: 'bigint', isNullable: true },
-          { name: 'packet_id', type: 'bigint', isNullable: true },
-          { name: 'from', type: 'bigint', isNullable: false },
+          { name: 'packet_id', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },
+          { name: 'from', type: 'bigint', isNullable: false },
+          { name: 'text', type: 'text', isNullable: false },
+
           { name: 'want_response', type: 'boolean', isNullable: true },
 
           { name: 'hop_limit', type: 'integer', isNullable: true },
           { name: 'rx_snr', type: 'double precision', isNullable: true },
           { name: 'rx_rssi', type: 'integer', isNullable: true },
           { name: 'rx_time', type: 'bigint', isNullable: true },
-          { name: 'text', type: 'text', isNullable: false },
 
           {
             name: 'created_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

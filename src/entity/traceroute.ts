@@ -1,11 +1,12 @@
 import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
+import { jsonType } from '#helpers/migration-helper'
 
 @Entity()
 export default class Traceroute extends BaseType {
-  @Column({ type: 'json' })
-  route: object
+  @Column({ type: jsonType(), array: true, nullable: true })
+  route: number[]
 
   @Column({ type: 'integer', nullable: true })
   channel?: number

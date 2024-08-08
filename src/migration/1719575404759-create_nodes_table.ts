@@ -21,21 +21,18 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'altitude', type: 'integer', isNullable: true },
           { name: 'latitude', type: 'integer', isNullable: true },
           { name: 'longitude', type: 'integer', isNullable: true },
-          { name: 'position_updated_at', type: dateTimeType(), isNullable: true },
+          { name: 'position_updated_at', ...dateTimeType(), isNullable: true },
 
           { name: 'air_util_tx', type: 'double precision', isNullable: true },
           { name: 'battery_level', type: 'integer', isNullable: true },
           { name: 'channel_utilization', type: 'double precision', isNullable: true },
           { name: 'voltage', type: 'double precision', isNullable: true },
           { name: 'neighbour_broadcast_interval_secs', type: 'integer', isNullable: true },
-          { name: 'neighbours', type: jsonType(queryRunner), isNullable: true },
-          { name: 'neighbours_updated_at', type: dateTimeType(), isNullable: true },
+          { name: 'neighbours_updated_at', ...dateTimeType(), isNullable: true },
 
-          { name: 'inbox', type: jsonType(queryRunner), isNullable: true },
-          { name: 'outbox', type: jsonType(queryRunner), isNullable: true },
 
           { name: 'mqtt_connection_state', type: 'text', isNullable: true },
-          { name: 'mqtt_connection_state_updated_at', type: dateTimeType(), isNullable: true },
+          { name: 'mqtt_connection_state_updated_at', ...dateTimeType(), isNullable: true },
 
           { name: 'firmware_version', type: 'text', isNullable: true },
           { name: 'has_default_channel', type: 'boolean', isNullable: true },
@@ -49,15 +46,19 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'relative_humidity', type: 'double precision', isNullable: true },
           { name: 'temperature', type: 'double precision', isNullable: true },
 
+          { name: 'neighbours', type: jsonType(), isNullable: true, isArray: true },
+          { name: 'inbox', type: jsonType(), isNullable: true, isArray: true },
+          { name: 'outbox', type: jsonType(), isNullable: true, isArray: true },
+
           {
             name: 'created_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.createDateDefault,
           },
           {
             name: 'updated_at',
-            type: dateTimeType(),
+            ...dateTimeType(),
             isNullable: false,
             default: queryRunner.connection.driver.mappedDataTypes.updateDateDefault,
           },

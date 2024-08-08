@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { PureComponent } from 'react'
+import { FormEvent, PureComponent } from 'react'
 import { NodesEntityForUI } from '../../../nodes-entity'
 
 export interface AllData {
@@ -22,7 +22,7 @@ export class SearchBar extends PureComponent<AllData & { selectCallback: (node: 
     this.props.selectCallback(node)
   }
 
-  private applyFilter(e: React.FormEvent<HTMLInputElement>) {
+  private applyFilter(e: FormEvent<HTMLInputElement>) {
     this.setState(
       {
         searchText: e.currentTarget.value,

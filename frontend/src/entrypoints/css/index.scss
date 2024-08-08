@@ -32,16 +32,6 @@ body {
   transform: translate(var(--cooltipz-arrow-offset, 0px), calc(var(--cooltipz-slide, 6px) * -1));
 }
 
-.message-bubble {
-  @apply bg-slate-200 px-2 py-2 mt-3 rounded-md;
-
-  &:before {
-    // show quotes
-    content: '“';
-    @apply font-serif text-4xl leading-[0];
-  }
-}
-
 .leaflet-tooltip-pane a.button {
   color: inherit;
 }
@@ -62,12 +52,6 @@ a.button {
   @apply text-black;
 }
 
-.header-action-buttons {
-  svg {
-    @apply w-6 h-6;
-  }
-}
-
 .z-sidebar {
   @apply z-[1005];
 }
@@ -81,9 +65,11 @@ a.button {
     &.node-status-offline {
       @apply border-t-red-600;
     }
+
     &.node-status-online {
       @apply border-t-green-600;
     }
+
     &.node-status-disconnected {
       @apply border-t-purple-600;
     }

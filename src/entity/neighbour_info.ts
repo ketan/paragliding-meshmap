@@ -2,6 +2,7 @@ import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'type
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
 import _ from 'lodash'
+import { jsonType } from '#helpers/migration-helper'
 
 @Entity()
 export default class NeighbourInfo extends BaseType {
@@ -11,7 +12,7 @@ export default class NeighbourInfo extends BaseType {
   @Column({ type: 'integer' })
   nodeBroadcastIntervalSecs: number
 
-  @Column({ type: 'json' })
+  @Column({ type: jsonType(), array: true, nullable: true })
   neighbours: Neighbors[]
 
   constructor(opts: Partial<NeighbourInfo> = {}) {

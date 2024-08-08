@@ -10,14 +10,14 @@ export default class TextMessage extends BaseType {
   @Column({ type: 'bigint' })
   from: number
 
-  @Column({ type: 'integer', nullable: true })
-  channel?: number
+  @Column({ type: 'integer', nullable: false })
+  channel: number
 
-  @Column({ type: 'bigint', nullable: true })
-  packetId?: number
+  @Column({ type: 'bigint', nullable: false })
+  packetId: number
 
-  @Column({ type: 'text', nullable: true })
-  channelId?: string
+  @Column({ type: 'text', nullable: false })
+  channelId: string
 
   @Column({ type: 'bigint', nullable: true })
   gatewayId?: number

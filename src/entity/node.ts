@@ -1,4 +1,4 @@
-import { dateTimeType } from '#helpers/migration-helper'
+import { dateTimeType, jsonType } from '#helpers/migration-helper'
 import { DateTime } from 'luxon'
 import { Column, DataSource, Entity, EntityManager } from 'typeorm'
 import { BaseType, BaseTypeWithoutPrimaryKey } from './base_type.js'
@@ -46,19 +46,19 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   voltage?: number
   @Column({ type: 'integer', nullable: true })
   neighbourBroadcastIntervalSecs?: number
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: jsonType(), nullable: true, array: true })
   neighbours?: Neighbors[]
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: jsonType(), nullable: true, array: true })
   outbox?: MessageOut[]
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: jsonType(), nullable: true, array: true })
   inbox?: MessageIn[]
-  @Column({ type: dateTimeType(), nullable: true })
+  @Column({ ...dateTimeType(), nullable: true })
   neighboursUpdatedAt?: Date
-  @Column({ type: dateTimeType(), nullable: true })
+  @Column({ ...dateTimeType(), nullable: true })
   positionUpdatedAt?: Date
   @Column({ type: 'text', nullable: true })
   mqttConnectionState?: string
-  @Column({ type: dateTimeType(), nullable: true })
+  @Column({ ...dateTimeType(), nullable: true })
   mqttConnectionStateUpdatedAt?: Date
   @Column({ type: 'text', nullable: true })
   firmwareVersion?: string

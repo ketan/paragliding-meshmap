@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "fmt": "yarn run format",
-    "typeorm": "typeorm-ts-node-esm",
+    "typeorm": "typeorm-ts-node-esm -d src/config/data-source.ts",
     "migrate": "typeorm-ts-node-esm migration:run -d src/config/data-source.ts",
     "schema-to-ts": "bin/schema-to-ts",
     "docker:build": "docker build . --progress plain --tag paragliding-meshmap --build-arg GIT_SHA=$(git rev-parse --short HEAD) --tag ghcr.io/ketan/paragliding-meshmap:latest",

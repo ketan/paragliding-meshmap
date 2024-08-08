@@ -116,6 +116,7 @@
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "supports-color": "^9.4.0",
+    "ts-parse-database-url": "^1.0.3",
     "typeorm": "^0.3.20"
   },
   "engines": {

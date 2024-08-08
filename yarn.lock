@@ -4342,6 +4342,11 @@ mocha@^10.6.0:
     yargs-parser "^20.2.9"
     yargs-unparser "^2.0.0"
 
+mongodb-uri@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/mongodb-uri/-/mongodb-uri-0.9.7.tgz#0f771ad16f483ae65f4287969428e9fbc4aa6181"
+  integrity sha512-s6BdnqNoEYfViPJgkH85X5Nw5NpzxN8hoflKLweNa7vBxt2V7kaS06d74pAtqDxde8fn4r9h4dNdLiFGoNV0KA==
+
 mqtt-packet@^6.8.0:
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/mqtt-packet/-/mqtt-packet-6.10.0.tgz#c8b507832c4152e3e511c0efa104ae4a64cd418f"
@@ -6037,6 +6042,13 @@ ts-node@^10.9.2:
     make-error "^1.1.1"
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
+
+ts-parse-database-url@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ts-parse-database-url/-/ts-parse-database-url-1.0.3.tgz#8a41e00f584c02e0274d98f4e9b86f4eb45f9365"
+  integrity sha512-7AIP9EZyKsgaeGpu+Yhu6xDQtwbKDfkw5zBUsuYXju79tFRj6u8w2W+5Ag5wtCS6LM1jOB4iIqDNyFYX758wVQ==
+  dependencies:
+    mongodb-uri "^0.9.7"
 
 tslib@2.6.2:
   version "2.6.2"

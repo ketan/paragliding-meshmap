@@ -42,8 +42,6 @@ export function addOpts(command: Command) {
     parseDuration,
     Duration.fromISO('PT5M')
   )
-
-  command.option('--collect-service-envelopes', 'Whether to collect service envelopes')
 }
 
 export function webCLIParse() {
@@ -76,7 +74,6 @@ export interface MQTTCLIOptions {
   purgeEvery: Duration
   purgeDataOlderThan: Duration
   dumpStatsEvery: Duration
-  collectServiceEnvelopes: boolean
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

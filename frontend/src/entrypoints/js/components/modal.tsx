@@ -1,5 +1,5 @@
 import { XMarkIcon } from '../utils/icon-constants'
-import React, { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
 export interface ModalBaseProps {
   showModal: boolean

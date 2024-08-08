@@ -35,9 +35,13 @@ const typescriptCode = await definition
     }
 
     if (column.defaultValue) {
-      table.nullable = false
+      column.nullable = false
       column.optional = false
     }
+    if (column.isPrimaryKey) {
+      column.optional = false
+    }
+
     if (column.propertyName === 'neighbours') {
       column.propertyType = 'Neighbour[]'
     }

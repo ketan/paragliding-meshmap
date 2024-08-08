@@ -30,7 +30,6 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'neighbour_broadcast_interval_secs', type: 'integer', isNullable: true },
           { name: 'neighbours_updated_at', ...dateTimeType(), isNullable: true },
 
-
           { name: 'mqtt_connection_state', type: 'text', isNullable: true },
           { name: 'mqtt_connection_state_updated_at', ...dateTimeType(), isNullable: true },
 

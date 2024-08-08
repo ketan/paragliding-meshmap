@@ -18,7 +18,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     skipUpdateIfNoValuesChanged: true,
     conflictPaths: ['nodeId'],
   }
-  @Column({ type: 'bigint', unique: true, primary: true })
+  @Column({ type: 'bigint', unique: true, primary: true, nullable: false })
   nodeId: number
   @Column({ type: 'text', nullable: true })
   longName?: string

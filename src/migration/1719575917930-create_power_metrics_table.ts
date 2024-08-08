@@ -10,18 +10,24 @@ export class CreatePowerMetricsTable1719575917930 implements MigrationInterface 
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'ch1_voltage', type: 'double precision', isNullable: true },
-          { name: 'ch1_current', type: 'double precision', isNullable: true },
+          { name: 'ch_1_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch_1_current', type: 'double precision', isNullable: true },
 
-          { name: 'ch2_voltage', type: 'double precision', isNullable: true },
-          { name: 'ch2_current', type: 'double precision', isNullable: true },
+          { name: 'ch_2_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch_2_current', type: 'double precision', isNullable: true },
 
-          { name: 'ch3_voltage', type: 'double precision', isNullable: true },
-          { name: 'ch3_current', type: 'double precision', isNullable: true },
+          { name: 'ch_3_voltage', type: 'double precision', isNullable: true },
+          { name: 'ch_3_current', type: 'double precision', isNullable: true },
 
           {
             name: 'created_at',

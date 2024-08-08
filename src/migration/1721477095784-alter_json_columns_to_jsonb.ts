@@ -8,7 +8,7 @@ export class AlterJsonColumnsToJsonb1721477095784 implements MigrationInterface 
   }
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    if (queryRunner.connection.driver.options.type !== "postgres") {
+    if (queryRunner.connection.driver.options.type !== 'postgres') {
       return
     }
     for (const table in this.mapping) {
@@ -21,7 +21,7 @@ export class AlterJsonColumnsToJsonb1721477095784 implements MigrationInterface 
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    if (queryRunner.connection.driver.options.type !== "postgres") {
+    if (queryRunner.connection.driver.options.type !== 'postgres') {
       return
     }
 

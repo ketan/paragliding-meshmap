@@ -10,13 +10,19 @@ export class CreateServiceEnvelopesTable1719576008087 implements MigrationInterf
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'mqtt_topic', type: 'text', isNullable: false },
           { name: 'channel_id', type: 'text', isNullable: false },
           { name: 'gateway_id', type: 'bigint', isNullable: true },
-          { name: 'to', type: 'bigint', isNullable: false },
-          { name: 'from', type: 'bigint', isNullable: false },
+          { name: 'to', type: 'bigint', isNullable: true },
+          { name: 'from', type: 'bigint', isNullable: true },
           { name: 'protobuf', type: blobType(), isNullable: false },
 
           {

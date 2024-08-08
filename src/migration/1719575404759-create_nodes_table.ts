@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices } from '#helpers/migration-helper'
 
 export class CreateNodesTable1719575404759 implements MigrationInterface {
   tableName = 'nodes'
@@ -10,9 +10,7 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
-
-          { name: 'node_id', type: 'bigint', isNullable: false, isUnique: true },
+          { name: 'node_id', type: 'bigint', isNullable: false, isUnique: true, isPrimary: true, isGenerated: false },
 
           { name: 'long_name', type: 'text', isNullable: true },
           { name: 'short_name', type: 'text', isNullable: true },
@@ -32,6 +30,9 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'neighbour_broadcast_interval_secs', type: 'integer', isNullable: true },
           { name: 'neighbours', type: 'json', isNullable: true },
           { name: 'neighbours_updated_at', type: dateTimeType(), isNullable: true },
+
+          { name: 'inbox', type: 'json', isNullable: true },
+          { name: 'outbox', type: 'json', isNullable: true },
 
           { name: 'mqtt_connection_state', type: 'text', isNullable: true },
           { name: 'mqtt_connection_state_updated_at', type: dateTimeType(), isNullable: true },

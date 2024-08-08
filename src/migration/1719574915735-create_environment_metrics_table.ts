@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInterface {
   tableName = 'environment_metrics'
@@ -10,7 +10,13 @@ export class CreateEnvironmentMetricsTable1719574915735 implements MigrationInte
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 

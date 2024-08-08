@@ -10,11 +10,17 @@ export class CreateNeighbourInfosTable1719575290714 implements MigrationInterfac
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'node_broadcast_interval_secs', type: 'integer', isNullable: false },
+          { name: 'node_broadcast_interval_secs', type: 'integer', isNullable: true },
           { name: 'neighbours', type: 'json', isNullable: false },
 
           {

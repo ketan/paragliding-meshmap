@@ -10,7 +10,13 @@ export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'route', type: 'json', isNullable: false },
           { name: 'channel', type: 'integer', isNullable: true },
@@ -19,7 +25,7 @@ export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
           { name: 'packet_id', type: 'bigint', isNullable: true },
           { name: 'from', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },
-          { name: 'want_response', type: 'boolean', isNullable: false },
+          { name: 'want_response', type: 'boolean', isNullable: true },
 
           {
             name: 'created_at',

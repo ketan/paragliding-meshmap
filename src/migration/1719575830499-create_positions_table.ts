@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
+
 export class CreatePositionsTable1719575830499 implements MigrationInterface {
   tableName = 'positions'
   indices = ['node_id', 'created_at', 'updated_at']
@@ -9,11 +10,17 @@ export class CreatePositionsTable1719575830499 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
-          { name: 'to', type: 'bigint', isNullable: false },
+          { name: 'to', type: 'bigint', isNullable: true },
           { name: 'from', type: 'bigint', isNullable: false },
 
           { name: 'channel', type: 'integer', isNullable: true },

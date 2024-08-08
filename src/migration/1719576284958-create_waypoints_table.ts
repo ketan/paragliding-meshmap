@@ -10,7 +10,13 @@ export class CreateWaypointsTable1719576284958 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'from', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },

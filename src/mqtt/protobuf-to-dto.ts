@@ -137,7 +137,7 @@ export function toPowerMetric(telemetry: meshtastic.Telemetry, nodeId: number) {
 
 export function toEnvironmentMetric(telemetry: meshtastic.Telemetry, nodeId: number) {
   const metric = telemetry.environmentMetrics!
-  
+
   return new EnvironmentMetric({
     nodeId: nodeId,
     temperature: sanitizeNumber(metric.temperature),

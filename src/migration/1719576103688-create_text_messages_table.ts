@@ -10,7 +10,13 @@ export class CreateTextMessagesTable1719576103688 implements MigrationInterface 
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'channel', type: 'integer', isNullable: true },
           { name: 'channel_id', type: 'text', isNullable: true },
@@ -18,7 +24,7 @@ export class CreateTextMessagesTable1719576103688 implements MigrationInterface 
           { name: 'packet_id', type: 'bigint', isNullable: true },
           { name: 'from', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },
-          { name: 'want_response', type: 'boolean', isNullable: false },
+          { name: 'want_response', type: 'boolean', isNullable: true },
 
           { name: 'hop_limit', type: 'integer', isNullable: true },
           { name: 'rx_snr', type: 'double precision', isNullable: true },

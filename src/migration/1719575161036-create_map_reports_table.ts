@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dropIndices, primaryKeyType, dateTimeType } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateMapReportsTable1719575161036 implements MigrationInterface {
   tableName = 'map_reports'
@@ -10,13 +10,19 @@ export class CreateMapReportsTable1719575161036 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          { name: 'id', type: primaryKeyType(queryRunner), isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
+          {
+            name: 'id',
+            type: primaryKeyType(queryRunner),
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
 
           { name: 'node_id', type: 'bigint', isNullable: false },
 
           { name: 'short_name', type: 'text', isNullable: false },
           { name: 'long_name', type: 'text', isNullable: false },
-          { name: 'role', type: 'integer', isNullable: false },
+          { name: 'role', type: 'integer', isNullable: true },
 
           { name: 'hardware_model', type: 'integer', isNullable: false },
           { name: 'firmware_version', type: 'text', isNullable: false },

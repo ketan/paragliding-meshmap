@@ -1,12 +1,9 @@
-import { Database } from '#config/data-source'
 import { errLog } from '#helpers/logger'
 import { parseProtobuf, secondsAgo } from '#helpers/utils'
-import { Prisma } from '@prisma/client'
 import debug from 'debug'
-import { DateTime } from 'luxon'
 import { AbortError } from 'p-retry'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { MQTTCLIOptions } from '../helpers/cli.js'
+import { MQTTCLIOptions } from '#helpers/cli'
 import {
   toDeviceMetric,
   toEnvironmentMetric,
@@ -20,82 +17,70 @@ import {
   toTraceroute,
   toWaypoint,
 } from './protobuf-to-dto.js'
+import { DataSource } from 'typeorm'
+import DeviceMetric from '#entity/device_metric'
+import EnvironmentMetric from '#entity/environment_metric'
+import MapReport from '#entity/map_report'
+import NeighbourInfo from '#entity/neighbour_info'
+import Node from '#entity/node'
+import Position from '#entity/position'
+import PowerMetric from '#entity/power_metric'
+import ServiceEnvelope from '#entity/service_envelope'
+import TextMessage from '#entity/text_message'
+import Traceroute from '#entity/traceroute'
+import Waypoint from '#entity/waypoint'
 
-type Model =
-  | 'node'
-  | 'mapReport'
-  | 'neighbourInfo'
-  | 'deviceMetric'
-  | 'environmentMetric'
-  | 'powerMetric'
-  | 'position'
-  | 'serviceEnvelopes'
-  | 'textMessages'
-  | 'traceRoute'
-  | 'waypoint'
-type Models = Model[]
-
-const models: Models = [
-  'node',
-  'mapReport',
-  'neighbourInfo',
-  'deviceMetric',
-  'environmentMetric',
-  'powerMetric',
-  'position',
-  'serviceEnvelopes',
-  'textMessages',
-  'traceRoute',
-  'waypoint',
-]
-
-export async function dumpStats(db: Database, logger: debug.Debugger) {
-  const response = await db.$queryRaw<
+export async function dumpStats(db: DataSource, logger: debug.Debugger) {
+  const response = await db.query<
     {
       relname: string
       n_live_tup: bigint
       n_dead_tup: bigint
     }[]
-  >`SELECT relname, n_live_tup, n_dead_tup FROM pg_stat_user_tables`
+  >(`SELECT relname, n_live_tup, n_dead_tup
+     FROM pg_stat_user_tables`)
   logger(`Record count (estimates)`, response)
 }
 
-export async function purgeData(db: Database, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {
+export async function purgeData(db: DataSource, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {
   if (cliOptions.purgeDataOlderThan) {
     logger(`Counting before purging data`)
     await dumpStats(db, logger)
     logger(`Starting purge`)
-    const purgeCutoff = DateTime.now().toLocal().minus(cliOptions.purgeDataOlderThan)
-    for (let index = 0; index < models.length; index++) {
-      const eachModel = models[index]
-      logger(`Purging ${eachModel}`)
-      await db.$transaction(
-        async (trx) => {
-          // @ts-expect-error We're duck typing here
-          const deletedRecords = await trx[eachModel].deleteMany({
-            where: {
-              updatedAt: {
-                lt: purgeCutoff.toJSDate(),
-              },
-            },
-          })
 
-          if (deletedRecords > 0) {
-            logger(`Purged ${deletedRecords} records from ${eachModel}`)
-          }
-        },
-        { timeout: 30000, maxWait: 30000 }
-      )
+    const klasses = [
+      DeviceMetric,
+      EnvironmentMetric,
+      MapReport,
+      NeighbourInfo,
+      Node,
+      Position,
+      PowerMetric,
+      ServiceEnvelope,
+      TextMessage,
+      Traceroute,
+      Waypoint,
+    ]
+
+    for (const klass of klasses) {
+      await db.transaction(async (trx) => {
+        logger(`Purging ${klass.name}`)
+        const deletedRecords = await klass.purge(cliOptions.purgeDataOlderThan, trx)
+        if (deletedRecords.affected && deletedRecords?.affected > 0) {
+          logger(`Purged ${deletedRecords?.affected} records from ${klass.name}`)
+        }
+      })
     }
+
     await dumpStats(db, logger)
     logger(`Next purge in ${cliOptions.purgeEvery.toHuman()}`)
   }
 }
 
-export async function updateMQTTStatus(db: Database, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
-  await db.$transaction(async (trx) => {
+export async function updateMQTTStatus(db: DataSource, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
+  await db.transaction(async (trx) => {
     try {
-      await trx.node.updateMQTTStatus(trx as unknown as Prisma.TransactionClient, nodeId, mqttConnectionState, mqttConnectionStateUpdatedAt)
+      await Node.updateMqttStatus(trx, nodeId, mqttConnectionState, mqttConnectionStateUpdatedAt)
     } catch (e) {
       errLog(`Unable to update mqtt status`, { err: e })
       throw e
@@ -103,7 +88,7 @@ export async function updateMQTTStatus(db: Database, nodeId: number, mqttConnect
   })
 }
 
-export async function createServiceEnvelope(db: Database, mqttTopic: string, payload: Buffer, envelope: meshtastic.ServiceEnvelope) {
+export async function createServiceEnvelope(db: DataSource, mqttTopic: string, payload: Buffer, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
 
   if (!packet) {
@@ -112,9 +97,9 @@ export async function createServiceEnvelope(db: Database, mqttTopic: string, pay
 
   const se = toServiceEnvelope(packet, payload, mqttTopic, envelope)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      await trx.serviceEnvelopes.create({ data: se })
+      await trx.save(se, { reload: false })
     } catch (e) {
       errLog(`Unable to create service envelope`, { err: e, mqttTopic, se, envelope })
       throw e
@@ -122,7 +107,7 @@ export async function createServiceEnvelope(db: Database, mqttTopic: string, pay
   })
 }
 
-export async function saveTextMessage(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function saveTextMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   if (!packet) {
     return
@@ -130,11 +115,20 @@ export async function saveTextMessage(db: Database, envelope: meshtastic.Service
 
   const tm = toTextMessage(envelope, packet)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction(async (trx) => {
     try {
-      await trx.node.outboundMessage(trx as unknown as Prisma.TransactionClient, tm)
-      await trx.node.inboundMessage(trx as unknown as Prisma.TransactionClient, tm)
-      await trx.textMessages.create({ data: tm })
+      let [from, to] = await Promise.all([
+        trx.findOne(Node, { where: { nodeId: tm.from } }),
+        trx.findOne(Node, { where: { nodeId: tm.to } }),
+      ])
+
+      from ||= new Node()
+      to ||= new Node()
+
+      from.outboundMessage(tm)
+      to.inboundMessage(tm)
+
+      await trx.save([from, to, tm], { reload: false })
     } catch (e) {
       errLog(`Unable to create text message`, { err: e, tm, envelope })
       throw e
@@ -142,7 +136,7 @@ export async function saveTextMessage(db: Database, envelope: meshtastic.Service
   })
 }
 
-export async function updateNodeWithPosition(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function updateNodeWithPosition(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -154,19 +148,16 @@ export async function updateNodeWithPosition(db: Database, envelope: meshtastic.
 
   const newPosition = toPosition(packet, envelope, position)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction(async (trx) => {
     try {
       if (newPosition.latitude != null && newPosition.longitude != null) {
-        const recentPosition = await trx.position.findRecentPosition(
-          trx as unknown as Prisma.TransactionClient,
-          secondsAgo(15),
-          newPosition
-        )
+        const recentPosition = await newPosition.findRecentPosition(secondsAgo(15), trx)
         if (recentPosition) {
           return
         }
-        await trx.position.create({ data: newPosition })
-        await trx.node.updatePosition(trx as unknown as Prisma.TransactionClient, newPosition)
+
+        await trx.save(newPosition, { reload: false })
+        await Node.updatePosition(trx, newPosition)
       }
     } catch (e) {
       errLog(`Unable to update node position`, { err: e, position, envelope })
@@ -175,7 +166,7 @@ export async function updateNodeWithPosition(db: Database, envelope: meshtastic.
   })
 }
 
-export async function createOrUpdateNode(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateNode(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -187,9 +178,9 @@ export async function createOrUpdateNode(db: Database, envelope: meshtastic.Serv
   const node = toNode(packet, user)
 
   // let node: Node | null
-  await db.$transaction(async (trx) => {
+  await db.transaction(async (trx) => {
     try {
-      await trx.node.createOrUpdate(trx as unknown as Prisma.TransactionClient, node)
+      await node.createOrUpdate(trx)
     } catch (e) {
       errLog(`Unable to update node`, { err: e, node, envelope })
       throw e
@@ -197,7 +188,7 @@ export async function createOrUpdateNode(db: Database, envelope: meshtastic.Serv
   })
 }
 
-export async function createOrUpdateWaypoint(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateWaypoint(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -209,9 +200,9 @@ export async function createOrUpdateWaypoint(db: Database, envelope: meshtastic.
 
   const wp = toWaypoint(packet, waypoint, envelope)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      return await trx.waypoint.create({ data: wp })
+      return await trx.save(wp, { reload: false })
     } catch (e) {
       errLog(`Unable to create waypoint`, { err: e, waypoint, envelope })
       throw new AbortError(e)
@@ -219,7 +210,7 @@ export async function createOrUpdateWaypoint(db: Database, envelope: meshtastic.
   })
 }
 
-export async function createOrUpdateNeighborInfo(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateNeighborInfo(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -231,10 +222,9 @@ export async function createOrUpdateNeighborInfo(db: Database, envelope: meshtas
 
   const entity = toNeighborInfo(packet, neighborInfo)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      await trx.neighbourInfo.create({ data: entity })
-      return await trx.node.updateNeighbors(trx as unknown as Prisma.TransactionClient, entity)
+      return await Promise.all([trx.save(neighborInfo, { reload: false }), Node.updateNeighbors(trx, entity)])
     } catch (e) {
       errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)
@@ -242,7 +232,7 @@ export async function createOrUpdateNeighborInfo(db: Database, envelope: meshtas
   })
 }
 
-export async function createOrUpdateTelemetryData(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateTelemetryData(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -261,49 +251,37 @@ export async function createOrUpdateTelemetryData(db: Database, envelope: meshta
     return // nothing to capture, move on
   }
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
       if (telemetry.variant === 'deviceMetrics') {
         const deviceMetric = toDeviceMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await trx.deviceMetric.findRecentSimilarMetric(
-          trx as unknown as Prisma.TransactionClient,
-          secondsAgo(15),
-          deviceMetric
-        )
+        const recentSimilarMetric = await deviceMetric.findRecentSimilarMetric(trx, secondsAgo(15))
+
         if (recentSimilarMetric) {
           return
         }
 
-        await trx.deviceMetric.create({ data: deviceMetric })
-        await trx.node.updateDeviceMetrics(trx as unknown as Prisma.TransactionClient, deviceMetric)
+        await Promise.all([trx.save(deviceMetric, { reload: false }), Node.updateDeviceMetrics(trx, deviceMetric)])
       } else if (telemetry.variant === 'environmentMetrics') {
         const environmentMetric = toEnvironmentMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await trx.environmentMetric.findRecentSimilarMetric(
-          trx as unknown as Prisma.TransactionClient,
-          secondsAgo(15),
-          environmentMetric
-        )
+        const recentSimilarMetric = await environmentMetric.findRecentSimilarMetric(trx, secondsAgo(15))
         if (recentSimilarMetric) {
           return
         }
-        await trx.environmentMetric.create({ data: environmentMetric })
-        return await trx.node.updateEnvironmentMetrics(trx as unknown as Prisma.TransactionClient, environmentMetric)
+
+        await Promise.all([trx.save(environmentMetric, { reload: false }), Node.updateEnvironmentMetrics(trx, environmentMetric)])
       } else if (telemetry.variant === 'powerMetrics') {
         const powerMetric = toPowerMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await trx.powerMetric.findRecentSimilarMetric(
-          trx as unknown as Prisma.TransactionClient,
-          secondsAgo(15),
-          powerMetric
-        )
+        const recentSimilarMetric = await powerMetric.findRecentSimilarMetric(trx, secondsAgo(15))
 
         if (recentSimilarMetric) {
           return
         }
 
-        await trx.powerMetric.create({ data: powerMetric })
+        await trx.save(powerMetric, { reload: false })
       }
     } catch (e) {
       errLog(`Unable to create telemetry data`, { err: e, nodeId, envelope })
@@ -312,7 +290,7 @@ export async function createOrUpdateTelemetryData(db: Database, envelope: meshta
   })
 }
 
-export async function createOrUpdateTracerouteMessage(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateTracerouteMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -324,9 +302,9 @@ export async function createOrUpdateTracerouteMessage(db: Database, envelope: me
 
   const traceroute = toTraceroute(packet, rd, envelope)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      await trx.traceRoute.create({ data: traceroute })
+      await trx.save(traceroute, { reload: false })
     } catch (e) {
       errLog(`Unable to save traceroute`, { err: e, traceroute, envelope })
       throw e
@@ -334,7 +312,7 @@ export async function createOrUpdateTracerouteMessage(db: Database, envelope: me
   })
 }
 
-export async function createMapReports(db: Database, envelope: meshtastic.ServiceEnvelope) {
+export async function createMapReports(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -346,10 +324,9 @@ export async function createMapReports(db: Database, envelope: meshtastic.Servic
 
   const mapReport = toMapReport(packet, mr)
 
-  await db.$transaction(async (trx) => {
+  await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      await trx.mapReport.create({ data: mapReport })
-      return trx.node.updateMapReports(trx as unknown as Prisma.TransactionClient, mapReport)
+      return await Promise.all([trx.save(mapReport, { reload: false }), Node.updateMapReports(trx, mapReport)])
     } catch (e) {
       errLog(`Unable to save map report`, { err: e, mr, envelope })
       throw e

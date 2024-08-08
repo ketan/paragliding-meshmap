@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
 import _ from 'lodash'
@@ -17,5 +17,18 @@ export default class NeighbourInfo extends BaseType {
   constructor(opts: Partial<NeighbourInfo> = {}) {
     super()
     _.assign(this, opts)
+  }
+
+  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+    return await this.find(db, {
+      select: ['neighbours', 'createdAt'],
+      where: {
+        nodeId: nodeId,
+        createdAt: MoreThanOrEqual(since),
+      },
+      order: {
+        createdAt: 'asc',
+      },
+    })
   }
 }

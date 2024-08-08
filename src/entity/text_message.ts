@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -43,5 +43,19 @@ export default class TextMessage extends BaseType {
   constructor(opts: Partial<TextMessage> = {}) {
     super()
     _.assign(this, opts)
+  }
+
+  static async outgoing(db: DataSource | EntityManager, nodeId: number, to: number | undefined, since: Date) {
+    return await this.find(db, {
+      select: ['id', 'from', 'to', 'text', 'createdAt'],
+      where: {
+        from: nodeId,
+        to: to,
+        createdAt: MoreThanOrEqual(since),
+      },
+      order: {
+        createdAt: 'asc',
+      },
+    })
   }
 }

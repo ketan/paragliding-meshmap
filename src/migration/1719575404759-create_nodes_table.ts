@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices, jsonType } from '#helpers/migration-helper'
 
 export class CreateNodesTable1719575404759 implements MigrationInterface {
   tableName = 'nodes'
@@ -28,11 +28,11 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'channel_utilization', type: 'double precision', isNullable: true },
           { name: 'voltage', type: 'double precision', isNullable: true },
           { name: 'neighbour_broadcast_interval_secs', type: 'integer', isNullable: true },
-          { name: 'neighbours', type: 'json', isNullable: true },
+          { name: 'neighbours', type: jsonType(queryRunner), isNullable: true },
           { name: 'neighbours_updated_at', type: dateTimeType(), isNullable: true },
 
-          { name: 'inbox', type: 'json', isNullable: true },
-          { name: 'outbox', type: 'json', isNullable: true },
+          { name: 'inbox', type: jsonType(queryRunner), isNullable: true },
+          { name: 'outbox', type: jsonType(queryRunner), isNullable: true },
 
           { name: 'mqtt_connection_state', type: 'text', isNullable: true },
           { name: 'mqtt_connection_state_updated_at', type: dateTimeType(), isNullable: true },

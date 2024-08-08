@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -31,5 +31,18 @@ export default class Traceroute extends BaseType {
   constructor(opts: Partial<Traceroute> = {}) {
     super()
     _.assign(this, opts)
+  }
+
+  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+    return await this.find(db, {
+      select: ['route', 'to', 'createdAt'],
+      where: {
+        from: nodeId,
+        createdAt: MoreThanOrEqual(since),
+      },
+      order: {
+        createdAt: 'asc',
+      },
+    })
   }
 }

@@ -1,13 +1,24 @@
 import debug from 'debug'
 import { DateTime, Duration } from 'luxon'
-import { CreateDateColumn, Entity, EntityManager, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  CreateDateColumn,
+  DataSource,
+  Entity,
+  EntityManager,
+  FindManyOptions,
+  FindOneOptions,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
 export abstract class BaseTypeWithoutPrimaryKey {
   static logger = debug('meshmap:model')
   static decodeLogger = debug('meshmap:decode')
+
   static purgeEvery: Duration
   static purgeDataOlderThan: Duration
+
   @UpdateDateColumn()
   updatedAt: Date
   @CreateDateColumn()
@@ -30,9 +41,27 @@ export abstract class BaseTypeWithoutPrimaryKey {
       updated_at: purgeCutoff.toISO(),
     })
 
-    const result = await query.execute()
+    return await query.execute()
+  }
 
-    this.logger(`Purged ${result.affected} rows from ${this.name} table which were updated earlier than ${purgeCutoff.toRelative()}`)
+  static async find<T extends BaseTypeWithoutPrimaryKey>(
+    this: {
+      new (): T
+    } & typeof BaseTypeWithoutPrimaryKey,
+    db: DataSource | EntityManager,
+    options?: FindManyOptions<T>
+  ) {
+    return await db.getRepository<T>(this).find(options)
+  }
+
+  static async findOne<T extends BaseTypeWithoutPrimaryKey>(
+    this: {
+      new (): T
+    } & typeof BaseTypeWithoutPrimaryKey,
+    db: DataSource | EntityManager,
+    options: FindOneOptions<T>
+  ) {
+    return await db.getRepository<T>(this).findOne(options)
   }
 }
 

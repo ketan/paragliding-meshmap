@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices, jsonType, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
   tableName = 'traceroutes'
@@ -18,7 +18,7 @@ export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
             generationStrategy: 'increment',
           },
 
-          { name: 'route', type: 'json', isNullable: false },
+          { name: 'route', type: jsonType(queryRunner), isNullable: false },
           { name: 'channel', type: 'integer', isNullable: true },
           { name: 'channel_id', type: 'text', isNullable: true },
           { name: 'gateway_id', type: 'bigint', isNullable: true },

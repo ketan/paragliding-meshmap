@@ -1,6 +1,6 @@
 import { dateTimeType } from '#helpers/migration-helper'
 import { DateTime } from 'luxon'
-import { Column, Entity, EntityManager } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager } from 'typeorm'
 import { BaseType, BaseTypeWithoutPrimaryKey } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
@@ -9,8 +9,8 @@ import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
 import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
-import { BROADCAST_ADDR } from '../../build/helpers/utils.js'
 import _ from 'lodash'
+import { BROADCAST_ADDR } from '#helpers/utils'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -87,7 +87,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   static async updateDeviceMetrics(trx: EntityManager, dm: DeviceMetric) {
-    return trx.getRepository(Node).upsert(
+    return await trx.getRepository(Node).upsert(
       {
         nodeId: dm.nodeId,
         batteryLevel: dm.batteryLevel,
@@ -101,7 +101,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   static async updateEnvironmentMetrics(trx: EntityManager, em: EnvironmentMetric) {
-    return trx.getRepository(Node).upsert(
+    return await trx.getRepository(Node).upsert(
       {
         nodeId: em.nodeId,
         barometricPressure: em.barometricPressure,
@@ -113,8 +113,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static updateMapReports(trx: EntityManager, mr: MapReport) {
-    return trx.getRepository(Node).upsert(
+  static async updateMapReports(trx: EntityManager, mr: MapReport) {
+    return await trx.getRepository(Node).upsert(
       {
         nodeId: mr.nodeId,
         shortName: mr.shortName,
@@ -136,7 +136,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   static async updateMqttStatus(trx: EntityManager, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
-    return trx.getRepository(Node).upsert(
+    return await trx.getRepository(Node).upsert(
       {
         nodeId,
         mqttConnectionState,
@@ -147,7 +147,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   static async updatePosition(trx: EntityManager, position: Position) {
-    return trx.getRepository(Node).upsert(
+    return await trx.getRepository(Node).upsert(
       {
         nodeId: position.from,
         positionUpdatedAt: new Date(),
@@ -159,8 +159,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {
-    return trx.getRepository(Node).upsert(
+  static async updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {
+    return await trx.getRepository(Node).upsert(
       {
         nodeId: neighborInfo.nodeId,
         neighbours: neighborInfo.neighbours,
@@ -170,14 +170,14 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static async hardwareModels(mgr: EntityManager) {
+  static async hardwareModels(mgr: EntityManager | DataSource) {
     return (
       (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
   }
 
-  static async createOrUpdate(trx: EntityManager, newNode: Node) {
-    return trx.getRepository(Node).upsert(newNode, {
+  async createOrUpdate(trx: EntityManager) {
+    return await trx.getRepository(Node).upsert(this, {
       skipUpdateIfNoValuesChanged: true,
       conflictPaths: ['nodeId'],
     })

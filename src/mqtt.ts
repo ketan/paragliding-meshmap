@@ -2,12 +2,11 @@
 import 'dotenv/config'
 
 //
-import { createDB, Database } from '#config/data-source'
 import { mqttProcessor } from '#mqtt/main'
-import { MQTTCLIOptions, mqttCLIParse } from './helpers/cli.js'
+import { MQTTCLIOptions, mqttCLIParse } from '#helpers/cli'
+import { AppDataSource } from '#config/data-source'
 
 const cliOptions: MQTTCLIOptions = mqttCLIParse()
-
-const db: Database = createDB(cliOptions.purgeDataOlderThan)
+const db = await AppDataSource.initialize()
 
 await mqttProcessor(db, cliOptions)

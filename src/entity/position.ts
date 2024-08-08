@@ -1,5 +1,5 @@
 import { AppDataSource } from '#config/data-source'
-import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -64,6 +64,19 @@ export default class Position extends BaseType {
         nodeId: this.nodeId,
         packetId: this.packetId,
         createdAt: MoreThanOrEqual(since),
+      },
+    })
+  }
+
+  static async forNode(db: EntityManager | DataSource, nodeId: number, since: Date) {
+    return await db.getRepository(this).find({
+      select: ['createdAt', 'latitude', 'longitude', 'altitude'],
+      where: {
+        nodeId,
+        createdAt: MoreThanOrEqual(since),
+      },
+      order: {
+        createdAt: 'ASC',
       },
     })
   }

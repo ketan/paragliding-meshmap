@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { createIndices, dateTimeType, dropIndices, primaryKeyType } from '#helpers/migration-helper'
+import { createIndices, dateTimeType, dropIndices, jsonType, primaryKeyType } from '#helpers/migration-helper'
 
 export class CreateNeighbourInfosTable1719575290714 implements MigrationInterface {
   tableName = 'neighbour_infos'
@@ -21,7 +21,7 @@ export class CreateNeighbourInfosTable1719575290714 implements MigrationInterfac
           { name: 'node_id', type: 'bigint', isNullable: false },
 
           { name: 'node_broadcast_interval_secs', type: 'integer', isNullable: true },
-          { name: 'neighbours', type: 'json', isNullable: false },
+          { name: 'neighbours', type: jsonType(queryRunner), isNullable: false },
 
           {
             name: 'created_at',

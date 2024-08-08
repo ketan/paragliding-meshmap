@@ -5,7 +5,7 @@ export function toBigInt(str: number | string | undefined | null): number | unde
     return str
   }
 
-  if (str === undefined || str === null || (typeof str === 'string' && str.trim().length === 0)) {
+  if (str === undefined || str === null || str.trim().length === 0) {
     return
   }
 
@@ -35,3 +35,5 @@ export function parseProtobuf<T>(f: () => T): T {
     throw new AbortError(e)
   }
 }
+
+export const BROADCAST_ADDR = Number('0xffffffff')

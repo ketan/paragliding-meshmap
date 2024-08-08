@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf build frontend/dist",
-    "build": "yarn run clean && yarn run prisma generate && concurrently yarn:build:fe yarn:build:be && cp -rf frontend/dist build/public",
+    "build": "yarn run clean && bin/schema-to-ts && concurrently yarn:build:fe yarn:build:be && cp -rf frontend/dist build/public",
     "build:be": "npx rollup -c rollup.config.js",
     "build:fe": "cd frontend && tsc -b && vite build --mode=production",
     "start": "concurrently -P \"yarn:start:be -- {@}\" yarn:start:fe --",
@@ -96,7 +96,6 @@
     "vite-plugin-inspect": "^0.8.4"
   },
   "dependencies": {
-    "@prisma/client": "^5.17.0",
     "async-mqtt": "^2.6.3",
     "body-parser": "^1.20.2",
     "commander": "^12.1.0",
@@ -110,8 +109,6 @@
     "p-retry": "^6.2.0",
     "pg": "^8.12.0",
     "pluralize": "^8.0.0",
-    "prisma": "^5.17.0",
-    "prisma-json-types-generator": "^3.0.4",
     "protobufjs": "^7.3.2",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",

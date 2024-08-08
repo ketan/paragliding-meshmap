@@ -31,7 +31,7 @@ export default class PowerMetric extends BaseType {
     _.assign(this, opts)
   }
 
-  async findRecentSimilarMetric(since: Date, trx: EntityManager) {
+  async findRecentSimilarMetric(trx: EntityManager, since: Date) {
     return await trx.findOne(PowerMetric, {
       where: {
         nodeId: this.nodeId,
@@ -47,7 +47,7 @@ export default class PowerMetric extends BaseType {
   }
 
   async saveIfNoSimilarRecentMetric(trx: EntityManager) {
-    if (!(await this.findRecentSimilarMetric(secondsAgo(15), trx))) {
+    if (!(await this.findRecentSimilarMetric(trx, secondsAgo(15)))) {
       await trx.save(this)
     }
   }

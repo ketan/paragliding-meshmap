@@ -1,4 +1,4 @@
-import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -33,7 +33,7 @@ export default class EnvironmentMetric extends BaseType {
     _.assign(this, opts)
   }
 
-  async findRecentSimilarMetric(since: Date, trx: EntityManager) {
+  async findRecentSimilarMetric(trx: EntityManager, since: Date) {
     return await trx.findOne(EnvironmentMetric, {
       where: {
         nodeId: this.nodeId,
@@ -45,6 +45,24 @@ export default class EnvironmentMetric extends BaseType {
         current: this.current,
         iaq: this.iaq,
         createdAt: MoreThanOrEqual(since),
+      },
+    })
+  }
+
+  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+    return this.find(db, {
+      select: {
+        temperature: true,
+        relativeHumidity: true,
+        barometricPressure: true,
+        createdAt: true,
+      },
+      where: {
+        nodeId: nodeId,
+        createdAt: MoreThanOrEqual(since),
+      },
+      order: {
+        createdAt: 'asc',
       },
     })
   }

@@ -15,7 +15,8 @@ export class AlterJsonColumnsToJsonb1721477095784 implements MigrationInterface 
       const columns = this.mapping[table]
       for (let index = 0; index < columns.length; index++) {
         const column = columns[index]
-        await queryRunner.query(`ALTER TABLE ${table} ALTER COLUMN ${column} SET DATA TYPE jsonb USING ${column}::jsonb;`)
+        await queryRunner.query(`ALTER TABLE ${table}
+            ALTER COLUMN ${column} SET DATA TYPE jsonb USING ${column}::jsonb;`)
       }
     }
   }
@@ -29,7 +30,8 @@ export class AlterJsonColumnsToJsonb1721477095784 implements MigrationInterface 
       const columns = this.mapping[table]
       for (let index = 0; index < columns.length; index++) {
         const column = columns[index]
-        await queryRunner.query(`ALTER TABLE ${table} ALTER COLUMN ${column} SET DATA TYPE json USING ${column}::json;`)
+        await queryRunner.query(`ALTER TABLE ${table}
+            ALTER COLUMN ${column} SET DATA TYPE json USING ${column}::json;`)
       }
     }
   }

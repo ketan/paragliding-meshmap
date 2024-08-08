@@ -1,6 +1,5 @@
 import { toBigInt } from '#helpers/utils'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { Prisma } from '@prisma/client'
 import Node from '#entity/node'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
@@ -11,6 +10,7 @@ import TextMessage from '#entity/text_message'
 import Traceroute from '#entity/traceroute'
 import Waypoint from '#entity/waypoint'
 import PowerMetric from '#entity/power_metric'
+import Position from '#entity/position'
 
 export function toServiceEnvelope(
   packet: meshtastic.IMeshPacket,
@@ -47,20 +47,20 @@ export function toTextMessage(envelope: meshtastic.ServiceEnvelope, packet: mesh
 }
 
 export function toPosition(packet: meshtastic.IMeshPacket, envelope: meshtastic.ServiceEnvelope, position: meshtastic.Position) {
-  return {
-    nodeId: packet.from,
-    to: packet.to,
-    from: packet.from,
+  return new Position({
+    nodeId: packet.from!,
+    to: packet.to!,
+    from: packet.from!,
 
-    channel: packet.channel,
-    packetId: packet.id,
+    channel: packet.channel!,
+    packetId: packet.id!,
     channelId: envelope.channelId,
     gatewayId: toBigInt(envelope.gatewayId),
 
     latitude: position.latitudeI,
     longitude: position.longitudeI,
     altitude: position.altitude,
-  } as Prisma.PositionCreateInput
+  })
 }
 
 export function toNode(packet: meshtastic.IMeshPacket, user: meshtastic.User) {
@@ -184,10 +184,9 @@ export function toMapReport(packet: meshtastic.IMeshPacket, mr: meshtastic.MapRe
 
 export function sanitizeNumber(num: number | undefined | null) {
   if (num === undefined || num === null) {
-    return undefined
+    return
   }
   if (num !== 0) {
     return num
   }
-  return undefined
 }

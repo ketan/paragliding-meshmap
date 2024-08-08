@@ -12,15 +12,53 @@ export function primaryKeyType(queryRunner: QueryRunner) {
 export async function createIndices(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
   await queryRunner.createIndices(
     tableName,
-    columnNames.map((eachColumn) => new TableIndex({ name: `${tableName}_${eachColumn}_idx`, columnNames: [eachColumn] }))
+    columnNames.map(
+      (eachColumn) =>
+        new TableIndex({
+          name: `${tableName}_${eachColumn}_idx`,
+          columnNames: [eachColumn],
+        })
+    )
   )
 }
 
 export async function dropIndices(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
   await queryRunner.dropIndices(
     tableName,
-    columnNames.map((eachColumn) => new TableIndex({ name: `${tableName}_${eachColumn}_idx`, columnNames: [eachColumn] }))
+    columnNames.map(
+      (eachColumn) =>
+        new TableIndex({
+          name: `${tableName}_${eachColumn}_idx`,
+          columnNames: [eachColumn],
+        })
+    )
   )
+}
+
+export async function makeColumnsJSONB(queryRunner: QueryRunner, table: string, columnNames: string[]) {
+  if (queryRunner.connection.driver.options.type !== 'postgres') {
+    return
+  }
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const column = columnNames[index]
+    await queryRunner.query(`
+        ALTER TABLE ${table}
+            ALTER COLUMN ${column} SET DATA TYPE jsonb USING ${column}::jsonb;
+    `)
+  }
+}
+
+export async function makeColumnsJSON(queryRunner: QueryRunner, table: string, columnNames: string[]) {
+  if (queryRunner.connection.driver.options.type !== 'postgres') {
+    return
+  }
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const column = columnNames[index]
+    await queryRunner.query(`ALTER TABLE ${table}
+        ALTER COLUMN ${column} SET DATA TYPE json USING ${column}::json;`)
+  }
 }
 
 export async function makeColumnNullable(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
@@ -75,4 +113,15 @@ export function blobType() {
     return 'bytea'
   }
   throw new Error(`Unsupported blob type for ${AppDataSource.options.type}. Supported types are ${AppDataSource.driver.supportedDataTypes}`)
+}
+
+export function jsonType(queryRunner: QueryRunner) {
+  if (queryRunner.connection.driver.supportedDataTypes.includes('json')) {
+    return 'json'
+  } else if (queryRunner.connection.driver.supportedDataTypes.includes('jsonb')) {
+    return 'jsonb'
+  }
+  throw new Error(
+    `Unsupported json type for ${queryRunner.connection.options.type}. Supported types are ${queryRunner.connection.driver.supportedDataTypes}`
+  )
 }

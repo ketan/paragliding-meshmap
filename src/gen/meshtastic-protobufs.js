@@ -2904,6 +2904,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} HELTEC_MESH_NODE_T114=69 Heltec Mesh Node T114 board with nRF52840 CPU, and a 1.14 inch TFT display, Ultimate low-power design,
    * specifically adapted for the Meshtatic project
    * @property {number} SENSECAP_INDICATOR=70 Sensecap Indicator from Seeed Studio. ESP32-S3 device with TFT and RP2040 coprocessor
+   * @property {number} TRACKER_T1000_E=71 Seeed studio T1000-E tracker card. NRF52840 w/ LR1110 radio, GPS, button, buzzer, and sensors.
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -2981,6 +2982,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[68] = 'HELTEC_VISION_MASTER_E290')] = 68
     values[(valuesById[69] = 'HELTEC_MESH_NODE_T114')] = 69
     values[(valuesById[70] = 'SENSECAP_INDICATOR')] = 70
+    values[(valuesById[71] = 'TRACKER_T1000_E')] = 71
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -4456,6 +4458,11 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} SX1262_FAILURE=10 Selftest of SX1262 radio chip failed
    * @property {number} RADIO_SPI_BUG=11 A (likely software but possibly hardware) failure was detected while trying to send packets.
    * If this occurs on your board, please post in the forum so that we can ask you to collect some information to allow fixing this bug
+   * @property {number} FLASH_CORRUPTION_RECOVERABLE=12 Corruption was detected on the flash filesystem but we were able to repair things.
+   * If you see this failure in the field please post in the forum because we are interested in seeing if this is occurring in the field.
+   * @property {number} FLASH_CORRUPTION_UNRECOVERABLE=13 Corruption was detected on the flash filesystem but we were unable to repair things.
+   * NOTE: Your node will probably need to be reconfigured the next time it reboots (it will lose the region code etc...)
+   * If you see this failure in the field please post in the forum because we are interested in seeing if this is occurring in the field.
    */
   meshtastic.CriticalErrorCode = (function () {
     const valuesById = {},
@@ -4472,6 +4479,8 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[9] = 'BROWNOUT')] = 9
     values[(valuesById[10] = 'SX1262_FAILURE')] = 10
     values[(valuesById[11] = 'RADIO_SPI_BUG')] = 11
+    values[(valuesById[12] = 'FLASH_CORRUPTION_RECOVERABLE')] = 12
+    values[(valuesById[13] = 'FLASH_CORRUPTION_UNRECOVERABLE')] = 13
     return values
   })()
 

@@ -1610,6 +1610,7 @@ export namespace meshtastic {
     HELTEC_VISION_MASTER_E290 = 68,
     HELTEC_MESH_NODE_T114 = 69,
     SENSECAP_INDICATOR = 70,
+    TRACKER_T1000_E = 71,
     PRIVATE_HW = 255,
   }
 
@@ -2479,6 +2480,8 @@ export namespace meshtastic {
     BROWNOUT = 9,
     SX1262_FAILURE = 10,
     RADIO_SPI_BUG = 11,
+    FLASH_CORRUPTION_RECOVERABLE = 12,
+    FLASH_CORRUPTION_UNRECOVERABLE = 13,
   }
 
   /** Properties of a MyNodeInfo. */

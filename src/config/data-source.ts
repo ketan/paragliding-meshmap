@@ -3,7 +3,6 @@ import 'dotenv/config'
 
 // then load everything else
 import { globSync } from 'glob'
-import snakeCase from 'lodash/snakeCase.js'
 import os from 'os'
 import path from 'path'
 import pluralize from 'pluralize'
@@ -12,6 +11,8 @@ import { DataSource, DefaultNamingStrategy, NamingStrategyInterface } from 'type
 import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
 import { dbConnectionOptions } from '#config/db-connection-opts-parser'
+import _ from 'lodash'
+
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -20,11 +21,11 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
       return userSpecifiedName
     }
 
-    return snakeCase(pluralize.plural(targetName))
+    return _.snakeCase(pluralize.plural(targetName))
   }
 
   columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string {
-    return snakeCase(super.columnName(propertyName, customName, embeddedPrefixes))
+    return _.snakeCase(super.columnName(propertyName, customName, embeddedPrefixes))
   }
 }
 

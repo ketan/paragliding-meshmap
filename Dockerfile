@@ -25,4 +25,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3333
 
-CMD ["sh", "-c", "npx prisma migrate deploy && exec node index.js"]
+CMD ["sh", "-c", "node index.js"]

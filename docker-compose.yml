@@ -1,0 +1,20 @@
+services:
+  meshmap:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+      - "5173:5173"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/meshmap
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: meshmap
+    ports:
+      - "5432:5432"

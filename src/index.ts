@@ -24,6 +24,10 @@ const cliOptions = webCLIParse()
 
 const db = await AppDataSource.initialize()
 
+await AppDataSource.runMigrations({
+  transaction: 'each'
+})
+
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 

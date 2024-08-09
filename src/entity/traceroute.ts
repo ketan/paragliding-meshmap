@@ -5,7 +5,7 @@ import { jsonType } from '#helpers/migration-helper'
 
 @Entity()
 export default class Traceroute extends BaseType {
-  @Column({ type: jsonType(), array: true, nullable: true })
+  @Column({ type: jsonType(), nullable: true })
   route: number[]
 
   @Column({ type: 'integer', nullable: true })

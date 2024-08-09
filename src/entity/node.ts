@@ -46,11 +46,11 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   voltage?: number
   @Column({ type: 'integer', nullable: true })
   neighbourBroadcastIntervalSecs?: number
-  @Column({ type: jsonType(), nullable: true, array: true })
+  @Column({ type: jsonType(), nullable: true })
   neighbours?: Neighbors[]
-  @Column({ type: jsonType(), nullable: true, array: true })
+  @Column({ type: jsonType(), nullable: true })
   outbox?: MessageOut[]
-  @Column({ type: jsonType(), nullable: true, array: true })
+  @Column({ type: jsonType(), nullable: true })
   inbox?: MessageIn[]
   @Column({ ...dateTimeType(), nullable: true })
   neighboursUpdatedAt?: Date

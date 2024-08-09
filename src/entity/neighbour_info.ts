@@ -12,7 +12,7 @@ export default class NeighbourInfo extends BaseType {
   @Column({ type: 'integer' })
   nodeBroadcastIntervalSecs: number
 
-  @Column({ type: jsonType(), array: true, nullable: true })
+  @Column({ type: jsonType(), nullable: true })
   neighbours: Neighbors[]
 
   constructor(opts: Partial<NeighbourInfo> = {}) {

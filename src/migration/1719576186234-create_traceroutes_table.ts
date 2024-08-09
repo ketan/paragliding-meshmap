@@ -20,7 +20,7 @@ export class CreateTraceroutesTable1719576186234 implements MigrationInterface {
           { name: 'from', type: 'bigint', isNullable: false },
           { name: 'to', type: 'bigint', isNullable: false },
 
-          { name: 'route', type: jsonType(), isNullable: true, isArray: true },
+          { name: 'route', type: jsonType(), isNullable: true },
           { name: 'want_response', type: 'boolean', isNullable: false },
           { name: 'channel', type: 'integer', isNullable: true },
           { name: 'channel_id', type: 'text', isNullable: true },

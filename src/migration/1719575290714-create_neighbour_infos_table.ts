@@ -21,7 +21,7 @@ export class CreateNeighbourInfosTable1719575290714 implements MigrationInterfac
           { name: 'node_id', type: 'bigint', isNullable: false },
 
           { name: 'node_broadcast_interval_secs', type: 'integer', isNullable: false },
-          { name: 'neighbours', type: jsonType(), isNullable: true, isArray: true },
+          { name: 'neighbours', type: jsonType(), isNullable: true },
 
           {
             name: 'created_at',

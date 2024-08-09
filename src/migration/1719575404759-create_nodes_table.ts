@@ -45,9 +45,9 @@ export class CreateNodesTable1719575404759 implements MigrationInterface {
           { name: 'relative_humidity', type: 'double precision', isNullable: true },
           { name: 'temperature', type: 'double precision', isNullable: true },
 
-          { name: 'neighbours', type: jsonType(), isNullable: true, isArray: true },
-          { name: 'inbox', type: jsonType(), isNullable: true, isArray: true },
-          { name: 'outbox', type: jsonType(), isNullable: true, isArray: true },
+          { name: 'neighbours', type: jsonType(), isNullable: true },
+          { name: 'inbox', type: jsonType(), isNullable: true },
+          { name: 'outbox', type: jsonType(), isNullable: true },
 
           {
             name: 'created_at',

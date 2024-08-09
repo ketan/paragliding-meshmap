@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url'
 import { defineConfig, Plugin, transformWithEsbuild } from 'vite'
 import injectHTML from 'vite-plugin-html-inject'
 import Inspect from 'vite-plugin-inspect'
+import viteCompression from 'vite-plugin-compression';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -91,7 +92,7 @@ function defineIconConstants(): Plugin {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [defineIconConstants(), react(), svgToReact(), injectHTML(), Inspect()],
+  plugins: [defineIconConstants(), react(), svgToReact(), injectHTML(), Inspect(), viteCompression()],
 
   define: {
     __GIT_SHA__: JSON.stringify(commitHash),

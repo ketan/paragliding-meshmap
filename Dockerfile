@@ -5,7 +5,6 @@ WORKDIR /app
 ARG GIT_SHA
 
 RUN yarn install --network-timeout 1000000 --frozen-lockfile \
-  && yarn run prisma generate \
   && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build
 
 FROM node:22.4-alpine
@@ -20,8 +19,7 @@ COPY --from=build /app/prisma /app/prisma
 WORKDIR /app
 
 RUN yarn install --network-timeout 1000000 --frozen-lockfile --prod \
-  && yarn cache clean --force \
-  && yarn run prisma generate
+  && yarn cache clean --force
 
 ENV DEBUG_COLORS=true
 ENV NODE_ENV=production

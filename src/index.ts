@@ -3,119 +3,109 @@ import 'dotenv/config'
 
 //
 import { AppDataSource } from '#config/data-source'
-import { webCLIParse } from '#helpers/cli'
-import { BROADCAST_ADDR } from '#helpers/utils'
-import { mqttProcessor } from '#mqtt/main'
-import bodyParser from 'body-parser'
-import express, { Request, Response } from 'express'
-import { DateTime, Duration } from 'luxon'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import Node from '#entity/node'
-import Position from '#entity/position'
-import TextMessage from '#entity/text_message'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
 import NeighbourInfo from '#entity/neighbour_info'
+import Node from '#entity/node'
+import Position from '#entity/position'
+import TextMessage from '#entity/text_message'
 import Traceroute from '#entity/traceroute'
+import { webCLIParse } from '#helpers/cli'
+import { BROADCAST_ADDR } from '#helpers/utils'
+import { mqttProcessor } from '#mqtt/main'
+import { DateTime, Duration } from 'luxon'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import Koa from 'koa'
+import Router from '@koa/router'
+import serve from 'koa-static'
 
 const cliOptions = webCLIParse()
 
 const db = await AppDataSource.initialize()
 
-if (cliOptions.mqtt) {
-  mqttProcessor(db, cliOptions)
-}
-
-// @ts-expect-error we're patching
-BigInt.prototype.toJSON = function () {
-  return Number(this.toString())
-}
-
-// @ts-expect-error we're patching
-Prisma.Decimal.prototype.toJSON = function () {
-  return Number(this.toString())
-}
-
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
-const app = express()
-
-app.use(bodyParser.json())
+const app = new Koa()
+const router = new Router()
+app.use(async (ctx, next) => {
+  const start = Date.now()
+  await next()
+  const ms = Date.now() - start
+  ctx.set('X-Response-Time', `${ms}ms`)
+})
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 if (isDevelopment) {
-  app.use((await import('compression')).default())
+  app.use((await import('koa-compress')).default())
 }
 
-function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
-  const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
+function parseSinceParam(
+  ctx: Koa.ParameterizedContext<
+    Koa.DefaultState,
+    Koa.DefaultContext & Router.RouterParamContext<Koa.DefaultState, Koa.DefaultContext>,
+    unknown
+  >,
+  defaultValue: string = `P30D`
+) {
+  const since = typeof ctx.query.since === 'string' ? ctx.query.since : defaultValue
   return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
 }
 
-function parseNodeIdParam(req: Request) {
-  const nodeIdQs = req.query.nodeId
+function parseNodeIdParam(
+  ctx: Koa.ParameterizedContext<
+    Koa.DefaultState,
+    Koa.DefaultContext & Router.RouterParamContext<Koa.DefaultState, Koa.DefaultContext>,
+    unknown
+  >
+) {
+  const nodeIdParam = ctx.params.nodeId
 
-  if (typeof nodeIdQs !== 'string') {
-    return
-  }
-
-  const nodeId = Number(nodeIdQs)
+  const nodeId = Number(nodeIdParam)
   if (!isNaN(nodeId)) {
     return nodeId
   }
+
+  ctx.throw(400, `Invalid node ID ${nodeIdParam}`)
 }
 
-app.get('/api/nodes', async (_req: Request, res: Response) => {
+router.get('/api/nodes', async (ctx) => {
   const allNodes = await Node.find(db)
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(allNodes)
+
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = allNodes
 })
 
-app.get('/api/positions/:nodeId', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/positions/:nodeId', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const since = parseSinceParam(req)
+  const since = parseSinceParam(ctx)
   const positions = await Position.forNode(db, nodeId, since)
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(positions)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = positions
 })
 
-app.get(`/api/node/:nodeId`, async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get(`/api/node/:nodeId`, async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const node = Node.findOne(db, { where: { nodeId } })
+  const node = await Node.findOne(db, { where: { nodeId } })
   if (node) {
-    res.setHeader('cache-control', 'public,max-age=60')
-    res.json(node)
+    ctx.set('cache-control', 'public,max-age=60')
+    ctx.body = node
   } else {
-    res.status(404).json({
+    ctx.status = 404
+    ctx.body = {
       message: `Node with ID ${nodeId} not found!`,
-    })
+    }
   }
 })
 
-app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/node/:nodeId/sent-messages', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
   function parseTo(to: any): number | undefined {
     if (to === 'all') {
@@ -127,98 +117,80 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
     }
   }
 
-  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
+  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(ctx.query.to), parseSinceParam(ctx))
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(outgoingMessages)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = outgoingMessages
 })
 
-app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/node/:nodeId/device-metrics', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const deviceMetrics = DeviceMetric.forNode(db, nodeId, parseSinceParam(req))
+  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, parseSinceParam(ctx))
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(deviceMetrics)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = deviceMetrics
 })
 
-app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/node/:nodeId/environment-metrics', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const since = parseSinceParam(req)
+  const since = parseSinceParam(ctx)
 
   const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since)
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(environmentMetrics)
+
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = environmentMetrics
 })
 
-app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/node/:nodeId/neighbour-infos', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(req))
+  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(ctx))
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(neighbours)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = neighbours
 })
 
-app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get('/api/node/:nodeId/trace-routes', async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(req))
+  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(ctx))
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(traceRoutes)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = traceRoutes
 })
 
-app.get(`/api/node/:nodeId/positions`, async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-  if (!nodeId) {
-    return res.status(400).json({
-      message: `Invalid node ID ${req.query.nodeId}`,
-    })
-  }
+router.get(`/api/node/:nodeId/positions`, async (ctx) => {
+  const nodeId = parseNodeIdParam(ctx)
 
-  const positions = await Position.forNode(db, nodeId, parseSinceParam(req))
+  const positions = await Position.forNode(db, nodeId, parseSinceParam(ctx))
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(positions)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = positions
 })
 
-app.get('/api/hardware-models', async function (_req: Request, res: Response) {
+router.get('/api/hardware-models', async function (ctx) {
   const hardwareModels = await Node.hardwareModels(db)
 
-  res.setHeader('cache-control', 'public,max-age=60')
-  res.json(hardwareModels)
+  ctx.set('cache-control', 'public,max-age=60')
+  ctx.body = hardwareModels
 })
 
+app.use(router.routes()).use(router.allowedMethods())
+
 if (!isDevelopment) {
-  app.use(express.static(`${__dirname}/public`))
-  app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  app.use(serve(`${__dirname}/public`))
+  router.get('*', (ctx) => {
+    ctx.sendFile(path.join(__dirname, 'public', 'index.html'))
   })
 }
 
 const port = process.env.PORT || 3333
 app.listen(port)
 
-console.log(`Express server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+console.log(`Meshmap server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+
+if (cliOptions.mqtt) {
+  await mqttProcessor(db, cliOptions)
+}

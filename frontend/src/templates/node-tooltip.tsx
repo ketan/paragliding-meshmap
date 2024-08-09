@@ -237,7 +237,7 @@ export function NodeTooltip({ node, callback, showDetail }: Props) {
   })
 
   return (
-    <div className="lg:text-sm sm:text-xs text-wrap" onClick={() => console.log(`div clicked`)}>
+    <div className="lg:text-sm sm:text-xs text-wrap min-w-[250px]">
       {image}
       <ul>{_.compact(elements)}</ul>
     </div>

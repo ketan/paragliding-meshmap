@@ -14,7 +14,6 @@ LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT
 
 COPY --from=build /app/package.json /app/yarn.lock /app/build /app/
-COPY --from=build /app/prisma /app/prisma
 
 WORKDIR /app
 

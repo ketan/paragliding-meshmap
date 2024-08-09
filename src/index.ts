@@ -16,100 +16,94 @@ import { mqttProcessor } from '#mqtt/main'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import Koa from 'koa'
-import Router from '@koa/router'
-import serve from 'koa-static'
+import express, { Request } from 'express'
+import expressStaticGzip from 'express-static-gzip'
 
 const cliOptions = webCLIParse()
 
 const db = await AppDataSource.initialize()
 
 await AppDataSource.runMigrations({
-  transaction: 'each'
+  transaction: 'each',
 })
 
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
-const app = new Koa()
-const router = new Router()
-app.use(async (ctx, next) => {
+const app = express()
+// const router = new Router()
+app.use(async (_req, res, next) => {
   const start = Date.now()
   await next()
   const ms = Date.now() - start
-  ctx.set('X-Response-Time', `${ms}ms`)
+  res.header('X-Response-Time', `${ms}ms`)
 })
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 if (isDevelopment) {
-  app.use((await import('koa-compress')).default())
+  app.use((await import('compression')).default())
 }
 
-function parseSinceParam(
-  ctx: Koa.ParameterizedContext<
-    Koa.DefaultState,
-    Koa.DefaultContext & Router.RouterParamContext<Koa.DefaultState, Koa.DefaultContext>,
-    unknown
-  >,
-  defaultValue: string = `P30D`
-) {
-  const since = typeof ctx.query.since === 'string' ? ctx.query.since : defaultValue
+function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
+  const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
   return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
 }
 
-function parseNodeIdParam(
-  ctx: Koa.ParameterizedContext<
-    Koa.DefaultState,
-    Koa.DefaultContext & Router.RouterParamContext<Koa.DefaultState, Koa.DefaultContext>,
-    unknown
-  >
-) {
-  const nodeIdParam = ctx.params.nodeId
+class HttpError extends Error {
+  status: number
+
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+  }
+}
+
+function parseNodeIdParam(req: Request) {
+  const nodeIdParam = req.params.nodeId
 
   const nodeId = Number(nodeIdParam)
   if (!isNaN(nodeId)) {
     return nodeId
   }
 
-  ctx.throw(400, `Invalid node ID ${nodeIdParam}`)
+  throw new HttpError(400, `Invalid node ID ${nodeIdParam}`)
 }
 
-router.get('/api/nodes', async (ctx) => {
+app.get('/api/nodes', async (_req, res) => {
   const allNodes = await Node.find(db)
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = allNodes
+  res.header('cache-control', 'public,max-age=60')
+  res.json(allNodes)
 })
 
-router.get('/api/positions/:nodeId', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/positions/:nodeId', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const since = parseSinceParam(ctx)
+  const since = parseSinceParam(req)
   const positions = await Position.forNode(db, nodeId, since)
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = positions
+  res.header('cache-control', 'public,max-age=60')
+  res.json(positions)
 })
 
-router.get(`/api/node/:nodeId`, async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get(`/api/node/:nodeId`, async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
   const node = await Node.findOne(db, { where: { nodeId } })
   if (node) {
-    ctx.set('cache-control', 'public,max-age=60')
-    ctx.body = node
+    res.header('cache-control', 'public,max-age=60')
+    res.json(node)
   } else {
-    ctx.status = 404
-    ctx.body = {
+    res.status(404).json({
       message: `Node with ID ${nodeId} not found!`,
-    }
+    })
   }
 })
 
-router.get('/api/node/:nodeId/sent-messages', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
   function parseTo(to: any): number | undefined {
     if (to === 'all') {
@@ -121,72 +115,70 @@ router.get('/api/node/:nodeId/sent-messages', async (ctx) => {
     }
   }
 
-  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(ctx.query.to), parseSinceParam(ctx))
+  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = outgoingMessages
+  res.header('cache-control', 'public,max-age=60')
+  res.json(outgoingMessages)
 })
 
-router.get('/api/node/:nodeId/device-metrics', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, parseSinceParam(ctx))
+  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, parseSinceParam(req))
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = deviceMetrics
+  res.header('cache-control', 'public,max-age=60')
+  res.json(deviceMetrics)
 })
 
-router.get('/api/node/:nodeId/environment-metrics', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const since = parseSinceParam(ctx)
+  const since = parseSinceParam(req)
 
   const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since)
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = environmentMetrics
+  res.header('cache-control', 'public,max-age=60')
+  res.json(environmentMetrics)
 })
 
-router.get('/api/node/:nodeId/neighbour-infos', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(ctx))
+  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(req))
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = neighbours
+  res.header('cache-control', 'public,max-age=60')
+  res.json(neighbours)
 })
 
-router.get('/api/node/:nodeId/trace-routes', async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(ctx))
+  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(req))
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = traceRoutes
+  res.header('cache-control', 'public,max-age=60')
+  res.json(traceRoutes)
 })
 
-router.get(`/api/node/:nodeId/positions`, async (ctx) => {
-  const nodeId = parseNodeIdParam(ctx)
+app.get(`/api/node/:nodeId/positions`, async (req, res) => {
+  const nodeId = parseNodeIdParam(req)
 
-  const positions = await Position.forNode(db, nodeId, parseSinceParam(ctx))
+  const positions = await Position.forNode(db, nodeId, parseSinceParam(req))
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = positions
+  res.header('cache-control', 'public,max-age=60')
+  res.json(positions)
 })
 
-router.get('/api/hardware-models', async function (ctx) {
+app.get('/api/hardware-models', async function (_req, res) {
   const hardwareModels = await Node.hardwareModels(db)
 
-  ctx.set('cache-control', 'public,max-age=60')
-  ctx.body = hardwareModels
+  res.header('cache-control', 'public,max-age=60')
+  res.json(hardwareModels)
 })
 
-app.use(router.routes()).use(router.allowedMethods())
-
 if (!isDevelopment) {
-  app.use(serve(`${__dirname}/public`))
-  router.get('*', (ctx) => {
-    ctx.sendFile(path.join(__dirname, 'public', 'index.html'))
+  app.use(expressStaticGzip(`${__dirname}/public`, {}))
+  app.get('*', async (_req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
   })
 }
 

@@ -47,7 +47,7 @@ export class MessagesApp extends React.Component<unknown, MessagesAppState> {
   async componentDidMount() {
     const queryParams = new URLSearchParams(window.location.search)
     const from = queryParams.get('from')
-    const to = queryParams.get('to')
+    const to = queryParams.get('to') || BROADCAST_ADDR.toString()
     const since = queryParams.get('since')
 
     this.setState(

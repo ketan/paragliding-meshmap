@@ -9,7 +9,7 @@ import { AppDataSource } from '#config/data-source'
 const cliOptions: MQTTCLIOptions = mqttCLIParse()
 const db = await AppDataSource.initialize()
 await AppDataSource.runMigrations({
-  transaction: 'each'
+  transaction: 'each',
 })
 
 await mqttProcessor(db, cliOptions)

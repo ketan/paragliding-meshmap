@@ -16,8 +16,10 @@ import { mqttProcessor } from '#mqtt/main'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import express, { Request } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import expressStaticGzip from 'express-static-gzip'
+import responseTime from 'response-time'
+import 'express-async-errors'
 
 const cliOptions = webCLIParse()
 
@@ -31,13 +33,7 @@ const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
 
 const app = express()
-// const router = new Router()
-app.use(async (_req, res, next) => {
-  const start = Date.now()
-  await next()
-  const ms = Date.now() - start
-  res.header('X-Response-Time', `${ms}ms`)
-})
+app.use(responseTime())
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -105,7 +101,7 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
 app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  function parseTo(to: any): number | undefined {
+  function parseTo(to: unknown): number | undefined {
     if (to === 'all') {
       return
     } else if (isNaN(Number(to))) {
@@ -176,11 +172,33 @@ app.get('/api/hardware-models', async function (_req, res) {
 })
 
 if (!isDevelopment) {
-  app.use(expressStaticGzip(`${__dirname}/public`, {}))
+  app.use(
+    expressStaticGzip(`${__dirname}/public`, {
+      serveStatic: {
+        etag: true,
+        setHeaders: (res, path) => {
+          if (path.includes(`/assets/`)) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000')
+          } else if (path.endsWith(`/index.html`)) {
+            res.setHeader('Cache-Control', 'public, max-age=60')
+          }
+        },
+      },
+    })
+  )
   app.get('*', async (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
   })
 }
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof HttpError) {
+    res.status(err.status).json({
+      error: err.message,
+    })
+  }
+  res.status(500).send('Internal server error')
+})
 
 const port = process.env.PORT || 3333
 app.listen(port)

@@ -13,7 +13,6 @@ import { fileURLToPath } from 'url'
 import { dbConnectionOptions } from '#config/db-connection-opts-parser'
 import _ from 'lodash'
 
-
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
   tableName(targetName: string, userSpecifiedName: string | undefined): string {

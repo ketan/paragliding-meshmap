@@ -122,8 +122,8 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
         trx.findOne(Node, { where: { nodeId: tm.to } }),
       ])
 
-      from ||= new Node({nodeId: tm.from})
-      to ||= new Node({nodeId: tm.to})
+      from ||= new Node({ nodeId: tm.from })
+      to ||= new Node({ nodeId: tm.to })
 
       from.outboundMessage(tm)
       to.inboundMessage(tm)

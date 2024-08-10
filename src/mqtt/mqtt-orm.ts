@@ -224,7 +224,7 @@ export async function createOrUpdateNeighborInfo(db: DataSource, envelope: mesht
 
   await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
-      return await Promise.all([trx.save(neighborInfo, { reload: false }), Node.updateNeighbors(trx, entity)])
+      return await Promise.all([trx.save(entity, { reload: false }), Node.updateNeighbors(trx, entity)])
     } catch (e) {
       errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
       throw new AbortError(e)

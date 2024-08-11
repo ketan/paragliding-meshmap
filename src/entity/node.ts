@@ -1,5 +1,5 @@
 import { dateTimeType, jsonType } from '#helpers/migration-helper'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { Column, DataSource, Entity, EntityManager } from 'typeorm'
 import { BaseType, BaseTypeWithoutPrimaryKey } from './base_type.js'
 import DeviceMetric from './device_metric.js'
@@ -183,29 +183,35 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     })
   }
 
-  inboundMessage(tm: TextMessage) {
+  inboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan?: Duration) {
     if (tm.to === BROADCAST_ADDR) {
       return
     }
-    const now = DateTime.now()
 
+    const now = DateTime.now()
     this.inbox ||= []
-    this.inbox.unshift({ from: tm.from, text: tm.text, time: this.now() })
-    this.inbox = this.inbox.filter((msg) => {
-      return now.diff(DateTime.fromISO(msg.time)) < Node.purgeDataOlderThan
-    })
+    this.inbox.unshift({ from: tm.from, text: tm.text, time: tm.createdAt.toISOString() })
+    if (purgeOlderThan) {
+      this.inbox = this.inbox.filter((msg) => {
+        const messageAge = now.diff(DateTime.fromISO(msg.time))
+        return messageAge < purgeOlderThan
+      })
+    }
   }
 
-  outboundMessage(tm: TextMessage) {
+  outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan?: Duration) {
     const now = DateTime.now()
     this.outbox ||= []
-    this.outbox.unshift({ to: tm.to, text: tm.text, time: this.now() })
-    this.outbox = this.outbox.filter((msg) => {
-      return now.diff(DateTime.fromISO(msg.time)) < Node.purgeDataOlderThan
-    })
+    this.outbox.unshift({ to: tm.to, text: tm.text, time: tm.createdAt.toISOString() })
+    if (purgeOlderThan) {
+      this.outbox = this.outbox.filter((msg) => {
+        const messageAge = now.diff(DateTime.fromISO(msg.time))
+        return messageAge < purgeOlderThan
+      })
+    }
   }
 
-  now() {
-    return new Date().toJSON()
+  static async findOrBuild(trx: EntityManager, nodeId: number) {
+    return (await trx.getRepository(Node).findOne({ where: { nodeId } })) || new Node({ nodeId })
   }
 }

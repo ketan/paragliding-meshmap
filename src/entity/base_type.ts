@@ -18,9 +18,6 @@ export abstract class BaseTypeWithoutPrimaryKey {
   static logger = debug('meshmap:model')
   static decodeLogger = debug('meshmap:decode')
 
-  static purgeEvery: Duration
-  static purgeDataOlderThan: Duration
-
   @UpdateDateColumn({ ...dateTimeType() })
   @Index()
   updatedAt: Date

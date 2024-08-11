@@ -1,4 +1,3 @@
-import { AppDataSource } from '#config/data-source'
 import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
@@ -40,25 +39,7 @@ export default class Position extends BaseType {
     _.assign(this, opts)
   }
 
-  static async positionsForNode(nodeId: string | number) {
-    const sanitizedNodeId = Number(nodeId)
-
-    if (sanitizedNodeId === null || sanitizedNodeId === undefined || isNaN(sanitizedNodeId)) {
-      return null
-    }
-
-    return await AppDataSource.manager.find(Position, {
-      select: ['createdAt', 'latitude', 'longitude', 'altitude'],
-      where: {
-        nodeId: sanitizedNodeId,
-      },
-      order: {
-        createdAt: 'ASC',
-      },
-    })
-  }
-
-  async findRecentPosition(since: Date, trx: EntityManager) {
+  async findRecentPosition(trx: EntityManager, since: Date) {
     return await trx.findOne(Position, {
       where: {
         nodeId: this.nodeId,

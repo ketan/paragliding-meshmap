@@ -45,7 +45,7 @@ export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions,
   if (envelope.packet.decoded) {
     switch (envelope.packet.decoded.portnum) {
       case meshtastic.PortNum.TEXT_MESSAGE_APP:
-        return await saveTextMessage(db, envelope)
+        return await saveTextMessage(db, envelope, cliOptions.purgeDataOlderThan)
       case meshtastic.PortNum.POSITION_APP:
         return await updateNodeWithPosition(db, envelope)
       case meshtastic.PortNum.NODEINFO_APP:

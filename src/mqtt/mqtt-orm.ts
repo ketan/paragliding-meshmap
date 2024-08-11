@@ -29,6 +29,7 @@ import ServiceEnvelope from '#entity/service_envelope'
 import TextMessage from '#entity/text_message'
 import Traceroute from '#entity/traceroute'
 import Waypoint from '#entity/waypoint'
+import { Duration } from 'luxon'
 
 export async function dumpStats(db: DataSource, logger: debug.Debugger) {
   const response = await db.query<
@@ -107,7 +108,7 @@ export async function createServiceEnvelope(db: DataSource, mqttTopic: string, p
   })
 }
 
-export async function saveTextMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
+export async function saveTextMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope, purgeOlderThan: Duration) {
   const packet = envelope.packet
   if (!packet) {
     return
@@ -117,16 +118,10 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
 
   await db.transaction(async (trx) => {
     try {
-      let [from, to] = await Promise.all([
-        trx.findOne(Node, { where: { nodeId: tm.from } }),
-        trx.findOne(Node, { where: { nodeId: tm.to } }),
-      ])
+      const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
 
-      from ||= new Node({ nodeId: tm.from })
-      to ||= new Node({ nodeId: tm.to })
-
-      from.outboundMessage(tm)
-      to.inboundMessage(tm)
+      from.outboundMessage(tm, purgeOlderThan)
+      to.inboundMessage(tm, purgeOlderThan)
 
       await trx.save([from, to, tm], { reload: false })
     } catch (e) {
@@ -151,7 +146,7 @@ export async function updateNodeWithPosition(db: DataSource, envelope: meshtasti
   await db.transaction(async (trx) => {
     try {
       if (newPosition.latitude != null && newPosition.longitude != null) {
-        const recentPosition = await newPosition.findRecentPosition(secondsAgo(15), trx)
+        const recentPosition = await newPosition.findRecentPosition(trx, secondsAgo(15))
         if (recentPosition) {
           return
         }

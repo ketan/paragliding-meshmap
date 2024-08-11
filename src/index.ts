@@ -1,8 +1,7 @@
 // do this first
-import 'dotenv/config'
+import 'dotenv-flow/config'
 
 //
-import { AppDataSource } from '#config/data-source'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
 import NeighbourInfo from '#entity/neighbour_info'
@@ -20,6 +19,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import expressStaticGzip from 'express-static-gzip'
 import responseTime from 'response-time'
 import 'express-async-errors'
+import { AppDataSource } from '#config/data-source'
 
 const cliOptions = webCLIParse()
 
@@ -74,7 +74,7 @@ app.get('/api/nodes', async (_req, res) => {
   res.json(allNodes)
 })
 
-app.get('/api/positions/:nodeId', async (req, res) => {
+app.get('/api/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
   const since = parseSinceParam(req)

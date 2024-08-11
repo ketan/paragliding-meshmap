@@ -1,5 +1,4 @@
 import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
-import { secondsAgo } from '#helpers/utils'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -44,11 +43,5 @@ export default class PowerMetric extends BaseType {
         createdAt: MoreThanOrEqual(since),
       },
     })
-  }
-
-  async saveIfNoSimilarRecentMetric(trx: EntityManager) {
-    if (!(await this.findRecentSimilarMetric(trx, secondsAgo(15)))) {
-      await trx.save(this)
-    }
   }
 }

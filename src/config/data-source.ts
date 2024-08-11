@@ -1,5 +1,5 @@
 // load .env file
-import 'dotenv/config'
+import 'dotenv-flow/config'
 
 // then load everything else
 import { globSync } from 'glob'

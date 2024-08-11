@@ -1,6 +1,6 @@
 import PowerMetric from '#entity/power_metric'
 import { expect } from 'chai'
-import { TestDataSource } from '../test-data-source.js'
+import { AppDataSource } from '#config/data-source'
 
 describe('PowerMetric', () => {
   it('should save', async () => {
@@ -9,7 +9,7 @@ describe('PowerMetric', () => {
 
     expect(pm.id).to.not.exist
 
-    await TestDataSource.transaction(async (trx) => {
+    await AppDataSource.transaction(async (trx) => {
       await trx.save(pm)
     })
 

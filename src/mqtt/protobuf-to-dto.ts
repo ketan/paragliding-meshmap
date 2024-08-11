@@ -1,4 +1,4 @@
-import { toBigInt } from '#helpers/utils'
+import { parseProtobuf, toBigInt } from '#helpers/utils'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import Node from '#entity/node'
 import DeviceMetric from '#entity/device_metric'
@@ -12,12 +12,9 @@ import Waypoint from '#entity/waypoint'
 import PowerMetric from '#entity/power_metric'
 import Position from '#entity/position'
 
-export function toServiceEnvelope(
-  packet: meshtastic.IMeshPacket,
-  payload: Buffer,
-  mqttTopic: string,
-  envelope: meshtastic.ServiceEnvelope
-) {
+export function toServiceEnvelope(payload: Buffer, mqttTopic: string, envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet!
+
   return new ServiceEnvelope({
     from: packet.from!,
     to: packet.to!,
@@ -29,7 +26,12 @@ export function toServiceEnvelope(
   })
 }
 
-export function toTextMessage(envelope: meshtastic.ServiceEnvelope, packet: meshtastic.IMeshPacket) {
+export function toTextMessage(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  if (!packet) {
+    return
+  }
+
   return new TextMessage({
     channelId: envelope.channelId,
     channel: packet.channel!,
@@ -46,7 +48,20 @@ export function toTextMessage(envelope: meshtastic.ServiceEnvelope, packet: mesh
   })
 }
 
-export function toPosition(packet: meshtastic.IMeshPacket, envelope: meshtastic.ServiceEnvelope, position: meshtastic.Position) {
+export function toPosition(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  if (!packet) {
+    return
+  }
+
+  const payload = packet?.decoded?.payload
+
+  if (!payload) {
+    return
+  }
+
+  const position = parseProtobuf(() => meshtastic.Position.decode(payload))
+
   return new Position({
     nodeId: packet.from!,
     to: packet.to!,
@@ -63,7 +78,16 @@ export function toPosition(packet: meshtastic.IMeshPacket, envelope: meshtastic.
   })
 }
 
-export function toNode(packet: meshtastic.IMeshPacket, user: meshtastic.User) {
+export function toNode(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  const payload = packet?.decoded?.payload
+
+  if (!payload) {
+    return
+  }
+
+  const user = parseProtobuf(() => meshtastic.User.decode(payload))
+
   return new Node({
     nodeId: packet.from!,
     longName: user.longName,
@@ -93,7 +117,16 @@ export function toWaypoint(packet: meshtastic.IMeshPacket, waypoint: meshtastic.
   })
 }
 
-export function toNeighborInfo(packet: meshtastic.IMeshPacket, neighborInfo: meshtastic.NeighborInfo) {
+export function toNeighborInfo(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  const payload = packet?.decoded?.payload
+
+  if (!payload) {
+    return
+  }
+
+  const neighborInfo = parseProtobuf(() => meshtastic.NeighborInfo.decode(payload))
+
   return new NeighbourInfo({
     nodeId: packet.from!,
     nodeBroadcastIntervalSecs: neighborInfo.nodeBroadcastIntervalSecs,
@@ -163,7 +196,16 @@ export function toTraceroute(packet: meshtastic.IMeshPacket, rd: meshtastic.Rout
   })
 }
 
-export function toMapReport(packet: meshtastic.IMeshPacket, mr: meshtastic.MapReport) {
+export function toMapReport(envelope: meshtastic.ServiceEnvelope) {
+  const packet = envelope.packet
+  const payload = packet?.decoded?.payload
+
+  if (!payload) {
+    return
+  }
+
+  const mr = parseProtobuf(() => meshtastic.MapReport.decode(payload))
+
   return new MapReport({
     nodeId: packet.from!,
     longName: mr.longName,

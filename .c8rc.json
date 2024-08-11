@@ -1,0 +1,6 @@
+{
+  "all": true,
+  "reporter": ["html", "text"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/migration/**/*.ts"]
+}

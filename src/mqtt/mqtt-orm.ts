@@ -96,7 +96,7 @@ export async function createServiceEnvelope(db: DataSource, mqttTopic: string, p
     return
   }
 
-  const se = toServiceEnvelope(packet, payload, mqttTopic, envelope)
+  const se = toServiceEnvelope(payload, mqttTopic, envelope)
 
   await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
@@ -109,12 +109,11 @@ export async function createServiceEnvelope(db: DataSource, mqttTopic: string, p
 }
 
 export async function saveTextMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope, purgeOlderThan: Duration) {
-  const packet = envelope.packet
-  if (!packet) {
+  const tm = toTextMessage(envelope)
+
+  if (!tm) {
     return
   }
-
-  const tm = toTextMessage(envelope, packet)
 
   await db.transaction(async (trx) => {
     try {
@@ -132,16 +131,11 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
 }
 
 export async function updateNodeWithPosition(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
-  const packet = envelope.packet
-  const payload = packet?.decoded?.payload
+  const newPosition = toPosition(envelope)
 
-  if (!payload) {
+  if (!newPosition) {
     return
   }
-
-  const position = parseProtobuf(() => meshtastic.Position.decode(payload))
-
-  const newPosition = toPosition(packet, envelope, position)
 
   await db.transaction(async (trx) => {
     try {
@@ -155,24 +149,18 @@ export async function updateNodeWithPosition(db: DataSource, envelope: meshtasti
         await Node.updatePosition(trx, newPosition)
       }
     } catch (e) {
-      errLog(`Unable to update node position`, { err: e, position, envelope })
+      errLog(`Unable to update node position`, { err: e, newPosition, envelope })
       throw e
     }
   })
 }
 
 export async function createOrUpdateNode(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
-  const packet = envelope.packet
-  const payload = packet?.decoded?.payload
-
-  if (!payload) {
+  const node = toNode(envelope)
+  if (!node) {
     return
   }
 
-  const user = parseProtobuf(() => meshtastic.User.decode(payload))
-  const node = toNode(packet, user)
-
-  // let node: Node | null
   await db.transaction(async (trx) => {
     try {
       await node.createOrUpdate(trx)
@@ -206,22 +194,16 @@ export async function createOrUpdateWaypoint(db: DataSource, envelope: meshtasti
 }
 
 export async function createOrUpdateNeighborInfo(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
-  const packet = envelope.packet
-  const payload = packet?.decoded?.payload
-
-  if (!payload) {
+  const entity = toNeighborInfo(envelope)
+  if (!entity) {
     return
   }
-
-  const neighborInfo = parseProtobuf(() => meshtastic.NeighborInfo.decode(payload))
-
-  const entity = toNeighborInfo(packet, neighborInfo)
 
   await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
       return await Promise.all([trx.save(entity, { reload: false }), Node.updateNeighbors(trx, entity)])
     } catch (e) {
-      errLog(`Unable to create neighborinfo`, { err: e, neighborInfo, envelope })
+      errLog(`Unable to create neighborinfo`, { err: e, envelope })
       throw new AbortError(e)
     }
   })
@@ -308,22 +290,16 @@ export async function createOrUpdateTracerouteMessage(db: DataSource, envelope: 
 }
 
 export async function createMapReports(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
-  const packet = envelope.packet
-  const payload = packet?.decoded?.payload
-
-  if (!payload) {
+  const mapReport = toMapReport(envelope)
+  if (!mapReport) {
     return
   }
-
-  const mr = parseProtobuf(() => meshtastic.MapReport.decode(payload))
-
-  const mapReport = toMapReport(packet, mr)
 
   await db.transaction('READ UNCOMMITTED', async (trx) => {
     try {
       return await Promise.all([trx.save(mapReport, { reload: false }), Node.updateMapReports(trx, mapReport)])
     } catch (e) {
-      errLog(`Unable to save map report`, { err: e, mr, envelope })
+      errLog(`Unable to save map report`, { err: e, mapReport, envelope })
       throw e
     }
   })

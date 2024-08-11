@@ -19,7 +19,7 @@
     "migrate": "NODE_ENV=development  yarn run typeorm migration:run",
     "schema-to-ts": "bin/schema-to-ts",
     "docker:build": "docker build . --progress plain --tag paragliding-meshmap --build-arg GIT_SHA=$(git rev-parse --short HEAD) --tag ghcr.io/ketan/paragliding-meshmap:latest",
-    "test": "mocha",
+    "test": "c8 mocha",
     "test:watch": "nodemon --config nodemon.test.json --exec mocha",
     "precommit": "concurrently yarn:fmt yarn:lint yarn:build yarn:test"
   },
@@ -59,6 +59,7 @@
     "@typescript-eslint/parser": "^7.16.1",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "c8": "^10.1.2",
     "chai": "^5.1.1",
     "cooltipz-css": "^2.3.0",
     "eslint": "^8.57.0",

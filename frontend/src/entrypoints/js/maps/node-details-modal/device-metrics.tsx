@@ -45,8 +45,8 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
     return (
       <>
         <div>
-          <NameValue name="Channel Utilization" value={node?.channelUtilization} unit="%" className="mr-4" />
-          <NameValue name="Air Utilization Tx" value={node?.airUtilTx} unit="%" className="mr-4" />
+          <NameValue name="Channel Utilization" value={node?.channelUtilization} unit="%" className="mr-4" precision={2} />
+          <NameValue name="Air Utilization Tx" value={node?.airUtilTx} unit="%" className="mr-4" precision={2} />
 
           <ResponsiveContainer height={200} className="content-center mx-auto">
             <LineChart data={data} syncId="anyId">
@@ -57,12 +57,19 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
                 dataKey="createdAt"
                 type="number"
                 scale="time"
-                domain={['auto']}
+                domain={['auto', 'auto']}
                 tickFormatter={(unixTime) => DateTime.fromMillis(unixTime).toFormat('HH:MM')}
               />
 
-              <YAxis yAxisId="left" unit="%" scale="linear" domain={['auto']} />
-              <YAxis yAxisId="right" orientation="right" unit="%" scale="linear" domain={['auto']} />
+              <YAxis yAxisId="left" unit="%" scale="linear" domain={['auto', 'auto']} tickFormatter={(value) => Number(value).toFixed(2)} />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                unit="%"
+                scale="linear"
+                domain={['auto', 'auto']}
+                tickFormatter={(value) => Number(value).toFixed(2)}
+              />
 
               <Line
                 dot={{ strokeWidth: 1, r: 0 }}
@@ -103,6 +110,10 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
   }
 
   function Voltage({ data }: { data: (Omit<DeviceMetricsEntityForUI, 'createdAt'> & { createdAt: number })[] }) {
+    if (!node?.voltage && !node.batteryLevel) {
+      return
+    }
+
     const [activeSeries, setActiveSeries] = useState<Array<DataKey<unknown> | unknown>>([])
     const handleLegendClick = (dataKey: DataKey<unknown> | undefined) => {
       if (activeSeries.includes(dataKey)) {
@@ -139,12 +150,12 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
                 dataKey="createdAt"
                 type="number"
                 scale="time"
-                domain={['auto']}
+                domain={['auto', 'auto']}
                 tickFormatter={(unixTime) => DateTime.fromMillis(unixTime).toFormat('HH:MM')}
               />
 
-              <YAxis yAxisId="left" unit="V" scale="linear" domain={['auto']} />
-              <YAxis yAxisId="right" orientation="right" unit="%" scale="linear" domain={['auto']} />
+              <YAxis yAxisId="left" unit="V" scale="linear" domain={['auto', 'auto']} />
+              <YAxis yAxisId="right" orientation="right" unit="%" scale="linear" domain={['auto', 'auto']} />
 
               <Line
                 dot={{ strokeWidth: 1, r: 0 }}

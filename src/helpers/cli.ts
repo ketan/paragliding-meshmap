@@ -1,4 +1,4 @@
-import { Command, InvalidArgumentError } from 'commander'
+import { Command, InvalidArgumentError, ParseOptions } from 'commander'
 import { Duration } from 'luxon'
 
 function parseDuration(value: string) {
@@ -43,27 +43,27 @@ export function addOpts(command: Command) {
     Duration.fromISO('PT5M')
   )
 
-  command.option('--collect-service-envelopes', 'Whether to collect service envelopes')
+  command.option('--collect-service-envelopes', 'Whether to collect service envelopes', false)
 }
 
-export function webCLIParse() {
+export function webCLIParse(argv?: readonly string[], parseOptions?: ParseOptions) {
   const program = new Command()
   program.showHelpAfterError()
   program.option('--no-mqtt', 'Disable MQTT listener. Other MQTT options do not have an effect if MQTT is disabled.')
 
   addOpts(program)
 
-  program.parse()
+  program.parse(argv, parseOptions)
   return program.opts() as WebCLIOptions
 }
 
-export function mqttCLIParse() {
+export function mqttCLIParse(argv?: readonly string[], parseOptions?: ParseOptions) {
   const program = new Command()
   program.showHelpAfterError()
 
   addOpts(program)
 
-  program.parse()
+  program.parse(argv, parseOptions)
   return program.opts() as MQTTCLIOptions
 }
 

@@ -163,7 +163,9 @@ describe('Node', () => {
       await Node.updateMapReports(AppDataSource, em)
 
       const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
-      expect(_.omitBy(node, _.isNil)).to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt']).to.deep.equal(_.omitBy(em, _.isNil))
+      expect(_.omitBy(node, _.isNil))
+        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt'])
+        .to.deep.equal(_.omitBy(em, _.isNil))
     })
 
     it('should update an existing node if one exists', async () => {
@@ -188,7 +190,9 @@ describe('Node', () => {
       await Node.updateMapReports(AppDataSource, em)
 
       const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
-      expect(_.omitBy(node, _.isNil)).to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt']).to.deep.equal(_.omitBy(em, _.isNil))
+      expect(_.omitBy(node, _.isNil))
+        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt'])
+        .to.deep.equal(_.omitBy(em, _.isNil))
     })
   })
 })

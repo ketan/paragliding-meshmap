@@ -24,7 +24,7 @@ describe('Node', () => {
       const n = new Node()
       const m = { from: 1, to: BROADCAST_ADDR, text: 'abc', createdAt: DateTime.now().toJSDate() }
 
-      n.inboundMessage(m)
+      n.inboundMessage(m, Duration.fromISO('PT11M'))
 
       expect(n.inbox).to.not.exist
     })
@@ -43,18 +43,6 @@ describe('Node', () => {
       n.outboundMessage(m3, purgeOlderThan)
 
       expect(n.outbox).to.deep.equal([m2, m1].map((m) => ({ to: m.to, text: m.text, time: m.createdAt.toISOString() })))
-    })
-
-    it('should not purge if `purgeDataOlderThan` is unset', () => {
-      const n = new Node()
-      const m1 = { to: 1, from: 123, text: 'abc', createdAt: DateTime.now().minus(Duration.fromISO('PT10M')).toJSDate() }
-      const m2 = { to: 2, from: 123, text: 'pqr', createdAt: DateTime.now().minus(Duration.fromISO('PT20M')).toJSDate() }
-      const m3 = { to: 3, from: 123, text: 'xyz', createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate() }
-      n.outboundMessage(m1)
-      n.outboundMessage(m2)
-      n.outboundMessage(m3)
-
-      expect(n.outbox).to.deep.equal([m3, m2, m1].map((m) => ({ to: m.to, text: m.text, time: m.createdAt.toISOString() })))
     })
   })
 })

@@ -30,7 +30,7 @@ export async function dumpStats(db: DataSource, logger: debug.Debugger) {
       n_dead_tup: bigint
     }[]
   >(`SELECT relname, n_live_tup, n_dead_tup
-     FROM pg_stat_user_tables`)
+       FROM pg_stat_user_tables`)
   logger(`Record count (estimates)`, response)
 }
 
@@ -95,11 +95,12 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
   await db.transaction(async (trx) => {
     try {
       const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
+      await trx.save(tm)
 
       from.outboundMessage(tm, purgeOlderThan)
       to.inboundMessage(tm, purgeOlderThan)
 
-      await trx.save([from, to, tm], { reload: false })
+      await trx.save([from, to], { reload: false })
     } catch (e) {
       errLog(`Unable to create text message`, { err: e, tm, envelope })
       throw e

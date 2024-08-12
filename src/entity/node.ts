@@ -183,7 +183,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     })
   }
 
-  inboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan?: Duration) {
+  inboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration) {
     if (tm.to === BROADCAST_ADDR) {
       return
     }
@@ -199,7 +199,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan?: Duration) {
+  outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration) {
     const now = DateTime.now()
     this.outbox ||= []
     this.outbox.unshift({ to: tm.to, text: tm.text, time: tm.createdAt.toISOString() })

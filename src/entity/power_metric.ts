@@ -1,4 +1,4 @@
-import { Column, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -30,8 +30,8 @@ export default class PowerMetric extends BaseType {
     _.assign(this, opts)
   }
 
-  async findRecentSimilarMetric(trx: EntityManager, since: Date) {
-    return await trx.findOne(PowerMetric, {
+  async findRecentSimilarMetric(trx: EntityManager | DataSource, since: Date) {
+    return await trx.getRepository(PowerMetric).findOne({
       where: {
         nodeId: this.nodeId,
         ch1Voltage: this.ch1Voltage,

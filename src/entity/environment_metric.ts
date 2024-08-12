@@ -33,8 +33,8 @@ export default class EnvironmentMetric extends BaseType {
     _.assign(this, opts)
   }
 
-  async findRecentSimilarMetric(trx: EntityManager, since: Date) {
-    return await trx.findOne(EnvironmentMetric, {
+  async findRecentSimilarMetric(trx: EntityManager | DataSource, since: Date) {
+    return await trx.getRepository(EnvironmentMetric).findOne({
       where: {
         nodeId: this.nodeId,
         temperature: this.temperature,

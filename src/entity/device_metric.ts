@@ -27,10 +27,11 @@ export default class DeviceMetric extends BaseType {
     _.assign(this, opts)
   }
 
-  async findRecentSimilarMetric(trx: EntityManager, since: Date) {
-    return await trx.findOne(DeviceMetric, {
+  async findRecentSimilarMetric(trx: EntityManager | DataSource, since: Date) {
+    return await trx.getRepository(DeviceMetric).findOne({
       where: {
         nodeId: this.nodeId,
+        batteryLevel: this.batteryLevel,
         voltage: this.voltage,
         channelUtilization: this.channelUtilization,
         airUtilTx: this.airUtilTx,

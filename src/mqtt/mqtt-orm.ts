@@ -18,18 +18,9 @@ import {
   toWaypoint,
 } from './protobuf-to-dto.js'
 import { DataSource } from 'typeorm'
-import DeviceMetric from '#entity/device_metric'
-import EnvironmentMetric from '#entity/environment_metric'
-import MapReport from '#entity/map_report'
-import NeighbourInfo from '#entity/neighbour_info'
 import Node from '#entity/node'
-import Position from '#entity/position'
-import PowerMetric from '#entity/power_metric'
-import ServiceEnvelope from '#entity/service_envelope'
-import TextMessage from '#entity/text_message'
-import Traceroute from '#entity/traceroute'
-import Waypoint from '#entity/waypoint'
 import { Duration } from 'luxon'
+import { ENTITY_TYPES } from '#helpers/entity-types'
 
 export async function dumpStats(db: DataSource, logger: debug.Debugger) {
   const response = await db.query<
@@ -49,21 +40,7 @@ export async function purgeData(db: DataSource, cliOptions: MQTTCLIOptions, logg
     await dumpStats(db, logger)
     logger(`Starting purge`)
 
-    const klasses = [
-      DeviceMetric,
-      EnvironmentMetric,
-      MapReport,
-      NeighbourInfo,
-      Node,
-      Position,
-      PowerMetric,
-      ServiceEnvelope,
-      TextMessage,
-      Traceroute,
-      Waypoint,
-    ]
-
-    for (const klass of klasses) {
+    for (const klass of ENTITY_TYPES) {
       await db.transaction(async (trx) => {
         logger(`Purging ${klass.name}`)
         const deletedRecords = await klass.purge(cliOptions.purgeDataOlderThan, trx)

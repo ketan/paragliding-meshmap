@@ -1,5 +1,10 @@
 import { RootHookObject } from 'mocha'
 import { AppDataSource } from '#config/data-source'
+import * as chai from 'chai'
+import chaiDeepEqualIgnoreUndefined from 'chai-deep-equal-ignore-undefined'
+import { ENTITY_TYPES } from '#helpers/entity-types'
+
+chai.use(chaiDeepEqualIgnoreUndefined)
 
 export const mochaHooks: RootHookObject = {
   async beforeAll() {
@@ -7,5 +12,9 @@ export const mochaHooks: RootHookObject = {
     await AppDataSource.runMigrations()
   },
 
-  async afterEach() {},
+  async beforeEach() {
+    for (const klass of ENTITY_TYPES) {
+      await AppDataSource.getRepository(klass).clear()
+    }
+  },
 }

@@ -2,6 +2,13 @@ import Node from '#entity/node'
 import { expect } from 'chai'
 import { DateTime, Duration } from 'luxon'
 import { BROADCAST_ADDR } from '#helpers/utils'
+import { AppDataSource } from '#config/data-source'
+import DeviceMetric from '#entity/device_metric'
+import EnvironmentMetric from '#entity/environment_metric'
+import MapReport from '#entity/map_report'
+import { meshtastic } from '../../src/gen/meshtastic-protobufs.js'
+import _ from 'lodash'
+import HardwareModel = meshtastic.HardwareModel
 
 describe('Node', () => {
   describe('inboundMessage', () => {
@@ -43,6 +50,145 @@ describe('Node', () => {
       n.outboundMessage(m3, purgeOlderThan)
 
       expect(n.outbox).to.deep.equal([m2, m1].map((m) => ({ to: m.to, text: m.text, time: m.createdAt.toISOString() })))
+    })
+  })
+
+  describe('updateDeviceMetrics', () => {
+    it('should create a new node with specified metrics if a node does not exist', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      const dm = new DeviceMetric({
+        nodeId: 123,
+
+        batteryLevel: 98,
+        voltage: 3.3,
+        channelUtilization: 0.5,
+        airUtilTx: 0.1,
+        uptimeSeconds: 123,
+      })
+
+      await Node.updateDeviceMetrics(AppDataSource, dm)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(node).excluding(['createdAt', 'updatedAt', 'id']).to.deep.include(dm)
+    })
+
+    it('should update an existing node if one exists', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      await AppDataSource.manager.save(new Node({ nodeId: 123, batteryLevel: 10, voltage: 1.2 }))
+
+      const dm = new DeviceMetric({
+        nodeId: 123,
+
+        batteryLevel: 98,
+        voltage: 3.3,
+        channelUtilization: 0.5,
+        airUtilTx: 0.1,
+        uptimeSeconds: 123,
+      })
+
+      await Node.updateDeviceMetrics(AppDataSource, dm)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(node).excluding(['createdAt', 'updatedAt', 'id']).to.deep.include(dm)
+    })
+  })
+
+  describe('updateEnvironmentMetrics', () => {
+    it('should create a new node with specified metrics if a node does not exist', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      const em = new EnvironmentMetric({
+        nodeId: 123,
+        iaq: 98,
+        temperature: 32,
+        relativeHumidity: 0.5,
+        gasResistance: 123,
+        barometricPressure: 1013.25,
+        voltage: 3.3,
+        current: 32,
+        createdAt: DateTime.now().minus({ minutes: 1 }).toJSDate(),
+      })
+
+      await Node.updateEnvironmentMetrics(AppDataSource, em)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(node).excluding(['createdAt', 'updatedAt', 'id', 'iaq', 'current', 'gasResistance']).to.deep.include(em)
+    })
+
+    it('should update an existing node if one exists', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      await AppDataSource.manager.save(
+        new Node({ nodeId: 123, barometricPressure: 10, relativeHumidity: 0.5, temperature: 20, voltage: 1.2 })
+      )
+
+      const em = new EnvironmentMetric({
+        nodeId: 123,
+        iaq: 98,
+        temperature: 32,
+        relativeHumidity: 0.5,
+        gasResistance: 123,
+        barometricPressure: 1013.25,
+        voltage: 3.3,
+        current: 32,
+        createdAt: DateTime.now().minus({ minutes: 1 }).toJSDate(),
+      })
+
+      await Node.updateEnvironmentMetrics(AppDataSource, em)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(node).excluding(['createdAt', 'updatedAt', 'id', 'iaq', 'current', 'gasResistance']).to.deep.include(em)
+    })
+  })
+
+  describe('updateMapReports', () => {
+    it('should create a new node with specified metrics if a node does not exist', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      const em = new MapReport({
+        nodeId: 123,
+        shortName: 'bob',
+        longName: 'robert',
+        altitude: 127,
+        latitude: 1000000,
+        longitude: 1234567,
+        firmwareVersion: '1.23',
+        hardwareModel: HardwareModel.BETAFPV_2400_TX,
+        role: meshtastic.Config.DeviceConfig.Role.CLIENT_MUTE,
+        createdAt: DateTime.now().minus({ minutes: 1 }).toJSDate(),
+      })
+
+      await Node.updateMapReports(AppDataSource, em)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(_.omitBy(node, _.isNil)).to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt']).to.deep.equal(_.omitBy(em, _.isNil))
+    })
+
+    it('should update an existing node if one exists', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      await AppDataSource.manager.save(new Node({ nodeId: 123, altitude: 99, shortName: 'foo', longName: 'blah' }))
+
+      const em = new MapReport({
+        nodeId: 123,
+        shortName: 'bob',
+        longName: 'robert',
+        altitude: 127,
+        latitude: 1000000,
+        longitude: 1234567,
+        firmwareVersion: '1.23',
+        hardwareModel: HardwareModel.BETAFPV_2400_TX,
+        role: meshtastic.Config.DeviceConfig.Role.CLIENT_MUTE,
+
+        createdAt: DateTime.now().minus({ minutes: 1 }).toJSDate(),
+      })
+
+      await Node.updateMapReports(AppDataSource, em)
+
+      const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(_.omitBy(node, _.isNil)).to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt']).to.deep.equal(_.omitBy(em, _.isNil))
     })
   })
 })

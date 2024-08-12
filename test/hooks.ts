@@ -3,7 +3,9 @@ import { AppDataSource } from '#config/data-source'
 import * as chai from 'chai'
 import chaiDeepEqualIgnoreUndefined from 'chai-deep-equal-ignore-undefined'
 import { ENTITY_TYPES } from '#helpers/entity-types'
+import chaiExclude from 'chai-exclude'
 
+chai.use(chaiExclude)
 chai.use(chaiDeepEqualIgnoreUndefined)
 
 export const mochaHooks: RootHookObject = {

@@ -86,7 +86,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     _.assign(this, opts)
   }
 
-  static async updateDeviceMetrics(trx: EntityManager, dm: DeviceMetric) {
+  static async updateDeviceMetrics(trx: EntityManager | DataSource, dm: DeviceMetric) {
     return await trx.getRepository(Node).upsert(
       {
         nodeId: dm.nodeId,
@@ -100,7 +100,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static async updateEnvironmentMetrics(trx: EntityManager, em: EnvironmentMetric) {
+  static async updateEnvironmentMetrics(trx: EntityManager | DataSource, em: EnvironmentMetric) {
     return await trx.getRepository(Node).upsert(
       {
         nodeId: em.nodeId,
@@ -113,7 +113,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static async updateMapReports(trx: EntityManager, mr: MapReport) {
+  static async updateMapReports(trx: EntityManager | DataSource, mr: MapReport) {
     return await trx.getRepository(Node).upsert(
       {
         nodeId: mr.nodeId,
@@ -124,6 +124,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         longitude: mr.longitude,
         altitude: BaseType.sanitizeNumber(mr.altitude),
         firmwareVersion: mr.firmwareVersion,
+        hardwareModel: mr.hardwareModel,
         region: mr.region,
         modemPreset: mr.modemPreset,
         hasDefaultChannel: mr.hasDefaultChannel,

@@ -62,6 +62,7 @@
     "c8": "^10.1.2",
     "chai": "^5.1.1",
     "chai-deep-equal-ignore-undefined": "^1.1.1",
+    "chai-exclude": "^3.0.0",
     "cooltipz-css": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.4",

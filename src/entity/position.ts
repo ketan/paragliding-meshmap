@@ -51,7 +51,7 @@ export default class Position extends BaseType {
 
   static async forNode(db: EntityManager | DataSource, nodeId: number, since: Date) {
     return await db.getRepository(this).find({
-      select: ['createdAt', 'latitude', 'longitude', 'altitude'],
+      select: ['createdAt', 'latitude', 'longitude', 'altitude', 'id'],
       where: {
         nodeId,
         createdAt: MoreThanOrEqual(since),

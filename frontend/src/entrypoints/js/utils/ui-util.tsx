@@ -67,9 +67,9 @@ export function isDesktop() {
   return !isMobile()
 }
 
-export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
+export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: boolean = false) {
   if (timestamp) {
-    const dateTime = DateTime.fromISO(timestamp)
+    const dateTime = getDateTime(timestamp)
     return (
       <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-right" className="text-nowrap">
         {addParens ? '(' : null}
@@ -79,6 +79,16 @@ export function timeAgo(timestamp?: string | null, addParens: boolean = false) {
     )
   }
   return
+}
+
+function getDateTime(timestamp: string | Date | DateTime) {
+  if (typeof timestamp === 'string') {
+    return DateTime.fromISO(timestamp)
+  } else if (timestamp instanceof Date) {
+    return DateTime.fromJSDate(timestamp)
+  } else {
+    return timestamp
+  }
 }
 
 export function duration(seconds?: number | null) {

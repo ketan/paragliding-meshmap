@@ -1,12 +1,10 @@
 import { renderToString } from 'react-dom/server'
-import { NodeNameAttributes } from '../nodes-entity'
-import { nodeName } from '../entrypoints/js/utils/ui-util'
 
-export function nodePositionView(node: Partial<NodeNameAttributes>) {
+export function nodePositionView(text: string) {
   const view = (
     <p className="text-base font-semibold font-sans align-middle text-center node-position -mt-[3px]">
       <span className="inline-block align-middle" style={{ whiteSpaceCollapse: 'preserve' }} data-test-id="node-position--name">
-        {nodeName(node)}
+        {text}
       </span>
     </p>
   )

@@ -18,6 +18,8 @@ import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
 import { SearchBar } from './search-bar'
 import { NodeDetailsModal } from './node-details-modal'
+import { TrackLog } from './track-log.tsx'
+import { getTextSize } from '../utils/text-size.ts'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -50,6 +52,7 @@ interface UIConfig {
   // Nodes older than this are considered offline
   configNodesOfflineAge: Duration
 }
+
 interface AllData {
   allNodes: Record<number, NodesEntityForUI>
   newerNodes: Record<number, NodesEntityForUI>
@@ -63,6 +66,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   dataLoaded: PromiseWithResolvers<void>
   mapInitialized: PromiseWithResolvers<void>
   nodeToShow?: NodesEntityForUI
+  trackLogToShow?: NodesEntityForUI
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
@@ -208,6 +212,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           node={this.state.nodeToShow}
           onClose={() => this.setState({ nodeToShow: undefined })}
         />
+        <TrackLog node={this.state.trackLogToShow} map={this.state.map} />
       </Page>
     )
   }
@@ -279,7 +284,8 @@ export default class MapApp extends Component<MapProps, MapState> {
     if (!queryParams.coords) {
       navigator.geolocation.getCurrentPosition((pos) => {
         const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
-        if (latLng) {
+        const currentQueryParams = this.getQueryParams()
+        if (latLng && !currentQueryParams.coords) {
           this.state.map?.flyTo(latLng, 17, { animate: false })
         }
       })
@@ -315,13 +321,13 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   private createMarker(eachNode: NodesEntityForUI) {
-    const iconSize = this.getTextSize(eachNode)
+    const iconSize = getTextSize(nodeName(eachNode))
 
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
         className: this.getIconClassFor(eachNode),
         iconSize: iconSize,
-        html: nodePositionView(eachNode),
+        html: nodePositionView(nodeName(eachNode)),
         iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
       }),
       zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
@@ -387,6 +393,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         tooltipReactRoot.render(
           <NodeTooltip
             showDetail={() => this.showDetails(eachNode)}
+            showTrackLog={() => this.showTrackLog(eachNode)}
             node={eachNode}
             callback={() => {
               marker.getTooltip()?.update()
@@ -417,6 +424,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         <NodeTooltip
           node={eachNode}
           showDetail={() => this.showDetails(eachNode)}
+          showTrackLog={() => this.showTrackLog(eachNode)}
           callback={() => {
             tooltip.update()
           }}
@@ -443,6 +451,11 @@ export default class MapApp extends Component<MapProps, MapState> {
 
   private showDetails(node: NodesEntityForUI) {
     this.setState({ nodeToShow: node })
+  }
+
+  private showTrackLog(node: NodesEntityForUI) {
+    this.closeAllToolTipsAndPopupsAndPopups()
+    this.setState({ trackLogToShow: node })
   }
 
   private findNodeById(nodes: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {
@@ -481,49 +494,5 @@ export default class MapApp extends Component<MapProps, MapState> {
         marker.openTooltip()
       }
     }
-  }
-
-  getTextSize(node: NodesEntityForUI) {
-    const name = nodeName(node)
-    let width = 0
-    let height = 0
-    for (let i = 0; i < name.length; i++) {
-      const char = name[i]
-      const [w, h] = this.getCharWidth(char)
-      width += w
-      height = Math.max(height, h)
-    }
-
-    return new L.Point(width + 15, height)
-  }
-
-  readonly charSizes: Record<string, [number, number]> = {}
-
-  nodeSizeElement: HTMLElement | null = null
-
-  // no validation in place for perf reason, so make sure to just pass a single character
-  private getCharWidth(c: string) {
-    if (!this.charSizes[c]) {
-      if (!this.nodeSizeElement) {
-        this.nodeSizeElement = document.createElement('div')
-        this.nodeSizeElement.setAttribute('id', 'test-node-size')
-        this.nodeSizeElement.classList.add(
-          'invisible',
-          '-z-1000',
-          'relative',
-          '-left-[1000px]',
-          '-top-[1000px]',
-          'w-auto',
-          'whitespace-nowrap'
-        )
-        document.body.appendChild(this.nodeSizeElement)
-      }
-      if (this.nodeSizeElement) {
-        this.nodeSizeElement.innerHTML = nodePositionView({ shortName: c })
-        const span = this.nodeSizeElement.querySelector('span')!
-        this.charSizes[c] = [span.offsetWidth, span.offsetHeight]
-      }
-    }
-    return this.charSizes[c]
   }
 }

@@ -6232,6 +6232,11 @@ typeorm@^0.3.20:
     uuid "^9.0.0"
     yargs "^17.6.2"
 
+typescript-color-gradient@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/typescript-color-gradient/-/typescript-color-gradient-3.3.2.tgz#fe5c49eabe52807b1482cd5e1caef2d3acb459e6"
+  integrity sha512-O367R7tKXlmYi2Odyu2KZKegRcTrtfZh6r6XoVHMzI6PSMISMM4m7myVwZuM/BFRaRqpwW4WRQyIVF30DwBe0Q==
+
 typescript-eslint@^7.15.0:
   version "7.16.1"
   resolved "https://registry.yarnpkg.com/typescript-eslint/-/typescript-eslint-7.16.1.tgz#4855e11985b3dbd13a94b4e7e6523b2ec5d1c759"

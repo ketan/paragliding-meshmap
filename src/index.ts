@@ -77,7 +77,7 @@ app.get('/api/nodes', async (_req, res) => {
 app.get('/api/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const since = parseSinceParam(req)
+  const since = parseSinceParam(req, `PT12H`)
   const positions = await Position.forNode(db, nodeId, since)
 
   res.header('cache-control', 'public,max-age=60')

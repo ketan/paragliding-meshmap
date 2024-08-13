@@ -4,20 +4,19 @@ import { HardwareModelIDToName } from '../../../hardware-modules'
 import { imageForModel } from '../../../image-for-model'
 import { DeviceMetricsEntityForUI, EnvironmentMetricsEntityForUI, NodesEntityForUI, TraceroutesEntityForUI } from '../../../nodes-entity'
 import { Modal } from '../components/modal'
-import { googleMapsLink, timeAgo } from '../utils/ui-util'
 import { DeviceMetrics } from './node-details-modal/device-metrics'
 import { EnvironmentMetrics } from './node-details-modal/environment-metrics'
 import { Header } from './node-details-modal/header'
 import { NameValue } from './node-details-modal/name-value'
 import { Traceroutes } from './node-details-modal/traceroutes'
+import { LoadedState } from './loaded-state.tsx'
+import { Position } from './position.tsx'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
   node?: NodesEntityForUI
   onClose: () => void
 }
-
-type LoadedState = 'loaded' | 'loading' | 'error' | null
 
 export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   if (!node) {
@@ -80,7 +79,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           <NameValue name="Short Name" value={node.shortName} />
         </div>
         <div>
-          <NameValue name="ID" value={node.nodeIdHex} />
+          <NameValue name="Hex ID" value={node.nodeIdHex} /> / <NameValue name="ID" value={node.nodeId} />
         </div>
         <div>
           <NameValue name="Hardware" value={hardwareModel} />
@@ -89,47 +88,10 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           <NameValue name="Firmware" value={node.firmwareVersion} />
         </div>
       </div>
-      {position()}
+      <Position node={node} />
       <DeviceMetrics node={node} deviceMetrics={deviceMetrics} />
       <EnvironmentMetrics node={node} environmentMetrics={environmentMetrics} />
       <Traceroutes node={node} traceRoutes={traceRoutes} allNodes={allNodes} />
     </Modal>
   )
-
-  function position() {
-    if (!node?.positionUpdatedAt) {
-      return
-    }
-    return (
-      <>
-        <Header str="Position" />
-        <div className="p-2 px-4 text-sm md:text-md">
-          <div>
-            <NameValue
-              name={`Location`}
-              renderer={() => {
-                if (!node.latLng) {
-                  return
-                }
-                return (
-                  <>
-                    <a target="_blank" rel="noreferrer" href={googleMapsLink(node.latLng)}>
-                      {node.latLng.join(', ')}
-                    </a>{' '}
-                    {timeAgo(node.positionUpdatedAt, true)}
-                  </>
-                )
-              }}
-            />
-          </div>
-          <div>
-            <NameValue name="Altitude" value={node.altitude} unit="m" />
-          </div>
-          <div>
-            <NameValue name="Position updated" value={node.positionUpdatedAt} renderer={timeAgo} />
-          </div>
-        </div>
-      </>
-    )
-  }
 }

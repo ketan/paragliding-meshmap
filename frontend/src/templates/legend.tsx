@@ -35,14 +35,19 @@ export function addLegendToMap(map: L.Map) {
   legend.addTo(map)
 }
 
-export function cssClassFor(str: 'online' | 'offline' | 'disconnected') {
+export function cssClassFor(str: 'online' | 'offline' | 'disconnected' | 'start-track' | 'end-track') {
   const commonClasses = `text-white rounded-full border-4 border-none marker-location node-status-${str}`
 
-  if (str === 'online') {
-    return `bg-green-600 ${commonClasses}`
-  } else if (str === 'disconnected') {
-    return `bg-purple-600 ${commonClasses}`
-  } else if (str === 'offline') {
-    return `bg-red-600 ${commonClasses}`
+  switch (str) {
+    case 'start-track':
+      return `bg-blue-600 ${commonClasses}`
+    case 'end-track':
+      return `bg-amber-600 ${commonClasses}`
+    case 'online':
+      return `bg-green-600 ${commonClasses}`
+    case 'disconnected':
+      return `bg-purple-600 ${commonClasses}`
+    case 'offline':
+      return `bg-red-600 ${commonClasses}`
   }
 }

@@ -135,9 +135,10 @@ interface Props {
   node: NodesEntityForUI
   callback?: () => void
   showDetail: (node: NodesEntityForUI) => void
+  showTrackLog: (node: NodesEntityForUI) => void
 }
 
-export function NodeTooltip({ node, callback, showDetail }: Props) {
+export function NodeTooltip({ node, callback, showDetail, showTrackLog }: Props) {
   const image = imageForModel(node.hardwareModel) ? (
     <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
   ) : null
@@ -149,7 +150,7 @@ export function NodeTooltip({ node, callback, showDetail }: Props) {
   const nodeName = keyValue({ key: 'Long Name', renderer: () => <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span> })
 
   const showDetailsButton = (
-    <p className="text-center mt-3" key="showDetails">
+    <p className="text-center mt-1" key="showDetails">
       <a
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
         onClick={() => showDetail(node)}
@@ -160,8 +161,20 @@ export function NodeTooltip({ node, callback, showDetail }: Props) {
     </p>
   )
 
+  const showTrackLogButton = (
+    <p className="text-center mt-1" key="showTrackLog">
+      <a
+        className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
+        onClick={() => showTrackLog(node)}
+        data-node-id={node.nodeId}
+      >
+        Show Tracklog
+      </a>
+    </p>
+  )
+
   const showMessagesButton = (
-    <p className="text-center mt-3" key="showMessages" data-id="showMessagesButton">
+    <p className="text-center mt-1" key="showMessages" data-id="showMessagesButton">
       <a
         href={messageLink(node.nodeId)}
         onClick={() => {
@@ -228,8 +241,11 @@ export function NodeTooltip({ node, callback, showDetail }: Props) {
     }),
     keyValue({ key: 'Role', value: role }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
-    showDetailsButton,
-    showMessagesButton,
+    <div className="mt-3" key="buttons">
+      {showDetailsButton}
+      {showTrackLogButton}
+      {showMessagesButton}
+    </div>,
   ]
 
   useEffect(() => {

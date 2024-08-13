@@ -3,15 +3,26 @@ import {
   EnvironmentMetricsEntity,
   NeighbourInfosEntity,
   NodesEntity,
+  PositionsEntity,
   TextMessagesEntity,
   TraceroutesEntity,
 } from './db-entities'
 import { PointTuple } from 'leaflet'
+import { DateTime } from 'luxon'
 
 export interface NodesEntityForUI extends Omit<NodesEntity, 'latitude' | 'longitude'> {
   latLng?: PointTuple
   offsetLatLng?: PointTuple
   nodeIdHex: string
+}
+
+export interface PositionsEntityJSON extends Pick<PositionsEntity, 'latitude' | 'longitude' | 'altitude' | 'createdAt' | 'id'> {}
+
+export interface PositionData {
+  latitude: number
+  longitude: number
+  altitude?: number
+  time: DateTime
 }
 
 export type TextMessagesEntityForUI = Pick<TextMessagesEntity, 'id' | 'to' | 'from' | 'text' | 'createdAt'>

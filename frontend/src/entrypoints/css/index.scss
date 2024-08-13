@@ -73,5 +73,13 @@ a.button {
     &.node-status-disconnected {
       @apply border-t-purple-600;
     }
+
+    &.node-status-start-track {
+      @apply border-t-blue-600;
+    }
+
+    &.node-status-end-track {
+      @apply border-t-amber-600;
+    }
   }
 }

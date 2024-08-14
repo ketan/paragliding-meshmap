@@ -7,8 +7,7 @@ import { BROADCAST_ADDR, googleMapsLink, timeAgo } from '../entrypoints/js/utils
 import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
-import { mainRouterNavigate } from '../entrypoints/js/router-event-listener'
-import { messageLink, nodeUrl } from '../entrypoints/js/utils/link-utils'
+import { nodeUrl } from '../entrypoints/js/utils/link-utils'
 
 function mqttStatus(node: NodesEntityForUI) {
   if (node.mqttConnectionState === 'online') {
@@ -136,9 +135,10 @@ interface Props {
   callback?: () => void
   showDetail: (node: NodesEntityForUI) => void
   showTrackLog: (node: NodesEntityForUI) => void
+  showMessages: (node: NodesEntityForUI) => void
 }
 
-export function NodeTooltip({ node, callback, showDetail, showTrackLog }: Props) {
+export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMessages }: Props) {
   const image = imageForModel(node.hardwareModel) ? (
     <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
   ) : null
@@ -176,9 +176,9 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog }: Props)
   const showMessagesButton = (
     <p className="text-center mt-1" key="showMessages" data-id="showMessagesButton">
       <a
-        href={messageLink(node.nodeId)}
+        href="#"
         onClick={() => {
-          mainRouterNavigate(messageLink(node.nodeId))
+          showMessages(node)
         }}
         rel="noreferrer"
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
@@ -227,7 +227,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog }: Props)
             <a
               href={link}
               onClick={() => {
-                mainRouterNavigate(link)
+                showMessages(node)
               }}
             >
               {node.nodeId} (!{node.nodeId.toString(16)})

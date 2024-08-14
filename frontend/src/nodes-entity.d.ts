@@ -18,6 +18,8 @@ export interface NodesEntityForUI extends Omit<NodesEntity, 'latitude' | 'longit
 
 export interface PositionsEntityJSON extends Pick<PositionsEntity, 'latitude' | 'longitude' | 'altitude' | 'createdAt' | 'id'> {}
 
+export interface MessagesEntityForUI extends Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'> {}
+
 export interface PositionData {
   latitude: number
   longitude: number

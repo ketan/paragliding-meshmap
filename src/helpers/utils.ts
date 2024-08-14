@@ -31,8 +31,14 @@ export function secondsAgo(secs: number) {
 export function parseProtobuf<T>(f: () => T): T {
   try {
     return f()
-  } catch (e) {
-    throw new AbortError(e)
+  } catch (e: unknown) {
+    if (typeof e === 'string' || e instanceof Error) {
+      throw new AbortError(e)
+    } else if (e) {
+      throw new AbortError((e as object).toString())
+    } else {
+      throw new AbortError(`Unknown error parsing protobuf`)
+    }
   }
 }
 

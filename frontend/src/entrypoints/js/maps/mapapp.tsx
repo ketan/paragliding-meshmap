@@ -20,6 +20,8 @@ import { SearchBar } from './search-bar'
 import { NodeDetailsModal } from './node-details-modal'
 import { TrackLog } from './track-log.tsx'
 import { getTextSize } from '../utils/text-size.ts'
+import { MessagesModal } from './messages-modal.tsx'
+import { BROADCAST_ADDR } from '#helpers/utils'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -67,15 +69,22 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   mapInitialized: PromiseWithResolvers<void>
   nodeToShow?: NodesEntityForUI
   trackLogToShow?: NodesEntityForUI
+  messageFrom?: number
+  messageTo?: number | 'all'
+  messageSince: Duration
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
+  private readonly defaultMessageSince = Duration.fromObject({ days: 7 }).rescale()
+
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
     configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P7D'),
     configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'P71D'),
     mapInitialized: Promise.withResolvers(),
     dataLoaded: Promise.withResolvers(),
+    messageTo: BROADCAST_ADDR,
+    messageSince: this.defaultMessageSince,
   }
 
   readonly allClusteredLayerGroup = L.markerClusterGroup({
@@ -211,6 +220,15 @@ export default class MapApp extends Component<MapProps, MapState> {
           allNodes={this.state.allNodes}
           node={this.state.nodeToShow}
           onClose={() => this.setState({ nodeToShow: undefined })}
+        />
+        <MessagesModal
+          from={this.state.messageFrom}
+          to={this.state.messageTo}
+          since={this.state.messageSince}
+          onClose={() => this.messagesClosed()}
+          nodes={this.state.allNodes || []}
+          updateDuration={(newDuration) => this.setState({ messageSince: newDuration })}
+          toggleFilter={() => this.toggleMessageFilter()}
         />
         <TrackLog node={this.state.trackLogToShow} map={this.state.map} />
       </Page>
@@ -394,6 +412,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           <NodeTooltip
             showDetail={() => this.showDetails(eachNode)}
             showTrackLog={() => this.showTrackLog(eachNode)}
+            showMessages={() => this.showMessages(eachNode)}
             node={eachNode}
             callback={() => {
               marker.getTooltip()?.update()
@@ -425,6 +444,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           node={eachNode}
           showDetail={() => this.showDetails(eachNode)}
           showTrackLog={() => this.showTrackLog(eachNode)}
+          showMessages={() => this.showMessages(eachNode)}
           callback={() => {
             tooltip.update()
           }}
@@ -493,6 +513,22 @@ export default class MapApp extends Component<MapProps, MapState> {
       if (marker) {
         marker.openTooltip()
       }
+    }
+  }
+
+  private showMessages(eachNode: NodesEntityForUI) {
+    this.setState({ messageFrom: eachNode.nodeId, messageTo: BROADCAST_ADDR, messageSince: this.defaultMessageSince })
+  }
+
+  private messagesClosed() {
+    this.setState({ messageTo: undefined, messageFrom: undefined, messageSince: this.defaultMessageSince })
+  }
+
+  private toggleMessageFilter() {
+    if (this.state.messageTo === `all`) {
+      this.setState({ messageTo: BROADCAST_ADDR })
+    } else {
+      this.setState({ messageTo: `all` })
     }
   }
 }

@@ -1,4 +1,6 @@
 // do this first
+import 'newrelic'
+// then dotenv
 import 'dotenv-flow/config'
 
 //

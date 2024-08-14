@@ -45,6 +45,7 @@ export default defineConfig({
     'glob',
     'lodash',
     'luxon',
+    'newrelic',
     'os',
     'p-queue',
     'p-retry',

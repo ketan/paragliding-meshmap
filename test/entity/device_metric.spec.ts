@@ -35,7 +35,10 @@ describe('DeviceMetric', () => {
     expect(recentMetric.id).to.exist
 
     expect(await oneMinuteAgoMetric.findRecentSimilarMetric(AppDataSource, secondsAgo(2))).to.not.exist
-    expect(await recentMetric.findRecentSimilarMetric(AppDataSource, secondsAgo(2))).to.deep.eq(recentMetric)
+
+    expect(await recentMetric.findRecentSimilarMetric(AppDataSource, secondsAgo(2))).to.deep.eq(
+      await AppDataSource.manager.findOneBy(DeviceMetric, { id: recentMetric.id })
+    )
   })
 
   it('should return device metrics for specified node', () => {

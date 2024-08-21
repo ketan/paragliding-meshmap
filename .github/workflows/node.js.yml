@@ -51,6 +51,22 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/meshmap-test
       - run: yarn run build
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: ghcr.io/ketan/paragliding-meshmap
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha            
+        if: github.event_name != 'pull_request'
       - name: Set up QEMU
         if: github.event_name != 'pull_request'
         uses: docker/setup-qemu-action@v3
@@ -71,5 +87,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: true
-          tags: ghcr.io/ketan/paragliding-meshmap:typeorm-latest,ghcr.io/ketan/paragliding-meshmap:typeorm-${{ steps.commit.outputs.short }}
+#          tags: ghcr.io/ketan/paragliding-meshmap:typeorm-latest,ghcr.io/ketan/paragliding-meshmap:typeorm-${{ steps.commit.outputs.short }}
           build-args: GIT_SHA=${{ steps.commit.outputs.short }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

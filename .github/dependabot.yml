@@ -6,16 +6,19 @@
 version: 2
 updates:
   - package-ecosystem: 'npm' # See documentation for possible values
+    open-pull-requests-limit: 10
     directory: '/' # Location of package manifests
     schedule:
       interval: 'weekly'
     versioning-strategy: 'widen'
   - package-ecosystem: 'github-actions'
+    open-pull-requests-limit: 10
     # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
     directory: '/'
     schedule:
       interval: 'weekly'
   - package-ecosystem: 'docker'
+    open-pull-requests-limit: 10
     directory: '/'
     schedule:
       interval: 'weekly'

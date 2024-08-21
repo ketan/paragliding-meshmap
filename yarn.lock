@@ -547,15 +547,6 @@
     node-gyp-build "^4.8.1"
     prebuildify "^6.0.1"
 
-"@newrelic/ritm@^7.2.0":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@newrelic/ritm/-/ritm-7.2.0.tgz#2d5dd52341e79ea921b7d1a57f43f9ca3b11defe"
-  integrity sha512-I4iVhm+wlTEDJXQT8EydF/U5vlR9bBHrtBGyvd/D9WCucoMtrPrCNyILQh9bZ+46E8QRE7zh6QEGyQcnc3qNMg==
-  dependencies:
-    debug "^4.1.1"
-    module-details-from-path "^1.0.3"
-    resolve "^1.22.1"
-
 "@newrelic/security-agent@^1.3.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@newrelic/security-agent/-/security-agent-1.4.0.tgz#3582f9fd0e623fa4e2774516649a50254281c602"
@@ -4940,14 +4931,13 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-newrelic@^12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-12.1.0.tgz#e36d380c621f13153765ac68f006330271ba5529"
-  integrity sha512-5WG2wGp+w7tt29mnpx/jhEnmJ9sOhQFelPLMxLtO0jvUiqG8Yg5r/3JKrOl9CNv4Q2uZT5KkX0eZ6yYbLrz88Q==
+newrelic@^12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-12.2.0.tgz#d5a9036fbc389bceb7f3645a8fc98d967e60b1b6"
+  integrity sha512-+GYdq5OOBuL4RzJ7g750sReXoqMZcgjwMLks5KHr3+fMES0ofooJ6jyGp8OCvT/V/7FpYqHaZdv02lLxtcy6fQ==
   dependencies:
     "@grpc/grpc-js" "^1.9.4"
     "@grpc/proto-loader" "^0.7.5"
-    "@newrelic/ritm" "^7.2.0"
     "@newrelic/security-agent" "^1.3.0"
     "@tyriar/fibonacci-heap" "^2.0.7"
     concat-stream "^2.0.0"
@@ -4957,6 +4947,7 @@ newrelic@^12.1.0:
     json-stringify-safe "^5.0.0"
     module-details-from-path "^1.0.3"
     readable-stream "^3.6.1"
+    require-in-the-middle "^7.4.0"
     semver "^7.5.2"
     winston-transport "^4.5.0"
   optionalDependencies:
@@ -5884,6 +5875,15 @@ require-directory@^2.1.1:
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==
 
+require-in-the-middle@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/require-in-the-middle/-/require-in-the-middle-7.4.0.tgz#606977820d4b5f9be75e5a108ce34cfed25b3bb4"
+  integrity sha512-X34iHADNbNDfr6OTStIAHWSAvvKQRYgLO6duASaVf7J2VA3lvmNYboAHOuLC2huav1IwgZJtyEcJCKVzFxOSMQ==
+  dependencies:
+    debug "^4.3.5"
+    module-details-from-path "^1.0.3"
+    resolve "^1.22.8"
+
 requizzle@^0.2.3:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/requizzle/-/requizzle-0.2.4.tgz#319eb658b28c370f0c20f968fa8ceab98c13d27c"
@@ -5901,7 +5901,7 @@ resolve-from@^5.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-5.0.0.tgz#c35225843df8f776df21c57557bc087e9dfdfc69"
   integrity sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==
 
-resolve@^1.1.7, resolve@^1.20.0, resolve@^1.22.1, resolve@^1.22.2:
+resolve@^1.1.7, resolve@^1.20.0, resolve@^1.22.1, resolve@^1.22.2, resolve@^1.22.8:
   version "1.22.8"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
   integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==

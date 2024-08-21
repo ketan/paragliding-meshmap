@@ -64,7 +64,7 @@ export function EnvironmentMetrics({
                 className={'mr-4'}
               />
               <ResponsiveContainer height={200} className="content-center mx-auto">
-                <LineChart data={environmentMetricsData} syncId="anyId">
+                <LineChart data={environmentMetricsData} syncId="nodeDetailsSync">
                   <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
 
                   <XAxis

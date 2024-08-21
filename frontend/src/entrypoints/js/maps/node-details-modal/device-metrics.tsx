@@ -49,7 +49,7 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
           <NameValue name="Air Utilization Tx" value={node?.airUtilTx} unit="%" className="mr-4" precision={2} />
 
           <ResponsiveContainer height={200} className="content-center mx-auto">
-            <LineChart data={data} syncId="anyId">
+            <LineChart data={data} syncId="nodeDetailsSync" >
               <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
 
               <XAxis
@@ -143,7 +143,7 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
             }}
           />
           <ResponsiveContainer height={200} className="content-center mx-auto">
-            <LineChart data={data} syncId="anyId">
+            <LineChart data={data} syncId="nodeDetailsSync">
               <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
               <XAxis
                 padding={{ left: 20, right: 20 }}

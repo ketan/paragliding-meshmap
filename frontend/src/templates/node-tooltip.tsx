@@ -224,16 +224,17 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
         const link = nodeUrl(node)
         return (
           <>
-            <a
-              href={link}
-              onClick={() => {
-                showMessages(node)
-              }}
-            >
+            <a href={link}>
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
-            <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3" data-copy={link}>
-              <CopyIcon className="w-5 h-5 inline-block p-0.5" />
+            <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3">
+              <CopyIcon
+                className="w-5 h-5 inline-block p-0.5"
+                onClick={() => {
+                  const absoluteNodeUrl = new URL(link, window.location.href)
+                  navigator.clipboard.writeText(absoluteNodeUrl.toString())
+                }}
+              />
             </Tooltip>
           </>
         )

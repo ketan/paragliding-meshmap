@@ -16,6 +16,22 @@ jobs:
       packages: write
       contents: read
 
+    services:
+      postgres:
+        image: "postgres:alpine"
+
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     strategy:
       matrix:
         node-version: [22.4.x]
@@ -32,6 +48,8 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn run lint
       - run: yarn test
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/meshmap-test
       - run: yarn run build
       - name: Set up QEMU
         if: github.event_name != 'pull_request'

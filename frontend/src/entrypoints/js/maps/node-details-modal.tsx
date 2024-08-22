@@ -63,11 +63,17 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
 
+  const firmwareVersion = (
+    <>
+      {node.firmwareVersion && ' / '}
+      {node.firmwareVersion && <NameValue name="Firmware" value={node.firmwareVersion} />}
+    </>
+  )
+
   return (
     <Modal showModal={true} setShowModal={() => onClose()}>
       <div className="p-2 px-4 text-sm md:text-md border-b shadow-md">
-        <h1 className="font-bold">NodeInfo</h1>
-        <h2 className="font-bold">{node.longName || `UNKNOWN`}</h2>
+        <h1 className="font-bold">{node.longName || `UNKNOWN`}</h1>
       </div>
       {image}
       <Header str="Node Info" />
@@ -82,10 +88,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           <NameValue name="Hex ID" value={node.nodeIdHex} /> / <NameValue name="ID" value={node.nodeId} />
         </div>
         <div>
-          <NameValue name="Hardware" value={hardwareModel} />
-        </div>
-        <div>
-          <NameValue name="Firmware" value={node.firmwareVersion} />
+          <NameValue name="Hardware" value={hardwareModel} /> {firmwareVersion}
         </div>
       </div>
       <Position node={node} />

@@ -17,8 +17,8 @@ export function Modal({ setShowModal, showModal, children }: PropsWithChildren<M
       <div className="fixed inset-0 bg-gray-900 bg-opacity-75"></div>
       {/* modal */}
       <div className="fixed left-0 right-0 top-0 bottom-0 lg:pointer-events-none">
-        <div className="flex w-full h-full overflow-y-auto p-4">
-          <div className="mx-auto my-auto w-full max-w-2xl flex-col bg-white shadow-xl rounded-xl lg:pointer-events-auto min-w-full">
+        <div className="flex md:w-full h-full overflow-y-auto p-4">
+          <div className="mx-auto my-auto md:w-[50%] lg:w-[40%] flex-col bg-white shadow-xl rounded-xl lg:pointer-events-auto md:min-w-[50%] lg:min-w-[40%]">
             <div className="relative flex">
               {/* close button */}
               <div className="absolute top-0 right-0 p-2">

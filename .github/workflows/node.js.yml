@@ -18,7 +18,7 @@ jobs:
 
     services:
       postgres:
-        image: "postgres:alpine"
+        image: 'postgres:alpine'
 
         env:
           POSTGRES_PASSWORD: postgres
@@ -65,7 +65,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha            
+            type=sha
         if: github.event_name != 'pull_request'
       - name: Set up QEMU
         if: github.event_name != 'pull_request'
@@ -87,7 +87,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: true
-#          tags: ghcr.io/ketan/paragliding-meshmap:typeorm-latest,ghcr.io/ketan/paragliding-meshmap:typeorm-${{ steps.commit.outputs.short }}
+          #          tags: ghcr.io/ketan/paragliding-meshmap:typeorm-latest,ghcr.io/ketan/paragliding-meshmap:typeorm-${{ steps.commit.outputs.short }}
           build-args: GIT_SHA=${{ steps.commit.outputs.short }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

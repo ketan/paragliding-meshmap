@@ -8,7 +8,7 @@ export interface ModalBaseProps {
 
 export function Modal({ setShowModal, showModal, children }: PropsWithChildren<ModalBaseProps>) {
   const ref = useRef<HTMLDivElement>(null)
-  
+
   const handleEscKey = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {

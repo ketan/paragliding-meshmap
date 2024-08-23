@@ -79,8 +79,7 @@ app.get('/api/nodes', async (_req, res) => {
 app.get('/api/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const since = parseSinceParam(req, `PT12H`)
-  const positions = await Position.forNode(db, nodeId, since)
+  const positions = await Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`))
 
   res.header('cache-control', 'public,max-age=60')
   res.json(positions)
@@ -155,15 +154,6 @@ app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
 
   res.header('cache-control', 'public,max-age=60')
   res.json(traceRoutes)
-})
-
-app.get(`/api/node/:nodeId/positions`, async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const positions = await Position.forNode(db, nodeId, parseSinceParam(req))
-
-  res.header('cache-control', 'public,max-age=60')
-  res.json(positions)
 })
 
 app.get('/api/hardware-models', async function (_req, res) {

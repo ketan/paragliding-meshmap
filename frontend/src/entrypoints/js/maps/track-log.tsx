@@ -9,6 +9,7 @@ import { nodePositionView } from '../../../templates/node-position.tsx'
 import { Gradient } from 'typescript-color-gradient'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
+import { toast } from 'react-toastify'
 
 interface TrackLogProps {
   node?: NodesEntityForUI
@@ -63,8 +64,12 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         }
         this.gpxLayer = undefined
         this.gpxLayer = this.createGPXLayer(this.state.positions!)
-        this.gpxLayer.addTo(this.props.map!)
-        this.props.map!.fitBounds(this.gpxLayer.getBounds())
+        if (this.gpxLayer) {
+          this.gpxLayer.addTo(this.props.map!)
+          this.props.map!.fitBounds(this.gpxLayer.getBounds())
+        } else {
+          toast('There are no track logs for this node')
+        }
       })
     } else {
       this.setState({ loadedState: 'error' })
@@ -89,6 +94,10 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
   }
 
   private createGPXLayer(positions: PositionData[]) {
+    if (positions.length === 0) {
+      return
+    }
+
     const featureGroup = new L.FeatureGroup()
 
     const startPosition = positions.at(0)

@@ -3,6 +3,7 @@ import icon from '../../../assets/images/icon.png'
 import { CircleInfoIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
 import { TooltipDirection } from './tooltip'
+import { ToastContainer } from 'react-toastify'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -33,6 +34,7 @@ export function Page(props: PageProps) {
         </div>
       </div>
       <AboutModal setShowModal={setShowModal} showModal={showModal} />
+      <ToastContainer hideProgressBar theme="dark" />
     </>
   )
 }

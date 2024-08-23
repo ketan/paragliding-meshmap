@@ -89,10 +89,10 @@ export function AboutModal({ setShowModal, showModal }: ModalBaseProps) {
           </div>
         </div>
         {/* dismiss button --> */}
-        <div className="mx-auto">
+        <div className="mx-auto mt-4 text-center">
           <a
             href="#"
-            className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
+            className="button px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
             onClick={() => setShowModal(false)}
           >
             Dismiss

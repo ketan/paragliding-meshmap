@@ -1,5 +1,5 @@
 import { NodesEntityForUI, PositionData, PositionsEntityJSON } from '../../../nodes-entity'
-import L, { Map, PointTuple } from 'leaflet'
+import L, { Map, Marker, PointTuple } from 'leaflet'
 import { Component } from 'react'
 import { LoadedState } from './loaded-state.tsx'
 import { DateTime } from 'luxon'
@@ -10,6 +10,7 @@ import { Gradient } from 'typescript-color-gradient'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
 import { toast } from 'react-toastify'
+import { nodeName, sanitizeLatLong } from '../utils/ui-util.tsx'
 
 interface TrackLogProps {
   node?: NodesEntityForUI
@@ -80,10 +81,12 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
     return positionData
       .filter((point) => point.latitude && point.longitude)
       .map((position) => {
+        const latLong = sanitizeLatLong(position.latitude! / 10000000, position.longitude! / 10000000)!
+
         return {
           id: position.id,
-          latitude: position.latitude! / 10000000,
-          longitude: position.longitude! / 10000000,
+          latitude: latLong[0],
+          longitude: latLong[1],
           altitude: position.altitude,
           time: DateTime.fromISO(position.createdAt),
         } as PositionData
@@ -102,7 +105,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
 
     const startPosition = positions.at(0)
     if (startPosition) {
-      const label = 'Take-off'
+      const label = `Earliest position for ${nodeName(this.props.node!)}`
       const iconSize = getTextSize(label)
       const startMarker = L.marker([startPosition.latitude, startPosition.longitude], {
         icon: L.divIcon({
@@ -113,13 +116,13 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         }),
         zIndexOffset: 2000,
       })
-
+      this.createTooltip(startMarker, startPosition)
       featureGroup.addLayer(startMarker)
     }
 
     const endPosition = positions.at(-1)
     if (endPosition) {
-      const label = 'Landing'
+      const label = `Last known position for ${nodeName(this.props.node!)}`
       const iconSize = getTextSize(label)
       const endMarker = L.marker([endPosition.latitude, endPosition.longitude], {
         icon: L.divIcon({
@@ -130,17 +133,9 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         }),
         zIndexOffset: 2000,
       })
-      featureGroup.addLayer(endMarker)
-    }
 
-    function positionTooltip(position: PositionData) {
-      const node = {
-        latLng: [position.latitude, position.longitude] as PointTuple,
-        positionUpdatedAt: position.time.toISOTime()!,
-        altitude: position.altitude,
-      }
-      const element = <Position node={node} />
-      return renderToString(element)
+      this.createTooltip(endMarker, endPosition)
+      featureGroup.addLayer(endMarker)
     }
 
     for (let i = 0; i < positions.length; i++) {
@@ -148,21 +143,12 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       const marker = L.marker([position.latitude, position.longitude], {
         icon: new L.DivIcon({
           className: 'rounded-full border-3 bg-green-600',
-          iconSize: [5, 5],
+          iconSize: [10, 10],
         }),
         zIndexOffset: 1000,
       })
 
-      marker.bindTooltip(() => positionTooltip(position), { interactive: true })
-
-      marker.on('click', () => {
-        const tooltip = new L.Tooltip([position.latitude, position.longitude], { interactive: true, permanent: true })
-        tooltip.setContent(() => {
-          return positionTooltip(position)
-        })
-
-        this.props.map!.openTooltip(tooltip)
-      })
+      this.createTooltip(marker, position)
 
       featureGroup.addLayer(marker)
     }
@@ -184,5 +170,28 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
     }
 
     return featureGroup
+  }
+
+  private createTooltip(marker: Marker, position: PositionData) {
+    marker.bindTooltip(() => this.positionTooltip(position), { interactive: true })
+
+    marker.on('click', () => {
+      const tooltip = new L.Tooltip([position.latitude, position.longitude], { interactive: true, permanent: true })
+      tooltip.setContent(() => {
+        return this.positionTooltip(position)
+      })
+
+      this.props.map!.openTooltip(tooltip)
+    })
+  }
+
+  private positionTooltip(position: PositionData) {
+    const node = {
+      latLng: [position.latitude, position.longitude] as PointTuple,
+      positionUpdatedAt: position.time.toISOTime()!,
+      altitude: position.altitude,
+    }
+    const element = <Position node={node} title={`Position for ${nodeName(this.props.node)}`} />
+    return renderToString(element)
   }
 }

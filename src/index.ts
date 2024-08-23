@@ -22,6 +22,7 @@ import expressStaticGzip from 'express-static-gzip'
 import responseTime from 'response-time'
 import 'express-async-errors'
 import { AppDataSource } from '#config/data-source'
+import MapReport from '#entity/map_report'
 
 const cliOptions = webCLIParse()
 
@@ -79,10 +80,15 @@ app.get('/api/nodes', async (_req, res) => {
 app.get('/api/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const positions = await Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`))
+  const [positions, mapReports] = await Promise.all([
+    Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
+    MapReport.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
+  ])
+
+  const response = [...positions, ...mapReports].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
   res.header('cache-control', 'public,max-age=60')
-  res.json(positions)
+  res.json(response)
 })
 
 app.get(`/api/node/:nodeId`, async (req, res) => {

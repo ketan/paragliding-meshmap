@@ -10,13 +10,13 @@ interface PositionProps {
   altitude?: number
 }
 
-export function Position({ node }: { node: PositionProps }) {
+export function Position({ node, title = 'Position' }: { node: PositionProps; title?: string }) {
   if (!node?.positionUpdatedAt) {
     return
   }
   return (
     <>
-      <Header str="Position" />
+      <Header str={title} />
       <div className="p-2 px-4 text-sm md:text-md">
         <div>
           <NameValue

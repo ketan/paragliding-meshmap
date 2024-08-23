@@ -1,6 +1,7 @@
 import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
+import { PositionDTO } from '#entity/map_report'
 
 @Entity()
 export default class Position extends BaseType {
@@ -50,7 +51,7 @@ export default class Position extends BaseType {
   }
 
   static async forNode(db: EntityManager | DataSource, nodeId: number, since: Date) {
-    return await db.getRepository(this).find({
+    return (await db.getRepository(this).find({
       select: ['createdAt', 'latitude', 'longitude', 'altitude', 'id'],
       where: {
         nodeId,
@@ -59,6 +60,6 @@ export default class Position extends BaseType {
       order: {
         createdAt: 'ASC',
       },
-    })
+    })) as PositionDTO[]
   }
 }

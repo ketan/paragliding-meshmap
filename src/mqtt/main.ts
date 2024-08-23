@@ -8,6 +8,7 @@ import { MQTTCLIOptions } from '#helpers/cli'
 import PQueue from 'p-queue'
 import os from 'os'
 import { DataSource } from 'typeorm'
+import { Configs } from '#entity/configs'
 
 export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) {
   const logger = debug('meshmap:mqtt')
@@ -15,13 +16,26 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   logger(`Starting mqtt with options`, cliOptions)
 
+  const clientIdConfig =
+    (await Configs.byName(db, 'mqttClientId')) ||
+    new Configs({
+      key: 'mqttClientId',
+      value: 'paragliding-meshmap-' + Math.random().toString(16).substring(2, 8),
+    })
+
+  if (!clientIdConfig.id) {
+    await clientIdConfig.save(db)
+  }
+
+  const clientId = clientIdConfig.value!.toString()
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {
     username: cliOptions.mqttUsername,
     password: cliOptions.mqttPassword,
+    clientId: clientId,
   })
 
   client.on('connect', async () => {
-    logger(`Connected to ${cliOptions.mqttBrokerUrl}`)
+    logger(`Connected to ${cliOptions.mqttBrokerUrl} using client id ${clientId}`)
     await client.subscribe(cliOptions.mqttTopic)
     logger(`Subscribed to ${cliOptions.mqttTopic}`)
   })

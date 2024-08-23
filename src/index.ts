@@ -85,7 +85,7 @@ app.get('/api/node/:nodeId/positions', async (req, res) => {
     MapReport.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
   ])
 
-  const response = [...positions, ...mapReports].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+  const response = [...positions, ...mapReports].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
   res.header('cache-control', 'public,max-age=60')
   res.json(response)

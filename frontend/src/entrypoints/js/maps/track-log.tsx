@@ -1,5 +1,5 @@
 import { NodesEntityForUI, PositionData, PositionsEntityJSON } from '../../../nodes-entity'
-import L, { Map, Marker, PointTuple } from 'leaflet'
+import L, { DivIcon, DivIconOptions, Map, Marker, PointTuple } from 'leaflet'
 import { Component } from 'react'
 import { LoadedState } from './loaded-state.tsx'
 import { DateTime } from 'luxon'
@@ -138,12 +138,13 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       featureGroup.addLayer(endMarker)
     }
 
+    const colours = new Gradient().setGradient('#0000ff', '#00ff00').setNumberOfColors(positions.length).getColors()
+
     for (let i = 0; i < positions.length; i++) {
       const position = positions[i]
       const marker = L.marker([position.latitude, position.longitude], {
-        icon: new L.DivIcon({
-          className: 'rounded-full border-3 bg-green-600',
-          iconSize: [10, 10],
+        icon: new CustomColorIcon({
+          backgroundColor: colours[i],
         }),
         zIndexOffset: 1000,
       })
@@ -152,8 +153,6 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
 
       featureGroup.addLayer(marker)
     }
-
-    const colours = new Gradient().setGradient('#0000ff', '#00ff00').setNumberOfColors(positions.length).getColors()
 
     for (let i = 0; i < positions.length - 1; i++) {
       const position = positions[i]
@@ -191,7 +190,28 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       positionUpdatedAt: position.time.toISOTime()!,
       altitude: position.altitude,
     }
-    const element = <Position node={node} title={`Position for ${nodeName(this.props.node)}`} />
+    const element = <Position node={node} title={`Position for ${nodeName(this.props.node!)}`} />
     return renderToString(element)
+  }
+}
+
+export class CustomColorIcon extends DivIcon {
+  private backgroundColor: string | undefined
+
+  constructor(options?: DivIconOptions & { backgroundColor: string }) {
+    super({
+      className: `rounded-full border-3`,
+      iconSize: [10, 10],
+      ...options,
+    })
+    this.backgroundColor = options?.backgroundColor
+  }
+
+  createIcon(oldIcon?: HTMLElement) {
+    const div = super.createIcon(oldIcon)
+    if (this.backgroundColor) {
+      div.style.backgroundColor = this.backgroundColor
+    }
+    return div
   }
 }

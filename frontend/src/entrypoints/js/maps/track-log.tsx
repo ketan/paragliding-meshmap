@@ -9,9 +9,6 @@ import { nodePositionView } from '../../../templates/node-position.tsx'
 import { Gradient } from 'typescript-color-gradient'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
-import markerIcon from '../../../assets/images/icons/marker-icon.png'
-import markerIconRetina from '../../../assets/images/icons/marker-icon-2x.png'
-import markerShadow from '../../../assets/images/icons/marker-shadow.png'
 
 interface TrackLogProps {
   node?: NodesEntityForUI
@@ -140,10 +137,9 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
     for (let i = 0; i < positions.length; i++) {
       const position = positions[i]
       const marker = L.marker([position.latitude, position.longitude], {
-        icon: new L.Icon.Default({
-          iconRetinaUrl: markerIconRetina,
-          shadowUrl: markerShadow,
-          iconUrl: markerIcon,
+        icon: new L.DivIcon({
+          className: 'rounded-full border-3 bg-green-600',
+          iconSize: [5, 5],
         }),
         zIndexOffset: 1000,
       })

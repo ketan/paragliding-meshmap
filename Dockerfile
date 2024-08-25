@@ -23,6 +23,7 @@ RUN yarn install --network-timeout 1000000 --frozen-lockfile --prod \
 
 ENV DEBUG_COLORS=true
 ENV NODE_ENV=production
+ENV TZ=UTC
 
 EXPOSE 3333
 

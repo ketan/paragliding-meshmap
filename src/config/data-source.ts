@@ -7,11 +7,12 @@ import os from 'os'
 import path from 'path'
 import pluralize from 'pluralize'
 import 'reflect-metadata'
-import { DataSource, DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm'
+import { DataSource, DefaultNamingStrategy, NamingStrategyInterface, Table } from 'typeorm'
 import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
 import { dbConnectionOptions } from '#config/db-connection-opts-parser'
 import _ from 'lodash'
+import { DateTime } from 'luxon'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -25,6 +26,14 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
 
   columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string {
     return _.snakeCase(super.columnName(propertyName, customName, embeddedPrefixes))
+  }
+
+  indexName(tableOrName: Table | string, columnNames: string[], _where?: string): string {
+    const clonedColumnNames = [...columnNames]
+    clonedColumnNames.sort()
+    const tableName = this.getTableName(tableOrName)
+    const replacedTableName = tableName.replace('.', '_')
+    return  `${replacedTableName}_${clonedColumnNames.join('_')}_idx`
   }
 }
 
@@ -56,4 +65,8 @@ export const dbConnectionConcurrency =
 
 console.log(`Using connection parameters`, connString)
 console.log(`Using connection concurrency`, dbConnectionConcurrency)
+console.log(`Timezone is ${process.env.TZ}`)
+console.log(`System time is ${DateTime.now().toString()}`)
+console.log(`Local time is ${DateTime.local().toString()}`)
+console.log(`new Date is ${new Date().toISOString()}`)
 export const AppDataSource = new DataSource(connString)

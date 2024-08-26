@@ -61,6 +61,31 @@ export async function makeColumnsJSON(queryRunner: QueryRunner, table: string, c
   }
 }
 
+export async function makeColumnsTimestamp(queryRunner: QueryRunner, table: string, columnNames: string[]) {
+  if (queryRunner.connection.driver.options.type !== 'postgres') {
+    return
+  }
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const column = columnNames[index]
+    await queryRunner.query(`
+        ALTER TABLE ${table}
+            ALTER COLUMN ${column} SET DATA TYPE timestamp(3) USING ${column}::timestamp;`)
+  }
+}
+
+export async function makeColumnsTimestampWithTZ(queryRunner: QueryRunner, table: string, columnNames: string[]) {
+  if (queryRunner.connection.driver.options.type !== 'postgres') {
+    return
+  }
+
+  for (let index = 0; index < columnNames.length; index++) {
+    const column = columnNames[index]
+    await queryRunner.query(`ALTER TABLE ${table}
+        ALTER COLUMN ${column} SET DATA TYPE timestamp(3) with time zone USING ${column}::timestamp with time zone;`)
+  }
+}
+
 export async function makeColumnNullable(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
   const table = await queryRunner.getTable(tableName)
 
@@ -98,6 +123,8 @@ export async function makeColumnNonNullable(queryRunner: QueryRunner, tableName:
 export function dateTimeType(): { type: ColumnType & string } | { type: ColumnType & string; precision: number } {
   if (AppDataSource.driver.supportedDataTypes.includes('datetime')) {
     return { type: 'datetime' }
+  } else if (AppDataSource.driver.supportedDataTypes.includes('timestamp with time zone')) {
+    return { type: 'timestamp with time zone', precision: 3 }
   } else if (AppDataSource.driver.supportedDataTypes.includes('timestamp')) {
     return { type: 'timestamp', precision: 3 }
   }

@@ -1,10 +1,11 @@
-import { Column, DataSource, Entity, EntityManager } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index } from 'typeorm'
 import { BaseType } from '#entity/base_type'
 import { jsonType } from '#helpers/migration-helper'
 import _ from 'lodash'
 
 @Entity()
 export class Configs extends BaseType {
+  @Index()
   @Column({ type: 'text', nullable: false })
   key: string
 

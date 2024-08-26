@@ -15,6 +15,7 @@ import {
 } from './mqtt-orm.js'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { DataSource } from 'typeorm'
+import { decodeLog } from '#helpers/logger'
 
 export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
   if (topic.includes('/stat/!')) {
@@ -64,11 +65,12 @@ export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions,
   }
 }
 
-export async function handleNodeStatusMessage(db: DataSource, topic: string, payload: Buffer) {
+export async function handleNodeStatusMessage(db: DataSource, topic: string, buffer: Buffer) {
   const nodeIdHex = topic.split('/').at(-1)
   const nodeId = toBigInt(nodeIdHex)
   if (nodeId) {
-    const mqttConnectionState = payload.toString()
+    const mqttConnectionState = buffer.toString()
+    decodeLog(`MQTT status`, { nodeIdHex, nodeId, mqttConnectionState })
     await updateMQTTStatus(db, nodeId, mqttConnectionState, new Date())
   }
 }

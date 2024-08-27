@@ -19,7 +19,7 @@ export function addOpts(command: Command) {
   command.option('--mqtt-broker-url <URL>', 'MQTT Broker URL (e.g: mqtt://mqtt.meshtastic.org)', 'mqtt://mqtt.meshtastic.org')
   command.option('--mqtt-username <USERNAME>', 'MQTT Username(e.g: meshdev)', 'meshdev')
   command.option('--mqtt-password <PASSWORD>', 'MQTT Password (e.g: large4cats)', 'large4cats')
-  command.option('--mqtt-topic <TOPIC>', 'MQTT Topic to subscribe to (e.g: msh/#, msh/IN/#)', 'msh/#')
+  command.option('--mqtt-topics <topics...>', 'MQTT Topic to subscribe to (e.g: msh/#, msh/IN/#)', ['msh/#'])
   command.option('--decryption-keys <keys...>', 'Decryption keys encoded in base64 to use when decrypting service envelopes.', [
     '1PG7OiApB1nwvP+rz05pAQ==',
   ])
@@ -71,7 +71,7 @@ export interface MQTTCLIOptions {
   mqttBrokerUrl: string
   mqttUsername: string
   mqttPassword: string
-  mqttTopic: string
+  mqttTopics: string[]
   decryptionKeys: string[]
   purgeEvery: Duration
   purgeDataOlderThan: Duration

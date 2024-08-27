@@ -8,7 +8,7 @@ describe('cli', () => {
       mqtt: true,
       mqttBrokerUrl: 'mqtt://mqtt.meshtastic.org',
       mqttPassword: 'large4cats',
-      mqttTopic: 'msh/#',
+      mqttTopics: ['msh/#'],
       mqttUsername: 'meshdev',
       decryptionKeys: ['1PG7OiApB1nwvP+rz05pAQ=='],
       purgeEvery: Duration.fromISO('PT10M'),
@@ -24,12 +24,19 @@ describe('cli', () => {
   })
 
   it('should parse mqtt connection options', () => {
-    const args = ['--mqtt-broker-url=mqtt://broker', '--mqtt-username=user', '--mqtt-password=p@ssw0rd', '--mqtt-topic=zigbee2mqtt/#']
+    const args = [
+      '--mqtt-broker-url=mqtt://broker',
+      '--mqtt-username=user',
+      '--mqtt-password=p@ssw0rd',
+      '--mqtt-topics',
+      'msh/US/#',
+      'msh/IN/#',
+    ]
     expect(webCLIParse(args, { from: 'user' })).to.deep.contain({
       mqtt: true,
       mqttBrokerUrl: 'mqtt://broker',
       mqttPassword: 'p@ssw0rd',
-      mqttTopic: 'zigbee2mqtt/#',
+      mqttTopics: ['msh/US/#', 'msh/IN/#'],
       mqttUsername: 'user',
     })
   })

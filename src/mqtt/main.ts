@@ -36,8 +36,8 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   client.on('connect', async () => {
     logger(`Connected to ${cliOptions.mqttBrokerUrl} using client id ${clientId}`)
-    await client.subscribe(cliOptions.mqttTopic)
-    logger(`Subscribed to ${cliOptions.mqttTopic}`)
+    client.subscribe(cliOptions.mqttTopics)
+    logger(`Subscribed to `, cliOptions.mqttTopics)
   })
 
   const queue = new PQueue({

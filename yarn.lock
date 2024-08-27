@@ -7032,9 +7032,9 @@ vite-plugin-html-inject@^1.1.2:
   integrity sha512-4DWANEcAw73H5JLWTAI4EvXdSyoGqGq/Is9fTRjpF+SJLor58LNdqB+YYnK3FOLwx6LMTAn4z1hkiRyc52lYLg==
 
 vite-plugin-inspect@^0.8.4:
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/vite-plugin-inspect/-/vite-plugin-inspect-0.8.6.tgz#35389ca9877853a23bab6e7bb758d2e83bf52ea1"
-  integrity sha512-iM/smnFRSuDq9UMVAN06fqBbHAofGDtB5yBucsl0QnPCFqQ2TmPIbsSgSR3gUv13qJ8oPE/FFhXlm9g1xX9nzg==
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/vite-plugin-inspect/-/vite-plugin-inspect-0.8.7.tgz#89acc829208fc1b43e2738e886304c5be0e80ab5"
+  integrity sha512-/XXou3MVc13A5O9/2Nd6xczjrUwt7ZyI9h8pTnUMkr5SshLcb0PJUOVq2V+XVkdeU4njsqAtmK87THZuO2coGA==
   dependencies:
     "@antfu/utils" "^0.7.10"
     "@rollup/pluginutils" "^5.1.0"

@@ -1,30 +1,47 @@
-import { XMarkIcon } from '../utils/icon-constants'
-import { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useRef } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useRef } from 'react'
+import { XMarkIcon } from '../utils/icon-constants.ts'
 
-export interface ModalBaseProps {
-  showModal: boolean
-  setShowModal: Dispatch<SetStateAction<boolean>>
+interface HeaderButton {
+  icon: React.JSX.Element
+  onClick: () => void
 }
 
-export function Modal({ setShowModal, showModal, children }: PropsWithChildren<ModalBaseProps>) {
+interface FooterButton {
+  label: string
+  onClick: () => void
+  className?: string
+}
+
+export interface ModalBaseProps {
+  onClose: () => void
+  isOpen: boolean
+}
+
+interface ConfigurableModalProps extends ModalBaseProps {
+  header: React.ReactNode
+  headerButtons?: HeaderButton[]
+  footerButtons?: FooterButton[]
+}
+
+export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, children }: PropsWithChildren<ConfigurableModalProps>) {
   const ref = useRef<HTMLDivElement>(null)
 
   const handleEscKey = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setShowModal(false)
+        onClose()
       }
     },
-    [() => setShowModal]
+    [onClose]
   )
 
   const handleOutsideClick = useCallback(
     (event: MouseEvent) => {
       if (event.target && !ref?.current?.contains(event.target as Node)) {
-        setShowModal(false)
+        onClose()
       }
     },
-    [() => setShowModal, ref]
+    [onClose, ref]
   )
 
   useEffect(() => {
@@ -35,38 +52,52 @@ export function Modal({ setShowModal, showModal, children }: PropsWithChildren<M
       document.removeEventListener('mouseup', handleOutsideClick)
       document.removeEventListener('keyup', handleEscKey, false)
     }
-  }, [handleOutsideClick, handleEscKey, showModal])
+  }, [handleOutsideClick, handleEscKey, isOpen])
 
-  if (!showModal) {
-    return
+  if (!isOpen) {
+    return null
   }
 
+  function bottomButtons() {
+    if (!footerButtons || footerButtons.length === 0) {
+      return
+    }
+    return (
+      <div className="flex justify-end p-4 border-t space-x-2">
+        {footerButtons.map((button, index) => (
+          <button key={index} onClick={button.onClick} className={`p-2 rounded`}>
+            {button.label}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  const allHeaderButtons = (headerButtons || []).concat({
+    icon: <XMarkIcon className="w-4 h-4" />,
+    onClick: onClose,
+  })
+
   return (
-    <div className="relative z-sidebar">
-      {/* overlay */}
-      <div className="fixed inset-0 bg-gray-900 bg-opacity-75"></div>
-      {/* modal */}
-      <div className="fixed left-0 right-0 top-0 bottom-0 lg:pointer-events-none">
-        <div className="flex md:w-full h-full overflow-y-auto p-4">
-          <div className="mx-auto my-auto sm:w-full md:w-[80%] lg:w-[40%] flex-col bg-white shadow-xl rounded-xl lg:pointer-events-auto sm:min-w-full md:min-w-[80%] lg:min-w-[40%]">
-            <div className="relative flex" ref={ref}>
-              {/* close button */}
-              <div className="absolute top-0 right-0 p-2">
-                <div className="h-7">
-                  <a href="#" className="rounded-full" onClick={() => setShowModal(false)}>
-                    <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full">
-                      <XMarkIcon className="w-3 h-3" />
-                    </div>
-                  </a>
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-gray-900 bg-opacity-75">
+      <div
+        className="relative sm:w-full sm:min-w-full md:w-[80%] md:min-w-[80%] lg:w-[40%] lg:min-w-[40%] mx-auto bg-white rounded-lg shadow-lg"
+        ref={ref}
+      >
+        <div className="flex justify-between items-center p-2 border-b shadow-md">
+          <h2 className="text-xl font-semibold">{header}</h2>
+          <div className="flex space-x-2">
+            {allHeaderButtons.map((button, index) => {
+              return (
+                <div key={index} onClick={button.onClick} className="bg-gray-100 hover:bg-gray-200 rounded-full p-2">
+                  {button.icon}
                 </div>
-              </div>
-
-              {/* content */}
-
-              <div className="flex flex-col w-full py-2 space-y-2">{children}</div>
-            </div>
+              )
+            })}
           </div>
         </div>
+        <div className="p-2 overflow-y-auto max-h-[80vh]">{children}</div>
+        {bottomButtons()}
       </div>
     </div>
   )

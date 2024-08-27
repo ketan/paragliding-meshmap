@@ -9,8 +9,8 @@ import { MessagesEntityForUI } from '../../../nodes-entity'
 import { Modal } from '../components/modal.tsx'
 import { nodeUrl } from '../utils/link-utils.ts'
 import { timeAgo } from '../utils/ui-util.tsx'
-import { HeaderIcon } from '../components/page.tsx'
 import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants.ts'
+import { Tooltip } from '../components/tooltip.tsx'
 
 interface Props {
   from?: number
@@ -23,8 +23,6 @@ interface Props {
 }
 
 export function MessagesModal({ from, to, since, nodes, onClose, updateDuration, toggleFilter }: Props) {
-  console.log(`message from ${from} -> ${to} ${since}`)
-
   const [loadedState, setLoadedState] = useState<LoadedState>(null)
   const [messages, setMessages] = useState<MessagesEntityForUI[]>([])
 
@@ -66,7 +64,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
       const toNode: NodesEntity = { ...nodes[msg.to], nodeId: msg.to }
 
       return (
-        <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md" key={msg.id}>
+        <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-200 p-4 shadow-md shadow-gray-400" key={msg.id}>
           <span className="font-semibold text-sm">
             <a href={nodeUrl(msg.from)}>{nodeName(fromNode)}</a> →{' '}
             {4294967295 === msg.to ? 'Everyone' : <a href={nodeUrl(msg.to)}>{nodeName(toNode)}</a>}
@@ -113,20 +111,8 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
     }
 
     const fromNode = { ...nodes[from], nodeId: from }
-    const bannerText = (
-      <span className="text-sm md:text-lg">
-        Messages sent by {fromNode.longName} ({fromNode.shortName})
-      </span>
-    )
-    return (
-      <div className="mx-auto grid content-evenly">
-        <span className="text-center align-middle font-bold mx-auto">{bannerText}</span>
-      </div>
-    )
-  }
 
-  if (!from) {
-    return <></>
+    return `Messages sent by ${fromNode.longName} (${fromNode.shortName})`
   }
 
   function renderLoadingMessage() {
@@ -137,24 +123,38 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
 
   function toggleFilterHeaderIcon() {
     const showAll = to === 'all'
+
+    const Element = showAll ? FilterCircleXmarkIcon : FilterIcon
+    const tooltip = showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`
+
     return (
-      <HeaderIcon
-        className="block"
-        tooltip={showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`}
-        tooltipDir="bottom-right"
-        icon={showAll ? FilterCircleXmarkIcon : FilterIcon}
-        onClick={() => toggleFilter()}
-      />
+      <Tooltip tooltipText={tooltip} tooltipDir="bottom-right">
+        <Element className="w-4 h-4" />
+      </Tooltip>
     )
   }
 
+  if (!from) {
+    return <></>
+  }
+
   return (
-    <Modal showModal={true} setShowModal={() => onClose()}>
-      {banner()}
-      {toggleFilterHeaderIcon()}
-      {renderLoadingMessage()}
-      {renderNoMessagesIfNone()}
-      {renderMessagesIfAny()}
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      header={banner()}
+      headerButtons={[
+        {
+          icon: toggleFilterHeaderIcon(),
+          onClick: () => toggleFilter(),
+        },
+      ]}
+    >
+      <div className="space-y-3">
+        {renderLoadingMessage()}
+        {renderNoMessagesIfNone()}
+        {renderMessagesIfAny()}
+      </div>
     </Modal>
   )
 }

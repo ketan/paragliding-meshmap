@@ -33,7 +33,7 @@ export function Page(props: PageProps) {
           {props.children}
         </div>
       </div>
-      <AboutModal setShowModal={setShowModal} showModal={showModal} />
+      <AboutModal onClose={() => setShowModal(false)} isOpen={showModal} />
       <ToastContainer hideProgressBar theme="dark" />
     </>
   )

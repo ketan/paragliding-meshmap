@@ -2,43 +2,48 @@ import icon from '../../../assets/images/icon.png'
 import { GithubIcon } from '../utils/icon-constants'
 import { Modal, ModalBaseProps } from './modal'
 
-export function AboutModal({ setShowModal, showModal }: ModalBaseProps) {
+const aboutModalTitle = (
+  <div className="w-min-full mx-auto text-center p-2 pt-4 pb-4 text-sm md:text-md">
+    <div className="relative mx-auto w-16 h-16 mb-1">
+      <div className="text-4xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
+      <img className="w-16 h-16 rounded bg-opacity-90" src={icon} alt="Meshtastic icon" />
+    </div>
+    <h1 className="font-bold">Paragliding Meshtastic Map</h1>
+    <h2>
+      Created by{' '}
+      <a target="_blank" rel="noreferrer" href="https://github.com/ketan">
+        Ketan Padegaonkar
+      </a>{' '}
+      (inspiration{' '}
+      <a target="_blank" rel="noreferrer" href="https://meshtastic.liamcottle.net/">
+        Liam Cottle
+      </a>
+      )
+    </h2>
+    <div className="w-min-full mx-auto text-center space-x-1 mt-2">
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href="https://github.com/ketan/paragliding-meshmap"
+        title="GitHub"
+        className="inline-flex items-center p-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#333333] bg-gray-100 hover:bg-gray-200"
+      >
+        <GithubIcon className="w-4 h-4" />
+      </a>
+    </div>
+  </div>
+)
+
+export function AboutModal({ onClose, isOpen }: ModalBaseProps) {
   return (
-    <Modal setShowModal={setShowModal} showModal={showModal}>
+    <Modal isOpen={isOpen} onClose={onClose} header={`About`} footerButtons={[]}>
+      {aboutModalTitle}
       {/* app info */}
-      <div className="p-2 text-sm md:text-md">
-        <div className="w-full mx-auto text-center">
-          <div className="relative mx-auto w-16 h-16 mb-1">
-            <div className="text-4xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-            <img className="w-16 h-16 rounded bg-opacity-90" src={icon} alt="Meshtastic icon" />
-          </div>
-          <h1 className="font-bold">Paragliding Meshtastic Map</h1>
-          <h2>
-            Created by{' '}
-            <a target="_blank" rel="noreferrer" href="https://github.com/ketan">
-              Ketan Padegaonkar
-            </a>{' '}
-            (inspiration{' '}
-            <a target="_blank" rel="noreferrer" href="https://meshtastic.liamcottle.net/">
-              Liam Cottle
-            </a>
-            )
-          </h2>
-          <div className="w-full mx-auto text-center space-x-1 mt-2">
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://github.com/ketan/paragliding-meshmap"
-              title="GitHub"
-              className="inline-flex items-center p-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#333333] bg-gray-100 hover:bg-gray-200"
-            >
-              <GithubIcon className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
+      <div className="pt-4 pb-4 text-sm md:text-md">
         {/* faq */}
         <div>
-          <div className="font-bold mb-2">FAQ</div>
+          <h3 className="font-semibold my-2">FAQ</h3>
+          {/*<h3 className="font-bold mb-2">FAQ</h3>*/}
           <div className="space-y-2">
             <div className="bg-gray-100 rounded p-2 border border-gray-200">
               <div className="font-semibold">I found a bug, what do I do?</div>
@@ -64,7 +69,7 @@ export function AboutModal({ setShowModal, showModal }: ModalBaseProps) {
         </div>
         {/* legal */}
         <div>
-          <div className="font-bold mb-2">Legal</div>
+          <h3 className="font-semibold my-2">Legal</h3>
           <div className="bg-gray-100 rounded p-2 border border-gray-200">
             <ul className="list-disc list-inside">
               <li>
@@ -87,16 +92,6 @@ export function AboutModal({ setShowModal, showModal }: ModalBaseProps) {
               </li>
             </ul>
           </div>
-        </div>
-        {/* dismiss button --> */}
-        <div className="mx-auto mt-4 text-center">
-          <a
-            href="#"
-            className="button px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
-            onClick={() => setShowModal(false)}
-          >
-            Dismiss
-          </a>
         </div>
       </div>
     </Modal>

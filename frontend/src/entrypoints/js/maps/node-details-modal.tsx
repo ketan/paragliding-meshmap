@@ -71,10 +71,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   )
 
   return (
-    <Modal showModal={true} setShowModal={() => onClose()}>
-      <div className="p-2 px-4 text-sm md:text-md border-b shadow-md">
-        <h1 className="font-bold">{node.longName || `UNKNOWN`}</h1>
-      </div>
+    <Modal onClose={onClose} isOpen={true} header={node.longName || `UNKNOWN`}>
       {image}
       <Header str="Node Info" />
       <div className="p-2 px-4 text-sm md:text-md">

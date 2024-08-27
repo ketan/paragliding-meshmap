@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import icon from '../../../assets/images/icon.png'
-import { CircleInfoIcon } from '../utils/icon-constants'
+import { CircleInfoIcon, GearsIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
 import { TooltipDirection } from './tooltip'
 import { ToastContainer } from 'react-toastify'
+import { ConfigModal } from './config-modal.tsx'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -11,7 +12,9 @@ interface PageProps extends React.PropsWithChildren {
 }
 
 export function Page(props: PageProps) {
-  const [showModal, setShowModal] = useState(false)
+  const [showAboutModal, setShowAboutModal] = useState(false)
+  const [showConfigModal, setShowConfigModal] = useState(false)
+
   return (
     <>
       <div className="flex flex-col h-full w-full">
@@ -24,7 +27,8 @@ export function Page(props: PageProps) {
             {props.bannerMain}
             {/* header action buttons */}
             <HeaderActionButtons>
-              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => setShowModal(true)} />
+              <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => setShowConfigModal(true)} />
+              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => setShowAboutModal(true)} />
               {props.headerIcons}
             </HeaderActionButtons>
           </div>
@@ -33,7 +37,8 @@ export function Page(props: PageProps) {
           {props.children}
         </div>
       </div>
-      <AboutModal onClose={() => setShowModal(false)} isOpen={showModal} />
+      <ConfigModal onClose={() => setShowConfigModal(false)} isOpen={showConfigModal} />
+      <AboutModal onClose={() => setShowAboutModal(false)} isOpen={showAboutModal} />
       <ToastContainer hideProgressBar theme="dark" />
     </>
   )

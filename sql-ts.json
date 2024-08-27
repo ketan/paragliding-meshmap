@@ -1,6 +1,7 @@
 {
   "client": "postgresql",
   "useNullAsDefault": true,
+  "excludedTables": ["public.configs", "public.migrations"],
   "connection": {
     "database": "meshmap-typeorm"
   }

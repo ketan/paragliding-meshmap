@@ -33,7 +33,7 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
     clonedColumnNames.sort()
     const tableName = this.getTableName(tableOrName)
     const replacedTableName = tableName.replace('.', '_')
-    return  `${replacedTableName}_${clonedColumnNames.join('_')}_idx`
+    return `${replacedTableName}_${clonedColumnNames.join('_')}_idx`
   }
 }
 

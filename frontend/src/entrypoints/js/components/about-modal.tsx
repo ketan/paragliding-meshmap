@@ -1,7 +1,7 @@
 import icon from '../../../assets/images/icon.png'
 import { GithubIcon } from '../utils/icon-constants'
 import { Modal, ModalBaseProps } from './modal'
-import { isMobile } from '../utils/ui-util.tsx'
+import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
 
 const aboutModalTitle = (
   <div className="w-min-full mx-auto text-center pt-4 text-sm md:text-md">
@@ -34,14 +34,6 @@ const aboutModalTitle = (
     </div>
   </div>
 )
-
-function meshtasticIndiaTelegramLink() {
-  if (isMobile()) {
-    return 'https://t.me/meshtastic_india'
-  } else {
-    return 'https://web.telegram.org/k/#@meshtastic_india'
-  }
-}
 
 export function AboutModal({ onClose, isOpen }: ModalBaseProps) {
   return (

@@ -40,6 +40,14 @@ export namespace meshtastic {
     public gatewayId: string
 
     /**
+     * Encodes the specified ServiceEnvelope message. Does not implicitly {@link meshtastic.ServiceEnvelope.verify|verify} messages.
+     * @param message ServiceEnvelope message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IServiceEnvelope, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ServiceEnvelope message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -152,6 +160,14 @@ export namespace meshtastic {
     public numOnlineLocalNodes: number
 
     /**
+     * Encodes the specified MapReport message. Does not implicitly {@link meshtastic.MapReport.verify|verify} messages.
+     * @param message MapReport message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IMapReport, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a MapReport message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -229,6 +245,14 @@ export namespace meshtastic {
 
     /** Payload Variant */
     public payloadVariant?: 'device' | 'position' | 'power' | 'network' | 'display' | 'lora' | 'bluetooth' | 'security' | 'sessionkey'
+
+    /**
+     * Encodes the specified Config message. Does not implicitly {@link meshtastic.Config.verify|verify} messages.
+     * @param message Config message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Config message from the specified reader or buffer.
@@ -350,6 +374,14 @@ export namespace meshtastic {
 
       /** If true, disable the default blinking LED (LED_PIN) behavior on the device */
       public ledHeartbeatDisabled: boolean
+
+      /**
+       * Encodes the specified DeviceConfig message. Does not implicitly {@link meshtastic.Config.DeviceConfig.verify|verify} messages.
+       * @param message DeviceConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.IDeviceConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a DeviceConfig message from the specified reader or buffer.
@@ -503,6 +535,14 @@ export namespace meshtastic {
 
       /** Set where GPS is enabled, disabled, or not present */
       public gpsMode: meshtastic.Config.PositionConfig.GpsMode
+
+      /**
+       * Encodes the specified PositionConfig message. Does not implicitly {@link meshtastic.Config.PositionConfig.verify|verify} messages.
+       * @param message PositionConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.IPositionConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a PositionConfig message from the specified reader or buffer.
@@ -667,6 +707,14 @@ export namespace meshtastic {
       public powermonEnables: number | Long
 
       /**
+       * Encodes the specified PowerConfig message. Does not implicitly {@link meshtastic.Config.PowerConfig.verify|verify} messages.
+       * @param message PowerConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.IPowerConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a PowerConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -743,6 +791,14 @@ export namespace meshtastic {
       public rsyslogServer: string
 
       /**
+       * Encodes the specified NetworkConfig message. Does not implicitly {@link meshtastic.Config.NetworkConfig.verify|verify} messages.
+       * @param message NetworkConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.INetworkConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a NetworkConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -794,6 +850,14 @@ export namespace meshtastic {
 
         /** Static DNS server address */
         public dns: number
+
+        /**
+         * Encodes the specified IpV4Config message. Does not implicitly {@link meshtastic.Config.NetworkConfig.IpV4Config.verify|verify} messages.
+         * @param message IpV4Config message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: meshtastic.Config.NetworkConfig.IIpV4Config, writer?: $protobuf.Writer): $protobuf.Writer
 
         /**
          * Decodes an IpV4Config message from the specified reader or buffer.
@@ -901,6 +965,14 @@ export namespace meshtastic {
 
       /** Indicates how to rotate or invert the compass output to accurate display on the display. */
       public compassOrientation: meshtastic.Config.DisplayConfig.CompassOrientation
+
+      /**
+       * Encodes the specified DisplayConfig message. Does not implicitly {@link meshtastic.Config.DisplayConfig.verify|verify} messages.
+       * @param message DisplayConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.IDisplayConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a DisplayConfig message from the specified reader or buffer.
@@ -1187,6 +1259,14 @@ export namespace meshtastic {
       public ignoreMqtt: boolean
 
       /**
+       * Encodes the specified LoRaConfig message. Does not implicitly {@link meshtastic.Config.LoRaConfig.verify|verify} messages.
+       * @param message LoRaConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.ILoRaConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a LoRaConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -1266,6 +1346,14 @@ export namespace meshtastic {
 
       /** Specified PIN for PairingMode.FixedPin */
       public fixedPin: number
+
+      /**
+       * Encodes the specified BluetoothConfig message. Does not implicitly {@link meshtastic.Config.BluetoothConfig.verify|verify} messages.
+       * @param message BluetoothConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.IBluetoothConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
@@ -1365,6 +1453,14 @@ export namespace meshtastic {
       public adminChannelEnabled: boolean
 
       /**
+       * Encodes the specified SecurityConfig message. Does not implicitly {@link meshtastic.Config.SecurityConfig.verify|verify} messages.
+       * @param message SecurityConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.ISecurityConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a SecurityConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -1385,6 +1481,14 @@ export namespace meshtastic {
        * @param [properties] Properties to set
        */
       constructor(properties?: meshtastic.Config.ISessionkeyConfig)
+
+      /**
+       * Encodes the specified SessionkeyConfig message. Does not implicitly {@link meshtastic.Config.SessionkeyConfig.verify|verify} messages.
+       * @param message SessionkeyConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.Config.ISessionkeyConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a SessionkeyConfig message from the specified reader or buffer.
@@ -1612,6 +1716,14 @@ export namespace meshtastic {
 
     /** Indicates the bits of precision set by the sending node */
     public precisionBits: number
+
+    /**
+     * Encodes the specified Position message. Does not implicitly {@link meshtastic.Position.verify|verify} messages.
+     * @param message Position message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IPosition, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Position message from the specified reader or buffer.
@@ -1861,6 +1973,14 @@ export namespace meshtastic {
     public publicKey: Uint8Array
 
     /**
+     * Encodes the specified User message. Does not implicitly {@link meshtastic.User.verify|verify} messages.
+     * @param message User message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IUser, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a User message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -1905,6 +2025,14 @@ export namespace meshtastic {
 
     /** The list of SNRs (in dB, scaled by 4) in the route back from the destination. */
     public snrBack: number[]
+
+    /**
+     * Encodes the specified RouteDiscovery message. Does not implicitly {@link meshtastic.RouteDiscovery.verify|verify} messages.
+     * @param message RouteDiscovery message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IRouteDiscovery, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a RouteDiscovery message from the specified reader or buffer.
@@ -1954,6 +2082,14 @@ export namespace meshtastic {
 
     /** Routing variant. */
     public variant?: 'routeRequest' | 'routeReply' | 'errorReason'
+
+    /**
+     * Encodes the specified Routing message. Does not implicitly {@link meshtastic.Routing.verify|verify} messages.
+     * @param message Routing message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IRouting, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Routing message from the specified reader or buffer.
@@ -2093,6 +2229,14 @@ export namespace meshtastic {
     public emoji: number
 
     /**
+     * Encodes the specified Data message. Does not implicitly {@link meshtastic.Data.verify|verify} messages.
+     * @param message Data message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IData, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a Data message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -2169,6 +2313,14 @@ export namespace meshtastic {
     public icon: number
 
     /**
+     * Encodes the specified Waypoint message. Does not implicitly {@link meshtastic.Waypoint.verify|verify} messages.
+     * @param message Waypoint message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IWaypoint, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a Waypoint message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -2216,6 +2368,14 @@ export namespace meshtastic {
 
     /** The actual service envelope payload or text for mqtt pub / sub */
     public payloadVariant?: 'data' | 'text'
+
+    /**
+     * Encodes the specified MqttClientProxyMessage message. Does not implicitly {@link meshtastic.MqttClientProxyMessage.verify|verify} messages.
+     * @param message MqttClientProxyMessage message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IMqttClientProxyMessage, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a MqttClientProxyMessage message from the specified reader or buffer.
@@ -2451,6 +2611,14 @@ export namespace meshtastic {
     public payloadVariant?: 'decoded' | 'encrypted'
 
     /**
+     * Encodes the specified MeshPacket message. Does not implicitly {@link meshtastic.MeshPacket.verify|verify} messages.
+     * @param message MeshPacket message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IMeshPacket, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a MeshPacket message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -2613,6 +2781,14 @@ export namespace meshtastic {
     public isFavorite: boolean
 
     /**
+     * Encodes the specified NodeInfo message. Does not implicitly {@link meshtastic.NodeInfo.verify|verify} messages.
+     * @param message NodeInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INodeInfo, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a NodeInfo message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -2698,6 +2874,14 @@ export namespace meshtastic {
     public minAppVersion: number
 
     /**
+     * Encodes the specified MyNodeInfo message. Does not implicitly {@link meshtastic.MyNodeInfo.verify|verify} messages.
+     * @param message MyNodeInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IMyNodeInfo, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a MyNodeInfo message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -2748,6 +2932,14 @@ export namespace meshtastic {
 
     /** Not yet set */
     public level: meshtastic.LogRecord.Level
+
+    /**
+     * Encodes the specified LogRecord message. Does not implicitly {@link meshtastic.LogRecord.verify|verify} messages.
+     * @param message LogRecord message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ILogRecord, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a LogRecord message from the specified reader or buffer.
@@ -2807,6 +2999,14 @@ export namespace meshtastic {
 
     /** What was mesh packet id that generated this response? */
     public meshPacketId: number
+
+    /**
+     * Encodes the specified QueueStatus message. Does not implicitly {@link meshtastic.QueueStatus.verify|verify} messages.
+     * @param message QueueStatus message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IQueueStatus, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a QueueStatus message from the specified reader or buffer.
@@ -2988,6 +3188,14 @@ export namespace meshtastic {
       | 'clientNotification'
 
     /**
+     * Encodes the specified FromRadio message. Does not implicitly {@link meshtastic.FromRadio.verify|verify} messages.
+     * @param message FromRadio message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IFromRadio, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a FromRadio message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3039,6 +3247,14 @@ export namespace meshtastic {
     public message: string
 
     /**
+     * Encodes the specified ClientNotification message. Does not implicitly {@link meshtastic.ClientNotification.verify|verify} messages.
+     * @param message ClientNotification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IClientNotification, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ClientNotification message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3071,6 +3287,14 @@ export namespace meshtastic {
 
     /** The size of the file in bytes */
     public sizeBytes: number
+
+    /**
+     * Encodes the specified FileInfo message. Does not implicitly {@link meshtastic.FileInfo.verify|verify} messages.
+     * @param message FileInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IFileInfo, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a FileInfo message from the specified reader or buffer.
@@ -3163,6 +3387,14 @@ export namespace meshtastic {
     public payloadVariant?: 'packet' | 'wantConfigId' | 'disconnect' | 'xmodemPacket' | 'mqttClientProxyMessage' | 'heartbeat'
 
     /**
+     * Encodes the specified ToRadio message. Does not implicitly {@link meshtastic.ToRadio.verify|verify} messages.
+     * @param message ToRadio message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IToRadio, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ToRadio message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3195,6 +3427,14 @@ export namespace meshtastic {
 
     /** Compressed data. */
     public data: Uint8Array
+
+    /**
+     * Encodes the specified Compressed message. Does not implicitly {@link meshtastic.Compressed.verify|verify} messages.
+     * @param message Compressed message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ICompressed, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Compressed message from the specified reader or buffer.
@@ -3241,6 +3481,14 @@ export namespace meshtastic {
 
     /** The list of out edges from this node */
     public neighbors: meshtastic.INeighbor[]
+
+    /**
+     * Encodes the specified NeighborInfo message. Does not implicitly {@link meshtastic.NeighborInfo.verify|verify} messages.
+     * @param message NeighborInfo message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INeighborInfo, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a NeighborInfo message from the specified reader or buffer.
@@ -3299,6 +3547,14 @@ export namespace meshtastic {
      * Note: this is for local storage only and will not be sent out over the mesh.
      */
     public nodeBroadcastIntervalSecs: number
+
+    /**
+     * Encodes the specified Neighbor message. Does not implicitly {@link meshtastic.Neighbor.verify|verify} messages.
+     * @param message Neighbor message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INeighbor, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Neighbor message from the specified reader or buffer.
@@ -3383,6 +3639,14 @@ export namespace meshtastic {
     public hasRemoteHardware: boolean
 
     /**
+     * Encodes the specified DeviceMetadata message. Does not implicitly {@link meshtastic.DeviceMetadata.verify|verify} messages.
+     * @param message DeviceMetadata message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IDeviceMetadata, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a DeviceMetadata message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3406,6 +3670,14 @@ export namespace meshtastic {
      * @param [properties] Properties to set
      */
     constructor(properties?: meshtastic.IHeartbeat)
+
+    /**
+     * Encodes the specified Heartbeat message. Does not implicitly {@link meshtastic.Heartbeat.verify|verify} messages.
+     * @param message Heartbeat message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IHeartbeat, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Heartbeat message from the specified reader or buffer.
@@ -3440,6 +3712,14 @@ export namespace meshtastic {
 
     /** The the available gpio pin for usage with RemoteHardware module */
     public pin?: meshtastic.IRemoteHardwarePin | null
+
+    /**
+     * Encodes the specified NodeRemoteHardwarePin message. Does not implicitly {@link meshtastic.NodeRemoteHardwarePin.verify|verify} messages.
+     * @param message NodeRemoteHardwarePin message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INodeRemoteHardwarePin, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a NodeRemoteHardwarePin message from the specified reader or buffer.
@@ -3488,6 +3768,14 @@ export namespace meshtastic {
     public payloadChunk: Uint8Array
 
     /**
+     * Encodes the specified ChunkedPayload message. Does not implicitly {@link meshtastic.ChunkedPayload.verify|verify} messages.
+     * @param message ChunkedPayload message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IChunkedPayload, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ChunkedPayload message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3514,6 +3802,14 @@ export namespace meshtastic {
 
     /** resend_chunks chunks. */
     public chunks: number[]
+
+    /**
+     * Encodes the specified resend_chunks message. Does not implicitly {@link meshtastic.resend_chunks.verify|verify} messages.
+     * @param message resend_chunks message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.Iresend_chunks, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a resend_chunks message from the specified reader or buffer.
@@ -3563,6 +3859,14 @@ export namespace meshtastic {
 
     /** ChunkedPayloadResponse payloadVariant. */
     public payloadVariant?: 'requestTransfer' | 'acceptTransfer' | 'resendChunks'
+
+    /**
+     * Encodes the specified ChunkedPayloadResponse message. Does not implicitly {@link meshtastic.ChunkedPayloadResponse.verify|verify} messages.
+     * @param message ChunkedPayloadResponse message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IChunkedPayloadResponse, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a ChunkedPayloadResponse message from the specified reader or buffer.
@@ -3709,6 +4013,14 @@ export namespace meshtastic {
     public moduleSettings?: meshtastic.IModuleSettings | null
 
     /**
+     * Encodes the specified ChannelSettings message. Does not implicitly {@link meshtastic.ChannelSettings.verify|verify} messages.
+     * @param message ChannelSettings message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IChannelSettings, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ChannelSettings message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -3747,6 +4059,14 @@ export namespace meshtastic {
      * Useful for noisy public channels you don't necessarily want to disable
      */
     public isClientMuted: boolean
+
+    /**
+     * Encodes the specified ModuleSettings message. Does not implicitly {@link meshtastic.ModuleSettings.verify|verify} messages.
+     * @param message ModuleSettings message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IModuleSettings, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a ModuleSettings message from the specified reader or buffer.
@@ -3795,6 +4115,14 @@ export namespace meshtastic {
 
     /** TODO: REPLACE */
     public role: meshtastic.Channel.Role
+
+    /**
+     * Encodes the specified Channel message. Does not implicitly {@link meshtastic.Channel.verify|verify} messages.
+     * @param message Channel message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IChannel, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Channel message from the specified reader or buffer.
@@ -3932,6 +4260,14 @@ export namespace meshtastic {
       | 'paxcounter'
 
     /**
+     * Encodes the specified ModuleConfig message. Does not implicitly {@link meshtastic.ModuleConfig.verify|verify} messages.
+     * @param message ModuleConfig message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IModuleConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a ModuleConfig message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -4065,6 +4401,14 @@ export namespace meshtastic {
       public mapReportSettings?: meshtastic.ModuleConfig.IMapReportSettings | null
 
       /**
+       * Encodes the specified MQTTConfig message. Does not implicitly {@link meshtastic.ModuleConfig.MQTTConfig.verify|verify} messages.
+       * @param message MQTTConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IMQTTConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a MQTTConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4097,6 +4441,14 @@ export namespace meshtastic {
 
       /** Bits of precision for the location sent (default of 32 is full precision). */
       public positionPrecision: number
+
+      /**
+       * Encodes the specified MapReportSettings message. Does not implicitly {@link meshtastic.ModuleConfig.MapReportSettings.verify|verify} messages.
+       * @param message MapReportSettings message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IMapReportSettings, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a MapReportSettings message from the specified reader or buffer.
@@ -4139,6 +4491,14 @@ export namespace meshtastic {
       public availablePins: meshtastic.IRemoteHardwarePin[]
 
       /**
+       * Encodes the specified RemoteHardwareConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RemoteHardwareConfig.verify|verify} messages.
+       * @param message RemoteHardwareConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IRemoteHardwareConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a RemoteHardwareConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4177,6 +4537,14 @@ export namespace meshtastic {
        * Neighbor Info to the mesh
        */
       public updateInterval: number
+
+      /**
+       * Encodes the specified NeighborInfoConfig message. Does not implicitly {@link meshtastic.ModuleConfig.NeighborInfoConfig.verify|verify} messages.
+       * @param message NeighborInfoConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.INeighborInfoConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a NeighborInfoConfig message from the specified reader or buffer.
@@ -4283,6 +4651,14 @@ export namespace meshtastic {
       public usePullup: boolean
 
       /**
+       * Encodes the specified DetectionSensorConfig message. Does not implicitly {@link meshtastic.ModuleConfig.DetectionSensorConfig.verify|verify} messages.
+       * @param message DetectionSensorConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IDetectionSensorConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a DetectionSensorConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4347,6 +4723,14 @@ export namespace meshtastic {
       public i2sSck: number
 
       /**
+       * Encodes the specified AudioConfig message. Does not implicitly {@link meshtastic.ModuleConfig.AudioConfig.verify|verify} messages.
+       * @param message AudioConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IAudioConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes an AudioConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4406,6 +4790,14 @@ export namespace meshtastic {
 
       /** BLE RSSI threshold. Defaults to -80 */
       public bleThreshold: number
+
+      /**
+       * Encodes the specified PaxcounterConfig message. Does not implicitly {@link meshtastic.ModuleConfig.PaxcounterConfig.verify|verify} messages.
+       * @param message PaxcounterConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IPaxcounterConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a PaxcounterConfig message from the specified reader or buffer.
@@ -4484,6 +4876,14 @@ export namespace meshtastic {
        * Existing logging over the Serial Console will still be present
        */
       public overrideConsoleSerialPort: boolean
+
+      /**
+       * Encodes the specified SerialConfig message. Does not implicitly {@link meshtastic.ModuleConfig.SerialConfig.verify|verify} messages.
+       * @param message SerialConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.ISerialConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a SerialConfig message from the specified reader or buffer.
@@ -4685,6 +5085,14 @@ export namespace meshtastic {
       public useI2sAsBuzzer: boolean
 
       /**
+       * Encodes the specified ExternalNotificationConfig message. Does not implicitly {@link meshtastic.ModuleConfig.ExternalNotificationConfig.verify|verify} messages.
+       * @param message ExternalNotificationConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IExternalNotificationConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes an ExternalNotificationConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4743,6 +5151,14 @@ export namespace meshtastic {
       public isServer: boolean
 
       /**
+       * Encodes the specified StoreForwardConfig message. Does not implicitly {@link meshtastic.ModuleConfig.StoreForwardConfig.verify|verify} messages.
+       * @param message StoreForwardConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IStoreForwardConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a StoreForwardConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -4787,6 +5203,14 @@ export namespace meshtastic {
        * ESP32 Only
        */
       public save: boolean
+
+      /**
+       * Encodes the specified RangeTestConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RangeTestConfig.verify|verify} messages.
+       * @param message RangeTestConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IRangeTestConfig, writer?: $protobuf.Writer): $protobuf.Writer
 
       /**
        * Decodes a RangeTestConfig message from the specified reader or buffer.
@@ -4913,6 +5337,14 @@ export namespace meshtastic {
       public powerScreenEnabled: boolean
 
       /**
+       * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.
+       * @param message TelemetryConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.ITelemetryConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a TelemetryConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -5013,6 +5445,14 @@ export namespace meshtastic {
       public sendBell: boolean
 
       /**
+       * Encodes the specified CannedMessageConfig message. Does not implicitly {@link meshtastic.ModuleConfig.CannedMessageConfig.verify|verify} messages.
+       * @param message CannedMessageConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.ICannedMessageConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes a CannedMessageConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -5082,6 +5522,14 @@ export namespace meshtastic {
       public blue: number
 
       /**
+       * Encodes the specified AmbientLightingConfig message. Does not implicitly {@link meshtastic.ModuleConfig.AmbientLightingConfig.verify|verify} messages.
+       * @param message AmbientLightingConfig message or plain object to encode
+       * @param [writer] Writer to encode to
+       * @returns Writer
+       */
+      public static encode(message: meshtastic.ModuleConfig.IAmbientLightingConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+      /**
        * Decodes an AmbientLightingConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
        * @param [length] Message length if known beforehand
@@ -5121,6 +5569,14 @@ export namespace meshtastic {
 
     /** Type of GPIO access available to consumers on the mesh */
     public type: meshtastic.RemoteHardwarePinType
+
+    /**
+     * Encodes the specified RemoteHardwarePin message. Does not implicitly {@link meshtastic.RemoteHardwarePin.verify|verify} messages.
+     * @param message RemoteHardwarePin message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IRemoteHardwarePin, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a RemoteHardwarePin message from the specified reader or buffer.
@@ -5225,6 +5681,14 @@ export namespace meshtastic {
 
     /** How long the device has been running since the last reboot (in seconds) */
     public uptimeSeconds?: number | null
+
+    /**
+     * Encodes the specified DeviceMetrics message. Does not implicitly {@link meshtastic.DeviceMetrics.verify|verify} messages.
+     * @param message DeviceMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IDeviceMetrics, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -5363,6 +5827,14 @@ export namespace meshtastic {
     public windLull?: number | null
 
     /**
+     * Encodes the specified EnvironmentMetrics message. Does not implicitly {@link meshtastic.EnvironmentMetrics.verify|verify} messages.
+     * @param message EnvironmentMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IEnvironmentMetrics, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -5419,6 +5891,14 @@ export namespace meshtastic {
 
     /** Current (Ch3) */
     public ch3Current?: number | null
+
+    /**
+     * Encodes the specified PowerMetrics message. Does not implicitly {@link meshtastic.PowerMetrics.verify|verify} messages.
+     * @param message PowerMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IPowerMetrics, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -5515,6 +5995,14 @@ export namespace meshtastic {
     public particles_100um?: number | null
 
     /**
+     * Encodes the specified AirQualityMetrics message. Does not implicitly {@link meshtastic.AirQualityMetrics.verify|verify} messages.
+     * @param message AirQualityMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IAirQualityMetrics, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -5585,6 +6073,14 @@ export namespace meshtastic {
     public numTotalNodes: number
 
     /**
+     * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
+     * @param message LocalStats message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ILocalStats, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a LocalStats message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -5644,6 +6140,14 @@ export namespace meshtastic {
 
     /** Telemetry variant. */
     public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics' | 'localStats'
+
+    /**
+     * Encodes the specified Telemetry message. Does not implicitly {@link meshtastic.Telemetry.verify|verify} messages.
+     * @param message Telemetry message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ITelemetry, writer?: $protobuf.Writer): $protobuf.Writer
 
     /**
      * Decodes a Telemetry message from the specified reader or buffer.
@@ -5713,6 +6217,14 @@ export namespace meshtastic {
     public calibrationFactor: number
 
     /**
+     * Encodes the specified Nau7802Config message. Does not implicitly {@link meshtastic.Nau7802Config.verify|verify} messages.
+     * @param message Nau7802Config message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INau7802Config, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a Nau7802Config message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -5759,6 +6271,14 @@ export namespace meshtastic {
     public buffer: Uint8Array
 
     /**
+     * Encodes the specified XModem message. Does not implicitly {@link meshtastic.XModem.verify|verify} messages.
+     * @param message XModem message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IXModem, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
      * Decodes a XModem message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -5781,5 +6301,282 @@ export namespace meshtastic {
       CAN = 24,
       CTRLZ = 26,
     }
+  }
+
+  /** Properties of a DeviceProfile. */
+  interface IDeviceProfile {
+    /** Long name for the node */
+    longName?: string | null
+
+    /** Short name of the node */
+    shortName?: string | null
+
+    /** The url of the channels from our node */
+    channelUrl?: string | null
+
+    /** The Config of the node */
+    config?: meshtastic.ILocalConfig | null
+
+    /** The ModuleConfig of the node */
+    moduleConfig?: meshtastic.ILocalModuleConfig | null
+  }
+
+  /**
+   * This abstraction is used to contain any configuration for provisioning a node on any client.
+   * It is useful for importing and exporting configurations.
+   */
+  class DeviceProfile implements IDeviceProfile {
+    /**
+     * Constructs a new DeviceProfile.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IDeviceProfile)
+
+    /** Long name for the node */
+    public longName?: string | null
+
+    /** Short name of the node */
+    public shortName?: string | null
+
+    /** The url of the channels from our node */
+    public channelUrl?: string | null
+
+    /** The Config of the node */
+    public config?: meshtastic.ILocalConfig | null
+
+    /** The ModuleConfig of the node */
+    public moduleConfig?: meshtastic.ILocalModuleConfig | null
+
+    /**
+     * Encodes the specified DeviceProfile message. Does not implicitly {@link meshtastic.DeviceProfile.verify|verify} messages.
+     * @param message DeviceProfile message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IDeviceProfile, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a DeviceProfile message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns DeviceProfile
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.DeviceProfile
+  }
+
+  /** Properties of a LocalConfig. */
+  interface ILocalConfig {
+    /** The part of the config that is specific to the Device */
+    device?: meshtastic.Config.IDeviceConfig | null
+
+    /** The part of the config that is specific to the GPS Position */
+    position?: meshtastic.Config.IPositionConfig | null
+
+    /** The part of the config that is specific to the Power settings */
+    power?: meshtastic.Config.IPowerConfig | null
+
+    /** The part of the config that is specific to the Wifi Settings */
+    network?: meshtastic.Config.INetworkConfig | null
+
+    /** The part of the config that is specific to the Display */
+    display?: meshtastic.Config.IDisplayConfig | null
+
+    /** The part of the config that is specific to the Lora Radio */
+    lora?: meshtastic.Config.ILoRaConfig | null
+
+    /** The part of the config that is specific to the Bluetooth settings */
+    bluetooth?: meshtastic.Config.IBluetoothConfig | null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     */
+    version?: number | null
+
+    /** The part of the config that is specific to Security settings */
+    security?: meshtastic.Config.ISecurityConfig | null
+  }
+
+  /** Represents a LocalConfig. */
+  class LocalConfig implements ILocalConfig {
+    /**
+     * Constructs a new LocalConfig.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.ILocalConfig)
+
+    /** The part of the config that is specific to the Device */
+    public device?: meshtastic.Config.IDeviceConfig | null
+
+    /** The part of the config that is specific to the GPS Position */
+    public position?: meshtastic.Config.IPositionConfig | null
+
+    /** The part of the config that is specific to the Power settings */
+    public power?: meshtastic.Config.IPowerConfig | null
+
+    /** The part of the config that is specific to the Wifi Settings */
+    public network?: meshtastic.Config.INetworkConfig | null
+
+    /** The part of the config that is specific to the Display */
+    public display?: meshtastic.Config.IDisplayConfig | null
+
+    /** The part of the config that is specific to the Lora Radio */
+    public lora?: meshtastic.Config.ILoRaConfig | null
+
+    /** The part of the config that is specific to the Bluetooth settings */
+    public bluetooth?: meshtastic.Config.IBluetoothConfig | null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     */
+    public version: number
+
+    /** The part of the config that is specific to Security settings */
+    public security?: meshtastic.Config.ISecurityConfig | null
+
+    /**
+     * Encodes the specified LocalConfig message. Does not implicitly {@link meshtastic.LocalConfig.verify|verify} messages.
+     * @param message LocalConfig message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ILocalConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a LocalConfig message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns LocalConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LocalConfig
+  }
+
+  /** Properties of a LocalModuleConfig. */
+  interface ILocalModuleConfig {
+    /** The part of the config that is specific to the MQTT module */
+    mqtt?: meshtastic.ModuleConfig.IMQTTConfig | null
+
+    /** The part of the config that is specific to the Serial module */
+    serial?: meshtastic.ModuleConfig.ISerialConfig | null
+
+    /** The part of the config that is specific to the ExternalNotification module */
+    externalNotification?: meshtastic.ModuleConfig.IExternalNotificationConfig | null
+
+    /** The part of the config that is specific to the Store & Forward module */
+    storeForward?: meshtastic.ModuleConfig.IStoreForwardConfig | null
+
+    /** The part of the config that is specific to the RangeTest module */
+    rangeTest?: meshtastic.ModuleConfig.IRangeTestConfig | null
+
+    /** The part of the config that is specific to the Telemetry module */
+    telemetry?: meshtastic.ModuleConfig.ITelemetryConfig | null
+
+    /** The part of the config that is specific to the Canned Message module */
+    cannedMessage?: meshtastic.ModuleConfig.ICannedMessageConfig | null
+
+    /** The part of the config that is specific to the Audio module */
+    audio?: meshtastic.ModuleConfig.IAudioConfig | null
+
+    /** The part of the config that is specific to the Remote Hardware module */
+    remoteHardware?: meshtastic.ModuleConfig.IRemoteHardwareConfig | null
+
+    /** The part of the config that is specific to the Neighbor Info module */
+    neighborInfo?: meshtastic.ModuleConfig.INeighborInfoConfig | null
+
+    /** The part of the config that is specific to the Ambient Lighting module */
+    ambientLighting?: meshtastic.ModuleConfig.IAmbientLightingConfig | null
+
+    /** The part of the config that is specific to the Detection Sensor module */
+    detectionSensor?: meshtastic.ModuleConfig.IDetectionSensorConfig | null
+
+    /** Paxcounter Config */
+    paxcounter?: meshtastic.ModuleConfig.IPaxcounterConfig | null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     */
+    version?: number | null
+  }
+
+  /** Represents a LocalModuleConfig. */
+  class LocalModuleConfig implements ILocalModuleConfig {
+    /**
+     * Constructs a new LocalModuleConfig.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.ILocalModuleConfig)
+
+    /** The part of the config that is specific to the MQTT module */
+    public mqtt?: meshtastic.ModuleConfig.IMQTTConfig | null
+
+    /** The part of the config that is specific to the Serial module */
+    public serial?: meshtastic.ModuleConfig.ISerialConfig | null
+
+    /** The part of the config that is specific to the ExternalNotification module */
+    public externalNotification?: meshtastic.ModuleConfig.IExternalNotificationConfig | null
+
+    /** The part of the config that is specific to the Store & Forward module */
+    public storeForward?: meshtastic.ModuleConfig.IStoreForwardConfig | null
+
+    /** The part of the config that is specific to the RangeTest module */
+    public rangeTest?: meshtastic.ModuleConfig.IRangeTestConfig | null
+
+    /** The part of the config that is specific to the Telemetry module */
+    public telemetry?: meshtastic.ModuleConfig.ITelemetryConfig | null
+
+    /** The part of the config that is specific to the Canned Message module */
+    public cannedMessage?: meshtastic.ModuleConfig.ICannedMessageConfig | null
+
+    /** The part of the config that is specific to the Audio module */
+    public audio?: meshtastic.ModuleConfig.IAudioConfig | null
+
+    /** The part of the config that is specific to the Remote Hardware module */
+    public remoteHardware?: meshtastic.ModuleConfig.IRemoteHardwareConfig | null
+
+    /** The part of the config that is specific to the Neighbor Info module */
+    public neighborInfo?: meshtastic.ModuleConfig.INeighborInfoConfig | null
+
+    /** The part of the config that is specific to the Ambient Lighting module */
+    public ambientLighting?: meshtastic.ModuleConfig.IAmbientLightingConfig | null
+
+    /** The part of the config that is specific to the Detection Sensor module */
+    public detectionSensor?: meshtastic.ModuleConfig.IDetectionSensorConfig | null
+
+    /** Paxcounter Config */
+    public paxcounter?: meshtastic.ModuleConfig.IPaxcounterConfig | null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     */
+    public version: number
+
+    /**
+     * Encodes the specified LocalModuleConfig message. Does not implicitly {@link meshtastic.LocalModuleConfig.verify|verify} messages.
+     * @param message LocalModuleConfig message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ILocalModuleConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a LocalModuleConfig message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns LocalModuleConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LocalModuleConfig
   }
 }

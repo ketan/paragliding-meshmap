@@ -3,6 +3,7 @@ import $protobuf from 'protobufjs/minimal.js'
 
 // Common aliases
 const $Reader = $protobuf.Reader,
+  $Writer = $protobuf.Writer,
   $util = $protobuf.util
 
 // Exported root namespace
@@ -67,6 +68,26 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     ServiceEnvelope.prototype.gatewayId = ''
+
+    /**
+     * Encodes the specified ServiceEnvelope message. Does not implicitly {@link meshtastic.ServiceEnvelope.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ServiceEnvelope
+     * @static
+     * @param {meshtastic.IServiceEnvelope} message ServiceEnvelope message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ServiceEnvelope.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.packet != null && Object.hasOwnProperty.call(message, 'packet'))
+        $root.meshtastic.MeshPacket.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.channelId != null && Object.hasOwnProperty.call(message, 'channelId'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.channelId)
+      if (message.gatewayId != null && Object.hasOwnProperty.call(message, 'gatewayId'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.gatewayId)
+      return writer
+    }
 
     /**
      * Decodes a ServiceEnvelope message from the specified reader or buffer.
@@ -250,6 +271,45 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     MapReport.prototype.numOnlineLocalNodes = 0
+
+    /**
+     * Encodes the specified MapReport message. Does not implicitly {@link meshtastic.MapReport.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.MapReport
+     * @static
+     * @param {meshtastic.IMapReport} message MapReport message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    MapReport.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.longName != null && Object.hasOwnProperty.call(message, 'longName'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.longName)
+      if (message.shortName != null && Object.hasOwnProperty.call(message, 'shortName'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.shortName)
+      if (message.role != null && Object.hasOwnProperty.call(message, 'role')) writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.role)
+      if (message.hwModel != null && Object.hasOwnProperty.call(message, 'hwModel'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.hwModel)
+      if (message.firmwareVersion != null && Object.hasOwnProperty.call(message, 'firmwareVersion'))
+        writer.uint32(/* id 5, wireType 2 =*/ 42).string(message.firmwareVersion)
+      if (message.region != null && Object.hasOwnProperty.call(message, 'region'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.region)
+      if (message.modemPreset != null && Object.hasOwnProperty.call(message, 'modemPreset'))
+        writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.modemPreset)
+      if (message.hasDefaultChannel != null && Object.hasOwnProperty.call(message, 'hasDefaultChannel'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.hasDefaultChannel)
+      if (message.latitudeI != null && Object.hasOwnProperty.call(message, 'latitudeI'))
+        writer.uint32(/* id 9, wireType 5 =*/ 77).sfixed32(message.latitudeI)
+      if (message.longitudeI != null && Object.hasOwnProperty.call(message, 'longitudeI'))
+        writer.uint32(/* id 10, wireType 5 =*/ 85).sfixed32(message.longitudeI)
+      if (message.altitude != null && Object.hasOwnProperty.call(message, 'altitude'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).int32(message.altitude)
+      if (message.positionPrecision != null && Object.hasOwnProperty.call(message, 'positionPrecision'))
+        writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.positionPrecision)
+      if (message.numOnlineLocalNodes != null && Object.hasOwnProperty.call(message, 'numOnlineLocalNodes'))
+        writer.uint32(/* id 13, wireType 0 =*/ 104).uint32(message.numOnlineLocalNodes)
+      return writer
+    }
 
     /**
      * Decodes a MapReport message from the specified reader or buffer.
@@ -451,6 +511,38 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified Config message. Does not implicitly {@link meshtastic.Config.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Config
+     * @static
+     * @param {meshtastic.IConfig} message Config message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Config.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.device != null && Object.hasOwnProperty.call(message, 'device'))
+        $root.meshtastic.Config.DeviceConfig.encode(message.device, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.position != null && Object.hasOwnProperty.call(message, 'position'))
+        $root.meshtastic.Config.PositionConfig.encode(message.position, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.power != null && Object.hasOwnProperty.call(message, 'power'))
+        $root.meshtastic.Config.PowerConfig.encode(message.power, writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+      if (message.network != null && Object.hasOwnProperty.call(message, 'network'))
+        $root.meshtastic.Config.NetworkConfig.encode(message.network, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.display != null && Object.hasOwnProperty.call(message, 'display'))
+        $root.meshtastic.Config.DisplayConfig.encode(message.display, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.lora != null && Object.hasOwnProperty.call(message, 'lora'))
+        $root.meshtastic.Config.LoRaConfig.encode(message.lora, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.bluetooth != null && Object.hasOwnProperty.call(message, 'bluetooth'))
+        $root.meshtastic.Config.BluetoothConfig.encode(message.bluetooth, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
+      if (message.security != null && Object.hasOwnProperty.call(message, 'security'))
+        $root.meshtastic.Config.SecurityConfig.encode(message.security, writer.uint32(/* id 8, wireType 2 =*/ 66).fork()).ldelim()
+      if (message.sessionkey != null && Object.hasOwnProperty.call(message, 'sessionkey'))
+        $root.meshtastic.Config.SessionkeyConfig.encode(message.sessionkey, writer.uint32(/* id 9, wireType 2 =*/ 74).fork()).ldelim()
+      return writer
+    }
+
+    /**
      * Decodes a Config message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.Config
@@ -643,6 +735,42 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       DeviceConfig.prototype.ledHeartbeatDisabled = false
+
+      /**
+       * Encodes the specified DeviceConfig message. Does not implicitly {@link meshtastic.Config.DeviceConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.DeviceConfig
+       * @static
+       * @param {meshtastic.Config.IDeviceConfig} message DeviceConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      DeviceConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.role != null && Object.hasOwnProperty.call(message, 'role'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.role)
+        if (message.serialEnabled != null && Object.hasOwnProperty.call(message, 'serialEnabled'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.serialEnabled)
+        if (message.buttonGpio != null && Object.hasOwnProperty.call(message, 'buttonGpio'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.buttonGpio)
+        if (message.buzzerGpio != null && Object.hasOwnProperty.call(message, 'buzzerGpio'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.buzzerGpio)
+        if (message.rebroadcastMode != null && Object.hasOwnProperty.call(message, 'rebroadcastMode'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.rebroadcastMode)
+        if (message.nodeInfoBroadcastSecs != null && Object.hasOwnProperty.call(message, 'nodeInfoBroadcastSecs'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.nodeInfoBroadcastSecs)
+        if (message.doubleTapAsButtonPress != null && Object.hasOwnProperty.call(message, 'doubleTapAsButtonPress'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.doubleTapAsButtonPress)
+        if (message.isManaged != null && Object.hasOwnProperty.call(message, 'isManaged'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).bool(message.isManaged)
+        if (message.disableTripleClick != null && Object.hasOwnProperty.call(message, 'disableTripleClick'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.disableTripleClick)
+        if (message.tzdef != null && Object.hasOwnProperty.call(message, 'tzdef'))
+          writer.uint32(/* id 11, wireType 2 =*/ 90).string(message.tzdef)
+        if (message.ledHeartbeatDisabled != null && Object.hasOwnProperty.call(message, 'ledHeartbeatDisabled'))
+          writer.uint32(/* id 12, wireType 0 =*/ 96).bool(message.ledHeartbeatDisabled)
+        return writer
+      }
 
       /**
        * Decodes a DeviceConfig message from the specified reader or buffer.
@@ -949,6 +1077,46 @@ export const meshtastic = ($root.meshtastic = (() => {
       PositionConfig.prototype.gpsMode = 0
 
       /**
+       * Encodes the specified PositionConfig message. Does not implicitly {@link meshtastic.Config.PositionConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.PositionConfig
+       * @static
+       * @param {meshtastic.Config.IPositionConfig} message PositionConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      PositionConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.positionBroadcastSecs != null && Object.hasOwnProperty.call(message, 'positionBroadcastSecs'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.positionBroadcastSecs)
+        if (message.positionBroadcastSmartEnabled != null && Object.hasOwnProperty.call(message, 'positionBroadcastSmartEnabled'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.positionBroadcastSmartEnabled)
+        if (message.fixedPosition != null && Object.hasOwnProperty.call(message, 'fixedPosition'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.fixedPosition)
+        if (message.gpsEnabled != null && Object.hasOwnProperty.call(message, 'gpsEnabled'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.gpsEnabled)
+        if (message.gpsUpdateInterval != null && Object.hasOwnProperty.call(message, 'gpsUpdateInterval'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.gpsUpdateInterval)
+        if (message.gpsAttemptTime != null && Object.hasOwnProperty.call(message, 'gpsAttemptTime'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.gpsAttemptTime)
+        if (message.positionFlags != null && Object.hasOwnProperty.call(message, 'positionFlags'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.positionFlags)
+        if (message.rxGpio != null && Object.hasOwnProperty.call(message, 'rxGpio'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.rxGpio)
+        if (message.txGpio != null && Object.hasOwnProperty.call(message, 'txGpio'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.txGpio)
+        if (message.broadcastSmartMinimumDistance != null && Object.hasOwnProperty.call(message, 'broadcastSmartMinimumDistance'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).uint32(message.broadcastSmartMinimumDistance)
+        if (message.broadcastSmartMinimumIntervalSecs != null && Object.hasOwnProperty.call(message, 'broadcastSmartMinimumIntervalSecs'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.broadcastSmartMinimumIntervalSecs)
+        if (message.gpsEnGpio != null && Object.hasOwnProperty.call(message, 'gpsEnGpio'))
+          writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.gpsEnGpio)
+        if (message.gpsMode != null && Object.hasOwnProperty.call(message, 'gpsMode'))
+          writer.uint32(/* id 13, wireType 0 =*/ 104).int32(message.gpsMode)
+        return writer
+      }
+
+      /**
        * Decodes a PositionConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.PositionConfig
@@ -1216,6 +1384,38 @@ export const meshtastic = ($root.meshtastic = (() => {
       PowerConfig.prototype.powermonEnables = $util.Long ? $util.Long.fromBits(0, 0, true) : 0
 
       /**
+       * Encodes the specified PowerConfig message. Does not implicitly {@link meshtastic.Config.PowerConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.PowerConfig
+       * @static
+       * @param {meshtastic.Config.IPowerConfig} message PowerConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      PowerConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.isPowerSaving != null && Object.hasOwnProperty.call(message, 'isPowerSaving'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.isPowerSaving)
+        if (message.onBatteryShutdownAfterSecs != null && Object.hasOwnProperty.call(message, 'onBatteryShutdownAfterSecs'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.onBatteryShutdownAfterSecs)
+        if (message.adcMultiplierOverride != null && Object.hasOwnProperty.call(message, 'adcMultiplierOverride'))
+          writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.adcMultiplierOverride)
+        if (message.waitBluetoothSecs != null && Object.hasOwnProperty.call(message, 'waitBluetoothSecs'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.waitBluetoothSecs)
+        if (message.sdsSecs != null && Object.hasOwnProperty.call(message, 'sdsSecs'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.sdsSecs)
+        if (message.lsSecs != null && Object.hasOwnProperty.call(message, 'lsSecs'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.lsSecs)
+        if (message.minWakeSecs != null && Object.hasOwnProperty.call(message, 'minWakeSecs'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.minWakeSecs)
+        if (message.deviceBatteryInaAddress != null && Object.hasOwnProperty.call(message, 'deviceBatteryInaAddress'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.deviceBatteryInaAddress)
+        if (message.powermonEnables != null && Object.hasOwnProperty.call(message, 'powermonEnables'))
+          writer.uint32(/* id 32, wireType 0 =*/ 256).uint64(message.powermonEnables)
+        return writer
+      }
+
+      /**
        * Decodes a PowerConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.PowerConfig
@@ -1376,6 +1576,39 @@ export const meshtastic = ($root.meshtastic = (() => {
       NetworkConfig.prototype.rsyslogServer = ''
 
       /**
+       * Encodes the specified NetworkConfig message. Does not implicitly {@link meshtastic.Config.NetworkConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.NetworkConfig
+       * @static
+       * @param {meshtastic.Config.INetworkConfig} message NetworkConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      NetworkConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.wifiEnabled != null && Object.hasOwnProperty.call(message, 'wifiEnabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.wifiEnabled)
+        if (message.wifiSsid != null && Object.hasOwnProperty.call(message, 'wifiSsid'))
+          writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.wifiSsid)
+        if (message.wifiPsk != null && Object.hasOwnProperty.call(message, 'wifiPsk'))
+          writer.uint32(/* id 4, wireType 2 =*/ 34).string(message.wifiPsk)
+        if (message.ntpServer != null && Object.hasOwnProperty.call(message, 'ntpServer'))
+          writer.uint32(/* id 5, wireType 2 =*/ 42).string(message.ntpServer)
+        if (message.ethEnabled != null && Object.hasOwnProperty.call(message, 'ethEnabled'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.ethEnabled)
+        if (message.addressMode != null && Object.hasOwnProperty.call(message, 'addressMode'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.addressMode)
+        if (message.ipv4Config != null && Object.hasOwnProperty.call(message, 'ipv4Config'))
+          $root.meshtastic.Config.NetworkConfig.IpV4Config.encode(
+            message.ipv4Config,
+            writer.uint32(/* id 8, wireType 2 =*/ 66).fork()
+          ).ldelim()
+        if (message.rsyslogServer != null && Object.hasOwnProperty.call(message, 'rsyslogServer'))
+          writer.uint32(/* id 9, wireType 2 =*/ 74).string(message.rsyslogServer)
+        return writer
+      }
+
+      /**
        * Decodes a NetworkConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.NetworkConfig
@@ -1504,6 +1737,27 @@ export const meshtastic = ($root.meshtastic = (() => {
          * @instance
          */
         IpV4Config.prototype.dns = 0
+
+        /**
+         * Encodes the specified IpV4Config message. Does not implicitly {@link meshtastic.Config.NetworkConfig.IpV4Config.verify|verify} messages.
+         * @function encode
+         * @memberof meshtastic.Config.NetworkConfig.IpV4Config
+         * @static
+         * @param {meshtastic.Config.NetworkConfig.IIpV4Config} message IpV4Config message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        IpV4Config.encode = function encode(message, writer) {
+          if (!writer) writer = $Writer.create()
+          if (message.ip != null && Object.hasOwnProperty.call(message, 'ip')) writer.uint32(/* id 1, wireType 5 =*/ 13).fixed32(message.ip)
+          if (message.gateway != null && Object.hasOwnProperty.call(message, 'gateway'))
+            writer.uint32(/* id 2, wireType 5 =*/ 21).fixed32(message.gateway)
+          if (message.subnet != null && Object.hasOwnProperty.call(message, 'subnet'))
+            writer.uint32(/* id 3, wireType 5 =*/ 29).fixed32(message.subnet)
+          if (message.dns != null && Object.hasOwnProperty.call(message, 'dns'))
+            writer.uint32(/* id 4, wireType 5 =*/ 37).fixed32(message.dns)
+          return writer
+        }
 
         /**
          * Decodes an IpV4Config message from the specified reader or buffer.
@@ -1678,6 +1932,42 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       DisplayConfig.prototype.compassOrientation = 0
+
+      /**
+       * Encodes the specified DisplayConfig message. Does not implicitly {@link meshtastic.Config.DisplayConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.DisplayConfig
+       * @static
+       * @param {meshtastic.Config.IDisplayConfig} message DisplayConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      DisplayConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.screenOnSecs != null && Object.hasOwnProperty.call(message, 'screenOnSecs'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.screenOnSecs)
+        if (message.gpsFormat != null && Object.hasOwnProperty.call(message, 'gpsFormat'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.gpsFormat)
+        if (message.autoScreenCarouselSecs != null && Object.hasOwnProperty.call(message, 'autoScreenCarouselSecs'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.autoScreenCarouselSecs)
+        if (message.compassNorthTop != null && Object.hasOwnProperty.call(message, 'compassNorthTop'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.compassNorthTop)
+        if (message.flipScreen != null && Object.hasOwnProperty.call(message, 'flipScreen'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.flipScreen)
+        if (message.units != null && Object.hasOwnProperty.call(message, 'units'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.units)
+        if (message.oled != null && Object.hasOwnProperty.call(message, 'oled'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.oled)
+        if (message.displaymode != null && Object.hasOwnProperty.call(message, 'displaymode'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).int32(message.displaymode)
+        if (message.headingBold != null && Object.hasOwnProperty.call(message, 'headingBold'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).bool(message.headingBold)
+        if (message.wakeOnTapOrMotion != null && Object.hasOwnProperty.call(message, 'wakeOnTapOrMotion'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.wakeOnTapOrMotion)
+        if (message.compassOrientation != null && Object.hasOwnProperty.call(message, 'compassOrientation'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).int32(message.compassOrientation)
+        return writer
+      }
 
       /**
        * Decodes a DisplayConfig message from the specified reader or buffer.
@@ -2100,6 +2390,57 @@ export const meshtastic = ($root.meshtastic = (() => {
       LoRaConfig.prototype.ignoreMqtt = false
 
       /**
+       * Encodes the specified LoRaConfig message. Does not implicitly {@link meshtastic.Config.LoRaConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.LoRaConfig
+       * @static
+       * @param {meshtastic.Config.ILoRaConfig} message LoRaConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      LoRaConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.usePreset != null && Object.hasOwnProperty.call(message, 'usePreset'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.usePreset)
+        if (message.modemPreset != null && Object.hasOwnProperty.call(message, 'modemPreset'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.modemPreset)
+        if (message.bandwidth != null && Object.hasOwnProperty.call(message, 'bandwidth'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.bandwidth)
+        if (message.spreadFactor != null && Object.hasOwnProperty.call(message, 'spreadFactor'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.spreadFactor)
+        if (message.codingRate != null && Object.hasOwnProperty.call(message, 'codingRate'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.codingRate)
+        if (message.frequencyOffset != null && Object.hasOwnProperty.call(message, 'frequencyOffset'))
+          writer.uint32(/* id 6, wireType 5 =*/ 53).float(message.frequencyOffset)
+        if (message.region != null && Object.hasOwnProperty.call(message, 'region'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.region)
+        if (message.hopLimit != null && Object.hasOwnProperty.call(message, 'hopLimit'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.hopLimit)
+        if (message.txEnabled != null && Object.hasOwnProperty.call(message, 'txEnabled'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).bool(message.txEnabled)
+        if (message.txPower != null && Object.hasOwnProperty.call(message, 'txPower'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).int32(message.txPower)
+        if (message.channelNum != null && Object.hasOwnProperty.call(message, 'channelNum'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.channelNum)
+        if (message.overrideDutyCycle != null && Object.hasOwnProperty.call(message, 'overrideDutyCycle'))
+          writer.uint32(/* id 12, wireType 0 =*/ 96).bool(message.overrideDutyCycle)
+        if (message.sx126xRxBoostedGain != null && Object.hasOwnProperty.call(message, 'sx126xRxBoostedGain'))
+          writer.uint32(/* id 13, wireType 0 =*/ 104).bool(message.sx126xRxBoostedGain)
+        if (message.overrideFrequency != null && Object.hasOwnProperty.call(message, 'overrideFrequency'))
+          writer.uint32(/* id 14, wireType 5 =*/ 117).float(message.overrideFrequency)
+        if (message.paFanDisabled != null && Object.hasOwnProperty.call(message, 'paFanDisabled'))
+          writer.uint32(/* id 15, wireType 0 =*/ 120).bool(message.paFanDisabled)
+        if (message.ignoreIncoming != null && message.ignoreIncoming.length) {
+          writer.uint32(/* id 103, wireType 2 =*/ 826).fork()
+          for (let i = 0; i < message.ignoreIncoming.length; ++i) writer.uint32(message.ignoreIncoming[i])
+          writer.ldelim()
+        }
+        if (message.ignoreMqtt != null && Object.hasOwnProperty.call(message, 'ignoreMqtt'))
+          writer.uint32(/* id 104, wireType 0 =*/ 832).bool(message.ignoreMqtt)
+        return writer
+      }
+
+      /**
        * Decodes a LoRaConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.LoRaConfig
@@ -2331,6 +2672,26 @@ export const meshtastic = ($root.meshtastic = (() => {
       BluetoothConfig.prototype.fixedPin = 0
 
       /**
+       * Encodes the specified BluetoothConfig message. Does not implicitly {@link meshtastic.Config.BluetoothConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.BluetoothConfig
+       * @static
+       * @param {meshtastic.Config.IBluetoothConfig} message BluetoothConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      BluetoothConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.mode != null && Object.hasOwnProperty.call(message, 'mode'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.mode)
+        if (message.fixedPin != null && Object.hasOwnProperty.call(message, 'fixedPin'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.fixedPin)
+        return writer
+      }
+
+      /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.BluetoothConfig
@@ -2482,6 +2843,34 @@ export const meshtastic = ($root.meshtastic = (() => {
       SecurityConfig.prototype.adminChannelEnabled = false
 
       /**
+       * Encodes the specified SecurityConfig message. Does not implicitly {@link meshtastic.Config.SecurityConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.SecurityConfig
+       * @static
+       * @param {meshtastic.Config.ISecurityConfig} message SecurityConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      SecurityConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.publicKey != null && Object.hasOwnProperty.call(message, 'publicKey'))
+          writer.uint32(/* id 1, wireType 2 =*/ 10).bytes(message.publicKey)
+        if (message.privateKey != null && Object.hasOwnProperty.call(message, 'privateKey'))
+          writer.uint32(/* id 2, wireType 2 =*/ 18).bytes(message.privateKey)
+        if (message.adminKey != null && message.adminKey.length)
+          for (let i = 0; i < message.adminKey.length; ++i) writer.uint32(/* id 3, wireType 2 =*/ 26).bytes(message.adminKey[i])
+        if (message.isManaged != null && Object.hasOwnProperty.call(message, 'isManaged'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.isManaged)
+        if (message.serialEnabled != null && Object.hasOwnProperty.call(message, 'serialEnabled'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.serialEnabled)
+        if (message.debugLogApiEnabled != null && Object.hasOwnProperty.call(message, 'debugLogApiEnabled'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.debugLogApiEnabled)
+        if (message.adminChannelEnabled != null && Object.hasOwnProperty.call(message, 'adminChannelEnabled'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.adminChannelEnabled)
+        return writer
+      }
+
+      /**
        * Decodes a SecurityConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.SecurityConfig
@@ -2558,6 +2947,20 @@ export const meshtastic = ($root.meshtastic = (() => {
         if (properties)
           for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
             if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+      }
+
+      /**
+       * Encodes the specified SessionkeyConfig message. Does not implicitly {@link meshtastic.Config.SessionkeyConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.Config.SessionkeyConfig
+       * @static
+       * @param {meshtastic.Config.ISessionkeyConfig} message SessionkeyConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      SessionkeyConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        return writer
       }
 
       /**
@@ -2902,6 +3305,66 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['groundTrack'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified Position message. Does not implicitly {@link meshtastic.Position.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Position
+     * @static
+     * @param {meshtastic.IPosition} message Position message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Position.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.latitudeI != null && Object.hasOwnProperty.call(message, 'latitudeI'))
+        writer.uint32(/* id 1, wireType 5 =*/ 13).sfixed32(message.latitudeI)
+      if (message.longitudeI != null && Object.hasOwnProperty.call(message, 'longitudeI'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).sfixed32(message.longitudeI)
+      if (message.altitude != null && Object.hasOwnProperty.call(message, 'altitude'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.altitude)
+      if (message.time != null && Object.hasOwnProperty.call(message, 'time'))
+        writer.uint32(/* id 4, wireType 5 =*/ 37).fixed32(message.time)
+      if (message.locationSource != null && Object.hasOwnProperty.call(message, 'locationSource'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).int32(message.locationSource)
+      if (message.altitudeSource != null && Object.hasOwnProperty.call(message, 'altitudeSource'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.altitudeSource)
+      if (message.timestamp != null && Object.hasOwnProperty.call(message, 'timestamp'))
+        writer.uint32(/* id 7, wireType 5 =*/ 61).fixed32(message.timestamp)
+      if (message.timestampMillisAdjust != null && Object.hasOwnProperty.call(message, 'timestampMillisAdjust'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).int32(message.timestampMillisAdjust)
+      if (message.altitudeHae != null && Object.hasOwnProperty.call(message, 'altitudeHae'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).sint32(message.altitudeHae)
+      if (message.altitudeGeoidalSeparation != null && Object.hasOwnProperty.call(message, 'altitudeGeoidalSeparation'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).sint32(message.altitudeGeoidalSeparation)
+      if (message.PDOP != null && Object.hasOwnProperty.call(message, 'PDOP'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.PDOP)
+      if (message.HDOP != null && Object.hasOwnProperty.call(message, 'HDOP'))
+        writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.HDOP)
+      if (message.VDOP != null && Object.hasOwnProperty.call(message, 'VDOP'))
+        writer.uint32(/* id 13, wireType 0 =*/ 104).uint32(message.VDOP)
+      if (message.gpsAccuracy != null && Object.hasOwnProperty.call(message, 'gpsAccuracy'))
+        writer.uint32(/* id 14, wireType 0 =*/ 112).uint32(message.gpsAccuracy)
+      if (message.groundSpeed != null && Object.hasOwnProperty.call(message, 'groundSpeed'))
+        writer.uint32(/* id 15, wireType 0 =*/ 120).uint32(message.groundSpeed)
+      if (message.groundTrack != null && Object.hasOwnProperty.call(message, 'groundTrack'))
+        writer.uint32(/* id 16, wireType 0 =*/ 128).uint32(message.groundTrack)
+      if (message.fixQuality != null && Object.hasOwnProperty.call(message, 'fixQuality'))
+        writer.uint32(/* id 17, wireType 0 =*/ 136).uint32(message.fixQuality)
+      if (message.fixType != null && Object.hasOwnProperty.call(message, 'fixType'))
+        writer.uint32(/* id 18, wireType 0 =*/ 144).uint32(message.fixType)
+      if (message.satsInView != null && Object.hasOwnProperty.call(message, 'satsInView'))
+        writer.uint32(/* id 19, wireType 0 =*/ 152).uint32(message.satsInView)
+      if (message.sensorId != null && Object.hasOwnProperty.call(message, 'sensorId'))
+        writer.uint32(/* id 20, wireType 0 =*/ 160).uint32(message.sensorId)
+      if (message.nextUpdate != null && Object.hasOwnProperty.call(message, 'nextUpdate'))
+        writer.uint32(/* id 21, wireType 0 =*/ 168).uint32(message.nextUpdate)
+      if (message.seqNumber != null && Object.hasOwnProperty.call(message, 'seqNumber'))
+        writer.uint32(/* id 22, wireType 0 =*/ 176).uint32(message.seqNumber)
+      if (message.precisionBits != null && Object.hasOwnProperty.call(message, 'precisionBits'))
+        writer.uint32(/* id 23, wireType 0 =*/ 184).uint32(message.precisionBits)
+      return writer
+    }
 
     /**
      * Decodes a Position message from the specified reader or buffer.
@@ -3395,6 +3858,34 @@ export const meshtastic = ($root.meshtastic = (() => {
     User.prototype.publicKey = $util.newBuffer([])
 
     /**
+     * Encodes the specified User message. Does not implicitly {@link meshtastic.User.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.User
+     * @static
+     * @param {meshtastic.IUser} message User message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    User.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.id != null && Object.hasOwnProperty.call(message, 'id')) writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.id)
+      if (message.longName != null && Object.hasOwnProperty.call(message, 'longName'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.longName)
+      if (message.shortName != null && Object.hasOwnProperty.call(message, 'shortName'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.shortName)
+      if (message.macaddr != null && Object.hasOwnProperty.call(message, 'macaddr'))
+        writer.uint32(/* id 4, wireType 2 =*/ 34).bytes(message.macaddr)
+      if (message.hwModel != null && Object.hasOwnProperty.call(message, 'hwModel'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).int32(message.hwModel)
+      if (message.isLicensed != null && Object.hasOwnProperty.call(message, 'isLicensed'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.isLicensed)
+      if (message.role != null && Object.hasOwnProperty.call(message, 'role')) writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.role)
+      if (message.publicKey != null && Object.hasOwnProperty.call(message, 'publicKey'))
+        writer.uint32(/* id 8, wireType 2 =*/ 66).bytes(message.publicKey)
+      return writer
+    }
+
+    /**
      * Decodes a User message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.User
@@ -3515,6 +4006,40 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     RouteDiscovery.prototype.snrBack = $util.emptyArray
+
+    /**
+     * Encodes the specified RouteDiscovery message. Does not implicitly {@link meshtastic.RouteDiscovery.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.RouteDiscovery
+     * @static
+     * @param {meshtastic.IRouteDiscovery} message RouteDiscovery message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    RouteDiscovery.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.route != null && message.route.length) {
+        writer.uint32(/* id 1, wireType 2 =*/ 10).fork()
+        for (let i = 0; i < message.route.length; ++i) writer.fixed32(message.route[i])
+        writer.ldelim()
+      }
+      if (message.snrTowards != null && message.snrTowards.length) {
+        writer.uint32(/* id 2, wireType 2 =*/ 18).fork()
+        for (let i = 0; i < message.snrTowards.length; ++i) writer.int32(message.snrTowards[i])
+        writer.ldelim()
+      }
+      if (message.routeBack != null && message.routeBack.length) {
+        writer.uint32(/* id 3, wireType 2 =*/ 26).fork()
+        for (let i = 0; i < message.routeBack.length; ++i) writer.fixed32(message.routeBack[i])
+        writer.ldelim()
+      }
+      if (message.snrBack != null && message.snrBack.length) {
+        writer.uint32(/* id 4, wireType 2 =*/ 34).fork()
+        for (let i = 0; i < message.snrBack.length; ++i) writer.int32(message.snrBack[i])
+        writer.ldelim()
+      }
+      return writer
+    }
 
     /**
      * Decodes a RouteDiscovery message from the specified reader or buffer.
@@ -3640,6 +4165,26 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['routeRequest', 'routeReply', 'errorReason'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified Routing message. Does not implicitly {@link meshtastic.Routing.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Routing
+     * @static
+     * @param {meshtastic.IRouting} message Routing message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Routing.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.routeRequest != null && Object.hasOwnProperty.call(message, 'routeRequest'))
+        $root.meshtastic.RouteDiscovery.encode(message.routeRequest, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.routeReply != null && Object.hasOwnProperty.call(message, 'routeReply'))
+        $root.meshtastic.RouteDiscovery.encode(message.routeReply, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.errorReason != null && Object.hasOwnProperty.call(message, 'errorReason'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.errorReason)
+      return writer
+    }
 
     /**
      * Decodes a Routing message from the specified reader or buffer.
@@ -3840,6 +4385,36 @@ export const meshtastic = ($root.meshtastic = (() => {
     Data.prototype.emoji = 0
 
     /**
+     * Encodes the specified Data message. Does not implicitly {@link meshtastic.Data.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Data
+     * @static
+     * @param {meshtastic.IData} message Data message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Data.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.portnum != null && Object.hasOwnProperty.call(message, 'portnum'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.portnum)
+      if (message.payload != null && Object.hasOwnProperty.call(message, 'payload'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).bytes(message.payload)
+      if (message.wantResponse != null && Object.hasOwnProperty.call(message, 'wantResponse'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.wantResponse)
+      if (message.dest != null && Object.hasOwnProperty.call(message, 'dest'))
+        writer.uint32(/* id 4, wireType 5 =*/ 37).fixed32(message.dest)
+      if (message.source != null && Object.hasOwnProperty.call(message, 'source'))
+        writer.uint32(/* id 5, wireType 5 =*/ 45).fixed32(message.source)
+      if (message.requestId != null && Object.hasOwnProperty.call(message, 'requestId'))
+        writer.uint32(/* id 6, wireType 5 =*/ 53).fixed32(message.requestId)
+      if (message.replyId != null && Object.hasOwnProperty.call(message, 'replyId'))
+        writer.uint32(/* id 7, wireType 5 =*/ 61).fixed32(message.replyId)
+      if (message.emoji != null && Object.hasOwnProperty.call(message, 'emoji'))
+        writer.uint32(/* id 8, wireType 5 =*/ 69).fixed32(message.emoji)
+      return writer
+    }
+
+    /**
      * Decodes a Data message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.Data
@@ -4011,6 +4586,35 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified Waypoint message. Does not implicitly {@link meshtastic.Waypoint.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Waypoint
+     * @static
+     * @param {meshtastic.IWaypoint} message Waypoint message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Waypoint.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.id != null && Object.hasOwnProperty.call(message, 'id')) writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.id)
+      if (message.latitudeI != null && Object.hasOwnProperty.call(message, 'latitudeI'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).sfixed32(message.latitudeI)
+      if (message.longitudeI != null && Object.hasOwnProperty.call(message, 'longitudeI'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).sfixed32(message.longitudeI)
+      if (message.expire != null && Object.hasOwnProperty.call(message, 'expire'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.expire)
+      if (message.lockedTo != null && Object.hasOwnProperty.call(message, 'lockedTo'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.lockedTo)
+      if (message.name != null && Object.hasOwnProperty.call(message, 'name'))
+        writer.uint32(/* id 6, wireType 2 =*/ 50).string(message.name)
+      if (message.description != null && Object.hasOwnProperty.call(message, 'description'))
+        writer.uint32(/* id 7, wireType 2 =*/ 58).string(message.description)
+      if (message.icon != null && Object.hasOwnProperty.call(message, 'icon'))
+        writer.uint32(/* id 8, wireType 5 =*/ 69).fixed32(message.icon)
+      return writer
+    }
+
+    /**
      * Decodes a Waypoint message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.Waypoint
@@ -4141,6 +4745,27 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['data', 'text'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified MqttClientProxyMessage message. Does not implicitly {@link meshtastic.MqttClientProxyMessage.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.MqttClientProxyMessage
+     * @static
+     * @param {meshtastic.IMqttClientProxyMessage} message MqttClientProxyMessage message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    MqttClientProxyMessage.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.topic != null && Object.hasOwnProperty.call(message, 'topic'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.topic)
+      if (message.data != null && Object.hasOwnProperty.call(message, 'data')) writer.uint32(/* id 2, wireType 2 =*/ 18).bytes(message.data)
+      if (message.text != null && Object.hasOwnProperty.call(message, 'text'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.text)
+      if (message.retained != null && Object.hasOwnProperty.call(message, 'retained'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.retained)
+      return writer
+    }
 
     /**
      * Decodes a MqttClientProxyMessage message from the specified reader or buffer.
@@ -4442,6 +5067,52 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['decoded', 'encrypted'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified MeshPacket message. Does not implicitly {@link meshtastic.MeshPacket.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.MeshPacket
+     * @static
+     * @param {meshtastic.IMeshPacket} message MeshPacket message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    MeshPacket.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.from != null && Object.hasOwnProperty.call(message, 'from'))
+        writer.uint32(/* id 1, wireType 5 =*/ 13).fixed32(message.from)
+      if (message.to != null && Object.hasOwnProperty.call(message, 'to')) writer.uint32(/* id 2, wireType 5 =*/ 21).fixed32(message.to)
+      if (message.channel != null && Object.hasOwnProperty.call(message, 'channel'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.channel)
+      if (message.decoded != null && Object.hasOwnProperty.call(message, 'decoded'))
+        $root.meshtastic.Data.encode(message.decoded, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.encrypted != null && Object.hasOwnProperty.call(message, 'encrypted'))
+        writer.uint32(/* id 5, wireType 2 =*/ 42).bytes(message.encrypted)
+      if (message.id != null && Object.hasOwnProperty.call(message, 'id')) writer.uint32(/* id 6, wireType 5 =*/ 53).fixed32(message.id)
+      if (message.rxTime != null && Object.hasOwnProperty.call(message, 'rxTime'))
+        writer.uint32(/* id 7, wireType 5 =*/ 61).fixed32(message.rxTime)
+      if (message.rxSnr != null && Object.hasOwnProperty.call(message, 'rxSnr'))
+        writer.uint32(/* id 8, wireType 5 =*/ 69).float(message.rxSnr)
+      if (message.hopLimit != null && Object.hasOwnProperty.call(message, 'hopLimit'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.hopLimit)
+      if (message.wantAck != null && Object.hasOwnProperty.call(message, 'wantAck'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.wantAck)
+      if (message.priority != null && Object.hasOwnProperty.call(message, 'priority'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).int32(message.priority)
+      if (message.rxRssi != null && Object.hasOwnProperty.call(message, 'rxRssi'))
+        writer.uint32(/* id 12, wireType 0 =*/ 96).int32(message.rxRssi)
+      if (message.delayed != null && Object.hasOwnProperty.call(message, 'delayed'))
+        writer.uint32(/* id 13, wireType 0 =*/ 104).int32(message.delayed)
+      if (message.viaMqtt != null && Object.hasOwnProperty.call(message, 'viaMqtt'))
+        writer.uint32(/* id 14, wireType 0 =*/ 112).bool(message.viaMqtt)
+      if (message.hopStart != null && Object.hasOwnProperty.call(message, 'hopStart'))
+        writer.uint32(/* id 15, wireType 0 =*/ 120).uint32(message.hopStart)
+      if (message.publicKey != null && Object.hasOwnProperty.call(message, 'publicKey'))
+        writer.uint32(/* id 16, wireType 2 =*/ 130).bytes(message.publicKey)
+      if (message.pkiEncrypted != null && Object.hasOwnProperty.call(message, 'pkiEncrypted'))
+        writer.uint32(/* id 17, wireType 0 =*/ 136).bool(message.pkiEncrypted)
+      return writer
+    }
 
     /**
      * Decodes a MeshPacket message from the specified reader or buffer.
@@ -4753,6 +5424,38 @@ export const meshtastic = ($root.meshtastic = (() => {
     NodeInfo.prototype.isFavorite = false
 
     /**
+     * Encodes the specified NodeInfo message. Does not implicitly {@link meshtastic.NodeInfo.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.NodeInfo
+     * @static
+     * @param {meshtastic.INodeInfo} message NodeInfo message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    NodeInfo.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.num != null && Object.hasOwnProperty.call(message, 'num')) writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.num)
+      if (message.user != null && Object.hasOwnProperty.call(message, 'user'))
+        $root.meshtastic.User.encode(message.user, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.position != null && Object.hasOwnProperty.call(message, 'position'))
+        $root.meshtastic.Position.encode(message.position, writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+      if (message.snr != null && Object.hasOwnProperty.call(message, 'snr')) writer.uint32(/* id 4, wireType 5 =*/ 37).float(message.snr)
+      if (message.lastHeard != null && Object.hasOwnProperty.call(message, 'lastHeard'))
+        writer.uint32(/* id 5, wireType 5 =*/ 45).fixed32(message.lastHeard)
+      if (message.deviceMetrics != null && Object.hasOwnProperty.call(message, 'deviceMetrics'))
+        $root.meshtastic.DeviceMetrics.encode(message.deviceMetrics, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.channel != null && Object.hasOwnProperty.call(message, 'channel'))
+        writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.channel)
+      if (message.viaMqtt != null && Object.hasOwnProperty.call(message, 'viaMqtt'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.viaMqtt)
+      if (message.hopsAway != null && Object.hasOwnProperty.call(message, 'hopsAway'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.hopsAway)
+      if (message.isFavorite != null && Object.hasOwnProperty.call(message, 'isFavorite'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.isFavorite)
+      return writer
+    }
+
+    /**
      * Decodes a NodeInfo message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.NodeInfo
@@ -4926,6 +5629,26 @@ export const meshtastic = ($root.meshtastic = (() => {
     MyNodeInfo.prototype.minAppVersion = 0
 
     /**
+     * Encodes the specified MyNodeInfo message. Does not implicitly {@link meshtastic.MyNodeInfo.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.MyNodeInfo
+     * @static
+     * @param {meshtastic.IMyNodeInfo} message MyNodeInfo message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    MyNodeInfo.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.myNodeNum != null && Object.hasOwnProperty.call(message, 'myNodeNum'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.myNodeNum)
+      if (message.rebootCount != null && Object.hasOwnProperty.call(message, 'rebootCount'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.rebootCount)
+      if (message.minAppVersion != null && Object.hasOwnProperty.call(message, 'minAppVersion'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.minAppVersion)
+      return writer
+    }
+
+    /**
      * Decodes a MyNodeInfo message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.MyNodeInfo
@@ -5026,6 +5749,28 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     LogRecord.prototype.level = 0
+
+    /**
+     * Encodes the specified LogRecord message. Does not implicitly {@link meshtastic.LogRecord.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.LogRecord
+     * @static
+     * @param {meshtastic.ILogRecord} message LogRecord message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    LogRecord.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.message != null && Object.hasOwnProperty.call(message, 'message'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.message)
+      if (message.time != null && Object.hasOwnProperty.call(message, 'time'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).fixed32(message.time)
+      if (message.source != null && Object.hasOwnProperty.call(message, 'source'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.source)
+      if (message.level != null && Object.hasOwnProperty.call(message, 'level'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.level)
+      return writer
+    }
 
     /**
      * Decodes a LogRecord message from the specified reader or buffer.
@@ -5153,6 +5898,27 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     QueueStatus.prototype.meshPacketId = 0
+
+    /**
+     * Encodes the specified QueueStatus message. Does not implicitly {@link meshtastic.QueueStatus.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.QueueStatus
+     * @static
+     * @param {meshtastic.IQueueStatus} message QueueStatus message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    QueueStatus.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.res != null && Object.hasOwnProperty.call(message, 'res')) writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.res)
+      if (message.free != null && Object.hasOwnProperty.call(message, 'free'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.free)
+      if (message.maxlen != null && Object.hasOwnProperty.call(message, 'maxlen'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.maxlen)
+      if (message.meshPacketId != null && Object.hasOwnProperty.call(message, 'meshPacketId'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.meshPacketId)
+      return writer
+    }
 
     /**
      * Decodes a QueueStatus message from the specified reader or buffer.
@@ -5418,6 +6184,54 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified FromRadio message. Does not implicitly {@link meshtastic.FromRadio.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.FromRadio
+     * @static
+     * @param {meshtastic.IFromRadio} message FromRadio message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    FromRadio.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.id != null && Object.hasOwnProperty.call(message, 'id')) writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.id)
+      if (message.packet != null && Object.hasOwnProperty.call(message, 'packet'))
+        $root.meshtastic.MeshPacket.encode(message.packet, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.myInfo != null && Object.hasOwnProperty.call(message, 'myInfo'))
+        $root.meshtastic.MyNodeInfo.encode(message.myInfo, writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+      if (message.nodeInfo != null && Object.hasOwnProperty.call(message, 'nodeInfo'))
+        $root.meshtastic.NodeInfo.encode(message.nodeInfo, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.config != null && Object.hasOwnProperty.call(message, 'config'))
+        $root.meshtastic.Config.encode(message.config, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.logRecord != null && Object.hasOwnProperty.call(message, 'logRecord'))
+        $root.meshtastic.LogRecord.encode(message.logRecord, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.configCompleteId != null && Object.hasOwnProperty.call(message, 'configCompleteId'))
+        writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.configCompleteId)
+      if (message.rebooted != null && Object.hasOwnProperty.call(message, 'rebooted'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.rebooted)
+      if (message.moduleConfig != null && Object.hasOwnProperty.call(message, 'moduleConfig'))
+        $root.meshtastic.ModuleConfig.encode(message.moduleConfig, writer.uint32(/* id 9, wireType 2 =*/ 74).fork()).ldelim()
+      if (message.channel != null && Object.hasOwnProperty.call(message, 'channel'))
+        $root.meshtastic.Channel.encode(message.channel, writer.uint32(/* id 10, wireType 2 =*/ 82).fork()).ldelim()
+      if (message.queueStatus != null && Object.hasOwnProperty.call(message, 'queueStatus'))
+        $root.meshtastic.QueueStatus.encode(message.queueStatus, writer.uint32(/* id 11, wireType 2 =*/ 90).fork()).ldelim()
+      if (message.xmodemPacket != null && Object.hasOwnProperty.call(message, 'xmodemPacket'))
+        $root.meshtastic.XModem.encode(message.xmodemPacket, writer.uint32(/* id 12, wireType 2 =*/ 98).fork()).ldelim()
+      if (message.metadata != null && Object.hasOwnProperty.call(message, 'metadata'))
+        $root.meshtastic.DeviceMetadata.encode(message.metadata, writer.uint32(/* id 13, wireType 2 =*/ 106).fork()).ldelim()
+      if (message.mqttClientProxyMessage != null && Object.hasOwnProperty.call(message, 'mqttClientProxyMessage'))
+        $root.meshtastic.MqttClientProxyMessage.encode(
+          message.mqttClientProxyMessage,
+          writer.uint32(/* id 14, wireType 2 =*/ 114).fork()
+        ).ldelim()
+      if (message.fileInfo != null && Object.hasOwnProperty.call(message, 'fileInfo'))
+        $root.meshtastic.FileInfo.encode(message.fileInfo, writer.uint32(/* id 15, wireType 2 =*/ 122).fork()).ldelim()
+      if (message.clientNotification != null && Object.hasOwnProperty.call(message, 'clientNotification'))
+        $root.meshtastic.ClientNotification.encode(message.clientNotification, writer.uint32(/* id 16, wireType 2 =*/ 130).fork()).ldelim()
+      return writer
+    }
+
+    /**
      * Decodes a FromRadio message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.FromRadio
@@ -5580,6 +6394,28 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified ClientNotification message. Does not implicitly {@link meshtastic.ClientNotification.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ClientNotification
+     * @static
+     * @param {meshtastic.IClientNotification} message ClientNotification message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ClientNotification.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.replyId != null && Object.hasOwnProperty.call(message, 'replyId'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.replyId)
+      if (message.time != null && Object.hasOwnProperty.call(message, 'time'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).fixed32(message.time)
+      if (message.level != null && Object.hasOwnProperty.call(message, 'level'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.level)
+      if (message.message != null && Object.hasOwnProperty.call(message, 'message'))
+        writer.uint32(/* id 4, wireType 2 =*/ 34).string(message.message)
+      return writer
+    }
+
+    /**
      * Decodes a ClientNotification message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ClientNotification
@@ -5662,6 +6498,24 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     FileInfo.prototype.sizeBytes = 0
+
+    /**
+     * Encodes the specified FileInfo message. Does not implicitly {@link meshtastic.FileInfo.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.FileInfo
+     * @static
+     * @param {meshtastic.IFileInfo} message FileInfo message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    FileInfo.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.fileName != null && Object.hasOwnProperty.call(message, 'fileName'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.fileName)
+      if (message.sizeBytes != null && Object.hasOwnProperty.call(message, 'sizeBytes'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.sizeBytes)
+      return writer
+    }
 
     /**
      * Decodes a FileInfo message from the specified reader or buffer.
@@ -5811,6 +6665,35 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified ToRadio message. Does not implicitly {@link meshtastic.ToRadio.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ToRadio
+     * @static
+     * @param {meshtastic.IToRadio} message ToRadio message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ToRadio.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.packet != null && Object.hasOwnProperty.call(message, 'packet'))
+        $root.meshtastic.MeshPacket.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.wantConfigId != null && Object.hasOwnProperty.call(message, 'wantConfigId'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.wantConfigId)
+      if (message.disconnect != null && Object.hasOwnProperty.call(message, 'disconnect'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.disconnect)
+      if (message.xmodemPacket != null && Object.hasOwnProperty.call(message, 'xmodemPacket'))
+        $root.meshtastic.XModem.encode(message.xmodemPacket, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.mqttClientProxyMessage != null && Object.hasOwnProperty.call(message, 'mqttClientProxyMessage'))
+        $root.meshtastic.MqttClientProxyMessage.encode(
+          message.mqttClientProxyMessage,
+          writer.uint32(/* id 6, wireType 2 =*/ 50).fork()
+        ).ldelim()
+      if (message.heartbeat != null && Object.hasOwnProperty.call(message, 'heartbeat'))
+        $root.meshtastic.Heartbeat.encode(message.heartbeat, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
+      return writer
+    }
+
+    /**
      * Decodes a ToRadio message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ToRadio
@@ -5901,6 +6784,23 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     Compressed.prototype.data = $util.newBuffer([])
+
+    /**
+     * Encodes the specified Compressed message. Does not implicitly {@link meshtastic.Compressed.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Compressed
+     * @static
+     * @param {meshtastic.ICompressed} message Compressed message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Compressed.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.portnum != null && Object.hasOwnProperty.call(message, 'portnum'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.portnum)
+      if (message.data != null && Object.hasOwnProperty.call(message, 'data')) writer.uint32(/* id 2, wireType 2 =*/ 18).bytes(message.data)
+      return writer
+    }
 
     /**
      * Decodes a Compressed message from the specified reader or buffer.
@@ -5996,6 +6896,29 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     NeighborInfo.prototype.neighbors = $util.emptyArray
+
+    /**
+     * Encodes the specified NeighborInfo message. Does not implicitly {@link meshtastic.NeighborInfo.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.NeighborInfo
+     * @static
+     * @param {meshtastic.INeighborInfo} message NeighborInfo message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    NeighborInfo.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.nodeId != null && Object.hasOwnProperty.call(message, 'nodeId'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.nodeId)
+      if (message.lastSentById != null && Object.hasOwnProperty.call(message, 'lastSentById'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.lastSentById)
+      if (message.nodeBroadcastIntervalSecs != null && Object.hasOwnProperty.call(message, 'nodeBroadcastIntervalSecs'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.nodeBroadcastIntervalSecs)
+      if (message.neighbors != null && message.neighbors.length)
+        for (let i = 0; i < message.neighbors.length; ++i)
+          $root.meshtastic.Neighbor.encode(message.neighbors[i], writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      return writer
+    }
 
     /**
      * Decodes a NeighborInfo message from the specified reader or buffer.
@@ -6103,6 +7026,27 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     Neighbor.prototype.nodeBroadcastIntervalSecs = 0
+
+    /**
+     * Encodes the specified Neighbor message. Does not implicitly {@link meshtastic.Neighbor.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Neighbor
+     * @static
+     * @param {meshtastic.INeighbor} message Neighbor message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Neighbor.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.nodeId != null && Object.hasOwnProperty.call(message, 'nodeId'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.nodeId)
+      if (message.snr != null && Object.hasOwnProperty.call(message, 'snr')) writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.snr)
+      if (message.lastRxTime != null && Object.hasOwnProperty.call(message, 'lastRxTime'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).fixed32(message.lastRxTime)
+      if (message.nodeBroadcastIntervalSecs != null && Object.hasOwnProperty.call(message, 'nodeBroadcastIntervalSecs'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.nodeBroadcastIntervalSecs)
+      return writer
+    }
 
     /**
      * Decodes a Neighbor message from the specified reader or buffer.
@@ -6261,6 +7205,39 @@ export const meshtastic = ($root.meshtastic = (() => {
     DeviceMetadata.prototype.hasRemoteHardware = false
 
     /**
+     * Encodes the specified DeviceMetadata message. Does not implicitly {@link meshtastic.DeviceMetadata.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.DeviceMetadata
+     * @static
+     * @param {meshtastic.IDeviceMetadata} message DeviceMetadata message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    DeviceMetadata.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.firmwareVersion != null && Object.hasOwnProperty.call(message, 'firmwareVersion'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.firmwareVersion)
+      if (message.deviceStateVersion != null && Object.hasOwnProperty.call(message, 'deviceStateVersion'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.deviceStateVersion)
+      if (message.canShutdown != null && Object.hasOwnProperty.call(message, 'canShutdown'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.canShutdown)
+      if (message.hasWifi != null && Object.hasOwnProperty.call(message, 'hasWifi'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.hasWifi)
+      if (message.hasBluetooth != null && Object.hasOwnProperty.call(message, 'hasBluetooth'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.hasBluetooth)
+      if (message.hasEthernet != null && Object.hasOwnProperty.call(message, 'hasEthernet'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.hasEthernet)
+      if (message.role != null && Object.hasOwnProperty.call(message, 'role')) writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.role)
+      if (message.positionFlags != null && Object.hasOwnProperty.call(message, 'positionFlags'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.positionFlags)
+      if (message.hwModel != null && Object.hasOwnProperty.call(message, 'hwModel'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.hwModel)
+      if (message.hasRemoteHardware != null && Object.hasOwnProperty.call(message, 'hasRemoteHardware'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.hasRemoteHardware)
+      return writer
+    }
+
+    /**
      * Decodes a DeviceMetadata message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.DeviceMetadata
@@ -6352,6 +7329,20 @@ export const meshtastic = ($root.meshtastic = (() => {
     }
 
     /**
+     * Encodes the specified Heartbeat message. Does not implicitly {@link meshtastic.Heartbeat.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Heartbeat
+     * @static
+     * @param {meshtastic.IHeartbeat} message Heartbeat message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Heartbeat.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      return writer
+    }
+
+    /**
      * Decodes a Heartbeat message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.Heartbeat
@@ -6418,6 +7409,24 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     NodeRemoteHardwarePin.prototype.pin = null
+
+    /**
+     * Encodes the specified NodeRemoteHardwarePin message. Does not implicitly {@link meshtastic.NodeRemoteHardwarePin.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.NodeRemoteHardwarePin
+     * @static
+     * @param {meshtastic.INodeRemoteHardwarePin} message NodeRemoteHardwarePin message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    NodeRemoteHardwarePin.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.nodeNum != null && Object.hasOwnProperty.call(message, 'nodeNum'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.nodeNum)
+      if (message.pin != null && Object.hasOwnProperty.call(message, 'pin'))
+        $root.meshtastic.RemoteHardwarePin.encode(message.pin, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      return writer
+    }
 
     /**
      * Decodes a NodeRemoteHardwarePin message from the specified reader or buffer.
@@ -6514,6 +7523,28 @@ export const meshtastic = ($root.meshtastic = (() => {
     ChunkedPayload.prototype.payloadChunk = $util.newBuffer([])
 
     /**
+     * Encodes the specified ChunkedPayload message. Does not implicitly {@link meshtastic.ChunkedPayload.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ChunkedPayload
+     * @static
+     * @param {meshtastic.IChunkedPayload} message ChunkedPayload message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ChunkedPayload.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.payloadId != null && Object.hasOwnProperty.call(message, 'payloadId'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.payloadId)
+      if (message.chunkCount != null && Object.hasOwnProperty.call(message, 'chunkCount'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.chunkCount)
+      if (message.chunkIndex != null && Object.hasOwnProperty.call(message, 'chunkIndex'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.chunkIndex)
+      if (message.payloadChunk != null && Object.hasOwnProperty.call(message, 'payloadChunk'))
+        writer.uint32(/* id 4, wireType 2 =*/ 34).bytes(message.payloadChunk)
+      return writer
+    }
+
+    /**
      * Decodes a ChunkedPayload message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ChunkedPayload
@@ -6588,6 +7619,25 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     resend_chunks.prototype.chunks = $util.emptyArray
+
+    /**
+     * Encodes the specified resend_chunks message. Does not implicitly {@link meshtastic.resend_chunks.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.resend_chunks
+     * @static
+     * @param {meshtastic.Iresend_chunks} message resend_chunks message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    resend_chunks.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.chunks != null && message.chunks.length) {
+        writer.uint32(/* id 1, wireType 2 =*/ 10).fork()
+        for (let i = 0; i < message.chunks.length; ++i) writer.uint32(message.chunks[i])
+        writer.ldelim()
+      }
+      return writer
+    }
 
     /**
      * Decodes a resend_chunks message from the specified reader or buffer.
@@ -6696,6 +7746,28 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['requestTransfer', 'acceptTransfer', 'resendChunks'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified ChunkedPayloadResponse message. Does not implicitly {@link meshtastic.ChunkedPayloadResponse.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ChunkedPayloadResponse
+     * @static
+     * @param {meshtastic.IChunkedPayloadResponse} message ChunkedPayloadResponse message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ChunkedPayloadResponse.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.payloadId != null && Object.hasOwnProperty.call(message, 'payloadId'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.payloadId)
+      if (message.requestTransfer != null && Object.hasOwnProperty.call(message, 'requestTransfer'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.requestTransfer)
+      if (message.acceptTransfer != null && Object.hasOwnProperty.call(message, 'acceptTransfer'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.acceptTransfer)
+      if (message.resendChunks != null && Object.hasOwnProperty.call(message, 'resendChunks'))
+        $root.meshtastic.resend_chunks.encode(message.resendChunks, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      return writer
+    }
 
     /**
      * Decodes a ChunkedPayloadResponse message from the specified reader or buffer.
@@ -6893,6 +7965,32 @@ export const meshtastic = ($root.meshtastic = (() => {
     ChannelSettings.prototype.moduleSettings = null
 
     /**
+     * Encodes the specified ChannelSettings message. Does not implicitly {@link meshtastic.ChannelSettings.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ChannelSettings
+     * @static
+     * @param {meshtastic.IChannelSettings} message ChannelSettings message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ChannelSettings.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.channelNum != null && Object.hasOwnProperty.call(message, 'channelNum'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.channelNum)
+      if (message.psk != null && Object.hasOwnProperty.call(message, 'psk')) writer.uint32(/* id 2, wireType 2 =*/ 18).bytes(message.psk)
+      if (message.name != null && Object.hasOwnProperty.call(message, 'name'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.name)
+      if (message.id != null && Object.hasOwnProperty.call(message, 'id')) writer.uint32(/* id 4, wireType 5 =*/ 37).fixed32(message.id)
+      if (message.uplinkEnabled != null && Object.hasOwnProperty.call(message, 'uplinkEnabled'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.uplinkEnabled)
+      if (message.downlinkEnabled != null && Object.hasOwnProperty.call(message, 'downlinkEnabled'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.downlinkEnabled)
+      if (message.moduleSettings != null && Object.hasOwnProperty.call(message, 'moduleSettings'))
+        $root.meshtastic.ModuleSettings.encode(message.moduleSettings, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
+      return writer
+    }
+
+    /**
      * Decodes a ChannelSettings message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ChannelSettings
@@ -6991,6 +8089,24 @@ export const meshtastic = ($root.meshtastic = (() => {
     ModuleSettings.prototype.isClientMuted = false
 
     /**
+     * Encodes the specified ModuleSettings message. Does not implicitly {@link meshtastic.ModuleSettings.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ModuleSettings
+     * @static
+     * @param {meshtastic.IModuleSettings} message ModuleSettings message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ModuleSettings.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.positionPrecision != null && Object.hasOwnProperty.call(message, 'positionPrecision'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.positionPrecision)
+      if (message.isClientMuted != null && Object.hasOwnProperty.call(message, 'isClientMuted'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.isClientMuted)
+      return writer
+    }
+
+    /**
      * Decodes a ModuleSettings message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ModuleSettings
@@ -7078,6 +8194,25 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     Channel.prototype.role = 0
+
+    /**
+     * Encodes the specified Channel message. Does not implicitly {@link meshtastic.Channel.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Channel
+     * @static
+     * @param {meshtastic.IChannel} message Channel message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Channel.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.index != null && Object.hasOwnProperty.call(message, 'index'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.index)
+      if (message.settings != null && Object.hasOwnProperty.call(message, 'settings'))
+        $root.meshtastic.ChannelSettings.encode(message.settings, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.role != null && Object.hasOwnProperty.call(message, 'role')) writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.role)
+      return writer
+    }
 
     /**
      * Decodes a Channel message from the specified reader or buffer.
@@ -7315,6 +8450,70 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified ModuleConfig message. Does not implicitly {@link meshtastic.ModuleConfig.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ModuleConfig
+     * @static
+     * @param {meshtastic.IModuleConfig} message ModuleConfig message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ModuleConfig.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.mqtt != null && Object.hasOwnProperty.call(message, 'mqtt'))
+        $root.meshtastic.ModuleConfig.MQTTConfig.encode(message.mqtt, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.serial != null && Object.hasOwnProperty.call(message, 'serial'))
+        $root.meshtastic.ModuleConfig.SerialConfig.encode(message.serial, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.externalNotification != null && Object.hasOwnProperty.call(message, 'externalNotification'))
+        $root.meshtastic.ModuleConfig.ExternalNotificationConfig.encode(
+          message.externalNotification,
+          writer.uint32(/* id 3, wireType 2 =*/ 26).fork()
+        ).ldelim()
+      if (message.storeForward != null && Object.hasOwnProperty.call(message, 'storeForward'))
+        $root.meshtastic.ModuleConfig.StoreForwardConfig.encode(
+          message.storeForward,
+          writer.uint32(/* id 4, wireType 2 =*/ 34).fork()
+        ).ldelim()
+      if (message.rangeTest != null && Object.hasOwnProperty.call(message, 'rangeTest'))
+        $root.meshtastic.ModuleConfig.RangeTestConfig.encode(message.rangeTest, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.telemetry != null && Object.hasOwnProperty.call(message, 'telemetry'))
+        $root.meshtastic.ModuleConfig.TelemetryConfig.encode(message.telemetry, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.cannedMessage != null && Object.hasOwnProperty.call(message, 'cannedMessage'))
+        $root.meshtastic.ModuleConfig.CannedMessageConfig.encode(
+          message.cannedMessage,
+          writer.uint32(/* id 7, wireType 2 =*/ 58).fork()
+        ).ldelim()
+      if (message.audio != null && Object.hasOwnProperty.call(message, 'audio'))
+        $root.meshtastic.ModuleConfig.AudioConfig.encode(message.audio, writer.uint32(/* id 8, wireType 2 =*/ 66).fork()).ldelim()
+      if (message.remoteHardware != null && Object.hasOwnProperty.call(message, 'remoteHardware'))
+        $root.meshtastic.ModuleConfig.RemoteHardwareConfig.encode(
+          message.remoteHardware,
+          writer.uint32(/* id 9, wireType 2 =*/ 74).fork()
+        ).ldelim()
+      if (message.neighborInfo != null && Object.hasOwnProperty.call(message, 'neighborInfo'))
+        $root.meshtastic.ModuleConfig.NeighborInfoConfig.encode(
+          message.neighborInfo,
+          writer.uint32(/* id 10, wireType 2 =*/ 82).fork()
+        ).ldelim()
+      if (message.ambientLighting != null && Object.hasOwnProperty.call(message, 'ambientLighting'))
+        $root.meshtastic.ModuleConfig.AmbientLightingConfig.encode(
+          message.ambientLighting,
+          writer.uint32(/* id 11, wireType 2 =*/ 90).fork()
+        ).ldelim()
+      if (message.detectionSensor != null && Object.hasOwnProperty.call(message, 'detectionSensor'))
+        $root.meshtastic.ModuleConfig.DetectionSensorConfig.encode(
+          message.detectionSensor,
+          writer.uint32(/* id 12, wireType 2 =*/ 98).fork()
+        ).ldelim()
+      if (message.paxcounter != null && Object.hasOwnProperty.call(message, 'paxcounter'))
+        $root.meshtastic.ModuleConfig.PaxcounterConfig.encode(
+          message.paxcounter,
+          writer.uint32(/* id 13, wireType 2 =*/ 106).fork()
+        ).ldelim()
+      return writer
+    }
+
+    /**
      * Decodes a ModuleConfig message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.ModuleConfig
@@ -7533,6 +8732,45 @@ export const meshtastic = ($root.meshtastic = (() => {
       MQTTConfig.prototype.mapReportSettings = null
 
       /**
+       * Encodes the specified MQTTConfig message. Does not implicitly {@link meshtastic.ModuleConfig.MQTTConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.MQTTConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IMQTTConfig} message MQTTConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      MQTTConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.address != null && Object.hasOwnProperty.call(message, 'address'))
+          writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.address)
+        if (message.username != null && Object.hasOwnProperty.call(message, 'username'))
+          writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.username)
+        if (message.password != null && Object.hasOwnProperty.call(message, 'password'))
+          writer.uint32(/* id 4, wireType 2 =*/ 34).string(message.password)
+        if (message.encryptionEnabled != null && Object.hasOwnProperty.call(message, 'encryptionEnabled'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.encryptionEnabled)
+        if (message.jsonEnabled != null && Object.hasOwnProperty.call(message, 'jsonEnabled'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.jsonEnabled)
+        if (message.tlsEnabled != null && Object.hasOwnProperty.call(message, 'tlsEnabled'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).bool(message.tlsEnabled)
+        if (message.root != null && Object.hasOwnProperty.call(message, 'root'))
+          writer.uint32(/* id 8, wireType 2 =*/ 66).string(message.root)
+        if (message.proxyToClientEnabled != null && Object.hasOwnProperty.call(message, 'proxyToClientEnabled'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).bool(message.proxyToClientEnabled)
+        if (message.mapReportingEnabled != null && Object.hasOwnProperty.call(message, 'mapReportingEnabled'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.mapReportingEnabled)
+        if (message.mapReportSettings != null && Object.hasOwnProperty.call(message, 'mapReportSettings'))
+          $root.meshtastic.ModuleConfig.MapReportSettings.encode(
+            message.mapReportSettings,
+            writer.uint32(/* id 11, wireType 2 =*/ 90).fork()
+          ).ldelim()
+        return writer
+      }
+
+      /**
        * Decodes a MQTTConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.MQTTConfig
@@ -7645,6 +8883,24 @@ export const meshtastic = ($root.meshtastic = (() => {
       MapReportSettings.prototype.positionPrecision = 0
 
       /**
+       * Encodes the specified MapReportSettings message. Does not implicitly {@link meshtastic.ModuleConfig.MapReportSettings.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.MapReportSettings
+       * @static
+       * @param {meshtastic.ModuleConfig.IMapReportSettings} message MapReportSettings message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      MapReportSettings.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.publishIntervalSecs != null && Object.hasOwnProperty.call(message, 'publishIntervalSecs'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.publishIntervalSecs)
+        if (message.positionPrecision != null && Object.hasOwnProperty.call(message, 'positionPrecision'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.positionPrecision)
+        return writer
+      }
+
+      /**
        * Decodes a MapReportSettings message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.MapReportSettings
@@ -7731,6 +8987,27 @@ export const meshtastic = ($root.meshtastic = (() => {
       RemoteHardwareConfig.prototype.availablePins = $util.emptyArray
 
       /**
+       * Encodes the specified RemoteHardwareConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RemoteHardwareConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.RemoteHardwareConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IRemoteHardwareConfig} message RemoteHardwareConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      RemoteHardwareConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.allowUndefinedPinAccess != null && Object.hasOwnProperty.call(message, 'allowUndefinedPinAccess'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.allowUndefinedPinAccess)
+        if (message.availablePins != null && message.availablePins.length)
+          for (let i = 0; i < message.availablePins.length; ++i)
+            $root.meshtastic.RemoteHardwarePin.encode(message.availablePins[i], writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+        return writer
+      }
+
+      /**
        * Decodes a RemoteHardwareConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.RemoteHardwareConfig
@@ -7812,6 +9089,24 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       NeighborInfoConfig.prototype.updateInterval = 0
+
+      /**
+       * Encodes the specified NeighborInfoConfig message. Does not implicitly {@link meshtastic.ModuleConfig.NeighborInfoConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.NeighborInfoConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.INeighborInfoConfig} message NeighborInfoConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      NeighborInfoConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.updateInterval != null && Object.hasOwnProperty.call(message, 'updateInterval'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.updateInterval)
+        return writer
+      }
 
       /**
        * Decodes a NeighborInfoConfig message from the specified reader or buffer.
@@ -7956,6 +9251,36 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       DetectionSensorConfig.prototype.usePullup = false
+
+      /**
+       * Encodes the specified DetectionSensorConfig message. Does not implicitly {@link meshtastic.ModuleConfig.DetectionSensorConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IDetectionSensorConfig} message DetectionSensorConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      DetectionSensorConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.minimumBroadcastSecs != null && Object.hasOwnProperty.call(message, 'minimumBroadcastSecs'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.minimumBroadcastSecs)
+        if (message.stateBroadcastSecs != null && Object.hasOwnProperty.call(message, 'stateBroadcastSecs'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.stateBroadcastSecs)
+        if (message.sendBell != null && Object.hasOwnProperty.call(message, 'sendBell'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.sendBell)
+        if (message.name != null && Object.hasOwnProperty.call(message, 'name'))
+          writer.uint32(/* id 5, wireType 2 =*/ 42).string(message.name)
+        if (message.monitorPin != null && Object.hasOwnProperty.call(message, 'monitorPin'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.monitorPin)
+        if (message.detectionTriggeredHigh != null && Object.hasOwnProperty.call(message, 'detectionTriggeredHigh'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).bool(message.detectionTriggeredHigh)
+        if (message.usePullup != null && Object.hasOwnProperty.call(message, 'usePullup'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.usePullup)
+        return writer
+      }
 
       /**
        * Decodes a DetectionSensorConfig message from the specified reader or buffer.
@@ -8103,6 +9428,34 @@ export const meshtastic = ($root.meshtastic = (() => {
       AudioConfig.prototype.i2sSck = 0
 
       /**
+       * Encodes the specified AudioConfig message. Does not implicitly {@link meshtastic.ModuleConfig.AudioConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.AudioConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IAudioConfig} message AudioConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      AudioConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.codec2Enabled != null && Object.hasOwnProperty.call(message, 'codec2Enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.codec2Enabled)
+        if (message.pttPin != null && Object.hasOwnProperty.call(message, 'pttPin'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.pttPin)
+        if (message.bitrate != null && Object.hasOwnProperty.call(message, 'bitrate'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.bitrate)
+        if (message.i2sWs != null && Object.hasOwnProperty.call(message, 'i2sWs'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.i2sWs)
+        if (message.i2sSd != null && Object.hasOwnProperty.call(message, 'i2sSd'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.i2sSd)
+        if (message.i2sDin != null && Object.hasOwnProperty.call(message, 'i2sDin'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.i2sDin)
+        if (message.i2sSck != null && Object.hasOwnProperty.call(message, 'i2sSck'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.i2sSck)
+        return writer
+      }
+
+      /**
        * Decodes an AudioConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.AudioConfig
@@ -8246,6 +9599,28 @@ export const meshtastic = ($root.meshtastic = (() => {
       PaxcounterConfig.prototype.bleThreshold = 0
 
       /**
+       * Encodes the specified PaxcounterConfig message. Does not implicitly {@link meshtastic.ModuleConfig.PaxcounterConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.PaxcounterConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IPaxcounterConfig} message PaxcounterConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      PaxcounterConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.paxcounterUpdateInterval != null && Object.hasOwnProperty.call(message, 'paxcounterUpdateInterval'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.paxcounterUpdateInterval)
+        if (message.wifiThreshold != null && Object.hasOwnProperty.call(message, 'wifiThreshold'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.wifiThreshold)
+        if (message.bleThreshold != null && Object.hasOwnProperty.call(message, 'bleThreshold'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.bleThreshold)
+        return writer
+      }
+
+      /**
        * Decodes a PaxcounterConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.PaxcounterConfig
@@ -8386,6 +9761,34 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       SerialConfig.prototype.overrideConsoleSerialPort = false
+
+      /**
+       * Encodes the specified SerialConfig message. Does not implicitly {@link meshtastic.ModuleConfig.SerialConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.SerialConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.ISerialConfig} message SerialConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      SerialConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.echo != null && Object.hasOwnProperty.call(message, 'echo'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.echo)
+        if (message.rxd != null && Object.hasOwnProperty.call(message, 'rxd')) writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.rxd)
+        if (message.txd != null && Object.hasOwnProperty.call(message, 'txd')) writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.txd)
+        if (message.baud != null && Object.hasOwnProperty.call(message, 'baud'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).int32(message.baud)
+        if (message.timeout != null && Object.hasOwnProperty.call(message, 'timeout'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.timeout)
+        if (message.mode != null && Object.hasOwnProperty.call(message, 'mode'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.mode)
+        if (message.overrideConsoleSerialPort != null && Object.hasOwnProperty.call(message, 'overrideConsoleSerialPort'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.overrideConsoleSerialPort)
+        return writer
+      }
 
       /**
        * Decodes a SerialConfig message from the specified reader or buffer.
@@ -8695,6 +10098,50 @@ export const meshtastic = ($root.meshtastic = (() => {
       ExternalNotificationConfig.prototype.useI2sAsBuzzer = false
 
       /**
+       * Encodes the specified ExternalNotificationConfig message. Does not implicitly {@link meshtastic.ModuleConfig.ExternalNotificationConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IExternalNotificationConfig} message ExternalNotificationConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      ExternalNotificationConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.outputMs != null && Object.hasOwnProperty.call(message, 'outputMs'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.outputMs)
+        if (message.output != null && Object.hasOwnProperty.call(message, 'output'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.output)
+        if (message.active != null && Object.hasOwnProperty.call(message, 'active'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.active)
+        if (message.alertMessage != null && Object.hasOwnProperty.call(message, 'alertMessage'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.alertMessage)
+        if (message.alertBell != null && Object.hasOwnProperty.call(message, 'alertBell'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.alertBell)
+        if (message.usePwm != null && Object.hasOwnProperty.call(message, 'usePwm'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).bool(message.usePwm)
+        if (message.outputVibra != null && Object.hasOwnProperty.call(message, 'outputVibra'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.outputVibra)
+        if (message.outputBuzzer != null && Object.hasOwnProperty.call(message, 'outputBuzzer'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.outputBuzzer)
+        if (message.alertMessageVibra != null && Object.hasOwnProperty.call(message, 'alertMessageVibra'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.alertMessageVibra)
+        if (message.alertMessageBuzzer != null && Object.hasOwnProperty.call(message, 'alertMessageBuzzer'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).bool(message.alertMessageBuzzer)
+        if (message.alertBellVibra != null && Object.hasOwnProperty.call(message, 'alertBellVibra'))
+          writer.uint32(/* id 12, wireType 0 =*/ 96).bool(message.alertBellVibra)
+        if (message.alertBellBuzzer != null && Object.hasOwnProperty.call(message, 'alertBellBuzzer'))
+          writer.uint32(/* id 13, wireType 0 =*/ 104).bool(message.alertBellBuzzer)
+        if (message.nagTimeout != null && Object.hasOwnProperty.call(message, 'nagTimeout'))
+          writer.uint32(/* id 14, wireType 0 =*/ 112).uint32(message.nagTimeout)
+        if (message.useI2sAsBuzzer != null && Object.hasOwnProperty.call(message, 'useI2sAsBuzzer'))
+          writer.uint32(/* id 15, wireType 0 =*/ 120).bool(message.useI2sAsBuzzer)
+        return writer
+      }
+
+      /**
        * Decodes an ExternalNotificationConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.ExternalNotificationConfig
@@ -8859,6 +10306,32 @@ export const meshtastic = ($root.meshtastic = (() => {
       StoreForwardConfig.prototype.isServer = false
 
       /**
+       * Encodes the specified StoreForwardConfig message. Does not implicitly {@link meshtastic.ModuleConfig.StoreForwardConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.StoreForwardConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IStoreForwardConfig} message StoreForwardConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      StoreForwardConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.heartbeat != null && Object.hasOwnProperty.call(message, 'heartbeat'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).bool(message.heartbeat)
+        if (message.records != null && Object.hasOwnProperty.call(message, 'records'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.records)
+        if (message.historyReturnMax != null && Object.hasOwnProperty.call(message, 'historyReturnMax'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.historyReturnMax)
+        if (message.historyReturnWindow != null && Object.hasOwnProperty.call(message, 'historyReturnWindow'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.historyReturnWindow)
+        if (message.isServer != null && Object.hasOwnProperty.call(message, 'isServer'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.isServer)
+        return writer
+      }
+
+      /**
        * Decodes a StoreForwardConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.StoreForwardConfig
@@ -8960,6 +10433,26 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       RangeTestConfig.prototype.save = false
+
+      /**
+       * Encodes the specified RangeTestConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RangeTestConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.RangeTestConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IRangeTestConfig} message RangeTestConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      RangeTestConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.enabled)
+        if (message.sender != null && Object.hasOwnProperty.call(message, 'sender'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.sender)
+        if (message.save != null && Object.hasOwnProperty.call(message, 'save'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.save)
+        return writer
+      }
 
       /**
        * Decodes a RangeTestConfig message from the specified reader or buffer.
@@ -9126,6 +10619,40 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @instance
        */
       TelemetryConfig.prototype.powerScreenEnabled = false
+
+      /**
+       * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.TelemetryConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.ITelemetryConfig} message TelemetryConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      TelemetryConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.deviceUpdateInterval != null && Object.hasOwnProperty.call(message, 'deviceUpdateInterval'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.deviceUpdateInterval)
+        if (message.environmentUpdateInterval != null && Object.hasOwnProperty.call(message, 'environmentUpdateInterval'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.environmentUpdateInterval)
+        if (message.environmentMeasurementEnabled != null && Object.hasOwnProperty.call(message, 'environmentMeasurementEnabled'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.environmentMeasurementEnabled)
+        if (message.environmentScreenEnabled != null && Object.hasOwnProperty.call(message, 'environmentScreenEnabled'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.environmentScreenEnabled)
+        if (message.environmentDisplayFahrenheit != null && Object.hasOwnProperty.call(message, 'environmentDisplayFahrenheit'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.environmentDisplayFahrenheit)
+        if (message.airQualityEnabled != null && Object.hasOwnProperty.call(message, 'airQualityEnabled'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.airQualityEnabled)
+        if (message.airQualityInterval != null && Object.hasOwnProperty.call(message, 'airQualityInterval'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.airQualityInterval)
+        if (message.powerMeasurementEnabled != null && Object.hasOwnProperty.call(message, 'powerMeasurementEnabled'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.powerMeasurementEnabled)
+        if (message.powerUpdateInterval != null && Object.hasOwnProperty.call(message, 'powerUpdateInterval'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.powerUpdateInterval)
+        if (message.powerScreenEnabled != null && Object.hasOwnProperty.call(message, 'powerScreenEnabled'))
+          writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.powerScreenEnabled)
+        return writer
+      }
 
       /**
        * Decodes a TelemetryConfig message from the specified reader or buffer.
@@ -9321,6 +10848,42 @@ export const meshtastic = ($root.meshtastic = (() => {
       CannedMessageConfig.prototype.sendBell = false
 
       /**
+       * Encodes the specified CannedMessageConfig message. Does not implicitly {@link meshtastic.ModuleConfig.CannedMessageConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.CannedMessageConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.ICannedMessageConfig} message CannedMessageConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      CannedMessageConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.rotary1Enabled != null && Object.hasOwnProperty.call(message, 'rotary1Enabled'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.rotary1Enabled)
+        if (message.inputbrokerPinA != null && Object.hasOwnProperty.call(message, 'inputbrokerPinA'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.inputbrokerPinA)
+        if (message.inputbrokerPinB != null && Object.hasOwnProperty.call(message, 'inputbrokerPinB'))
+          writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.inputbrokerPinB)
+        if (message.inputbrokerPinPress != null && Object.hasOwnProperty.call(message, 'inputbrokerPinPress'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.inputbrokerPinPress)
+        if (message.inputbrokerEventCw != null && Object.hasOwnProperty.call(message, 'inputbrokerEventCw'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).int32(message.inputbrokerEventCw)
+        if (message.inputbrokerEventCcw != null && Object.hasOwnProperty.call(message, 'inputbrokerEventCcw'))
+          writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.inputbrokerEventCcw)
+        if (message.inputbrokerEventPress != null && Object.hasOwnProperty.call(message, 'inputbrokerEventPress'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.inputbrokerEventPress)
+        if (message.updown1Enabled != null && Object.hasOwnProperty.call(message, 'updown1Enabled'))
+          writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.updown1Enabled)
+        if (message.enabled != null && Object.hasOwnProperty.call(message, 'enabled'))
+          writer.uint32(/* id 9, wireType 0 =*/ 72).bool(message.enabled)
+        if (message.allowInputSource != null && Object.hasOwnProperty.call(message, 'allowInputSource'))
+          writer.uint32(/* id 10, wireType 2 =*/ 82).string(message.allowInputSource)
+        if (message.sendBell != null && Object.hasOwnProperty.call(message, 'sendBell'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).bool(message.sendBell)
+        return writer
+      }
+
+      /**
        * Decodes a CannedMessageConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
@@ -9488,6 +11051,29 @@ export const meshtastic = ($root.meshtastic = (() => {
       AmbientLightingConfig.prototype.blue = 0
 
       /**
+       * Encodes the specified AmbientLightingConfig message. Does not implicitly {@link meshtastic.ModuleConfig.AmbientLightingConfig.verify|verify} messages.
+       * @function encode
+       * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
+       * @static
+       * @param {meshtastic.ModuleConfig.IAmbientLightingConfig} message AmbientLightingConfig message or plain object to encode
+       * @param {$protobuf.Writer} [writer] Writer to encode to
+       * @returns {$protobuf.Writer} Writer
+       */
+      AmbientLightingConfig.encode = function encode(message, writer) {
+        if (!writer) writer = $Writer.create()
+        if (message.ledState != null && Object.hasOwnProperty.call(message, 'ledState'))
+          writer.uint32(/* id 1, wireType 0 =*/ 8).bool(message.ledState)
+        if (message.current != null && Object.hasOwnProperty.call(message, 'current'))
+          writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.current)
+        if (message.red != null && Object.hasOwnProperty.call(message, 'red')) writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.red)
+        if (message.green != null && Object.hasOwnProperty.call(message, 'green'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.green)
+        if (message.blue != null && Object.hasOwnProperty.call(message, 'blue'))
+          writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.blue)
+        return writer
+      }
+
+      /**
        * Decodes an AmbientLightingConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.ModuleConfig.AmbientLightingConfig
@@ -9586,6 +11172,25 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     RemoteHardwarePin.prototype.type = 0
+
+    /**
+     * Encodes the specified RemoteHardwarePin message. Does not implicitly {@link meshtastic.RemoteHardwarePin.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.RemoteHardwarePin
+     * @static
+     * @param {meshtastic.IRemoteHardwarePin} message RemoteHardwarePin message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    RemoteHardwarePin.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.gpioPin != null && Object.hasOwnProperty.call(message, 'gpioPin'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.gpioPin)
+      if (message.name != null && Object.hasOwnProperty.call(message, 'name'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.name)
+      if (message.type != null && Object.hasOwnProperty.call(message, 'type')) writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.type)
+      return writer
+    }
 
     /**
      * Decodes a RemoteHardwarePin message from the specified reader or buffer.
@@ -9877,6 +11482,30 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['uptimeSeconds'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified DeviceMetrics message. Does not implicitly {@link meshtastic.DeviceMetrics.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.DeviceMetrics
+     * @static
+     * @param {meshtastic.IDeviceMetrics} message DeviceMetrics message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    DeviceMetrics.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.batteryLevel != null && Object.hasOwnProperty.call(message, 'batteryLevel'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.batteryLevel)
+      if (message.voltage != null && Object.hasOwnProperty.call(message, 'voltage'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.voltage)
+      if (message.channelUtilization != null && Object.hasOwnProperty.call(message, 'channelUtilization'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.channelUtilization)
+      if (message.airUtilTx != null && Object.hasOwnProperty.call(message, 'airUtilTx'))
+        writer.uint32(/* id 4, wireType 5 =*/ 37).float(message.airUtilTx)
+      if (message.uptimeSeconds != null && Object.hasOwnProperty.call(message, 'uptimeSeconds'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.uptimeSeconds)
+      return writer
+    }
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -10211,6 +11840,52 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified EnvironmentMetrics message. Does not implicitly {@link meshtastic.EnvironmentMetrics.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.EnvironmentMetrics
+     * @static
+     * @param {meshtastic.IEnvironmentMetrics} message EnvironmentMetrics message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    EnvironmentMetrics.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.temperature != null && Object.hasOwnProperty.call(message, 'temperature'))
+        writer.uint32(/* id 1, wireType 5 =*/ 13).float(message.temperature)
+      if (message.relativeHumidity != null && Object.hasOwnProperty.call(message, 'relativeHumidity'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.relativeHumidity)
+      if (message.barometricPressure != null && Object.hasOwnProperty.call(message, 'barometricPressure'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.barometricPressure)
+      if (message.gasResistance != null && Object.hasOwnProperty.call(message, 'gasResistance'))
+        writer.uint32(/* id 4, wireType 5 =*/ 37).float(message.gasResistance)
+      if (message.voltage != null && Object.hasOwnProperty.call(message, 'voltage'))
+        writer.uint32(/* id 5, wireType 5 =*/ 45).float(message.voltage)
+      if (message.current != null && Object.hasOwnProperty.call(message, 'current'))
+        writer.uint32(/* id 6, wireType 5 =*/ 53).float(message.current)
+      if (message.iaq != null && Object.hasOwnProperty.call(message, 'iaq')) writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.iaq)
+      if (message.distance != null && Object.hasOwnProperty.call(message, 'distance'))
+        writer.uint32(/* id 8, wireType 5 =*/ 69).float(message.distance)
+      if (message.lux != null && Object.hasOwnProperty.call(message, 'lux')) writer.uint32(/* id 9, wireType 5 =*/ 77).float(message.lux)
+      if (message.whiteLux != null && Object.hasOwnProperty.call(message, 'whiteLux'))
+        writer.uint32(/* id 10, wireType 5 =*/ 85).float(message.whiteLux)
+      if (message.irLux != null && Object.hasOwnProperty.call(message, 'irLux'))
+        writer.uint32(/* id 11, wireType 5 =*/ 93).float(message.irLux)
+      if (message.uvLux != null && Object.hasOwnProperty.call(message, 'uvLux'))
+        writer.uint32(/* id 12, wireType 5 =*/ 101).float(message.uvLux)
+      if (message.windDirection != null && Object.hasOwnProperty.call(message, 'windDirection'))
+        writer.uint32(/* id 13, wireType 0 =*/ 104).uint32(message.windDirection)
+      if (message.windSpeed != null && Object.hasOwnProperty.call(message, 'windSpeed'))
+        writer.uint32(/* id 14, wireType 5 =*/ 117).float(message.windSpeed)
+      if (message.weight != null && Object.hasOwnProperty.call(message, 'weight'))
+        writer.uint32(/* id 15, wireType 5 =*/ 125).float(message.weight)
+      if (message.windGust != null && Object.hasOwnProperty.call(message, 'windGust'))
+        writer.uint32(/* id 16, wireType 5 =*/ 133).float(message.windGust)
+      if (message.windLull != null && Object.hasOwnProperty.call(message, 'windLull'))
+        writer.uint32(/* id 17, wireType 5 =*/ 141).float(message.windLull)
+      return writer
+    }
+
+    /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.EnvironmentMetrics
@@ -10420,6 +12095,32 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['ch3Current'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified PowerMetrics message. Does not implicitly {@link meshtastic.PowerMetrics.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.PowerMetrics
+     * @static
+     * @param {meshtastic.IPowerMetrics} message PowerMetrics message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    PowerMetrics.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.ch1Voltage != null && Object.hasOwnProperty.call(message, 'ch1Voltage'))
+        writer.uint32(/* id 1, wireType 5 =*/ 13).float(message.ch1Voltage)
+      if (message.ch1Current != null && Object.hasOwnProperty.call(message, 'ch1Current'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.ch1Current)
+      if (message.ch2Voltage != null && Object.hasOwnProperty.call(message, 'ch2Voltage'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.ch2Voltage)
+      if (message.ch2Current != null && Object.hasOwnProperty.call(message, 'ch2Current'))
+        writer.uint32(/* id 4, wireType 5 =*/ 37).float(message.ch2Current)
+      if (message.ch3Voltage != null && Object.hasOwnProperty.call(message, 'ch3Voltage'))
+        writer.uint32(/* id 5, wireType 5 =*/ 45).float(message.ch3Voltage)
+      if (message.ch3Current != null && Object.hasOwnProperty.call(message, 'ch3Current'))
+        writer.uint32(/* id 6, wireType 5 =*/ 53).float(message.ch3Current)
+      return writer
+    }
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -10679,6 +12380,44 @@ export const meshtastic = ($root.meshtastic = (() => {
     })
 
     /**
+     * Encodes the specified AirQualityMetrics message. Does not implicitly {@link meshtastic.AirQualityMetrics.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.AirQualityMetrics
+     * @static
+     * @param {meshtastic.IAirQualityMetrics} message AirQualityMetrics message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    AirQualityMetrics.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.pm10Standard != null && Object.hasOwnProperty.call(message, 'pm10Standard'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.pm10Standard)
+      if (message.pm25Standard != null && Object.hasOwnProperty.call(message, 'pm25Standard'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.pm25Standard)
+      if (message.pm100Standard != null && Object.hasOwnProperty.call(message, 'pm100Standard'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.pm100Standard)
+      if (message.pm10Environmental != null && Object.hasOwnProperty.call(message, 'pm10Environmental'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.pm10Environmental)
+      if (message.pm25Environmental != null && Object.hasOwnProperty.call(message, 'pm25Environmental'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.pm25Environmental)
+      if (message.pm100Environmental != null && Object.hasOwnProperty.call(message, 'pm100Environmental'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.pm100Environmental)
+      if (message.particles_03um != null && Object.hasOwnProperty.call(message, 'particles_03um'))
+        writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.particles_03um)
+      if (message.particles_05um != null && Object.hasOwnProperty.call(message, 'particles_05um'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.particles_05um)
+      if (message.particles_10um != null && Object.hasOwnProperty.call(message, 'particles_10um'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.particles_10um)
+      if (message.particles_25um != null && Object.hasOwnProperty.call(message, 'particles_25um'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).uint32(message.particles_25um)
+      if (message.particles_50um != null && Object.hasOwnProperty.call(message, 'particles_50um'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.particles_50um)
+      if (message.particles_100um != null && Object.hasOwnProperty.call(message, 'particles_100um'))
+        writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.particles_100um)
+      return writer
+    }
+
+    /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.AirQualityMetrics
@@ -10849,6 +12588,36 @@ export const meshtastic = ($root.meshtastic = (() => {
     LocalStats.prototype.numTotalNodes = 0
 
     /**
+     * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.LocalStats
+     * @static
+     * @param {meshtastic.ILocalStats} message LocalStats message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    LocalStats.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.uptimeSeconds != null && Object.hasOwnProperty.call(message, 'uptimeSeconds'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.uptimeSeconds)
+      if (message.channelUtilization != null && Object.hasOwnProperty.call(message, 'channelUtilization'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.channelUtilization)
+      if (message.airUtilTx != null && Object.hasOwnProperty.call(message, 'airUtilTx'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.airUtilTx)
+      if (message.numPacketsTx != null && Object.hasOwnProperty.call(message, 'numPacketsTx'))
+        writer.uint32(/* id 4, wireType 0 =*/ 32).uint32(message.numPacketsTx)
+      if (message.numPacketsRx != null && Object.hasOwnProperty.call(message, 'numPacketsRx'))
+        writer.uint32(/* id 5, wireType 0 =*/ 40).uint32(message.numPacketsRx)
+      if (message.numPacketsRxBad != null && Object.hasOwnProperty.call(message, 'numPacketsRxBad'))
+        writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.numPacketsRxBad)
+      if (message.numOnlineNodes != null && Object.hasOwnProperty.call(message, 'numOnlineNodes'))
+        writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.numOnlineNodes)
+      if (message.numTotalNodes != null && Object.hasOwnProperty.call(message, 'numTotalNodes'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.numTotalNodes)
+      return writer
+    }
+
+    /**
      * Decodes a LocalStats message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.LocalStats
@@ -10997,6 +12766,32 @@ export const meshtastic = ($root.meshtastic = (() => {
       get: $util.oneOfGetter(($oneOfFields = ['deviceMetrics', 'environmentMetrics', 'airQualityMetrics', 'powerMetrics', 'localStats'])),
       set: $util.oneOfSetter($oneOfFields),
     })
+
+    /**
+     * Encodes the specified Telemetry message. Does not implicitly {@link meshtastic.Telemetry.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Telemetry
+     * @static
+     * @param {meshtastic.ITelemetry} message Telemetry message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Telemetry.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.time != null && Object.hasOwnProperty.call(message, 'time'))
+        writer.uint32(/* id 1, wireType 5 =*/ 13).fixed32(message.time)
+      if (message.deviceMetrics != null && Object.hasOwnProperty.call(message, 'deviceMetrics'))
+        $root.meshtastic.DeviceMetrics.encode(message.deviceMetrics, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.environmentMetrics != null && Object.hasOwnProperty.call(message, 'environmentMetrics'))
+        $root.meshtastic.EnvironmentMetrics.encode(message.environmentMetrics, writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+      if (message.airQualityMetrics != null && Object.hasOwnProperty.call(message, 'airQualityMetrics'))
+        $root.meshtastic.AirQualityMetrics.encode(message.airQualityMetrics, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.powerMetrics != null && Object.hasOwnProperty.call(message, 'powerMetrics'))
+        $root.meshtastic.PowerMetrics.encode(message.powerMetrics, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.localStats != null && Object.hasOwnProperty.call(message, 'localStats'))
+        $root.meshtastic.LocalStats.encode(message.localStats, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      return writer
+    }
 
     /**
      * Decodes a Telemetry message from the specified reader or buffer.
@@ -11160,6 +12955,24 @@ export const meshtastic = ($root.meshtastic = (() => {
     Nau7802Config.prototype.calibrationFactor = 0
 
     /**
+     * Encodes the specified Nau7802Config message. Does not implicitly {@link meshtastic.Nau7802Config.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.Nau7802Config
+     * @static
+     * @param {meshtastic.INau7802Config} message Nau7802Config message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Nau7802Config.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.zeroOffset != null && Object.hasOwnProperty.call(message, 'zeroOffset'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.zeroOffset)
+      if (message.calibrationFactor != null && Object.hasOwnProperty.call(message, 'calibrationFactor'))
+        writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.calibrationFactor)
+      return writer
+    }
+
+    /**
      * Decodes a Nau7802Config message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.Nau7802Config
@@ -11254,6 +13067,27 @@ export const meshtastic = ($root.meshtastic = (() => {
     XModem.prototype.buffer = $util.newBuffer([])
 
     /**
+     * Encodes the specified XModem message. Does not implicitly {@link meshtastic.XModem.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.XModem
+     * @static
+     * @param {meshtastic.IXModem} message XModem message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    XModem.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.control != null && Object.hasOwnProperty.call(message, 'control'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.control)
+      if (message.seq != null && Object.hasOwnProperty.call(message, 'seq')) writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.seq)
+      if (message.crc16 != null && Object.hasOwnProperty.call(message, 'crc16'))
+        writer.uint32(/* id 3, wireType 0 =*/ 24).uint32(message.crc16)
+      if (message.buffer != null && Object.hasOwnProperty.call(message, 'buffer'))
+        writer.uint32(/* id 4, wireType 2 =*/ 34).bytes(message.buffer)
+      return writer
+    }
+
+    /**
      * Decodes a XModem message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.XModem
@@ -11323,6 +13157,684 @@ export const meshtastic = ($root.meshtastic = (() => {
     })()
 
     return XModem
+  })()
+
+  meshtastic.DeviceProfile = (function () {
+    /**
+     * Properties of a DeviceProfile.
+     * @memberof meshtastic
+     * @interface IDeviceProfile
+     * @property {string|null} [longName] Long name for the node
+     * @property {string|null} [shortName] Short name of the node
+     * @property {string|null} [channelUrl] The url of the channels from our node
+     * @property {meshtastic.ILocalConfig|null} [config] The Config of the node
+     * @property {meshtastic.ILocalModuleConfig|null} [moduleConfig] The ModuleConfig of the node
+     */
+
+    /**
+     * Constructs a new DeviceProfile.
+     * @memberof meshtastic
+     * @classdesc This abstraction is used to contain any configuration for provisioning a node on any client.
+     * It is useful for importing and exporting configurations.
+     * @implements IDeviceProfile
+     * @constructor
+     * @param {meshtastic.IDeviceProfile=} [properties] Properties to set
+     */
+    function DeviceProfile(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * Long name for the node
+     * @member {string|null|undefined} longName
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.longName = null
+
+    /**
+     * Short name of the node
+     * @member {string|null|undefined} shortName
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.shortName = null
+
+    /**
+     * The url of the channels from our node
+     * @member {string|null|undefined} channelUrl
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.channelUrl = null
+
+    /**
+     * The Config of the node
+     * @member {meshtastic.ILocalConfig|null|undefined} config
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.config = null
+
+    /**
+     * The ModuleConfig of the node
+     * @member {meshtastic.ILocalModuleConfig|null|undefined} moduleConfig
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.moduleConfig = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_longName', {
+      get: $util.oneOfGetter(($oneOfFields = ['longName'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_shortName', {
+      get: $util.oneOfGetter(($oneOfFields = ['shortName'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_channelUrl', {
+      get: $util.oneOfGetter(($oneOfFields = ['channelUrl'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_config', {
+      get: $util.oneOfGetter(($oneOfFields = ['config'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_moduleConfig', {
+      get: $util.oneOfGetter(($oneOfFields = ['moduleConfig'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    /**
+     * Encodes the specified DeviceProfile message. Does not implicitly {@link meshtastic.DeviceProfile.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.DeviceProfile
+     * @static
+     * @param {meshtastic.IDeviceProfile} message DeviceProfile message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    DeviceProfile.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.longName != null && Object.hasOwnProperty.call(message, 'longName'))
+        writer.uint32(/* id 1, wireType 2 =*/ 10).string(message.longName)
+      if (message.shortName != null && Object.hasOwnProperty.call(message, 'shortName'))
+        writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.shortName)
+      if (message.channelUrl != null && Object.hasOwnProperty.call(message, 'channelUrl'))
+        writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.channelUrl)
+      if (message.config != null && Object.hasOwnProperty.call(message, 'config'))
+        $root.meshtastic.LocalConfig.encode(message.config, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.moduleConfig != null && Object.hasOwnProperty.call(message, 'moduleConfig'))
+        $root.meshtastic.LocalModuleConfig.encode(message.moduleConfig, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      return writer
+    }
+
+    /**
+     * Decodes a DeviceProfile message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.DeviceProfile
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.DeviceProfile} DeviceProfile
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    DeviceProfile.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.DeviceProfile()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.longName = reader.string()
+            break
+          }
+          case 2: {
+            message.shortName = reader.string()
+            break
+          }
+          case 3: {
+            message.channelUrl = reader.string()
+            break
+          }
+          case 4: {
+            message.config = $root.meshtastic.LocalConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 5: {
+            message.moduleConfig = $root.meshtastic.LocalModuleConfig.decode(reader, reader.uint32())
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return DeviceProfile
+  })()
+
+  meshtastic.LocalConfig = (function () {
+    /**
+     * Properties of a LocalConfig.
+     * @memberof meshtastic
+     * @interface ILocalConfig
+     * @property {meshtastic.Config.IDeviceConfig|null} [device] The part of the config that is specific to the Device
+     * @property {meshtastic.Config.IPositionConfig|null} [position] The part of the config that is specific to the GPS Position
+     * @property {meshtastic.Config.IPowerConfig|null} [power] The part of the config that is specific to the Power settings
+     * @property {meshtastic.Config.INetworkConfig|null} [network] The part of the config that is specific to the Wifi Settings
+     * @property {meshtastic.Config.IDisplayConfig|null} [display] The part of the config that is specific to the Display
+     * @property {meshtastic.Config.ILoRaConfig|null} [lora] The part of the config that is specific to the Lora Radio
+     * @property {meshtastic.Config.IBluetoothConfig|null} [bluetooth] The part of the config that is specific to the Bluetooth settings
+     * @property {number|null} [version] A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     * @property {meshtastic.Config.ISecurityConfig|null} [security] The part of the config that is specific to Security settings
+     */
+
+    /**
+     * Constructs a new LocalConfig.
+     * @memberof meshtastic
+     * @classdesc Represents a LocalConfig.
+     * @implements ILocalConfig
+     * @constructor
+     * @param {meshtastic.ILocalConfig=} [properties] Properties to set
+     */
+    function LocalConfig(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * The part of the config that is specific to the Device
+     * @member {meshtastic.Config.IDeviceConfig|null|undefined} device
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.device = null
+
+    /**
+     * The part of the config that is specific to the GPS Position
+     * @member {meshtastic.Config.IPositionConfig|null|undefined} position
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.position = null
+
+    /**
+     * The part of the config that is specific to the Power settings
+     * @member {meshtastic.Config.IPowerConfig|null|undefined} power
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.power = null
+
+    /**
+     * The part of the config that is specific to the Wifi Settings
+     * @member {meshtastic.Config.INetworkConfig|null|undefined} network
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.network = null
+
+    /**
+     * The part of the config that is specific to the Display
+     * @member {meshtastic.Config.IDisplayConfig|null|undefined} display
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.display = null
+
+    /**
+     * The part of the config that is specific to the Lora Radio
+     * @member {meshtastic.Config.ILoRaConfig|null|undefined} lora
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.lora = null
+
+    /**
+     * The part of the config that is specific to the Bluetooth settings
+     * @member {meshtastic.Config.IBluetoothConfig|null|undefined} bluetooth
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.bluetooth = null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     * @member {number} version
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.version = 0
+
+    /**
+     * The part of the config that is specific to Security settings
+     * @member {meshtastic.Config.ISecurityConfig|null|undefined} security
+     * @memberof meshtastic.LocalConfig
+     * @instance
+     */
+    LocalConfig.prototype.security = null
+
+    /**
+     * Encodes the specified LocalConfig message. Does not implicitly {@link meshtastic.LocalConfig.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.LocalConfig
+     * @static
+     * @param {meshtastic.ILocalConfig} message LocalConfig message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    LocalConfig.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.device != null && Object.hasOwnProperty.call(message, 'device'))
+        $root.meshtastic.Config.DeviceConfig.encode(message.device, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.position != null && Object.hasOwnProperty.call(message, 'position'))
+        $root.meshtastic.Config.PositionConfig.encode(message.position, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.power != null && Object.hasOwnProperty.call(message, 'power'))
+        $root.meshtastic.Config.PowerConfig.encode(message.power, writer.uint32(/* id 3, wireType 2 =*/ 26).fork()).ldelim()
+      if (message.network != null && Object.hasOwnProperty.call(message, 'network'))
+        $root.meshtastic.Config.NetworkConfig.encode(message.network, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
+      if (message.display != null && Object.hasOwnProperty.call(message, 'display'))
+        $root.meshtastic.Config.DisplayConfig.encode(message.display, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.lora != null && Object.hasOwnProperty.call(message, 'lora'))
+        $root.meshtastic.Config.LoRaConfig.encode(message.lora, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.bluetooth != null && Object.hasOwnProperty.call(message, 'bluetooth'))
+        $root.meshtastic.Config.BluetoothConfig.encode(message.bluetooth, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
+      if (message.version != null && Object.hasOwnProperty.call(message, 'version'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.version)
+      if (message.security != null && Object.hasOwnProperty.call(message, 'security'))
+        $root.meshtastic.Config.SecurityConfig.encode(message.security, writer.uint32(/* id 9, wireType 2 =*/ 74).fork()).ldelim()
+      return writer
+    }
+
+    /**
+     * Decodes a LocalConfig message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.LocalConfig
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.LocalConfig} LocalConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    LocalConfig.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.LocalConfig()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.device = $root.meshtastic.Config.DeviceConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 2: {
+            message.position = $root.meshtastic.Config.PositionConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 3: {
+            message.power = $root.meshtastic.Config.PowerConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 4: {
+            message.network = $root.meshtastic.Config.NetworkConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 5: {
+            message.display = $root.meshtastic.Config.DisplayConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 6: {
+            message.lora = $root.meshtastic.Config.LoRaConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 7: {
+            message.bluetooth = $root.meshtastic.Config.BluetoothConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 8: {
+            message.version = reader.uint32()
+            break
+          }
+          case 9: {
+            message.security = $root.meshtastic.Config.SecurityConfig.decode(reader, reader.uint32())
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return LocalConfig
+  })()
+
+  meshtastic.LocalModuleConfig = (function () {
+    /**
+     * Properties of a LocalModuleConfig.
+     * @memberof meshtastic
+     * @interface ILocalModuleConfig
+     * @property {meshtastic.ModuleConfig.IMQTTConfig|null} [mqtt] The part of the config that is specific to the MQTT module
+     * @property {meshtastic.ModuleConfig.ISerialConfig|null} [serial] The part of the config that is specific to the Serial module
+     * @property {meshtastic.ModuleConfig.IExternalNotificationConfig|null} [externalNotification] The part of the config that is specific to the ExternalNotification module
+     * @property {meshtastic.ModuleConfig.IStoreForwardConfig|null} [storeForward] The part of the config that is specific to the Store & Forward module
+     * @property {meshtastic.ModuleConfig.IRangeTestConfig|null} [rangeTest] The part of the config that is specific to the RangeTest module
+     * @property {meshtastic.ModuleConfig.ITelemetryConfig|null} [telemetry] The part of the config that is specific to the Telemetry module
+     * @property {meshtastic.ModuleConfig.ICannedMessageConfig|null} [cannedMessage] The part of the config that is specific to the Canned Message module
+     * @property {meshtastic.ModuleConfig.IAudioConfig|null} [audio] The part of the config that is specific to the Audio module
+     * @property {meshtastic.ModuleConfig.IRemoteHardwareConfig|null} [remoteHardware] The part of the config that is specific to the Remote Hardware module
+     * @property {meshtastic.ModuleConfig.INeighborInfoConfig|null} [neighborInfo] The part of the config that is specific to the Neighbor Info module
+     * @property {meshtastic.ModuleConfig.IAmbientLightingConfig|null} [ambientLighting] The part of the config that is specific to the Ambient Lighting module
+     * @property {meshtastic.ModuleConfig.IDetectionSensorConfig|null} [detectionSensor] The part of the config that is specific to the Detection Sensor module
+     * @property {meshtastic.ModuleConfig.IPaxcounterConfig|null} [paxcounter] Paxcounter Config
+     * @property {number|null} [version] A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     */
+
+    /**
+     * Constructs a new LocalModuleConfig.
+     * @memberof meshtastic
+     * @classdesc Represents a LocalModuleConfig.
+     * @implements ILocalModuleConfig
+     * @constructor
+     * @param {meshtastic.ILocalModuleConfig=} [properties] Properties to set
+     */
+    function LocalModuleConfig(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * The part of the config that is specific to the MQTT module
+     * @member {meshtastic.ModuleConfig.IMQTTConfig|null|undefined} mqtt
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.mqtt = null
+
+    /**
+     * The part of the config that is specific to the Serial module
+     * @member {meshtastic.ModuleConfig.ISerialConfig|null|undefined} serial
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.serial = null
+
+    /**
+     * The part of the config that is specific to the ExternalNotification module
+     * @member {meshtastic.ModuleConfig.IExternalNotificationConfig|null|undefined} externalNotification
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.externalNotification = null
+
+    /**
+     * The part of the config that is specific to the Store & Forward module
+     * @member {meshtastic.ModuleConfig.IStoreForwardConfig|null|undefined} storeForward
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.storeForward = null
+
+    /**
+     * The part of the config that is specific to the RangeTest module
+     * @member {meshtastic.ModuleConfig.IRangeTestConfig|null|undefined} rangeTest
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.rangeTest = null
+
+    /**
+     * The part of the config that is specific to the Telemetry module
+     * @member {meshtastic.ModuleConfig.ITelemetryConfig|null|undefined} telemetry
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.telemetry = null
+
+    /**
+     * The part of the config that is specific to the Canned Message module
+     * @member {meshtastic.ModuleConfig.ICannedMessageConfig|null|undefined} cannedMessage
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.cannedMessage = null
+
+    /**
+     * The part of the config that is specific to the Audio module
+     * @member {meshtastic.ModuleConfig.IAudioConfig|null|undefined} audio
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.audio = null
+
+    /**
+     * The part of the config that is specific to the Remote Hardware module
+     * @member {meshtastic.ModuleConfig.IRemoteHardwareConfig|null|undefined} remoteHardware
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.remoteHardware = null
+
+    /**
+     * The part of the config that is specific to the Neighbor Info module
+     * @member {meshtastic.ModuleConfig.INeighborInfoConfig|null|undefined} neighborInfo
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.neighborInfo = null
+
+    /**
+     * The part of the config that is specific to the Ambient Lighting module
+     * @member {meshtastic.ModuleConfig.IAmbientLightingConfig|null|undefined} ambientLighting
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.ambientLighting = null
+
+    /**
+     * The part of the config that is specific to the Detection Sensor module
+     * @member {meshtastic.ModuleConfig.IDetectionSensorConfig|null|undefined} detectionSensor
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.detectionSensor = null
+
+    /**
+     * Paxcounter Config
+     * @member {meshtastic.ModuleConfig.IPaxcounterConfig|null|undefined} paxcounter
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.paxcounter = null
+
+    /**
+     * A version integer used to invalidate old save files when we make
+     * incompatible changes This integer is set at build time and is private to
+     * NodeDB.cpp in the device code.
+     * @member {number} version
+     * @memberof meshtastic.LocalModuleConfig
+     * @instance
+     */
+    LocalModuleConfig.prototype.version = 0
+
+    /**
+     * Encodes the specified LocalModuleConfig message. Does not implicitly {@link meshtastic.LocalModuleConfig.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.LocalModuleConfig
+     * @static
+     * @param {meshtastic.ILocalModuleConfig} message LocalModuleConfig message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    LocalModuleConfig.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.mqtt != null && Object.hasOwnProperty.call(message, 'mqtt'))
+        $root.meshtastic.ModuleConfig.MQTTConfig.encode(message.mqtt, writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.serial != null && Object.hasOwnProperty.call(message, 'serial'))
+        $root.meshtastic.ModuleConfig.SerialConfig.encode(message.serial, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      if (message.externalNotification != null && Object.hasOwnProperty.call(message, 'externalNotification'))
+        $root.meshtastic.ModuleConfig.ExternalNotificationConfig.encode(
+          message.externalNotification,
+          writer.uint32(/* id 3, wireType 2 =*/ 26).fork()
+        ).ldelim()
+      if (message.storeForward != null && Object.hasOwnProperty.call(message, 'storeForward'))
+        $root.meshtastic.ModuleConfig.StoreForwardConfig.encode(
+          message.storeForward,
+          writer.uint32(/* id 4, wireType 2 =*/ 34).fork()
+        ).ldelim()
+      if (message.rangeTest != null && Object.hasOwnProperty.call(message, 'rangeTest'))
+        $root.meshtastic.ModuleConfig.RangeTestConfig.encode(message.rangeTest, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.telemetry != null && Object.hasOwnProperty.call(message, 'telemetry'))
+        $root.meshtastic.ModuleConfig.TelemetryConfig.encode(message.telemetry, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.cannedMessage != null && Object.hasOwnProperty.call(message, 'cannedMessage'))
+        $root.meshtastic.ModuleConfig.CannedMessageConfig.encode(
+          message.cannedMessage,
+          writer.uint32(/* id 7, wireType 2 =*/ 58).fork()
+        ).ldelim()
+      if (message.version != null && Object.hasOwnProperty.call(message, 'version'))
+        writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.version)
+      if (message.audio != null && Object.hasOwnProperty.call(message, 'audio'))
+        $root.meshtastic.ModuleConfig.AudioConfig.encode(message.audio, writer.uint32(/* id 9, wireType 2 =*/ 74).fork()).ldelim()
+      if (message.remoteHardware != null && Object.hasOwnProperty.call(message, 'remoteHardware'))
+        $root.meshtastic.ModuleConfig.RemoteHardwareConfig.encode(
+          message.remoteHardware,
+          writer.uint32(/* id 10, wireType 2 =*/ 82).fork()
+        ).ldelim()
+      if (message.neighborInfo != null && Object.hasOwnProperty.call(message, 'neighborInfo'))
+        $root.meshtastic.ModuleConfig.NeighborInfoConfig.encode(
+          message.neighborInfo,
+          writer.uint32(/* id 11, wireType 2 =*/ 90).fork()
+        ).ldelim()
+      if (message.ambientLighting != null && Object.hasOwnProperty.call(message, 'ambientLighting'))
+        $root.meshtastic.ModuleConfig.AmbientLightingConfig.encode(
+          message.ambientLighting,
+          writer.uint32(/* id 12, wireType 2 =*/ 98).fork()
+        ).ldelim()
+      if (message.detectionSensor != null && Object.hasOwnProperty.call(message, 'detectionSensor'))
+        $root.meshtastic.ModuleConfig.DetectionSensorConfig.encode(
+          message.detectionSensor,
+          writer.uint32(/* id 13, wireType 2 =*/ 106).fork()
+        ).ldelim()
+      if (message.paxcounter != null && Object.hasOwnProperty.call(message, 'paxcounter'))
+        $root.meshtastic.ModuleConfig.PaxcounterConfig.encode(
+          message.paxcounter,
+          writer.uint32(/* id 14, wireType 2 =*/ 114).fork()
+        ).ldelim()
+      return writer
+    }
+
+    /**
+     * Decodes a LocalModuleConfig message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.LocalModuleConfig
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.LocalModuleConfig} LocalModuleConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    LocalModuleConfig.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.LocalModuleConfig()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.mqtt = $root.meshtastic.ModuleConfig.MQTTConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 2: {
+            message.serial = $root.meshtastic.ModuleConfig.SerialConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 3: {
+            message.externalNotification = $root.meshtastic.ModuleConfig.ExternalNotificationConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 4: {
+            message.storeForward = $root.meshtastic.ModuleConfig.StoreForwardConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 5: {
+            message.rangeTest = $root.meshtastic.ModuleConfig.RangeTestConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 6: {
+            message.telemetry = $root.meshtastic.ModuleConfig.TelemetryConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 7: {
+            message.cannedMessage = $root.meshtastic.ModuleConfig.CannedMessageConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 9: {
+            message.audio = $root.meshtastic.ModuleConfig.AudioConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 10: {
+            message.remoteHardware = $root.meshtastic.ModuleConfig.RemoteHardwareConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 11: {
+            message.neighborInfo = $root.meshtastic.ModuleConfig.NeighborInfoConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 12: {
+            message.ambientLighting = $root.meshtastic.ModuleConfig.AmbientLightingConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 13: {
+            message.detectionSensor = $root.meshtastic.ModuleConfig.DetectionSensorConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 14: {
+            message.paxcounter = $root.meshtastic.ModuleConfig.PaxcounterConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 8: {
+            message.version = reader.uint32()
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return LocalModuleConfig
   })()
 
   return meshtastic

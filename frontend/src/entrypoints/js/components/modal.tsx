@@ -79,9 +79,9 @@ export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, c
   })
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-gray-900 bg-opacity-75">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-gray-900 bg-opacity-75 w-[100vw] h-[100vh]">
       <div
-        className="relative sm:w-full sm:min-w-full md:w-[80%] md:min-w-[80%] lg:w-[40%] lg:min-w-[40%] mx-auto bg-white rounded-lg shadow-lg"
+        className="relative w-[95%] max-w-[95%] sm:w-[90%] sm:max-w-[90%] md:max-w-2xl lg:max-w-2xl mx-auto bg-white rounded-lg shadow-lg"
         ref={ref}
       >
         <div className="flex justify-between items-center p-2 border-b shadow-md">

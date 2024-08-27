@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-bin/emit-hardware-models >  frontend/src/hardware-modules.ts
-bin/emit-schema-ts >  frontend/src/db-entities.d.ts
+bin/_emit-hardware-models >  frontend/src/hardware-modules.ts
+bin/_emit-schema-ts >  frontend/src/db-entities.d.ts
 
 npx prettier -w frontend/src/db-entities.d.ts frontend/src/hardware-modules.ts

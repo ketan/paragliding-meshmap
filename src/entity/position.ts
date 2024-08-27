@@ -27,13 +27,13 @@ export default class Position extends BaseType {
   gatewayId?: number
 
   @Column({ type: 'integer', nullable: true })
-  latitude?: number
+  latitude?: number | null
 
   @Column({ type: 'integer', nullable: true })
-  longitude?: number
+  longitude?: number | null
 
   @Column({ type: 'integer', nullable: true })
-  altitude?: number
+  altitude?: number | null
 
   constructor(opts: Partial<Position> = {}) {
     super()

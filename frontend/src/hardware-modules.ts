@@ -70,6 +70,11 @@ export const HardwareModelIDToName = {
   '69': 'HELTEC_MESH_NODE_T114',
   '70': 'SENSECAP_INDICATOR',
   '71': 'TRACKER_T1000_E',
+  '72': 'RAK3172',
+  '73': 'WIO_E5',
+  '74': 'RADIOMASTER_900_BANDIT',
+  '75': 'ME25LS01_4Y10TD',
+  '76': 'RP2040_FEATHER_RFM95',
   '255': 'PRIVATE_HW',
 } as Record<number, string>
 
@@ -145,6 +150,11 @@ export const HardwareModelNameToID = {
   HELTEC_MESH_NODE_T114: 69,
   SENSECAP_INDICATOR: 70,
   TRACKER_T1000_E: 71,
+  RAK3172: 72,
+  WIO_E5: 73,
+  RADIOMASTER_900_BANDIT: 74,
+  ME25LS01_4Y10TD: 75,
+  RP2040_FEATHER_RFM95: 76,
   PRIVATE_HW: 255,
 } as Record<string, number>
 

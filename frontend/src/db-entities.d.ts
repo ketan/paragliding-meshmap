@@ -46,11 +46,6 @@ export interface MapReportsEntity {
   shortName: string
   updatedAt: string
 }
-export interface MigrationsEntity {
-  id: number
-  name: string
-  timestamp: number
-}
 export interface NeighbourInfosEntity {
   createdAt: string
   id: number

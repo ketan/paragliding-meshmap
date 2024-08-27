@@ -184,6 +184,12 @@ export namespace meshtastic {
 
     /** Config bluetooth */
     bluetooth?: meshtastic.Config.IBluetoothConfig | null
+
+    /** Config security */
+    security?: meshtastic.Config.ISecurityConfig | null
+
+    /** Config sessionkey */
+    sessionkey?: meshtastic.Config.ISessionkeyConfig | null
   }
 
   /** Represents a Config. */
@@ -215,8 +221,14 @@ export namespace meshtastic {
     /** Config bluetooth. */
     public bluetooth?: meshtastic.Config.IBluetoothConfig | null
 
+    /** Config security. */
+    public security?: meshtastic.Config.ISecurityConfig | null
+
+    /** Config sessionkey. */
+    public sessionkey?: meshtastic.Config.ISessionkeyConfig | null
+
     /** Payload Variant */
-    public payloadVariant?: 'device' | 'position' | 'power' | 'network' | 'display' | 'lora' | 'bluetooth'
+    public payloadVariant?: 'device' | 'position' | 'power' | 'network' | 'display' | 'lora' | 'bluetooth' | 'security' | 'sessionkey'
 
     /**
      * Decodes a Config message from the specified reader or buffer.
@@ -235,14 +247,11 @@ export namespace meshtastic {
       /** Sets the role of node */
       role?: meshtastic.Config.DeviceConfig.Role | null
 
-      /** Disabling this will disable the SerialConsole by not initilizing the StreamAPI */
-      serialEnabled?: boolean | null
-
       /**
-       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
-       * Set this to true to leave the debug log outputting even when API is active.
+       * Disabling this will disable the SerialConsole by not initilizing the StreamAPI
+       * Moved to SecurityConfig
        */
-      debugLogEnabled?: boolean | null
+      serialEnabled?: boolean | null
 
       /**
        * For boards without a hard wired button, this is the pin number that will be used
@@ -271,6 +280,7 @@ export namespace meshtastic {
       /**
        * If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
+       * Moved to SecurityConfig
        */
       isManaged?: boolean | null
 
@@ -295,14 +305,11 @@ export namespace meshtastic {
       /** Sets the role of node */
       public role: meshtastic.Config.DeviceConfig.Role
 
-      /** Disabling this will disable the SerialConsole by not initilizing the StreamAPI */
-      public serialEnabled: boolean
-
       /**
-       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
-       * Set this to true to leave the debug log outputting even when API is active.
+       * Disabling this will disable the SerialConsole by not initilizing the StreamAPI
+       * Moved to SecurityConfig
        */
-      public debugLogEnabled: boolean
+      public serialEnabled: boolean
 
       /**
        * For boards without a hard wired button, this is the pin number that will be used
@@ -331,6 +338,7 @@ export namespace meshtastic {
       /**
        * If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
+       * Moved to SecurityConfig
        */
       public isManaged: boolean
 
@@ -1226,6 +1234,7 @@ export namespace meshtastic {
         SHORT_SLOW = 5,
         SHORT_FAST = 6,
         LONG_MODERATE = 7,
+        SHORT_TURBO = 8,
       }
     }
 
@@ -1239,9 +1248,6 @@ export namespace meshtastic {
 
       /** Specified PIN for PairingMode.FixedPin */
       fixedPin?: number | null
-
-      /** Enables device (serial style logs) over Bluetooth */
-      deviceLoggingEnabled?: boolean | null
     }
 
     /** Represents a BluetoothConfig. */
@@ -1261,9 +1267,6 @@ export namespace meshtastic {
       /** Specified PIN for PairingMode.FixedPin */
       public fixedPin: number
 
-      /** Enables device (serial style logs) over Bluetooth */
-      public deviceLoggingEnabled: boolean
-
       /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
        * @param reader Reader or buffer to decode from
@@ -1282,6 +1285,116 @@ export namespace meshtastic {
         FIXED_PIN = 1,
         NO_PIN = 2,
       }
+    }
+
+    /** Properties of a SecurityConfig. */
+    interface ISecurityConfig {
+      /**
+       * The public key of the user's device.
+       * Sent out to other nodes on the mesh to allow them to compute a shared secret key.
+       */
+      publicKey?: Uint8Array | null
+
+      /**
+       * The private key of the device.
+       * Used to create a shared key with a remote device.
+       */
+      privateKey?: Uint8Array | null
+
+      /** The public key authorized to send admin messages to this node. */
+      adminKey?: Uint8Array[] | null
+
+      /**
+       * If true, device is considered to be "managed" by a mesh administrator via admin messages
+       * Device is managed by a mesh administrator.
+       */
+      isManaged?: boolean | null
+
+      /** Serial Console over the Stream API." */
+      serialEnabled?: boolean | null
+
+      /**
+       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
+       * Output live debug logging over serial or bluetooth is set to true.
+       */
+      debugLogApiEnabled?: boolean | null
+
+      /** Allow incoming device control over the insecure legacy admin channel. */
+      adminChannelEnabled?: boolean | null
+    }
+
+    /** Represents a SecurityConfig. */
+    class SecurityConfig implements ISecurityConfig {
+      /**
+       * Constructs a new SecurityConfig.
+       * @param [properties] Properties to set
+       */
+      constructor(properties?: meshtastic.Config.ISecurityConfig)
+
+      /**
+       * The public key of the user's device.
+       * Sent out to other nodes on the mesh to allow them to compute a shared secret key.
+       */
+      public publicKey: Uint8Array
+
+      /**
+       * The private key of the device.
+       * Used to create a shared key with a remote device.
+       */
+      public privateKey: Uint8Array
+
+      /** The public key authorized to send admin messages to this node. */
+      public adminKey: Uint8Array[]
+
+      /**
+       * If true, device is considered to be "managed" by a mesh administrator via admin messages
+       * Device is managed by a mesh administrator.
+       */
+      public isManaged: boolean
+
+      /** Serial Console over the Stream API." */
+      public serialEnabled: boolean
+
+      /**
+       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
+       * Output live debug logging over serial or bluetooth is set to true.
+       */
+      public debugLogApiEnabled: boolean
+
+      /** Allow incoming device control over the insecure legacy admin channel. */
+      public adminChannelEnabled: boolean
+
+      /**
+       * Decodes a SecurityConfig message from the specified reader or buffer.
+       * @param reader Reader or buffer to decode from
+       * @param [length] Message length if known beforehand
+       * @returns SecurityConfig
+       * @throws {Error} If the payload is not a reader or valid buffer
+       * @throws {$protobuf.util.ProtocolError} If required fields are missing
+       */
+      public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.Config.SecurityConfig
+    }
+
+    /** Properties of a SessionkeyConfig. */
+    interface ISessionkeyConfig {}
+
+    /** Blank config request, strictly for getting the session key */
+    class SessionkeyConfig implements ISessionkeyConfig {
+      /**
+       * Constructs a new SessionkeyConfig.
+       * @param [properties] Properties to set
+       */
+      constructor(properties?: meshtastic.Config.ISessionkeyConfig)
+
+      /**
+       * Decodes a SessionkeyConfig message from the specified reader or buffer.
+       * @param reader Reader or buffer to decode from
+       * @param [length] Message length if known beforehand
+       * @returns SessionkeyConfig
+       * @throws {Error} If the payload is not a reader or valid buffer
+       * @throws {$protobuf.util.ProtocolError} If required fields are missing
+       */
+      public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.Config.SessionkeyConfig
     }
   }
 
@@ -1402,13 +1515,13 @@ export namespace meshtastic {
      * The new preferred location encoding, multiply by 1e-7 to get degrees
      * in floating point
      */
-    public latitudeI: number
+    public latitudeI?: number | null
 
     /** TODO: REPLACE */
-    public longitudeI: number
+    public longitudeI?: number | null
 
     /** In meters above MSL (but see issue #359) */
-    public altitude: number
+    public altitude?: number | null
 
     /**
      * This is usually not sent over the mesh (to save space), but it is sent
@@ -1431,10 +1544,10 @@ export namespace meshtastic {
     public timestampMillisAdjust: number
 
     /** HAE altitude in meters - can be used instead of MSL altitude */
-    public altitudeHae: number
+    public altitudeHae?: number | null
 
     /** Geoidal separation in meters */
-    public altitudeGeoidalSeparation: number
+    public altitudeGeoidalSeparation?: number | null
 
     /**
      * Horizontal, Vertical and Position Dilution of Precision, in 1/100 units
@@ -1466,10 +1579,10 @@ export namespace meshtastic {
      * - "yaw" indicates a relative rotation about the vertical axis
      * TODO: REMOVE/INTEGRATE
      */
-    public groundSpeed: number
+    public groundSpeed?: number | null
 
     /** TODO: REPLACE */
-    public groundTrack: number
+    public groundTrack?: number | null
 
     /** GPS fix quality (from NMEA GxGGA statement or similar) */
     public fixQuality: number
@@ -1611,6 +1724,11 @@ export namespace meshtastic {
     HELTEC_MESH_NODE_T114 = 69,
     SENSECAP_INDICATOR = 70,
     TRACKER_T1000_E = 71,
+    RAK3172 = 72,
+    WIO_E5 = 73,
+    RADIOMASTER_900_BANDIT = 74,
+    ME25LS01_4Y10TD = 75,
+    RP2040_FEATHER_RFM95 = 76,
     PRIVATE_HW = 255,
   }
 
@@ -1657,6 +1775,12 @@ export namespace meshtastic {
 
     /** Indicates that the user's role in the mesh */
     role?: meshtastic.Config.DeviceConfig.Role | null
+
+    /**
+     * The public key of the user's device.
+     * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
+     */
+    publicKey?: Uint8Array | null
   }
 
   /**
@@ -1731,6 +1855,12 @@ export namespace meshtastic {
     public role: meshtastic.Config.DeviceConfig.Role
 
     /**
+     * The public key of the user's device.
+     * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
+     */
+    public publicKey: Uint8Array
+
+    /**
      * Decodes a User message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
@@ -1743,11 +1873,20 @@ export namespace meshtastic {
 
   /** Properties of a RouteDiscovery. */
   interface IRouteDiscovery {
-    /** The list of nodenums this packet has visited so far */
+    /** The list of nodenums this packet has visited so far to the destination. */
     route?: number[] | null
+
+    /** The list of SNRs (in dB, scaled by 4) in the route towards the destination. */
+    snrTowards?: number[] | null
+
+    /** The list of nodenums the packet has visited on the way back from the destination. */
+    routeBack?: number[] | null
+
+    /** The list of SNRs (in dB, scaled by 4) in the route back from the destination. */
+    snrBack?: number[] | null
   }
 
-  /** A message used in our Dynamic Source Routing protocol (RFC 4728 based) */
+  /** A message used in a traceroute */
   class RouteDiscovery implements IRouteDiscovery {
     /**
      * Constructs a new RouteDiscovery.
@@ -1755,8 +1894,17 @@ export namespace meshtastic {
      */
     constructor(properties?: meshtastic.IRouteDiscovery)
 
-    /** The list of nodenums this packet has visited so far */
+    /** The list of nodenums this packet has visited so far to the destination. */
     public route: number[]
+
+    /** The list of SNRs (in dB, scaled by 4) in the route towards the destination. */
+    public snrTowards: number[]
+
+    /** The list of nodenums the packet has visited on the way back from the destination. */
+    public routeBack: number[]
+
+    /** The list of SNRs (in dB, scaled by 4) in the route back from the destination. */
+    public snrBack: number[]
 
     /**
      * Decodes a RouteDiscovery message from the specified reader or buffer.
@@ -1836,6 +1984,8 @@ export namespace meshtastic {
       DUTY_CYCLE_LIMIT = 9,
       BAD_REQUEST = 32,
       NOT_AUTHORIZED = 33,
+      PKI_FAILED = 34,
+      PKI_UNKNOWN_PUBKEY = 35,
     }
   }
 
@@ -1995,10 +2145,10 @@ export namespace meshtastic {
     public id: number
 
     /** latitude_i */
-    public latitudeI: number
+    public latitudeI?: number | null
 
     /** longitude_i */
-    public longitudeI: number
+    public longitudeI?: number | null
 
     /** Time the waypoint is to expire (epoch) */
     public expire: number
@@ -2175,6 +2325,12 @@ export namespace meshtastic {
      * When receiving a packet, the difference between hop_start and hop_limit gives how many hops it traveled.
      */
     hopStart?: number | null
+
+    /** Records the public key the packet was encrypted with, if applicable. */
+    publicKey?: Uint8Array | null
+
+    /** Indicates whether the packet was en/decrypted using PKI */
+    pkiEncrypted?: boolean | null
   }
 
   /**
@@ -2284,6 +2440,12 @@ export namespace meshtastic {
      * When receiving a packet, the difference between hop_start and hop_limit gives how many hops it traveled.
      */
     public hopStart: number
+
+    /** Records the public key the packet was encrypted with, if applicable. */
+    public publicKey: Uint8Array
+
+    /** Indicates whether the packet was en/decrypted using PKI */
+    public pkiEncrypted: boolean
 
     /** MeshPacket payloadVariant. */
     public payloadVariant?: 'decoded' | 'encrypted'
@@ -2722,6 +2884,9 @@ export namespace meshtastic {
 
     /** File system manifest messages */
     fileInfo?: meshtastic.IFileInfo | null
+
+    /** Notification message to the client */
+    clientNotification?: meshtastic.IClientNotification | null
   }
 
   /**
@@ -2801,6 +2966,9 @@ export namespace meshtastic {
     /** File system manifest messages */
     public fileInfo?: meshtastic.IFileInfo | null
 
+    /** Notification message to the client */
+    public clientNotification?: meshtastic.IClientNotification | null
+
     /** Log levels, chosen to match python logging conventions. */
     public payloadVariant?:
       | 'packet'
@@ -2817,6 +2985,7 @@ export namespace meshtastic {
       | 'metadata'
       | 'mqttClientProxyMessage'
       | 'fileInfo'
+      | 'clientNotification'
 
     /**
      * Decodes a FromRadio message from the specified reader or buffer.
@@ -2827,6 +2996,57 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.FromRadio
+  }
+
+  /** Properties of a ClientNotification. */
+  interface IClientNotification {
+    /** The id of the packet we're notifying in response to */
+    replyId?: number | null
+
+    /** Seconds since 1970 - or 0 for unknown/unset */
+    time?: number | null
+
+    /** The level type of notification */
+    level?: meshtastic.LogRecord.Level | null
+
+    /** The message body of the notification */
+    message?: string | null
+  }
+
+  /**
+   * A notification message from the device to the client
+   * To be used for important messages that should to be displayed to the user
+   * in the form of push notifications or validation messages when saving
+   * invalid configuration.
+   */
+  class ClientNotification implements IClientNotification {
+    /**
+     * Constructs a new ClientNotification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IClientNotification)
+
+    /** The id of the packet we're notifying in response to */
+    public replyId?: number | null
+
+    /** Seconds since 1970 - or 0 for unknown/unset */
+    public time: number
+
+    /** The level type of notification */
+    public level: meshtastic.LogRecord.Level
+
+    /** The message body of the notification */
+    public message: string
+
+    /**
+     * Decodes a ClientNotification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ClientNotification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.ClientNotification
   }
 
   /** Properties of a FileInfo. */
@@ -4734,7 +4954,7 @@ export namespace meshtastic {
 
       /**
        * Input event origin accepted by the canned message module.
-       * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
+       * Can be e.g. "rotEnc1", "upDownEnc1", "scanAndSelect", "cardkb", "serialkb", or keyword "_any"
        */
       allowInputSource?: string | null
 
@@ -4782,7 +5002,7 @@ export namespace meshtastic {
 
       /**
        * Input event origin accepted by the canned message module.
-       * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
+       * Can be e.g. "rotEnc1", "upDownEnc1", "scanAndSelect", "cardkb", "serialkb", or keyword "_any"
        */
       public allowInputSource: string
 
@@ -4992,19 +5212,19 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IDeviceMetrics)
 
     /** 0-100 (>100 means powered) */
-    public batteryLevel: number
+    public batteryLevel?: number | null
 
     /** Voltage measured */
-    public voltage: number
+    public voltage?: number | null
 
     /** Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise). */
-    public channelUtilization: number
+    public channelUtilization?: number | null
 
     /** Percent of airtime for transmission used within the last hour. */
-    public airUtilTx: number
+    public airUtilTx?: number | null
 
     /** How long the device has been running since the last reboot (in seconds) */
-    public uptimeSeconds: number
+    public uptimeSeconds?: number | null
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -5086,61 +5306,61 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IEnvironmentMetrics)
 
     /** Temperature measured */
-    public temperature: number
+    public temperature?: number | null
 
     /** Relative humidity percent measured */
-    public relativeHumidity: number
+    public relativeHumidity?: number | null
 
     /** Barometric pressure in hPA measured */
-    public barometricPressure: number
+    public barometricPressure?: number | null
 
     /** Gas resistance in MOhm measured */
-    public gasResistance: number
+    public gasResistance?: number | null
 
     /** Voltage measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x) */
-    public voltage: number
+    public voltage?: number | null
 
     /** Current measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x) */
-    public current: number
+    public current?: number | null
 
     /**
      * relative scale IAQ value as measured by Bosch BME680 . value 0-500.
      * Belongs to Air Quality but is not particle but VOC measurement. Other VOC values can also be put in here.
      */
-    public iaq: number
+    public iaq?: number | null
 
     /** RCWL9620 Doppler Radar Distance Sensor, used for water level detection. Float value in mm. */
-    public distance: number
+    public distance?: number | null
 
     /** VEML7700 high accuracy ambient light(Lux) digital 16-bit resolution sensor. */
-    public lux: number
+    public lux?: number | null
 
     /** VEML7700 high accuracy white light(irradiance) not calibrated digital 16-bit resolution sensor. */
-    public whiteLux: number
+    public whiteLux?: number | null
 
     /** Infrared lux */
-    public irLux: number
+    public irLux?: number | null
 
     /** Ultraviolet lux */
-    public uvLux: number
+    public uvLux?: number | null
 
     /**
      * Wind direction in degrees
      * 0 degrees = North, 90 = East, etc...
      */
-    public windDirection: number
+    public windDirection?: number | null
 
     /** Wind speed in m/s */
-    public windSpeed: number
+    public windSpeed?: number | null
 
     /** Weight in KG */
-    public weight: number
+    public weight?: number | null
 
     /** Wind gust in m/s */
-    public windGust: number
+    public windGust?: number | null
 
     /** Wind lull in m/s */
-    public windLull: number
+    public windLull?: number | null
 
     /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
@@ -5183,22 +5403,22 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IPowerMetrics)
 
     /** Voltage (Ch1) */
-    public ch1Voltage: number
+    public ch1Voltage?: number | null
 
     /** Current (Ch1) */
-    public ch1Current: number
+    public ch1Current?: number | null
 
     /** Voltage (Ch2) */
-    public ch2Voltage: number
+    public ch2Voltage?: number | null
 
     /** Current (Ch2) */
-    public ch2Current: number
+    public ch2Current?: number | null
 
     /** Voltage (Ch3) */
-    public ch3Voltage: number
+    public ch3Voltage?: number | null
 
     /** Current (Ch3) */
-    public ch3Current: number
+    public ch3Current?: number | null
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -5259,40 +5479,40 @@ export namespace meshtastic {
     constructor(properties?: meshtastic.IAirQualityMetrics)
 
     /** Concentration Units Standard PM1.0 */
-    public pm10Standard: number
+    public pm10Standard?: number | null
 
     /** Concentration Units Standard PM2.5 */
-    public pm25Standard: number
+    public pm25Standard?: number | null
 
     /** Concentration Units Standard PM10.0 */
-    public pm100Standard: number
+    public pm100Standard?: number | null
 
     /** Concentration Units Environmental PM1.0 */
-    public pm10Environmental: number
+    public pm10Environmental?: number | null
 
     /** Concentration Units Environmental PM2.5 */
-    public pm25Environmental: number
+    public pm25Environmental?: number | null
 
     /** Concentration Units Environmental PM10.0 */
-    public pm100Environmental: number
+    public pm100Environmental?: number | null
 
     /** 0.3um Particle Count */
-    public particles_03um: number
+    public particles_03um?: number | null
 
     /** 0.5um Particle Count */
-    public particles_05um: number
+    public particles_05um?: number | null
 
     /** 1.0um Particle Count */
-    public particles_10um: number
+    public particles_10um?: number | null
 
     /** 2.5um Particle Count */
-    public particles_25um: number
+    public particles_25um?: number | null
 
     /** 5.0um Particle Count */
-    public particles_50um: number
+    public particles_50um?: number | null
 
     /** 10.0um Particle Count */
-    public particles_100um: number
+    public particles_100um?: number | null
 
     /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
@@ -5303,6 +5523,76 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.AirQualityMetrics
+  }
+
+  /** Properties of a LocalStats. */
+  interface ILocalStats {
+    /** How long the device has been running since the last reboot (in seconds) */
+    uptimeSeconds?: number | null
+
+    /** Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise). */
+    channelUtilization?: number | null
+
+    /** Percent of airtime for transmission used within the last hour. */
+    airUtilTx?: number | null
+
+    /** Number of packets sent */
+    numPacketsTx?: number | null
+
+    /** Number of packets received good */
+    numPacketsRx?: number | null
+
+    /** Number of packets received that are malformed or violate the protocol */
+    numPacketsRxBad?: number | null
+
+    /** Number of nodes online (in the past 2 hours) */
+    numOnlineNodes?: number | null
+
+    /** Number of nodes total */
+    numTotalNodes?: number | null
+  }
+
+  /** Local device mesh statistics */
+  class LocalStats implements ILocalStats {
+    /**
+     * Constructs a new LocalStats.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.ILocalStats)
+
+    /** How long the device has been running since the last reboot (in seconds) */
+    public uptimeSeconds: number
+
+    /** Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise). */
+    public channelUtilization: number
+
+    /** Percent of airtime for transmission used within the last hour. */
+    public airUtilTx: number
+
+    /** Number of packets sent */
+    public numPacketsTx: number
+
+    /** Number of packets received good */
+    public numPacketsRx: number
+
+    /** Number of packets received that are malformed or violate the protocol */
+    public numPacketsRxBad: number
+
+    /** Number of nodes online (in the past 2 hours) */
+    public numOnlineNodes: number
+
+    /** Number of nodes total */
+    public numTotalNodes: number
+
+    /**
+     * Decodes a LocalStats message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns LocalStats
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LocalStats
   }
 
   /** Properties of a Telemetry. */
@@ -5321,6 +5611,9 @@ export namespace meshtastic {
 
     /** Power Metrics */
     powerMetrics?: meshtastic.IPowerMetrics | null
+
+    /** Local device mesh statistics */
+    localStats?: meshtastic.ILocalStats | null
   }
 
   /** Types of Measurements the telemetry module is equipped to handle */
@@ -5346,8 +5639,11 @@ export namespace meshtastic {
     /** Power Metrics */
     public powerMetrics?: meshtastic.IPowerMetrics | null
 
+    /** Local device mesh statistics */
+    public localStats?: meshtastic.ILocalStats | null
+
     /** Telemetry variant. */
-    public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics'
+    public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics' | 'localStats'
 
     /**
      * Decodes a Telemetry message from the specified reader or buffer.
@@ -5388,6 +5684,9 @@ export namespace meshtastic {
     AHT10 = 23,
     DFROBOT_LARK = 24,
     NAU7802 = 25,
+    BMP3XX = 26,
+    ICM20948 = 27,
+    MAX17048 = 28,
   }
 
   /** Properties of a Nau7802Config. */

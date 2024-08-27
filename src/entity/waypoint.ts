@@ -14,10 +14,10 @@ export default class Waypoint extends BaseType {
   waypointId: number
 
   @Column({ type: 'integer' })
-  latitude: number
+  latitude?: number | null
 
   @Column({ type: 'integer' })
-  longitude: number
+  longitude?: number | null
 
   @Column({ type: 'bigint', nullable: true })
   expire?: number

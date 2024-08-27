@@ -344,6 +344,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {meshtastic.Config.IDisplayConfig|null} [display] Config display
      * @property {meshtastic.Config.ILoRaConfig|null} [lora] Config lora
      * @property {meshtastic.Config.IBluetoothConfig|null} [bluetooth] Config bluetooth
+     * @property {meshtastic.Config.ISecurityConfig|null} [security] Config security
+     * @property {meshtastic.Config.ISessionkeyConfig|null} [sessionkey] Config sessionkey
      */
 
     /**
@@ -416,17 +418,35 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     Config.prototype.bluetooth = null
 
+    /**
+     * Config security.
+     * @member {meshtastic.Config.ISecurityConfig|null|undefined} security
+     * @memberof meshtastic.Config
+     * @instance
+     */
+    Config.prototype.security = null
+
+    /**
+     * Config sessionkey.
+     * @member {meshtastic.Config.ISessionkeyConfig|null|undefined} sessionkey
+     * @memberof meshtastic.Config
+     * @instance
+     */
+    Config.prototype.sessionkey = null
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
     /**
      * Payload Variant
-     * @member {"device"|"position"|"power"|"network"|"display"|"lora"|"bluetooth"|undefined} payloadVariant
+     * @member {"device"|"position"|"power"|"network"|"display"|"lora"|"bluetooth"|"security"|"sessionkey"|undefined} payloadVariant
      * @memberof meshtastic.Config
      * @instance
      */
     Object.defineProperty(Config.prototype, 'payloadVariant', {
-      get: $util.oneOfGetter(($oneOfFields = ['device', 'position', 'power', 'network', 'display', 'lora', 'bluetooth'])),
+      get: $util.oneOfGetter(
+        ($oneOfFields = ['device', 'position', 'power', 'network', 'display', 'lora', 'bluetooth', 'security', 'sessionkey'])
+      ),
       set: $util.oneOfSetter($oneOfFields),
     })
 
@@ -476,6 +496,14 @@ export const meshtastic = ($root.meshtastic = (() => {
             message.bluetooth = $root.meshtastic.Config.BluetoothConfig.decode(reader, reader.uint32())
             break
           }
+          case 8: {
+            message.security = $root.meshtastic.Config.SecurityConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 9: {
+            message.sessionkey = $root.meshtastic.Config.SessionkeyConfig.decode(reader, reader.uint32())
+            break
+          }
           default:
             reader.skipType(tag & 7)
             break
@@ -491,8 +519,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @interface IDeviceConfig
        * @property {meshtastic.Config.DeviceConfig.Role|null} [role] Sets the role of node
        * @property {boolean|null} [serialEnabled] Disabling this will disable the SerialConsole by not initilizing the StreamAPI
-       * @property {boolean|null} [debugLogEnabled] By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
-       * Set this to true to leave the debug log outputting even when API is active.
+       * Moved to SecurityConfig
        * @property {number|null} [buttonGpio] For boards without a hard wired button, this is the pin number that will be used
        * Boards that have more than one button can swap the function with this one. defaults to BUTTON_PIN if defined.
        * @property {number|null} [buzzerGpio] For boards without a PWM buzzer, this is the pin number that will be used
@@ -503,6 +530,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {boolean|null} [doubleTapAsButtonPress] Treat double tap interrupt on supported accelerometers as a button press if set to true
        * @property {boolean|null} [isManaged] If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
+       * Moved to SecurityConfig
        * @property {boolean|null} [disableTripleClick] Disables the triple-press of user button to enable or disable GPS
        * @property {string|null} [tzdef] POSIX Timezone definition string from https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv.
        * @property {boolean|null} [ledHeartbeatDisabled] If true, disable the default blinking LED (LED_PIN) behavior on the device
@@ -532,20 +560,12 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Disabling this will disable the SerialConsole by not initilizing the StreamAPI
+       * Moved to SecurityConfig
        * @member {boolean} serialEnabled
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
        */
       DeviceConfig.prototype.serialEnabled = false
-
-      /**
-       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
-       * Set this to true to leave the debug log outputting even when API is active.
-       * @member {boolean} debugLogEnabled
-       * @memberof meshtastic.Config.DeviceConfig
-       * @instance
-       */
-      DeviceConfig.prototype.debugLogEnabled = false
 
       /**
        * For boards without a hard wired button, this is the pin number that will be used
@@ -593,6 +613,7 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * If true, device is considered to be "managed" by a mesh administrator
        * Clients should then limit available configuration and administrative options inside the user interface
+       * Moved to SecurityConfig
        * @member {boolean} isManaged
        * @memberof meshtastic.Config.DeviceConfig
        * @instance
@@ -647,10 +668,6 @@ export const meshtastic = ($root.meshtastic = (() => {
             }
             case 2: {
               message.serialEnabled = reader.bool()
-              break
-            }
-            case 3: {
-              message.debugLogEnabled = reader.bool()
               break
             }
             case 4: {
@@ -2237,11 +2254,15 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {number} LONG_FAST=0 Long Range - Fast
        * @property {number} LONG_SLOW=1 Long Range - Slow
        * @property {number} VERY_LONG_SLOW=2 Very Long Range - Slow
+       * Deprecated in 2.5: Works only with txco and is unusably slow
        * @property {number} MEDIUM_SLOW=3 Medium Range - Slow
        * @property {number} MEDIUM_FAST=4 Medium Range - Fast
        * @property {number} SHORT_SLOW=5 Short Range - Slow
        * @property {number} SHORT_FAST=6 Short Range - Fast
        * @property {number} LONG_MODERATE=7 Long Range - Moderately Fast
+       * @property {number} SHORT_TURBO=8 Short Range - Turbo
+       * This is the fastest preset and the only one with 500kHz bandwidth.
+       * It is not legal to use in all regions due to this wider bandwidth.
        */
       LoRaConfig.ModemPreset = (function () {
         const valuesById = {},
@@ -2254,6 +2275,7 @@ export const meshtastic = ($root.meshtastic = (() => {
         values[(valuesById[5] = 'SHORT_SLOW')] = 5
         values[(valuesById[6] = 'SHORT_FAST')] = 6
         values[(valuesById[7] = 'LONG_MODERATE')] = 7
+        values[(valuesById[8] = 'SHORT_TURBO')] = 8
         return values
       })()
 
@@ -2268,7 +2290,6 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {boolean|null} [enabled] Enable Bluetooth on the device
        * @property {meshtastic.Config.BluetoothConfig.PairingMode|null} [mode] Determines the pairing strategy for the device
        * @property {number|null} [fixedPin] Specified PIN for PairingMode.FixedPin
-       * @property {boolean|null} [deviceLoggingEnabled] Enables device (serial style logs) over Bluetooth
        */
 
       /**
@@ -2310,14 +2331,6 @@ export const meshtastic = ($root.meshtastic = (() => {
       BluetoothConfig.prototype.fixedPin = 0
 
       /**
-       * Enables device (serial style logs) over Bluetooth
-       * @member {boolean} deviceLoggingEnabled
-       * @memberof meshtastic.Config.BluetoothConfig
-       * @instance
-       */
-      BluetoothConfig.prototype.deviceLoggingEnabled = false
-
-      /**
        * Decodes a BluetoothConfig message from the specified reader or buffer.
        * @function decode
        * @memberof meshtastic.Config.BluetoothConfig
@@ -2347,10 +2360,6 @@ export const meshtastic = ($root.meshtastic = (() => {
               message.fixedPin = reader.uint32()
               break
             }
-            case 4: {
-              message.deviceLoggingEnabled = reader.bool()
-              break
-            }
             default:
               reader.skipType(tag & 7)
               break
@@ -2377,6 +2386,207 @@ export const meshtastic = ($root.meshtastic = (() => {
       })()
 
       return BluetoothConfig
+    })()
+
+    Config.SecurityConfig = (function () {
+      /**
+       * Properties of a SecurityConfig.
+       * @memberof meshtastic.Config
+       * @interface ISecurityConfig
+       * @property {Uint8Array|null} [publicKey] The public key of the user's device.
+       * Sent out to other nodes on the mesh to allow them to compute a shared secret key.
+       * @property {Uint8Array|null} [privateKey] The private key of the device.
+       * Used to create a shared key with a remote device.
+       * @property {Array.<Uint8Array>|null} [adminKey] The public key authorized to send admin messages to this node.
+       * @property {boolean|null} [isManaged] If true, device is considered to be "managed" by a mesh administrator via admin messages
+       * Device is managed by a mesh administrator.
+       * @property {boolean|null} [serialEnabled] Serial Console over the Stream API."
+       * @property {boolean|null} [debugLogApiEnabled] By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
+       * Output live debug logging over serial or bluetooth is set to true.
+       * @property {boolean|null} [adminChannelEnabled] Allow incoming device control over the insecure legacy admin channel.
+       */
+
+      /**
+       * Constructs a new SecurityConfig.
+       * @memberof meshtastic.Config
+       * @classdesc Represents a SecurityConfig.
+       * @implements ISecurityConfig
+       * @constructor
+       * @param {meshtastic.Config.ISecurityConfig=} [properties] Properties to set
+       */
+      function SecurityConfig(properties) {
+        this.adminKey = []
+        if (properties)
+          for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+            if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+      }
+
+      /**
+       * The public key of the user's device.
+       * Sent out to other nodes on the mesh to allow them to compute a shared secret key.
+       * @member {Uint8Array} publicKey
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.publicKey = $util.newBuffer([])
+
+      /**
+       * The private key of the device.
+       * Used to create a shared key with a remote device.
+       * @member {Uint8Array} privateKey
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.privateKey = $util.newBuffer([])
+
+      /**
+       * The public key authorized to send admin messages to this node.
+       * @member {Array.<Uint8Array>} adminKey
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.adminKey = $util.emptyArray
+
+      /**
+       * If true, device is considered to be "managed" by a mesh administrator via admin messages
+       * Device is managed by a mesh administrator.
+       * @member {boolean} isManaged
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.isManaged = false
+
+      /**
+       * Serial Console over the Stream API."
+       * @member {boolean} serialEnabled
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.serialEnabled = false
+
+      /**
+       * By default we turn off logging as soon as an API client connects (to keep shared serial link quiet).
+       * Output live debug logging over serial or bluetooth is set to true.
+       * @member {boolean} debugLogApiEnabled
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.debugLogApiEnabled = false
+
+      /**
+       * Allow incoming device control over the insecure legacy admin channel.
+       * @member {boolean} adminChannelEnabled
+       * @memberof meshtastic.Config.SecurityConfig
+       * @instance
+       */
+      SecurityConfig.prototype.adminChannelEnabled = false
+
+      /**
+       * Decodes a SecurityConfig message from the specified reader or buffer.
+       * @function decode
+       * @memberof meshtastic.Config.SecurityConfig
+       * @static
+       * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+       * @param {number} [length] Message length if known beforehand
+       * @returns {meshtastic.Config.SecurityConfig} SecurityConfig
+       * @throws {Error} If the payload is not a reader or valid buffer
+       * @throws {$protobuf.util.ProtocolError} If required fields are missing
+       */
+      SecurityConfig.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+        let end = length === undefined ? reader.len : reader.pos + length,
+          message = new $root.meshtastic.Config.SecurityConfig()
+        while (reader.pos < end) {
+          let tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1: {
+              message.publicKey = reader.bytes()
+              break
+            }
+            case 2: {
+              message.privateKey = reader.bytes()
+              break
+            }
+            case 3: {
+              if (!(message.adminKey && message.adminKey.length)) message.adminKey = []
+              message.adminKey.push(reader.bytes())
+              break
+            }
+            case 4: {
+              message.isManaged = reader.bool()
+              break
+            }
+            case 5: {
+              message.serialEnabled = reader.bool()
+              break
+            }
+            case 6: {
+              message.debugLogApiEnabled = reader.bool()
+              break
+            }
+            case 8: {
+              message.adminChannelEnabled = reader.bool()
+              break
+            }
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+        return message
+      }
+
+      return SecurityConfig
+    })()
+
+    Config.SessionkeyConfig = (function () {
+      /**
+       * Properties of a SessionkeyConfig.
+       * @memberof meshtastic.Config
+       * @interface ISessionkeyConfig
+       */
+
+      /**
+       * Constructs a new SessionkeyConfig.
+       * @memberof meshtastic.Config
+       * @classdesc Blank config request, strictly for getting the session key
+       * @implements ISessionkeyConfig
+       * @constructor
+       * @param {meshtastic.Config.ISessionkeyConfig=} [properties] Properties to set
+       */
+      function SessionkeyConfig(properties) {
+        if (properties)
+          for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+            if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+      }
+
+      /**
+       * Decodes a SessionkeyConfig message from the specified reader or buffer.
+       * @function decode
+       * @memberof meshtastic.Config.SessionkeyConfig
+       * @static
+       * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+       * @param {number} [length] Message length if known beforehand
+       * @returns {meshtastic.Config.SessionkeyConfig} SessionkeyConfig
+       * @throws {Error} If the payload is not a reader or valid buffer
+       * @throws {$protobuf.util.ProtocolError} If required fields are missing
+       */
+      SessionkeyConfig.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+        let end = length === undefined ? reader.len : reader.pos + length,
+          message = new $root.meshtastic.Config.SessionkeyConfig()
+        while (reader.pos < end) {
+          let tag = reader.uint32()
+          switch (tag >>> 3) {
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+        return message
+      }
+
+      return SessionkeyConfig
     })()
 
     return Config
@@ -2448,27 +2658,27 @@ export const meshtastic = ($root.meshtastic = (() => {
     /**
      * The new preferred location encoding, multiply by 1e-7 to get degrees
      * in floating point
-     * @member {number} latitudeI
+     * @member {number|null|undefined} latitudeI
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.latitudeI = 0
+    Position.prototype.latitudeI = null
 
     /**
      * TODO: REPLACE
-     * @member {number} longitudeI
+     * @member {number|null|undefined} longitudeI
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.longitudeI = 0
+    Position.prototype.longitudeI = null
 
     /**
      * In meters above MSL (but see issue #359)
-     * @member {number} altitude
+     * @member {number|null|undefined} altitude
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitude = 0
+    Position.prototype.altitude = null
 
     /**
      * This is usually not sent over the mesh (to save space), but it is sent
@@ -2515,19 +2725,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * HAE altitude in meters - can be used instead of MSL altitude
-     * @member {number} altitudeHae
+     * @member {number|null|undefined} altitudeHae
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitudeHae = 0
+    Position.prototype.altitudeHae = null
 
     /**
      * Geoidal separation in meters
-     * @member {number} altitudeGeoidalSeparation
+     * @member {number|null|undefined} altitudeGeoidalSeparation
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.altitudeGeoidalSeparation = 0
+    Position.prototype.altitudeGeoidalSeparation = null
 
     /**
      * Horizontal, Vertical and Position Dilution of Precision, in 1/100 units
@@ -2574,19 +2784,19 @@ export const meshtastic = ($root.meshtastic = (() => {
      * - "heading" is where the fuselage points (measured in horizontal plane)
      * - "yaw" indicates a relative rotation about the vertical axis
      * TODO: REMOVE/INTEGRATE
-     * @member {number} groundSpeed
+     * @member {number|null|undefined} groundSpeed
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.groundSpeed = 0
+    Position.prototype.groundSpeed = null
 
     /**
      * TODO: REPLACE
-     * @member {number} groundTrack
+     * @member {number|null|undefined} groundTrack
      * @memberof meshtastic.Position
      * @instance
      */
-    Position.prototype.groundTrack = 0
+    Position.prototype.groundTrack = null
 
     /**
      * GPS fix quality (from NMEA GxGGA statement or similar)
@@ -2647,6 +2857,51 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     Position.prototype.precisionBits = 0
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_latitudeI', {
+      get: $util.oneOfGetter(($oneOfFields = ['latitudeI'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_longitudeI', {
+      get: $util.oneOfGetter(($oneOfFields = ['longitudeI'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_altitude', {
+      get: $util.oneOfGetter(($oneOfFields = ['altitude'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_altitudeHae', {
+      get: $util.oneOfGetter(($oneOfFields = ['altitudeHae'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_altitudeGeoidalSeparation', {
+      get: $util.oneOfGetter(($oneOfFields = ['altitudeGeoidalSeparation'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_groundSpeed', {
+      get: $util.oneOfGetter(($oneOfFields = ['groundSpeed'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Position.prototype, '_groundTrack', {
+      get: $util.oneOfGetter(($oneOfFields = ['groundTrack'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes a Position message from the specified reader or buffer.
@@ -2905,6 +3160,17 @@ export const meshtastic = ($root.meshtastic = (() => {
    * specifically adapted for the Meshtatic project
    * @property {number} SENSECAP_INDICATOR=70 Sensecap Indicator from Seeed Studio. ESP32-S3 device with TFT and RP2040 coprocessor
    * @property {number} TRACKER_T1000_E=71 Seeed studio T1000-E tracker card. NRF52840 w/ LR1110 radio, GPS, button, buzzer, and sensors.
+   * @property {number} RAK3172=72 RAK3172 STM32WLE5 Module (https://store.rakwireless.com/products/wisduo-lpwan-module-rak3172)
+   * @property {number} WIO_E5=73 Seeed Studio Wio-E5 (either mini or Dev kit) using STM32WL chip.
+   * @property {number} RADIOMASTER_900_BANDIT=74 RadioMaster 900 Bandit, https://www.radiomasterrc.com/products/bandit-expresslrs-rf-module
+   * SSD1306 OLED and No GPS
+   * @property {number} ME25LS01_4Y10TD=75 Minewsemi ME25LS01 (ME25LE01_V1.0). NRF52840 w/ LR1110 radio, buttons and leds and pins.
+   * @property {number} RP2040_FEATHER_RFM95=76 RP2040_FEATHER_RFM95
+   * Adafruit Feather RP2040 with RFM95 LoRa Radio RFM95 with SX1272, SSD1306 OLED
+   * https://www.adafruit.com/product/5714
+   * https://www.adafruit.com/product/326
+   * https://www.adafruit.com/product/938
+   * ^^^ short A0 to switch to I2C address 0x3C
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -2983,6 +3249,11 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[69] = 'HELTEC_MESH_NODE_T114')] = 69
     values[(valuesById[70] = 'SENSECAP_INDICATOR')] = 70
     values[(valuesById[71] = 'TRACKER_T1000_E')] = 71
+    values[(valuesById[72] = 'RAK3172')] = 72
+    values[(valuesById[73] = 'WIO_E5')] = 73
+    values[(valuesById[74] = 'RADIOMASTER_900_BANDIT')] = 74
+    values[(valuesById[75] = 'ME25LS01_4Y10TD')] = 75
+    values[(valuesById[76] = 'RP2040_FEATHER_RFM95')] = 76
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -3010,6 +3281,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * If this user is a licensed operator, set this flag.
      * Also, "long_name" should be their licence number.
      * @property {meshtastic.Config.DeviceConfig.Role|null} [role] Indicates that the user's role in the mesh
+     * @property {Uint8Array|null} [publicKey] The public key of the user's device.
+     * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
      */
 
     /**
@@ -3113,6 +3386,15 @@ export const meshtastic = ($root.meshtastic = (() => {
     User.prototype.role = 0
 
     /**
+     * The public key of the user's device.
+     * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
+     * @member {Uint8Array} publicKey
+     * @memberof meshtastic.User
+     * @instance
+     */
+    User.prototype.publicKey = $util.newBuffer([])
+
+    /**
      * Decodes a User message from the specified reader or buffer.
      * @function decode
      * @memberof meshtastic.User
@@ -3158,6 +3440,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             message.role = reader.int32()
             break
           }
+          case 8: {
+            message.publicKey = reader.bytes()
+            break
+          }
           default:
             reader.skipType(tag & 7)
             break
@@ -3174,31 +3460,61 @@ export const meshtastic = ($root.meshtastic = (() => {
      * Properties of a RouteDiscovery.
      * @memberof meshtastic
      * @interface IRouteDiscovery
-     * @property {Array.<number>|null} [route] The list of nodenums this packet has visited so far
+     * @property {Array.<number>|null} [route] The list of nodenums this packet has visited so far to the destination.
+     * @property {Array.<number>|null} [snrTowards] The list of SNRs (in dB, scaled by 4) in the route towards the destination.
+     * @property {Array.<number>|null} [routeBack] The list of nodenums the packet has visited on the way back from the destination.
+     * @property {Array.<number>|null} [snrBack] The list of SNRs (in dB, scaled by 4) in the route back from the destination.
      */
 
     /**
      * Constructs a new RouteDiscovery.
      * @memberof meshtastic
-     * @classdesc A message used in our Dynamic Source Routing protocol (RFC 4728 based)
+     * @classdesc A message used in a traceroute
      * @implements IRouteDiscovery
      * @constructor
      * @param {meshtastic.IRouteDiscovery=} [properties] Properties to set
      */
     function RouteDiscovery(properties) {
       this.route = []
+      this.snrTowards = []
+      this.routeBack = []
+      this.snrBack = []
       if (properties)
         for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
           if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
     }
 
     /**
-     * The list of nodenums this packet has visited so far
+     * The list of nodenums this packet has visited so far to the destination.
      * @member {Array.<number>} route
      * @memberof meshtastic.RouteDiscovery
      * @instance
      */
     RouteDiscovery.prototype.route = $util.emptyArray
+
+    /**
+     * The list of SNRs (in dB, scaled by 4) in the route towards the destination.
+     * @member {Array.<number>} snrTowards
+     * @memberof meshtastic.RouteDiscovery
+     * @instance
+     */
+    RouteDiscovery.prototype.snrTowards = $util.emptyArray
+
+    /**
+     * The list of nodenums the packet has visited on the way back from the destination.
+     * @member {Array.<number>} routeBack
+     * @memberof meshtastic.RouteDiscovery
+     * @instance
+     */
+    RouteDiscovery.prototype.routeBack = $util.emptyArray
+
+    /**
+     * The list of SNRs (in dB, scaled by 4) in the route back from the destination.
+     * @member {Array.<number>} snrBack
+     * @memberof meshtastic.RouteDiscovery
+     * @instance
+     */
+    RouteDiscovery.prototype.snrBack = $util.emptyArray
 
     /**
      * Decodes a RouteDiscovery message from the specified reader or buffer.
@@ -3224,6 +3540,30 @@ export const meshtastic = ($root.meshtastic = (() => {
               let end2 = reader.uint32() + reader.pos
               while (reader.pos < end2) message.route.push(reader.fixed32())
             } else message.route.push(reader.fixed32())
+            break
+          }
+          case 2: {
+            if (!(message.snrTowards && message.snrTowards.length)) message.snrTowards = []
+            if ((tag & 7) === 2) {
+              let end2 = reader.uint32() + reader.pos
+              while (reader.pos < end2) message.snrTowards.push(reader.int32())
+            } else message.snrTowards.push(reader.int32())
+            break
+          }
+          case 3: {
+            if (!(message.routeBack && message.routeBack.length)) message.routeBack = []
+            if ((tag & 7) === 2) {
+              let end2 = reader.uint32() + reader.pos
+              while (reader.pos < end2) message.routeBack.push(reader.fixed32())
+            } else message.routeBack.push(reader.fixed32())
+            break
+          }
+          case 4: {
+            if (!(message.snrBack && message.snrBack.length)) message.snrBack = []
+            if ((tag & 7) === 2) {
+              let end2 = reader.uint32() + reader.pos
+              while (reader.pos < end2) message.snrBack.push(reader.int32())
+            } else message.snrBack.push(reader.int32())
             break
           }
           default:
@@ -3358,6 +3698,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number} BAD_REQUEST=32 The application layer service on the remote node received your request, but considered your request somehow invalid
      * @property {number} NOT_AUTHORIZED=33 The application layer service on the remote node received your request, but considered your request not authorized
      * (i.e you did not send the request on the required bound channel)
+     * @property {number} PKI_FAILED=34 The client specified a PKI transport, but the node was unable to send the packet using PKI (and did not send the message at all)
+     * @property {number} PKI_UNKNOWN_PUBKEY=35 The receiving node does not have a Public Key to decode with
      */
     Routing.Error = (function () {
       const valuesById = {},
@@ -3374,6 +3716,8 @@ export const meshtastic = ($root.meshtastic = (() => {
       values[(valuesById[9] = 'DUTY_CYCLE_LIMIT')] = 9
       values[(valuesById[32] = 'BAD_REQUEST')] = 32
       values[(valuesById[33] = 'NOT_AUTHORIZED')] = 33
+      values[(valuesById[34] = 'PKI_FAILED')] = 34
+      values[(valuesById[35] = 'PKI_UNKNOWN_PUBKEY')] = 35
       return values
     })()
 
@@ -3596,19 +3940,19 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * latitude_i
-     * @member {number} latitudeI
+     * @member {number|null|undefined} latitudeI
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.latitudeI = 0
+    Waypoint.prototype.latitudeI = null
 
     /**
      * longitude_i
-     * @member {number} longitudeI
+     * @member {number|null|undefined} longitudeI
      * @memberof meshtastic.Waypoint
      * @instance
      */
-    Waypoint.prototype.longitudeI = 0
+    Waypoint.prototype.longitudeI = null
 
     /**
      * Time the waypoint is to expire (epoch)
@@ -3650,6 +3994,21 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     Waypoint.prototype.icon = 0
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Waypoint.prototype, '_latitudeI', {
+      get: $util.oneOfGetter(($oneOfFields = ['latitudeI'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Waypoint.prototype, '_longitudeI', {
+      get: $util.oneOfGetter(($oneOfFields = ['longitudeI'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes a Waypoint message from the specified reader or buffer.
@@ -3881,6 +4240,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {boolean|null} [viaMqtt] Describes whether this packet passed via MQTT somewhere along the path it currently took.
      * @property {number|null} [hopStart] Hop limit with which the original packet started. Sent via LoRa using three bits in the unencrypted header.
      * When receiving a packet, the difference between hop_start and hop_limit gives how many hops it traveled.
+     * @property {Uint8Array|null} [publicKey] Records the public key the packet was encrypted with, if applicable.
+     * @property {boolean|null} [pkiEncrypted] Indicates whether the packet was en/decrypted using PKI
      */
 
     /**
@@ -4052,6 +4413,22 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     MeshPacket.prototype.hopStart = 0
 
+    /**
+     * Records the public key the packet was encrypted with, if applicable.
+     * @member {Uint8Array} publicKey
+     * @memberof meshtastic.MeshPacket
+     * @instance
+     */
+    MeshPacket.prototype.publicKey = $util.newBuffer([])
+
+    /**
+     * Indicates whether the packet was en/decrypted using PKI
+     * @member {boolean} pkiEncrypted
+     * @memberof meshtastic.MeshPacket
+     * @instance
+     */
+    MeshPacket.prototype.pkiEncrypted = false
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
@@ -4142,6 +4519,14 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 15: {
             message.hopStart = reader.uint32()
+            break
+          }
+          case 16: {
+            message.publicKey = reader.bytes()
+            break
+          }
+          case 17: {
+            message.pkiEncrypted = reader.bool()
             break
           }
           default:
@@ -4843,6 +5228,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {meshtastic.IDeviceMetadata|null} [metadata] Device metadata message
      * @property {meshtastic.IMqttClientProxyMessage|null} [mqttClientProxyMessage] MQTT Client Proxy Message (device sending to client / phone for publishing to MQTT)
      * @property {meshtastic.IFileInfo|null} [fileInfo] File system manifest messages
+     * @property {meshtastic.IClientNotification|null} [clientNotification] Notification message to the client
      */
 
     /**
@@ -4991,12 +5377,20 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     FromRadio.prototype.fileInfo = null
 
+    /**
+     * Notification message to the client
+     * @member {meshtastic.IClientNotification|null|undefined} clientNotification
+     * @memberof meshtastic.FromRadio
+     * @instance
+     */
+    FromRadio.prototype.clientNotification = null
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
     /**
      * Log levels, chosen to match python logging conventions.
-     * @member {"packet"|"myInfo"|"nodeInfo"|"config"|"logRecord"|"configCompleteId"|"rebooted"|"moduleConfig"|"channel"|"queueStatus"|"xmodemPacket"|"metadata"|"mqttClientProxyMessage"|"fileInfo"|undefined} payloadVariant
+     * @member {"packet"|"myInfo"|"nodeInfo"|"config"|"logRecord"|"configCompleteId"|"rebooted"|"moduleConfig"|"channel"|"queueStatus"|"xmodemPacket"|"metadata"|"mqttClientProxyMessage"|"fileInfo"|"clientNotification"|undefined} payloadVariant
      * @memberof meshtastic.FromRadio
      * @instance
      */
@@ -5017,6 +5411,7 @@ export const meshtastic = ($root.meshtastic = (() => {
           'metadata',
           'mqttClientProxyMessage',
           'fileInfo',
+          'clientNotification',
         ])
       ),
       set: $util.oneOfSetter($oneOfFields),
@@ -5100,6 +5495,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             message.fileInfo = $root.meshtastic.FileInfo.decode(reader, reader.uint32())
             break
           }
+          case 16: {
+            message.clientNotification = $root.meshtastic.ClientNotification.decode(reader, reader.uint32())
+            break
+          }
           default:
             reader.skipType(tag & 7)
             break
@@ -5109,6 +5508,120 @@ export const meshtastic = ($root.meshtastic = (() => {
     }
 
     return FromRadio
+  })()
+
+  meshtastic.ClientNotification = (function () {
+    /**
+     * Properties of a ClientNotification.
+     * @memberof meshtastic
+     * @interface IClientNotification
+     * @property {number|null} [replyId] The id of the packet we're notifying in response to
+     * @property {number|null} [time] Seconds since 1970 - or 0 for unknown/unset
+     * @property {meshtastic.LogRecord.Level|null} [level] The level type of notification
+     * @property {string|null} [message] The message body of the notification
+     */
+
+    /**
+     * Constructs a new ClientNotification.
+     * @memberof meshtastic
+     * @classdesc A notification message from the device to the client
+     * To be used for important messages that should to be displayed to the user
+     * in the form of push notifications or validation messages when saving
+     * invalid configuration.
+     * @implements IClientNotification
+     * @constructor
+     * @param {meshtastic.IClientNotification=} [properties] Properties to set
+     */
+    function ClientNotification(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * The id of the packet we're notifying in response to
+     * @member {number|null|undefined} replyId
+     * @memberof meshtastic.ClientNotification
+     * @instance
+     */
+    ClientNotification.prototype.replyId = null
+
+    /**
+     * Seconds since 1970 - or 0 for unknown/unset
+     * @member {number} time
+     * @memberof meshtastic.ClientNotification
+     * @instance
+     */
+    ClientNotification.prototype.time = 0
+
+    /**
+     * The level type of notification
+     * @member {meshtastic.LogRecord.Level} level
+     * @memberof meshtastic.ClientNotification
+     * @instance
+     */
+    ClientNotification.prototype.level = 0
+
+    /**
+     * The message body of the notification
+     * @member {string} message
+     * @memberof meshtastic.ClientNotification
+     * @instance
+     */
+    ClientNotification.prototype.message = ''
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(ClientNotification.prototype, '_replyId', {
+      get: $util.oneOfGetter(($oneOfFields = ['replyId'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    /**
+     * Decodes a ClientNotification message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.ClientNotification
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.ClientNotification} ClientNotification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    ClientNotification.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.ClientNotification()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.replyId = reader.uint32()
+            break
+          }
+          case 2: {
+            message.time = reader.fixed32()
+            break
+          }
+          case 3: {
+            message.level = reader.int32()
+            break
+          }
+          case 4: {
+            message.message = reader.string()
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return ClientNotification
   })()
 
   meshtastic.FileInfo = (function () {
@@ -8698,7 +9211,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {boolean|null} [updown1Enabled] Enable the Up/Down/Select input device. Can be RAK rotary encoder or 3 buttons. Uses the a/b/press definitions from inputbroker.
        * @property {boolean|null} [enabled] Enable/disable CannedMessageModule.
        * @property {string|null} [allowInputSource] Input event origin accepted by the canned message module.
-       * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
+       * Can be e.g. "rotEnc1", "upDownEnc1", "scanAndSelect", "cardkb", "serialkb", or keyword "_any"
        * @property {boolean|null} [sendBell] CannedMessageModule also sends a bell character with the messages.
        * ExternalNotificationModule can benefit from this feature.
        */
@@ -8791,7 +9304,7 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Input event origin accepted by the canned message module.
-       * Can be e.g. "rotEnc1", "upDownEnc1" or keyword "_any"
+       * Can be e.g. "rotEnc1", "upDownEnc1", "scanAndSelect", "cardkb", "serialkb", or keyword "_any"
        * @member {string} allowInputSource
        * @memberof meshtastic.ModuleConfig.CannedMessageConfig
        * @instance
@@ -9217,7 +9730,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * Project files at https://github.com/GUVWAF/Meshtasticator
    * ENCODING: Protobuf (?)
    * @property {number} TRACEROUTE_APP=70 Provides a traceroute functionality to show the route a packet towards
-   * a certain destination would take on the mesh.
+   * a certain destination would take on the mesh. Contains a RouteDiscovery message as payload.
    * ENCODING: Protobuf
    * @property {number} NEIGHBORINFO_APP=71 Aggregates edge info for the network by sending out a list of each node's neighbors
    * ENCODING: Protobuf
@@ -9294,43 +9807,76 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * 0-100 (>100 means powered)
-     * @member {number} batteryLevel
+     * @member {number|null|undefined} batteryLevel
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.batteryLevel = 0
+    DeviceMetrics.prototype.batteryLevel = null
 
     /**
      * Voltage measured
-     * @member {number} voltage
+     * @member {number|null|undefined} voltage
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.voltage = 0
+    DeviceMetrics.prototype.voltage = null
 
     /**
      * Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise).
-     * @member {number} channelUtilization
+     * @member {number|null|undefined} channelUtilization
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.channelUtilization = 0
+    DeviceMetrics.prototype.channelUtilization = null
 
     /**
      * Percent of airtime for transmission used within the last hour.
-     * @member {number} airUtilTx
+     * @member {number|null|undefined} airUtilTx
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.airUtilTx = 0
+    DeviceMetrics.prototype.airUtilTx = null
 
     /**
      * How long the device has been running since the last reboot (in seconds)
-     * @member {number} uptimeSeconds
+     * @member {number|null|undefined} uptimeSeconds
      * @memberof meshtastic.DeviceMetrics
      * @instance
      */
-    DeviceMetrics.prototype.uptimeSeconds = 0
+    DeviceMetrics.prototype.uptimeSeconds = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceMetrics.prototype, '_batteryLevel', {
+      get: $util.oneOfGetter(($oneOfFields = ['batteryLevel'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceMetrics.prototype, '_voltage', {
+      get: $util.oneOfGetter(($oneOfFields = ['voltage'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceMetrics.prototype, '_channelUtilization', {
+      get: $util.oneOfGetter(($oneOfFields = ['channelUtilization'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceMetrics.prototype, '_airUtilTx', {
+      get: $util.oneOfGetter(($oneOfFields = ['airUtilTx'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceMetrics.prototype, '_uptimeSeconds', {
+      get: $util.oneOfGetter(($oneOfFields = ['uptimeSeconds'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes a DeviceMetrics message from the specified reader or buffer.
@@ -9423,141 +9969,246 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Temperature measured
-     * @member {number} temperature
+     * @member {number|null|undefined} temperature
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.temperature = 0
+    EnvironmentMetrics.prototype.temperature = null
 
     /**
      * Relative humidity percent measured
-     * @member {number} relativeHumidity
+     * @member {number|null|undefined} relativeHumidity
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.relativeHumidity = 0
+    EnvironmentMetrics.prototype.relativeHumidity = null
 
     /**
      * Barometric pressure in hPA measured
-     * @member {number} barometricPressure
+     * @member {number|null|undefined} barometricPressure
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.barometricPressure = 0
+    EnvironmentMetrics.prototype.barometricPressure = null
 
     /**
      * Gas resistance in MOhm measured
-     * @member {number} gasResistance
+     * @member {number|null|undefined} gasResistance
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.gasResistance = 0
+    EnvironmentMetrics.prototype.gasResistance = null
 
     /**
      * Voltage measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x)
-     * @member {number} voltage
+     * @member {number|null|undefined} voltage
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.voltage = 0
+    EnvironmentMetrics.prototype.voltage = null
 
     /**
      * Current measured (To be depreciated in favor of PowerMetrics in Meshtastic 3.x)
-     * @member {number} current
+     * @member {number|null|undefined} current
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.current = 0
+    EnvironmentMetrics.prototype.current = null
 
     /**
      * relative scale IAQ value as measured by Bosch BME680 . value 0-500.
      * Belongs to Air Quality but is not particle but VOC measurement. Other VOC values can also be put in here.
-     * @member {number} iaq
+     * @member {number|null|undefined} iaq
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.iaq = 0
+    EnvironmentMetrics.prototype.iaq = null
 
     /**
      * RCWL9620 Doppler Radar Distance Sensor, used for water level detection. Float value in mm.
-     * @member {number} distance
+     * @member {number|null|undefined} distance
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.distance = 0
+    EnvironmentMetrics.prototype.distance = null
 
     /**
      * VEML7700 high accuracy ambient light(Lux) digital 16-bit resolution sensor.
-     * @member {number} lux
+     * @member {number|null|undefined} lux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.lux = 0
+    EnvironmentMetrics.prototype.lux = null
 
     /**
      * VEML7700 high accuracy white light(irradiance) not calibrated digital 16-bit resolution sensor.
-     * @member {number} whiteLux
+     * @member {number|null|undefined} whiteLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.whiteLux = 0
+    EnvironmentMetrics.prototype.whiteLux = null
 
     /**
      * Infrared lux
-     * @member {number} irLux
+     * @member {number|null|undefined} irLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.irLux = 0
+    EnvironmentMetrics.prototype.irLux = null
 
     /**
      * Ultraviolet lux
-     * @member {number} uvLux
+     * @member {number|null|undefined} uvLux
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.uvLux = 0
+    EnvironmentMetrics.prototype.uvLux = null
 
     /**
      * Wind direction in degrees
      * 0 degrees = North, 90 = East, etc...
-     * @member {number} windDirection
+     * @member {number|null|undefined} windDirection
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windDirection = 0
+    EnvironmentMetrics.prototype.windDirection = null
 
     /**
      * Wind speed in m/s
-     * @member {number} windSpeed
+     * @member {number|null|undefined} windSpeed
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windSpeed = 0
+    EnvironmentMetrics.prototype.windSpeed = null
 
     /**
      * Weight in KG
-     * @member {number} weight
+     * @member {number|null|undefined} weight
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.weight = 0
+    EnvironmentMetrics.prototype.weight = null
 
     /**
      * Wind gust in m/s
-     * @member {number} windGust
+     * @member {number|null|undefined} windGust
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windGust = 0
+    EnvironmentMetrics.prototype.windGust = null
 
     /**
      * Wind lull in m/s
-     * @member {number} windLull
+     * @member {number|null|undefined} windLull
      * @memberof meshtastic.EnvironmentMetrics
      * @instance
      */
-    EnvironmentMetrics.prototype.windLull = 0
+    EnvironmentMetrics.prototype.windLull = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_temperature', {
+      get: $util.oneOfGetter(($oneOfFields = ['temperature'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_relativeHumidity', {
+      get: $util.oneOfGetter(($oneOfFields = ['relativeHumidity'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_barometricPressure', {
+      get: $util.oneOfGetter(($oneOfFields = ['barometricPressure'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_gasResistance', {
+      get: $util.oneOfGetter(($oneOfFields = ['gasResistance'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_voltage', {
+      get: $util.oneOfGetter(($oneOfFields = ['voltage'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_current', {
+      get: $util.oneOfGetter(($oneOfFields = ['current'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_iaq', {
+      get: $util.oneOfGetter(($oneOfFields = ['iaq'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_distance', {
+      get: $util.oneOfGetter(($oneOfFields = ['distance'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_lux', {
+      get: $util.oneOfGetter(($oneOfFields = ['lux'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_whiteLux', {
+      get: $util.oneOfGetter(($oneOfFields = ['whiteLux'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_irLux', {
+      get: $util.oneOfGetter(($oneOfFields = ['irLux'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_uvLux', {
+      get: $util.oneOfGetter(($oneOfFields = ['uvLux'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_windDirection', {
+      get: $util.oneOfGetter(($oneOfFields = ['windDirection'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_windSpeed', {
+      get: $util.oneOfGetter(($oneOfFields = ['windSpeed'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_weight', {
+      get: $util.oneOfGetter(($oneOfFields = ['weight'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_windGust', {
+      get: $util.oneOfGetter(($oneOfFields = ['windGust'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(EnvironmentMetrics.prototype, '_windLull', {
+      get: $util.oneOfGetter(($oneOfFields = ['windLull'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes an EnvironmentMetrics message from the specified reader or buffer.
@@ -9685,51 +10336,90 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Voltage (Ch1)
-     * @member {number} ch1Voltage
+     * @member {number|null|undefined} ch1Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch1Voltage = 0
+    PowerMetrics.prototype.ch1Voltage = null
 
     /**
      * Current (Ch1)
-     * @member {number} ch1Current
+     * @member {number|null|undefined} ch1Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch1Current = 0
+    PowerMetrics.prototype.ch1Current = null
 
     /**
      * Voltage (Ch2)
-     * @member {number} ch2Voltage
+     * @member {number|null|undefined} ch2Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch2Voltage = 0
+    PowerMetrics.prototype.ch2Voltage = null
 
     /**
      * Current (Ch2)
-     * @member {number} ch2Current
+     * @member {number|null|undefined} ch2Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch2Current = 0
+    PowerMetrics.prototype.ch2Current = null
 
     /**
      * Voltage (Ch3)
-     * @member {number} ch3Voltage
+     * @member {number|null|undefined} ch3Voltage
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch3Voltage = 0
+    PowerMetrics.prototype.ch3Voltage = null
 
     /**
      * Current (Ch3)
-     * @member {number} ch3Current
+     * @member {number|null|undefined} ch3Current
      * @memberof meshtastic.PowerMetrics
      * @instance
      */
-    PowerMetrics.prototype.ch3Current = 0
+    PowerMetrics.prototype.ch3Current = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch1Voltage', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch1Voltage'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch1Current', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch1Current'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch2Voltage', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch2Voltage'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch2Current', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch2Current'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch3Voltage', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch3Voltage'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(PowerMetrics.prototype, '_ch3Current', {
+      get: $util.oneOfGetter(($oneOfFields = ['ch3Current'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes a PowerMetrics message from the specified reader or buffer.
@@ -9819,99 +10509,174 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Concentration Units Standard PM1.0
-     * @member {number} pm10Standard
+     * @member {number|null|undefined} pm10Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm10Standard = 0
+    AirQualityMetrics.prototype.pm10Standard = null
 
     /**
      * Concentration Units Standard PM2.5
-     * @member {number} pm25Standard
+     * @member {number|null|undefined} pm25Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm25Standard = 0
+    AirQualityMetrics.prototype.pm25Standard = null
 
     /**
      * Concentration Units Standard PM10.0
-     * @member {number} pm100Standard
+     * @member {number|null|undefined} pm100Standard
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm100Standard = 0
+    AirQualityMetrics.prototype.pm100Standard = null
 
     /**
      * Concentration Units Environmental PM1.0
-     * @member {number} pm10Environmental
+     * @member {number|null|undefined} pm10Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm10Environmental = 0
+    AirQualityMetrics.prototype.pm10Environmental = null
 
     /**
      * Concentration Units Environmental PM2.5
-     * @member {number} pm25Environmental
+     * @member {number|null|undefined} pm25Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm25Environmental = 0
+    AirQualityMetrics.prototype.pm25Environmental = null
 
     /**
      * Concentration Units Environmental PM10.0
-     * @member {number} pm100Environmental
+     * @member {number|null|undefined} pm100Environmental
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.pm100Environmental = 0
+    AirQualityMetrics.prototype.pm100Environmental = null
 
     /**
      * 0.3um Particle Count
-     * @member {number} particles_03um
+     * @member {number|null|undefined} particles_03um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_03um = 0
+    AirQualityMetrics.prototype.particles_03um = null
 
     /**
      * 0.5um Particle Count
-     * @member {number} particles_05um
+     * @member {number|null|undefined} particles_05um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_05um = 0
+    AirQualityMetrics.prototype.particles_05um = null
 
     /**
      * 1.0um Particle Count
-     * @member {number} particles_10um
+     * @member {number|null|undefined} particles_10um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_10um = 0
+    AirQualityMetrics.prototype.particles_10um = null
 
     /**
      * 2.5um Particle Count
-     * @member {number} particles_25um
+     * @member {number|null|undefined} particles_25um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_25um = 0
+    AirQualityMetrics.prototype.particles_25um = null
 
     /**
      * 5.0um Particle Count
-     * @member {number} particles_50um
+     * @member {number|null|undefined} particles_50um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_50um = 0
+    AirQualityMetrics.prototype.particles_50um = null
 
     /**
      * 10.0um Particle Count
-     * @member {number} particles_100um
+     * @member {number|null|undefined} particles_100um
      * @memberof meshtastic.AirQualityMetrics
      * @instance
      */
-    AirQualityMetrics.prototype.particles_100um = 0
+    AirQualityMetrics.prototype.particles_100um = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm10Standard', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm10Standard'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm25Standard', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm25Standard'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm100Standard', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm100Standard'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm10Environmental', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm10Environmental'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm25Environmental', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm25Environmental'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_pm100Environmental', {
+      get: $util.oneOfGetter(($oneOfFields = ['pm100Environmental'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_03um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_03um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_05um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_05um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_10um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_10um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_25um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_25um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_50um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_50um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(AirQualityMetrics.prototype, '_particles_100um', {
+      get: $util.oneOfGetter(($oneOfFields = ['particles_100um'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Decodes an AirQualityMetrics message from the specified reader or buffer.
@@ -9990,6 +10755,160 @@ export const meshtastic = ($root.meshtastic = (() => {
     return AirQualityMetrics
   })()
 
+  meshtastic.LocalStats = (function () {
+    /**
+     * Properties of a LocalStats.
+     * @memberof meshtastic
+     * @interface ILocalStats
+     * @property {number|null} [uptimeSeconds] How long the device has been running since the last reboot (in seconds)
+     * @property {number|null} [channelUtilization] Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise).
+     * @property {number|null} [airUtilTx] Percent of airtime for transmission used within the last hour.
+     * @property {number|null} [numPacketsTx] Number of packets sent
+     * @property {number|null} [numPacketsRx] Number of packets received good
+     * @property {number|null} [numPacketsRxBad] Number of packets received that are malformed or violate the protocol
+     * @property {number|null} [numOnlineNodes] Number of nodes online (in the past 2 hours)
+     * @property {number|null} [numTotalNodes] Number of nodes total
+     */
+
+    /**
+     * Constructs a new LocalStats.
+     * @memberof meshtastic
+     * @classdesc Local device mesh statistics
+     * @implements ILocalStats
+     * @constructor
+     * @param {meshtastic.ILocalStats=} [properties] Properties to set
+     */
+    function LocalStats(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * How long the device has been running since the last reboot (in seconds)
+     * @member {number} uptimeSeconds
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.uptimeSeconds = 0
+
+    /**
+     * Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise).
+     * @member {number} channelUtilization
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.channelUtilization = 0
+
+    /**
+     * Percent of airtime for transmission used within the last hour.
+     * @member {number} airUtilTx
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.airUtilTx = 0
+
+    /**
+     * Number of packets sent
+     * @member {number} numPacketsTx
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numPacketsTx = 0
+
+    /**
+     * Number of packets received good
+     * @member {number} numPacketsRx
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numPacketsRx = 0
+
+    /**
+     * Number of packets received that are malformed or violate the protocol
+     * @member {number} numPacketsRxBad
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numPacketsRxBad = 0
+
+    /**
+     * Number of nodes online (in the past 2 hours)
+     * @member {number} numOnlineNodes
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numOnlineNodes = 0
+
+    /**
+     * Number of nodes total
+     * @member {number} numTotalNodes
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numTotalNodes = 0
+
+    /**
+     * Decodes a LocalStats message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.LocalStats
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.LocalStats} LocalStats
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    LocalStats.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.LocalStats()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.uptimeSeconds = reader.uint32()
+            break
+          }
+          case 2: {
+            message.channelUtilization = reader.float()
+            break
+          }
+          case 3: {
+            message.airUtilTx = reader.float()
+            break
+          }
+          case 4: {
+            message.numPacketsTx = reader.uint32()
+            break
+          }
+          case 5: {
+            message.numPacketsRx = reader.uint32()
+            break
+          }
+          case 6: {
+            message.numPacketsRxBad = reader.uint32()
+            break
+          }
+          case 7: {
+            message.numOnlineNodes = reader.uint32()
+            break
+          }
+          case 8: {
+            message.numTotalNodes = reader.uint32()
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return LocalStats
+  })()
+
   meshtastic.Telemetry = (function () {
     /**
      * Properties of a Telemetry.
@@ -10000,6 +10919,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {meshtastic.IEnvironmentMetrics|null} [environmentMetrics] Weather station or other environmental metrics
      * @property {meshtastic.IAirQualityMetrics|null} [airQualityMetrics] Air quality metrics
      * @property {meshtastic.IPowerMetrics|null} [powerMetrics] Power Metrics
+     * @property {meshtastic.ILocalStats|null} [localStats] Local device mesh statistics
      */
 
     /**
@@ -10056,17 +10976,25 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     Telemetry.prototype.powerMetrics = null
 
+    /**
+     * Local device mesh statistics
+     * @member {meshtastic.ILocalStats|null|undefined} localStats
+     * @memberof meshtastic.Telemetry
+     * @instance
+     */
+    Telemetry.prototype.localStats = null
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
     /**
      * Telemetry variant.
-     * @member {"deviceMetrics"|"environmentMetrics"|"airQualityMetrics"|"powerMetrics"|undefined} variant
+     * @member {"deviceMetrics"|"environmentMetrics"|"airQualityMetrics"|"powerMetrics"|"localStats"|undefined} variant
      * @memberof meshtastic.Telemetry
      * @instance
      */
     Object.defineProperty(Telemetry.prototype, 'variant', {
-      get: $util.oneOfGetter(($oneOfFields = ['deviceMetrics', 'environmentMetrics', 'airQualityMetrics', 'powerMetrics'])),
+      get: $util.oneOfGetter(($oneOfFields = ['deviceMetrics', 'environmentMetrics', 'airQualityMetrics', 'powerMetrics', 'localStats'])),
       set: $util.oneOfSetter($oneOfFields),
     })
 
@@ -10106,6 +11034,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 5: {
             message.powerMetrics = $root.meshtastic.PowerMetrics.decode(reader, reader.uint32())
+            break
+          }
+          case 6: {
+            message.localStats = $root.meshtastic.LocalStats.decode(reader, reader.uint32())
             break
           }
           default:
@@ -10149,6 +11081,9 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} AHT10=23 AHT10 Integrated temperature and humidity sensor
    * @property {number} DFROBOT_LARK=24 DFRobot Lark Weather station (temperature, humidity, pressure, wind speed and direction)
    * @property {number} NAU7802=25 NAU7802 Scale Chip or compatible
+   * @property {number} BMP3XX=26 BMP3XX High accuracy temperature and pressure
+   * @property {number} ICM20948=27 ICM-20948 9-Axis digital motion processor
+   * @property {number} MAX17048=28 MAX17048 1S lipo battery sensor (voltage, state of charge, time to go)
    */
   meshtastic.TelemetrySensorType = (function () {
     const valuesById = {},
@@ -10179,6 +11114,9 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[23] = 'AHT10')] = 23
     values[(valuesById[24] = 'DFROBOT_LARK')] = 24
     values[(valuesById[25] = 'NAU7802')] = 25
+    values[(valuesById[26] = 'BMP3XX')] = 26
+    values[(valuesById[27] = 'ICM20948')] = 27
+    values[(valuesById[28] = 'MAX17048')] = 28
     return values
   })()
 

@@ -1,4 +1,6 @@
 import icon from '../../../assets/images/icon.png'
+import glider from '../../../assets/images/glider.png'
+
 import { GithubIcon } from '../utils/icon-constants'
 import { Modal, ModalBaseProps } from './modal'
 import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
@@ -6,8 +8,8 @@ import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
 const aboutModalTitle = (
   <div className="w-min-full mx-auto text-center pt-4 text-sm md:text-md">
     <div className="relative mx-auto w-16 h-16 mb-1">
-      <div className="text-4xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
-      <img className="w-16 h-16 rounded bg-opacity-90" src={icon} alt="Meshtastic icon" />
+      <img className="absolute -top-4 -right-6 w-10" src={glider} alt="Glider icon" />
+      <img className="w-16 h-16 bg-opacity-90" src={icon} alt="Meshtastic icon" />
     </div>
     <h1 className="font-bold">Paragliding Meshtastic Map</h1>
     <h2>

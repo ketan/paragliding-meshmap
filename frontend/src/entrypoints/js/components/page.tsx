@@ -5,6 +5,7 @@ import { AboutModal } from './about-modal'
 import { TooltipDirection } from './tooltip'
 import { ToastContainer } from 'react-toastify'
 import { ConfigModal } from './config-modal.tsx'
+import glider from '../../../assets/images/glider.png'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -83,7 +84,7 @@ function ApplicationName() {
 function IconInHeader() {
   return (
     <a className="min-w-10 min-h-10 max-w-10 max-h-10 block m-auto relative mr-2.5" href="/">
-      <div className="text-3xl absolute -top-2.5 -right-1.5">&#x1FA82;</div>
+      <img className="absolute -top-2 -right-5 w-7" src={glider} alt="Glider icon" />
       <img className="w-full h-full rounded bg-opacity-90" src={icon} alt="Meshtastic icon" />
     </a>
   )

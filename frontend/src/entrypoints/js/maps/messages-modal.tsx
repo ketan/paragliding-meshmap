@@ -25,6 +25,7 @@ interface Props {
 export function MessagesModal({ from, to, since, nodes, onClose, updateDuration, toggleFilter }: Props) {
   const [loadedState, setLoadedState] = useState<LoadedState>(null)
   const [messages, setMessages] = useState<MessagesEntityForUI[]>([])
+  const elementRefForEndOfPage = React.createRef<HTMLDivElement>()
 
   async function loadData() {
     setLoadedState('loading')
@@ -53,6 +54,13 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
       loadData()
     }
   }, [from, to, since])
+
+  useEffect(() => {
+    if (loadedState === 'loaded') {
+      console.log(`Scrolling to end of page`, elementRefForEndOfPage.current)
+      elementRefForEndOfPage.current?.scrollIntoView(false)
+    }
+  }, [loadedState, messages])
 
   function renderMessagesIfAny() {
     if (loadedState !== 'loaded') {
@@ -154,6 +162,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
         {renderLoadingMessage()}
         {renderNoMessagesIfNone()}
         {renderMessagesIfAny()}
+        <div ref={elementRefForEndOfPage}></div>
       </div>
     </Modal>
   )

@@ -1,8 +1,9 @@
-import React, { ReactNode, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { Modal, ModalBaseProps } from './modal'
 import qs from 'qs'
 import { kebabCase } from 'lodash'
 import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 function download(blob: Blob, shortName: string) {
   const url = window.URL.createObjectURL(blob)
@@ -16,34 +17,22 @@ function download(blob: Blob, shortName: string) {
   a.remove()
 }
 
+interface Inputs {
+  shortName: string
+  longName: string
+  skylinesId: string
+}
+
 export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
-  const [shortName, setShortName] = useState('')
-  const [longName, setLongName] = useState('')
-  const [skylinesId, setSkylinesId] = useState('')
-  const [errors, setErrors] = useState({ shortName: '', longName: '', skylinesId: '' })
   const [errorMessage, setErrorMessage] = useState<ReactNode>()
 
-  const validate = () => {
-    const newErrors = { shortName: '', longName: '', skylinesId: '' }
-    if (!shortName) {
-      newErrors.shortName = 'Short Name is required'
-    }
-    if (!longName) {
-      newErrors.longName = 'Long Name is required'
-    }
-    if (!skylinesId) {
-      newErrors.skylinesId = 'Skylines ID is required'
-    }
-    setErrors(newErrors)
-    return !newErrors.shortName && !newErrors.longName && !newErrors.skylinesId
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>()
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    if (!validate()) {
-      return
-    }
-
+  const onSubmit: SubmitHandler<Inputs> = async ({ longName, shortName, skylinesId }) => {
     const queryString = qs.stringify({
       shortName: shortName,
       longName: longName,
@@ -80,22 +69,29 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
     <Modal isOpen={isOpen} onClose={onClose} header={`Configure your meshtastic device`}>
       <div className="pt-4 pb-4 text-sm md:text-md">
         {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
           <div>
             <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
               Short Name
             </label>
             <input
               type="text"
-              id="shortName"
-              value={shortName}
-              onChange={(e) => setShortName(e.target.value)}
+              {...register('shortName', {
+                required: 'This field is required.',
+                minLength: {
+                  value: 2,
+                  message: 'Minimum length is 2.',
+                },
+                maxLength: {
+                  value: 5,
+                  message: 'Maximum length is 5.',
+                },
+              })}
+              aria-invalid={errors.shortName ? 'true' : 'false'}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            {errors.shortName && <p className="mt-1 text-xs text-red-500">{errors.shortName}</p>}
-            <p className="mt-1 text-xs text-gray-500">
-              Enter a unique enough short identifier for yourself (preferably less than 5 characters).
-            </p>
+            {errors.shortName && <p className="mt-1 text-xs text-red-500">{errors.shortName.message}</p>}
+            <p className="mt-1 text-xs text-gray-500">Enter a unique 3-5 character identifier.</p>
           </div>
           <div>
             <label htmlFor="longName" className="block text-sm font-medium text-gray-700">
@@ -103,13 +99,22 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             </label>
             <input
               type="text"
-              id="longName"
-              value={longName}
-              onChange={(e) => setLongName(e.target.value)}
+              {...register('longName', {
+                required: 'This field is required.',
+                minLength: {
+                  value: 5,
+                  message: 'Minimum length is 5.',
+                },
+                maxLength: {
+                  value: 12,
+                  message: 'Maximum length is 12.',
+                },
+              })}
+              aria-invalid={errors.longName ? 'true' : 'false'}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            {errors.longName && <p className="mt-1 text-xs text-red-500">{errors.longName}</p>}
-            <p className="mt-1 text-xs text-gray-500">Enter a long name for yourself.</p>
+            {errors.longName && <p className="mt-1 text-xs text-red-500">{errors.longName.message}</p>}
+            <p className="mt-1 text-xs text-gray-500">Enter a long name for yourself that is 5-12 character long.</p>
           </div>
           <div>
             <label htmlFor="skylinesId" className="block text-sm font-medium text-gray-700">
@@ -117,12 +122,21 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             </label>
             <input
               type="text"
-              id="skylinesId"
-              value={skylinesId}
-              onChange={(e) => setSkylinesId(e.target.value)}
+              {...register('skylinesId', {
+                required: 'This field is required.',
+                minLength: {
+                  value: 6,
+                  message: 'Minimum length is 8.',
+                },
+                maxLength: {
+                  value: 10,
+                  message: 'Maximum length is 10.',
+                },
+              })}
+              aria-invalid={errors.skylinesId ? 'true' : 'false'}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            {errors.skylinesId && <p className="mt-1 text-xs text-red-500">{errors.skylinesId}</p>}
+            {errors.skylinesId && <p className="mt-1 text-xs text-red-500">{errors.skylinesId.message}</p>}
             <p className="mt-1 text-xs text-gray-500">
               Enter your{' '}
               <a href="https://skylines.aero/settings/tracking" target="_blank" rel="noreferrer">

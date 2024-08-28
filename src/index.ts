@@ -25,6 +25,7 @@ import { AppDataSource } from '#config/data-source'
 import MapReport from '#entity/map_report'
 import _ from 'lodash'
 import { meshtastic } from './gen/meshtastic-protobufs.js'
+import { createDeviceProfile } from '#helpers/create-device-profile'
 
 const cliOptions = webCLIParse()
 
@@ -181,34 +182,7 @@ app.get('/api/device-config', async function (req, res) {
       message: `You must specify shortName, longName and skylinesId`,
     })
   }
-
-  const dp = new meshtastic.DeviceProfile({
-    shortName: shortName,
-    longName: `${longName}/${skylinesId}`,
-    channelUrl: 'https://meshtastic.org/e/#CgsSAQEoATABOgIIIAoOEgGkGgVhZG1pbigBMAESDAgBOApAA0gBUB5oAQ',
-    config: new meshtastic.LocalConfig({
-      position: new meshtastic.Config.PositionConfig({
-        positionBroadcastSecs: 120,
-        gpsUpdateInterval: 60,
-        positionFlags: 811,
-        broadcastSmartMinimumDistance: 100,
-        broadcastSmartMinimumIntervalSecs: 30,
-        gpsMode: 1,
-      }),
-      lora: new meshtastic.Config.LoRaConfig({
-        usePreset: true,
-        region: meshtastic.Config.LoRaConfig.RegionCode.IN,
-        txEnabled: true,
-        txPower: 0, // default maxiumu
-        sx126xRxBoostedGain: true,
-      }),
-    }),
-    moduleConfig: new meshtastic.ModuleConfig({
-      neighborInfo: new meshtastic.ModuleConfig.NeighborInfoConfig({
-        updateInterval: 900,
-      }),
-    }),
-  })
+  const dp = createDeviceProfile(shortName, longName, skylinesId)
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })

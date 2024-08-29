@@ -92,24 +92,68 @@ function getDateTime(timestamp: string | Date | DateTime) {
   }
 }
 
-export function replaceWindowHistory(opts: { lat?: number; lng?: number; zoom?: number; configure?: boolean }) {
+interface MapParams {
+  configure?: boolean
+  lat?: number | false
+  lng?: number | false
+  nodeId?: number | false
+  zoom?: number | false
+}
+
+export interface MessageParams {
+  from: number
+  to: number | 'all'
+  since?: string | null
+}
+
+function applyParam<T extends MapParams | MessageParams>(param: keyof T, opts: T, url: URL) {
+  if (opts[param]) {
+    url.searchParams.set(param as string, opts[param]!.toString())
+  }
+  if (opts[param] === false) {
+    url.searchParams.delete(param as string)
+  }
+}
+
+function setUrl(url: URL) {
+  window.history.replaceState(null, '', url.toString())
+}
+
+export function setMapUrlParams(opts: MapParams) {
   const url = new URL(window.location.href)
-  if (opts.lat) {
-    url.searchParams.set('lat', opts.lat.toString())
-  }
-  if (opts.lng) {
-    url.searchParams.set('lng', opts.lng.toString())
-  }
-  if (opts.zoom) {
-    url.searchParams.set('zoom', opts.zoom.toString())
-  }
+
+  applyParam('nodeId', opts, url)
+  applyParam('lat', opts, url)
+  applyParam('lng', opts, url)
+  applyParam('zoom', opts, url)
+
   if (opts.configure) {
     url.searchParams.set('configure', '')
   }
   if (opts.configure === false) {
     url.searchParams.delete('configure')
   }
-  window.history.replaceState(null, '', url.toString())
+  setUrl(url)
+}
+
+export function setMessageUrlParams(opts: MessageParams) {
+  const url = new URL(window.location.href)
+
+  url.searchParams.set('from', opts.from.toString())
+  url.searchParams.set('to', opts.to.toString())
+  if (opts.since) {
+    url.searchParams.set('since', opts.since)
+  }
+
+  setUrl(url)
+}
+
+export function clearMessageUrlParams() {
+  const url = new URL(window.location.href)
+  url.searchParams.delete('from')
+  url.searchParams.delete('to')
+  url.searchParams.delete('since')
+  setUrl(url)
 }
 
 export function nodeRole(node: NodesEntity) {

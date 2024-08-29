@@ -1,5 +1,5 @@
 import { LeafletMouseEvent, Map } from 'leaflet'
-import { replaceWindowHistory } from '../utils/ui-util.tsx'
+import { setMapUrlParams } from '../utils/ui-util.tsx'
 
 export interface Props {
   map: Map
@@ -21,7 +21,7 @@ function onZoomPan(map: Map): void {
   const latLng = map.getCenter()
   const zoom = map.getZoom()
 
-  replaceWindowHistory({ lat: latLng.lat, lng: latLng.lng, zoom })
+  setMapUrlParams({ lat: latLng.lat, lng: latLng.lng, zoom })
 }
 
 export function mapEventsHandler({ map, closeAllToolTipsAndPopupsAndPopups }: Props) {

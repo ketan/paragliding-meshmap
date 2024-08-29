@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { MessagesEntityForUI } from '../../../nodes-entity'
 import { Modal } from '../components/modal.tsx'
 import { nodeUrl } from '../utils/link-utils.ts'
-import { timeAgo } from '../utils/ui-util.tsx'
+import { clearMessageUrlParams, setMessageUrlParams, timeAgo } from '../utils/ui-util.tsx'
 import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
 
@@ -41,9 +41,9 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
     const messagesResponse = await fetch(`/api/node/${from}/sent-messages?to=${to}&since=${since.toISO()}`)
     if (messagesResponse.status == 200 || messagesResponse.status == 304) {
       const messages = (await messagesResponse.json()) as MessagesEntityForUI[]
-
       setMessages(messages)
       setLoadedState('loaded')
+      setMessageUrlParams({ from: from!, to: to!, since: since?.rescale().toISO() })
     } else {
       setLoadedState('error')
     }
@@ -53,6 +53,8 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
     if (from) {
       loadData()
     }
+
+    return () => clearMessageUrlParams()
   }, [from, to, since])
 
   useEffect(() => {

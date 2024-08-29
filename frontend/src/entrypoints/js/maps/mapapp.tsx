@@ -13,7 +13,15 @@ import { addLegendToMap, cssClassFor } from '../../../templates/legend'
 import { nodePositionView } from '../../../templates/node-position'
 import { NodeTooltip } from '../../../templates/node-tooltip'
 import { Page } from '../components/page'
-import { isDesktop, nodeName, replaceWindowHistory, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from '../utils/ui-util'
+import {
+  isDesktop,
+  MessageParams,
+  nodeName,
+  sanitizeLatLong,
+  sanitizeNodesProperties,
+  sanitizeNumber,
+  setMapUrlParams,
+} from '../utils/ui-util'
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
 import { SearchBar } from './search-bar'
@@ -40,6 +48,7 @@ interface LatLngZoom {
 interface QueryParams extends LatLngZoom {
   nodeId?: number
   showConfigurationPopup: boolean
+  msg?: MessageParams
 }
 
 interface MapProps {
@@ -201,9 +210,17 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.setState({ markers }, () => {
         const queryParams = this.getQueryParams()
         if (queryParams.nodeId) {
+          console.log(`flying to node`)
           this.flyToNode(queryParams.nodeId)
         } else {
           this.maybeFlyToCurrentLocation()
+        }
+        if (queryParams.msg) {
+          console.log(`opening messages`)
+          const node = this.findNodeById(this.state.allNodes, queryParams.msg.from)
+          if (node) {
+            this.showMessages(node)
+          }
         }
       })
     })
@@ -229,7 +246,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           show: this.state.configModalVisible,
           onClick: () => {
             this.setState({ configModalVisible: !this.state.configModalVisible }, () => {
-              replaceWindowHistory({ configure: this.state.configModalVisible })
+              setMapUrlParams({ configure: this.state.configModalVisible })
             })
           },
         }}
@@ -299,6 +316,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         layer.removeFrom(map)
       }
     })
+    setMapUrlParams({ nodeId: false })
   }
 
   private getQueryParams(): QueryParams {
@@ -312,6 +330,10 @@ export default class MapApp extends Component<MapProps, MapState> {
     const nodeId = sanitizeNumber(queryParams.get('nodeId'))
     const showConfigurationPopup = queryParams.has('configure')
 
+    const msgFrom = queryParams.get('from')
+    const msgTo = queryParams.get('to')
+    const msgSince = queryParams.get('since')
+
     const retval: QueryParams = {
       showConfigurationPopup,
     }
@@ -324,6 +346,17 @@ export default class MapApp extends Component<MapProps, MapState> {
     }
     if (nodeId) {
       retval.nodeId = nodeId
+    }
+    if (msgTo && msgFrom) {
+      const from = sanitizeNumber(msgFrom)
+      const to = sanitizeNumber(msgTo)
+      if (from && to) {
+        retval.msg = {
+          from: from,
+          to: to,
+          since: msgSince,
+        }
+      }
     }
     return retval
   }
@@ -429,7 +462,6 @@ export default class MapApp extends Component<MapProps, MapState> {
       )
 
       marker.on('tooltipopen', () => {
-        // debugger
         if (tooltipReactRoot) {
           tooltipReactRoot.unmount()
           tooltipReactRoot = undefined
@@ -490,6 +522,8 @@ export default class MapApp extends Component<MapProps, MapState> {
 
       tooltip.setContent(popupDiv!)
 
+      setMapUrlParams({ nodeId: eachNode.nodeId })
+
       this.state.map?.openTooltip(tooltip)
     })
 
@@ -515,7 +549,10 @@ export default class MapApp extends Component<MapProps, MapState> {
     this.setState({ trackLogToShow: node })
   }
 
-  private findNodeById(nodes: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {
+  private findNodeById(nodes?: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {
+    if (!nodes) {
+      return
+    }
     // find node by id
     nodeId = sanitizeNumber(nodeId)
     if (!nodeId) {

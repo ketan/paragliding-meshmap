@@ -29,7 +29,8 @@ export async function dumpStats(db: DataSource, logger: debug.Debugger) {
       n_live_tup: bigint
       n_dead_tup: bigint
     }[]
-  >(`SELECT relname, n_live_tup, n_dead_tup FROM pg_stat_user_tables`)
+  >(`SELECT relname, n_live_tup, n_dead_tup
+     FROM pg_stat_user_tables`)
   logger(`Record count (estimates)`, response)
 }
 

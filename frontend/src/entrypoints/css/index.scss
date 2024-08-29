@@ -41,7 +41,8 @@ body {
   @apply text-blue-700;
 }
 
-a {
+a,
+.link {
   @apply text-blue-700;
 
   &:hover {

@@ -68,11 +68,11 @@ export function HeaderIcon({
   className?: string | undefined
 }) {
   return (
-    <a href="#" className={`has-tooltip rounded-full ${className}`} aria-label={tooltip} data-cooltipz-dir={tooltipDir} onClick={onClick}>
+    <button className={`has-tooltip rounded-full ${className}`} aria-label={tooltip} data-cooltipz-dir={tooltipDir} onClick={onClick}>
       <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
         {React.createElement(icon, { className: 'w-6 h-6' })}
       </div>
-    </a>
+    </button>
   )
 }
 

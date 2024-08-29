@@ -97,9 +97,9 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
         link = (
           <>
             {' '}
-            <a href="#" onClick={() => updateDuration(currentDurationDoubled)}>
+            <button className="link" onClick={() => updateDuration(currentDurationDoubled)}>
               Show older messages
-            </a>
+            </button>
           </>
         )
       }

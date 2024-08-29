@@ -174,7 +174,7 @@ app.get('/api/hardware-models', async function (_req, res) {
 
 app.get('/api/device-config', async function (req, res) {
   const shortName = (req.query.shortName || '').toString()
-  const longName = (req.query.shortName || '').toString()
+  const longName = (req.query.longName || '').toString()
   const skylinesId = (req.query.skylinesId || '').toString()
 
   if (_.isEmpty(shortName) || _.isEmpty(longName) || _.isEmpty(skylinesId)) {

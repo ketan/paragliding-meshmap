@@ -58,4 +58,16 @@ export default class TextMessage extends BaseType {
       },
     })
   }
+
+  async findRecentSimilarMessage(trx: EntityManager | DataSource, since: Date) {
+    return await trx.getRepository(TextMessage).findOne({
+      where: {
+        from: this.from,
+        to: this.to,
+        packetId: this.packetId,
+        text: this.text,
+        createdAt: MoreThanOrEqual(since),
+      },
+    })
+  }
 }

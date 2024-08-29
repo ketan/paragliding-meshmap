@@ -93,6 +93,12 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
 
   await db.transaction(async (trx) => {
     try {
+      const recentSimilarMessage = await tm.findRecentSimilarMessage(trx, secondsAgo(15))
+
+      if (recentSimilarMessage) {
+        return
+      }
+
       const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
       await trx.save(tm)
 

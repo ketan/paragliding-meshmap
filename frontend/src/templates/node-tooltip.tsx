@@ -153,40 +153,37 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
 
   const showDetailsButton = (
     <p className="text-center mt-1" key="showDetails">
-      <a
+      <button
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
         onClick={() => showDetail(node)}
         data-node-id={node.nodeId}
       >
         Show details
-      </a>
+      </button>
     </p>
   )
 
   const showTrackLogButton = (
     <p className="text-center mt-1" key="showTrackLog">
-      <a
+      <button
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100 show-details-button"
         onClick={() => showTrackLog(node)}
         data-node-id={node.nodeId}
       >
         Show Tracklog
-      </a>
+      </button>
     </p>
   )
 
   const showMessagesButton = (
     <p className="text-center mt-1" key="showMessages" data-id="showMessagesButton">
-      <a
-        href="#"
-        onClick={() => {
-          showMessages(node)
-        }}
+      <button
+        onClick={() => showMessages(node)}
         rel="noreferrer"
         className="button block w-full px-4 py-2 font-semibold border border-gray-400 shadow-lg shadow-gray-100 rounded bg-gray-100"
       >
         Show Messages
-      </a>
+      </button>
     </p>
   )
 

@@ -13,8 +13,14 @@
 
 html,
 body {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow: clip;
 }
 
 [aria-label][data-cooltipz-dir]::after,

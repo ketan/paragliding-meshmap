@@ -4,6 +4,7 @@ import { DateTime, Duration } from 'luxon'
 import { NodesEntity } from '../../../db-entities'
 import { NodeNameAttributes, NodesEntityForUI } from '../../../nodes-entity'
 import { Tooltip } from '../components/tooltip'
+import { NodeRoleIDToName } from '../../../hardware-modules.ts'
 
 export const BROADCAST_ADDR = Number('0xffffffff')
 
@@ -109,6 +110,14 @@ export function replaceWindowHistory(opts: { lat?: number; lng?: number; zoom?: 
     url.searchParams.delete('configure')
   }
   window.history.replaceState(null, '', url.toString())
+}
+
+export function nodeRole(node: NodesEntity) {
+  let role: string | undefined
+  if (node.role !== null && node.role !== undefined) {
+    role = NodeRoleIDToName[node.role]
+  }
+  return role || `UNKNOWN`
 }
 
 export function duration(seconds?: number | null) {

@@ -3,8 +3,8 @@ import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
 import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
-import { BROADCAST_ADDR, googleMapsLink, timeAgo } from '../entrypoints/js/utils/ui-util'
-import { HardwareModelIDToName, NodeRoleIDToName } from '../hardware-modules'
+import { BROADCAST_ADDR, googleMapsLink, nodeRole, timeAgo } from '../entrypoints/js/utils/ui-util'
+import { HardwareModelIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
 import { nodeUrl } from '../entrypoints/js/utils/link-utils'
@@ -142,12 +142,14 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
   const image = imageForModel(node.hardwareModel) ? (
     <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
   ) : null
-  const role = node.role ? NodeRoleIDToName[node.role] : 'UNKNOWN'
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
   const padding = () => <li key={window.crypto.randomUUID()} className="mt-1.5"></li>
 
-  const nodeName = keyValue({ key: 'Long Name', renderer: () => <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span> })
+  const nodeName = keyValue({
+    key: 'Long Name',
+    renderer: () => <span className="font-extrabold">{node.longName || `(UNKNOWN)`}</span>,
+  })
 
   const showDetailsButton = (
     <p className="text-center mt-1" key="showDetails">
@@ -240,7 +242,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
         )
       },
     }),
-    keyValue({ key: 'Role', value: role }),
+    keyValue({ key: 'Role', value: nodeRole(node) }),
     keyValue({ key: 'Updated', value: node.updatedAt, renderer: timeAgo }),
     <div className="mt-3" key="buttons">
       {showDetailsButton}

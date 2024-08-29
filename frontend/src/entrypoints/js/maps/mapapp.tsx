@@ -210,13 +210,11 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.setState({ markers }, () => {
         const queryParams = this.getQueryParams()
         if (queryParams.nodeId) {
-          console.log(`flying to node`)
           this.flyToNode(queryParams.nodeId)
         } else {
           this.maybeFlyToCurrentLocation()
         }
         if (queryParams.msg) {
-          console.log(`opening messages`)
           const node = this.findNodeById(this.state.allNodes, queryParams.msg.from)
           if (node) {
             this.showMessages(node)

@@ -26,7 +26,8 @@ function getDeviceProfile() {
       network: new meshtastic.Config.NetworkConfig(),
       bluetooth: new meshtastic.Config.BluetoothConfig({
         enabled: true,
-        mode: meshtastic.Config.BluetoothConfig.PairingMode.RANDOM_PIN,
+        mode: meshtastic.Config.BluetoothConfig.PairingMode.FIXED_PIN,
+        fixedPin: 123456,
       }),
       display: new meshtastic.Config.DisplayConfig(),
       lora: new meshtastic.Config.LoRaConfig({

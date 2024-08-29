@@ -1,5 +1,6 @@
 {
-  "watch": ["src", "package.json", "tsconfig.json", "package-lock.json", ".env"],
+  "watch": ["src", "package.json", "tsconfig.json", ".env**", "yarn.lock"],
   "ignore": ["test", "build", "tmp", "dist"],
-  "ext": "*"
+  "ext": "*",
+  "verbose": true
 }

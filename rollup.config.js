@@ -42,6 +42,7 @@ export default defineConfig({
     'express',
     'express-async-errors',
     'express-static-gzip',
+    'fs',
     'glob',
     'lodash',
     'luxon',

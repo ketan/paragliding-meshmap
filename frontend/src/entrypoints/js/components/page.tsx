@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import icon from '../../../assets/images/icon.png'
 import { CircleInfoIcon, GearsIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
@@ -10,12 +10,17 @@ import glider from '../../../assets/images/glider.png'
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
   bannerMain?: React.ReactNode
+  aboutModal: {
+    show: boolean
+    onClick: () => void
+  }
+  configModal: {
+    show: boolean
+    onClick: () => void
+  }
 }
 
 export function Page(props: PageProps) {
-  const [showAboutModal, setShowAboutModal] = useState(false)
-  const [showConfigModal, setShowConfigModal] = useState(false)
-
   return (
     <>
       <div className="flex flex-col h-full w-full">
@@ -28,8 +33,8 @@ export function Page(props: PageProps) {
             {props.bannerMain}
             {/* header action buttons */}
             <HeaderActionButtons>
-              <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => setShowConfigModal(true)} />
-              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => setShowAboutModal(true)} />
+              <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
+              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => props.aboutModal.onClick()} />
               {props.headerIcons}
             </HeaderActionButtons>
           </div>
@@ -38,8 +43,8 @@ export function Page(props: PageProps) {
           {props.children}
         </div>
       </div>
-      <ConfigModal onClose={() => setShowConfigModal(false)} isOpen={showConfigModal} />
-      <AboutModal onClose={() => setShowAboutModal(false)} isOpen={showAboutModal} />
+      <ConfigModal onClose={() => props.configModal.onClick()} isOpen={props.configModal.show} />
+      <AboutModal onClose={() => props.aboutModal.onClick()} isOpen={props.aboutModal.show} />
       <ToastContainer hideProgressBar theme="dark" />
     </>
   )

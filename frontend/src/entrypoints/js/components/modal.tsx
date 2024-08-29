@@ -44,13 +44,24 @@ export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, c
     [onClose, ref]
   )
 
-  useEffect(() => {
+  function uninstallHandlers() {
+    document.removeEventListener('mouseup', handleOutsideClick)
+    document.removeEventListener('keyup', handleEscKey, false)
+  }
+
+  function installHandlers() {
     document.addEventListener('mouseup', handleOutsideClick)
     document.addEventListener('keyup', handleEscKey, false)
+  }
 
+  useEffect(() => {
+    if (isOpen) {
+      installHandlers()
+    } else {
+      uninstallHandlers()
+    }
     return () => {
-      document.removeEventListener('mouseup', handleOutsideClick)
-      document.removeEventListener('keyup', handleEscKey, false)
+      uninstallHandlers()
     }
   }, [handleOutsideClick, handleEscKey, isOpen])
 

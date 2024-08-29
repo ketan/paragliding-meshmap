@@ -91,6 +91,26 @@ function getDateTime(timestamp: string | Date | DateTime) {
   }
 }
 
+export function replaceWindowHistory(opts: { lat?: number; lng?: number; zoom?: number; configure?: boolean }) {
+  const url = new URL(window.location.href)
+  if (opts.lat) {
+    url.searchParams.set('lat', opts.lat.toString())
+  }
+  if (opts.lng) {
+    url.searchParams.set('lng', opts.lng.toString())
+  }
+  if (opts.zoom) {
+    url.searchParams.set('zoom', opts.zoom.toString())
+  }
+  if (opts.configure) {
+    url.searchParams.set('configure', '')
+  }
+  if (opts.configure === false) {
+    url.searchParams.delete('configure')
+  }
+  window.history.replaceState(null, '', url.toString())
+}
+
 export function duration(seconds?: number | null) {
   if (!seconds) {
     return

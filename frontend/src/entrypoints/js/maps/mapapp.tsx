@@ -13,7 +13,7 @@ import { addLegendToMap, cssClassFor } from '../../../templates/legend'
 import { nodePositionView } from '../../../templates/node-position'
 import { NodeTooltip } from '../../../templates/node-tooltip'
 import { Page } from '../components/page'
-import { isDesktop, nodeName, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from '../utils/ui-util'
+import { isDesktop, nodeName, replaceWindowHistory, sanitizeLatLong, sanitizeNodesProperties, sanitizeNumber } from '../utils/ui-util'
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
 import { SearchBar } from './search-bar'
@@ -39,6 +39,7 @@ interface LatLngZoom {
 
 interface QueryParams extends LatLngZoom {
   nodeId?: number
+  showConfigurationPopup: boolean
 }
 
 interface MapProps {
@@ -72,6 +73,9 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   messageFrom?: number
   messageTo?: number | 'all'
   messageSince: Duration
+
+  aboutModalVisible: boolean
+  configModalVisible: boolean
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
@@ -85,6 +89,9 @@ export default class MapApp extends Component<MapProps, MapState> {
     dataLoaded: Promise.withResolvers(),
     messageTo: BROADCAST_ADDR,
     messageSince: this.defaultMessageSince,
+    showConfigurationPopup: false,
+    aboutModalVisible: false,
+    configModalVisible: false,
   }
 
   readonly allClusteredLayerGroup = L.markerClusterGroup({
@@ -115,7 +122,11 @@ export default class MapApp extends Component<MapProps, MapState> {
   )
 
   async componentDidMount() {
-    const { coords, zoom, nodeId } = this.getQueryParams()
+    const { coords, zoom, nodeId, showConfigurationPopup } = this.getQueryParams()
+
+    if (showConfigurationPopup) {
+      this.setState({ configModalVisible: true })
+    }
 
     if (coords) {
       this.setState({ coords, zoom })
@@ -206,7 +217,23 @@ export default class MapApp extends Component<MapProps, MapState> {
     const searchBar = <SearchBar nodes={Object.values(this.state.newerNodesWithPosition)} selectCallback={(node) => this.flyToNode(node)} />
 
     return (
-      <Page bannerMain={searchBar}>
+      <Page
+        bannerMain={searchBar}
+        aboutModal={{
+          show: this.state.aboutModalVisible,
+          onClick: () => {
+            this.setState({ aboutModalVisible: !this.state.aboutModalVisible })
+          },
+        }}
+        configModal={{
+          show: this.state.configModalVisible,
+          onClick: () => {
+            this.setState({ configModalVisible: !this.state.configModalVisible }, () => {
+              replaceWindowHistory({ configure: this.state.configModalVisible })
+            })
+          },
+        }}
+      >
         <div style={{ width: '100%', height: '100%' }}>
           <MapContainer
             center={this.state.coords}
@@ -250,7 +277,10 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   private mapInitialized() {
-    mapEventsHandler({ map: this.state.map!, closeAllToolTipsAndPopupsAndPopups: this.closeAllToolTipsAndPopupsAndPopups.bind(this) })
+    mapEventsHandler({
+      map: this.state.map!,
+      closeAllToolTipsAndPopupsAndPopups: this.closeAllToolTipsAndPopupsAndPopups.bind(this),
+    })
     this.configureGroupedLayers()
     this.allClusteredLayerGroup.addTo(this.state.map!)
     new MapTiles(this.props.mapType).addDefaultLayerToMap(this.state.map!)
@@ -280,8 +310,11 @@ export default class MapApp extends Component<MapProps, MapState> {
     const coords = sanitizeLatLong(queryLat, queryLng)
     const zoom = sanitizeNumber(queryParams.get('zoom'))
     const nodeId = sanitizeNumber(queryParams.get('nodeId'))
+    const showConfigurationPopup = queryParams.has('configure')
 
-    const retval: QueryParams = {}
+    const retval: QueryParams = {
+      showConfigurationPopup,
+    }
 
     if (coords) {
       retval.coords = { lat: coords[0], lng: coords[1] }
@@ -437,7 +470,11 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.closeAllToolTipsAndPopupsAndPopups()
       maybeCreateTooltip()
 
-      const tooltip = new L.Tooltip(eachNode.offsetLatLng!, { interactive: true, permanent: true, offset: tooltipOffset })
+      const tooltip = new L.Tooltip(eachNode.offsetLatLng!, {
+        interactive: true,
+        permanent: true,
+        offset: tooltipOffset,
+      })
 
       popupReactRoot?.render(
         <NodeTooltip

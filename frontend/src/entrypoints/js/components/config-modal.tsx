@@ -67,9 +67,10 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} header={`Configure your meshtastic device`}>
-      <div className="pt-4 pb-4 text-sm md:text-md">
+      <div className="text-sm md:text-md">
+        <div></div>
         {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 p-2">
           <div>
             <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
               Short Name

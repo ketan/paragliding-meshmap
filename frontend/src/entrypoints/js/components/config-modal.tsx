@@ -66,11 +66,40 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} header={`Configure your meshtastic device`}>
+    <Modal isOpen={isOpen} onClose={onClose} header={`Configure your Meshtastic device`}>
       <div className="text-sm md:text-md">
-        <div></div>
         {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 p-2">
+          <div className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-yellow-200">
+            <p className="font-semibold text-xl">Note!</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>
+                Importing this configuration to your Meshtastic device will <span className="font-semibold italic underline">publicly</span>{' '}
+                share its location every 180 seconds. Do not reduce this interval as it can increase battery usage of the device among other
+                undesirable side effects. Disable GPS or turn off the Meshtastic device if you do not wish to share its location.
+              </li>
+              <li>
+                Bluetooth pin is set as{' '}
+                <code className="font-mono rounded-[0.25em] py-[0.125rem] px-[0.1875rem] my-0 -mx-[0.1875rem] bg-yellow-600">123456</code>,
+                you may change that to more secure pin from the Meshtastic phone application.
+              </li>
+
+              <li>
+                Do not turn off Bluetooth on your Meshtastic device. Doing so will prevent the Meshtastic app on your phone from connecting
+                with the Meshtastic device.
+              </li>
+
+              <li>
+                Check the{' '}
+                <a href="https://meshtastic.org/docs/configuration/" target="_blank" rel="noreferrer">
+                  Meshtastic documentation
+                </a>{' '}
+                for any additional settings.
+              </li>
+
+              <li>Happy meshing! Great winds and clear skies!</li>
+            </ul>
+          </div>
           <div>
             <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
               Short Name

@@ -101,8 +101,10 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             </ul>
           </div>
           <div>
+            <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
+              Short Name
+            </label>
             <input
-              placeholder="Short Name"
               type="text"
               {...register('shortName', {
                 required: 'This field is required.',
@@ -122,8 +124,10 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             <p className="mt-1 text-xs text-gray-500">Enter a unique 3-5 character identifier.</p>
           </div>
           <div>
+            <label htmlFor="longName" className="block text-sm font-medium text-gray-700">
+              Long Name
+            </label>
             <input
-              placeholder="Long Name"
               type="text"
               {...register('longName', {
                 required: 'This field is required.',
@@ -143,8 +147,10 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             <p className="mt-1 text-xs text-gray-500">Enter a long name for yourself that is 5-12 character long.</p>
           </div>
           <div>
+            <label htmlFor="skylinesId" className="block text-sm font-medium text-gray-700">
+              Skylines ID
+            </label>
             <input
-              placeholder="Skylines ID"
               type="text"
               {...register('skylinesId', {
                 required: 'This field is required.',

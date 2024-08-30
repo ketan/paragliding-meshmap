@@ -6,6 +6,8 @@ import { TooltipDirection } from './tooltip'
 import { ToastContainer } from 'react-toastify'
 import { ConfigModal } from './config-modal.tsx'
 import glider from '../../../assets/images/glider.png'
+import { Tooltip } from 'react-tooltip'
+import { randomHex } from '../utils/ui-util.tsx'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -34,7 +36,7 @@ export function Page(props: PageProps) {
             {/* header action buttons */}
             <HeaderActionButtons>
               <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
-              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom" onClick={() => props.aboutModal.onClick()} />
+              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom-end" onClick={() => props.aboutModal.onClick()} />
               {props.headerIcons}
             </HeaderActionButtons>
           </div>
@@ -59,7 +61,6 @@ export function HeaderIcon({
   tooltip,
   onClick,
   tooltipDir,
-  className = '',
 }: {
   icon: React.FunctionComponent<React.SVGAttributes<SVGElement>>
   onClick?: () => void
@@ -67,12 +68,22 @@ export function HeaderIcon({
   tooltipDir: TooltipDirection
   className?: string | undefined
 }) {
+  const id = `tooltip-${randomHex(10)}`
   return (
-    <button className={`has-tooltip rounded-full ${className}`} aria-label={tooltip} data-cooltipz-dir={tooltipDir} onClick={onClick}>
-      <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
-        {React.createElement(icon, { className: 'w-6 h-6' })}
-      </div>
-    </button>
+    <>
+      <button
+        className={`has-tooltip rounded-full`}
+        data-tooltip-content={tooltip}
+        data-tooltip-place={tooltipDir}
+        onClick={onClick}
+        data-tooltip-id={id}
+      >
+        <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
+          {React.createElement(icon, { className: 'w-6 h-6' })}
+        </div>
+      </button>
+      <Tooltip id={id} />
+    </>
   )
 }
 

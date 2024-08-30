@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
 import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
-import { BROADCAST_ADDR, googleMapsLink, nodeRole, timeAgo } from '../entrypoints/js/utils/ui-util'
+import { BROADCAST_ADDR, googleMapsLink, nodeRole, randomHex, timeAgo } from '../entrypoints/js/utils/ui-util'
 import { HardwareModelIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
@@ -144,7 +144,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
   ) : null
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
-  const padding = () => <li key={window.crypto.randomUUID()} className="mt-1.5"></li>
+  const padding = () => <li key={randomHex(10)} className="mt-1.5"></li>
 
   const nodeName = keyValue({
     key: 'Long Name',

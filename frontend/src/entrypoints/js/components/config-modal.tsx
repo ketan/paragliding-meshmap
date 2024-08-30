@@ -84,9 +84,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
                 you may change that to more secure pin from the Meshtastic phone application.
               </li>
 
-              <li>
-                Do not turn off Bluetooth on your Meshtastic device, or the app won&apos;t connect.
-              </li>
+              <li>Do not turn off Bluetooth on your Meshtastic device, or the app won&apos;t connect.</li>
 
               <li>
                 Check the{' '}

@@ -138,7 +138,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
     const tooltip = showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`
 
     return (
-      <Tooltip tooltipText={tooltip} tooltipDir="bottom-right">
+      <Tooltip tooltipText={tooltip} tooltipDir="bottom-end">
         <Element className="w-4 h-4" />
       </Tooltip>
     )

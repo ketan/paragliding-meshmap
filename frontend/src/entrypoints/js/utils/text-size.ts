@@ -15,22 +15,33 @@ export function getTextSize(text: string) {
 }
 
 const charSizes: Record<string, [number, number]> = {}
-
 let nodeSizeElement: HTMLElement | null = null
+let timeout: number | null = null
 
 // no validation in place for perf reason, so make sure to just pass a single character
 function getCharWidth(c: string) {
+  return [0, 0]
   if (!charSizes[c]) {
+    if (timeout) {
+      window.clearTimeout(timeout)
+      timeout = null
+    }
     if (!nodeSizeElement) {
       nodeSizeElement = document.createElement('div')
-      nodeSizeElement.setAttribute('id', 'test-node-size')
-      nodeSizeElement.classList.add('invisible', '-z-1000', 'relative', '-left-[1000px]', '-top-[1000px]', 'w-auto', 'whitespace-nowrap')
+      nodeSizeElement.classList.add('w-auto', 'whitespace-nowrap')
+      nodeSizeElement.innerHTML = nodePositionView('')
       document.body.appendChild(nodeSizeElement)
     }
     if (nodeSizeElement) {
-      nodeSizeElement.innerHTML = nodePositionView(c)
       const span = nodeSizeElement.querySelector('span')!
+      span.innerHTML = c
       charSizes[c] = [span.offsetWidth, span.offsetHeight]
+      timeout = window.setTimeout(() => {
+        // debugger
+        nodeSizeElement!.remove()
+        nodeSizeElement = null
+        timeout = null
+      })
     }
   }
   return charSizes[c]

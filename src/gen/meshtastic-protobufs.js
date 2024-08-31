@@ -3634,6 +3634,8 @@ export const meshtastic = ($root.meshtastic = (() => {
    * https://www.adafruit.com/product/326
    * https://www.adafruit.com/product/938
    * ^^^ short A0 to switch to I2C address 0x3C
+   * @property {number} M5STACK_COREBASIC=77 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, Paper) https://m5stack.com/
+   * @property {number} M5STACK_CORE2=78 M5STACK_CORE2 value
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -3717,6 +3719,8 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[74] = 'RADIOMASTER_900_BANDIT')] = 74
     values[(valuesById[75] = 'ME25LS01_4Y10TD')] = 75
     values[(valuesById[76] = 'RP2040_FEATHER_RFM95')] = 76
+    values[(valuesById[77] = 'M5STACK_COREBASIC')] = 77
+    values[(valuesById[78] = 'M5STACK_CORE2')] = 78
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -5236,6 +5240,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number} DEFAULT=64 This priority is used for most messages that don't have a priority set
      * @property {number} RELIABLE=70 If priority is unset but the message is marked as want_ack,
      * assume it is important and use a slightly higher priority
+     * @property {number} HIGH=100 Higher priority for specific message types (portnums) to distinguish between other reliable packets.
      * @property {number} ACK=120 Ack/naks are sent with very high priority to ensure that retransmission
      * stops as soon as possible
      * @property {number} MAX=127 TODO: REPLACE
@@ -5248,6 +5253,7 @@ export const meshtastic = ($root.meshtastic = (() => {
       values[(valuesById[10] = 'BACKGROUND')] = 10
       values[(valuesById[64] = 'DEFAULT')] = 64
       values[(valuesById[70] = 'RELIABLE')] = 70
+      values[(valuesById[100] = 'HIGH')] = 100
       values[(valuesById[120] = 'ACK')] = 120
       values[(valuesById[127] = 'MAX')] = 127
       return values
@@ -12879,6 +12885,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} BMP3XX=26 BMP3XX High accuracy temperature and pressure
    * @property {number} ICM20948=27 ICM-20948 9-Axis digital motion processor
    * @property {number} MAX17048=28 MAX17048 1S lipo battery sensor (voltage, state of charge, time to go)
+   * @property {number} CUSTOM_SENSOR=29 Custom I2C sensor implementation based on https://github.com/meshtastic/i2c-sensor
    */
   meshtastic.TelemetrySensorType = (function () {
     const valuesById = {},
@@ -12912,6 +12919,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[26] = 'BMP3XX')] = 26
     values[(valuesById[27] = 'ICM20948')] = 27
     values[(valuesById[28] = 'MAX17048')] = 28
+    values[(valuesById[29] = 'CUSTOM_SENSOR')] = 29
     return values
   })()
 
@@ -13835,6 +13843,107 @@ export const meshtastic = ($root.meshtastic = (() => {
     }
 
     return LocalModuleConfig
+  })()
+
+  meshtastic.ChannelSet = (function () {
+    /**
+     * Properties of a ChannelSet.
+     * @memberof meshtastic
+     * @interface IChannelSet
+     * @property {Array.<meshtastic.IChannelSettings>|null} [settings] Channel list with settings
+     * @property {meshtastic.Config.ILoRaConfig|null} [loraConfig] LoRa config
+     */
+
+    /**
+     * Constructs a new ChannelSet.
+     * @memberof meshtastic
+     * @classdesc This is the most compact possible representation for a set of channels.
+     * It includes only one PRIMARY channel (which must be first) and
+     * any SECONDARY channels.
+     * No DISABLED channels are included.
+     * This abstraction is used only on the the 'app side' of the world (ie python, javascript and android etc) to show a group of Channels as a (long) URL
+     * @implements IChannelSet
+     * @constructor
+     * @param {meshtastic.IChannelSet=} [properties] Properties to set
+     */
+    function ChannelSet(properties) {
+      this.settings = []
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * Channel list with settings
+     * @member {Array.<meshtastic.IChannelSettings>} settings
+     * @memberof meshtastic.ChannelSet
+     * @instance
+     */
+    ChannelSet.prototype.settings = $util.emptyArray
+
+    /**
+     * LoRa config
+     * @member {meshtastic.Config.ILoRaConfig|null|undefined} loraConfig
+     * @memberof meshtastic.ChannelSet
+     * @instance
+     */
+    ChannelSet.prototype.loraConfig = null
+
+    /**
+     * Encodes the specified ChannelSet message. Does not implicitly {@link meshtastic.ChannelSet.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.ChannelSet
+     * @static
+     * @param {meshtastic.IChannelSet} message ChannelSet message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    ChannelSet.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.settings != null && message.settings.length)
+        for (let i = 0; i < message.settings.length; ++i)
+          $root.meshtastic.ChannelSettings.encode(message.settings[i], writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      if (message.loraConfig != null && Object.hasOwnProperty.call(message, 'loraConfig'))
+        $root.meshtastic.Config.LoRaConfig.encode(message.loraConfig, writer.uint32(/* id 2, wireType 2 =*/ 18).fork()).ldelim()
+      return writer
+    }
+
+    /**
+     * Decodes a ChannelSet message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.ChannelSet
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.ChannelSet} ChannelSet
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    ChannelSet.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.ChannelSet()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            if (!(message.settings && message.settings.length)) message.settings = []
+            message.settings.push($root.meshtastic.ChannelSettings.decode(reader, reader.uint32()))
+            break
+          }
+          case 2: {
+            message.loraConfig = $root.meshtastic.Config.LoRaConfig.decode(reader, reader.uint32())
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return ChannelSet
   })()
 
   return meshtastic

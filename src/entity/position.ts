@@ -1,10 +1,11 @@
-import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 import { PositionDTO } from '#entity/map_report'
 
 @Entity()
 export default class Position extends BaseType {
+  @Index()
   @Column({ type: 'bigint' })
   nodeId: number
 

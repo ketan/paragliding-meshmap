@@ -1,6 +1,6 @@
 import { dateTimeType, jsonType } from '#helpers/migration-helper'
 import { DateTime, Duration } from 'luxon'
-import { Column, DataSource, Entity, EntityManager } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index } from 'typeorm'
 import { BaseType, BaseTypeWithoutPrimaryKey } from './base_type.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
@@ -18,6 +18,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     skipUpdateIfNoValuesChanged: true,
     conflictPaths: ['nodeId'],
   }
+  @Index()
   @Column({ type: 'bigint', unique: true, primary: true, nullable: false })
   nodeId: number
   @Column({ type: 'text', nullable: true })

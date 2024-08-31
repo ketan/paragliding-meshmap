@@ -1,9 +1,10 @@
-import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {
+  @Index()
   @Column({ type: 'bigint', nullable: false })
   nodeId: number
 

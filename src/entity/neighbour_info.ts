@@ -1,4 +1,4 @@
-import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import { Neighbors } from './neighbors.js'
 import _ from 'lodash'
@@ -6,6 +6,7 @@ import { jsonType } from '#helpers/migration-helper'
 
 @Entity()
 export default class NeighbourInfo extends BaseType {
+  @Index()
   @Column({ type: 'bigint' })
   nodeId: number
 

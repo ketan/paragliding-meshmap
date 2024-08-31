@@ -1,4 +1,4 @@
-import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 
@@ -12,6 +12,7 @@ export interface PositionDTO {
 
 @Entity()
 export default class MapReport extends BaseType {
+  @Index()
   @Column({ type: 'bigint' })
   nodeId: number
 

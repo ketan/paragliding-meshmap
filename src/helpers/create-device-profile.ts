@@ -12,7 +12,6 @@ function getDeviceProfile() {
   }
 
   return new meshtastic.DeviceProfile({
-    channelUrl: 'https://meshtastic.org/e/#CgkSAQEoAToCCCAKDhIBPBoFYWRtaW4oATABEg8IATgKQANIAVAeaAHABgE',
     config: new meshtastic.LocalConfig({
       position: new meshtastic.Config.PositionConfig({
         positionBroadcastSecs: 180,
@@ -53,7 +52,7 @@ function getDeviceProfile() {
         proxyToClientEnabled: true,
         mapReportingEnabled: true,
         mapReportSettings: new meshtastic.ModuleConfig.MapReportSettings({
-          publishIntervalSecs: 120,
+          publishIntervalSecs: 7200,
           positionPrecision: 32,
         }),
       }),
@@ -77,5 +76,25 @@ export function createDeviceProfile(shortName: string, longName: string, skyline
   const deviceProfile = getDeviceProfile()
   deviceProfile.shortName = shortName
   deviceProfile.longName = `${longName}/${skylinesId}`
+
+  const chset = new meshtastic.ChannelSet({
+    settings: [
+      new meshtastic.ChannelSettings({
+        moduleSettings: {
+          positionPrecision: 32,
+        },
+        uplinkEnabled: true,
+        psk: Buffer.from('AQ==', 'base64url'), // default channel key
+      }),
+    ],
+    loraConfig: deviceProfile.config?.lora,
+  })
+
+  const url = new Buffer(meshtastic.ChannelSet.encode(chset).finish())
+    .toString('base64url')
+    .replace('=', '')
+    .replace('+', '-')
+    .replace('/', '_')
+  deviceProfile.channelUrl = `https://meshtastic.org/e/#${url}`
   return deviceProfile
 }

@@ -154,8 +154,8 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
                 tickFormatter={(unixTime) => DateTime.fromMillis(unixTime).toFormat('HH:MM')}
               />
 
-              <YAxis yAxisId="left" unit="V" scale="linear" domain={['auto', 'auto']} />
-              <YAxis yAxisId="right" orientation="right" unit="%" scale="linear" domain={['auto', 'auto']} />
+              <YAxis yAxisId="left" unit="V" scale="linear" domain={['auto', 'auto']} tickFormatter={(value) => Number(value).toFixed(2)} />
+              <YAxis yAxisId="right" orientation="right" unit="%" scale="linear" domain={['auto', 'auto']} tickFormatter={(value) => Number(value).toFixed(0)}/>
 
               <Line
                 dot={{ strokeWidth: 1, r: 0 }}

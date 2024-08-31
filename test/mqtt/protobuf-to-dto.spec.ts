@@ -55,42 +55,47 @@ describe('protobuf-to-dto', () => {
 
   it('should create position', () => {
     /*
-      protobuf 0a3b0d08a7594315ffffffff22130803120f0db3d0f115158bd4a5b71873b80120353422e83d3dd9bbb866450000204060b3ffffffffffffffff01780512084c6f6e67466173741a09216132306131316238
+      protobuf 0a480d208a584315ffffffff222e080312280d0000461b1500001a0318d801253811d3663d0911d36658c501780b8001d8fbbf0d980107b8010e1801359d02c4263d3811d366580a7804120946725f42616c6973651a09213433353838613230
       portnum POSITION_APP
       ServiceEnvelope {
         packet: MeshPacket {
-          from: 1129948936,
+          from: 1129876000,
           to: 4294967295,
           decoded: Data {
             portnum: 3,
-            payload: <Buffer 0d b3 d0 f1 15 15 8b d4 a5 b7 18 73 b8 01 20>
+            payload: <Buffer 0d 00 00 46 1b 15 00 00 1a 03 18 d8 01 25 38 11 d3 66 3d 09 11 d3 66 58 c5 01 78 0b 80 01 d8 fb bf 0d 98 01 07 b8 01 0e>,
+            wantResponse: true
           },
-          id: 1038623284,
-          rxTime: 1723382745,
-          rxSnr: 2.5,
-          rxRssi: -77,
-          hopStart: 5
+          id: 650379933,
+          rxTime: 1725108536,
+          priority: 10,
+          hopStart: 4
         },
-        channelId: 'LongFast',
-        gatewayId: '!a20a11b8'
+        channelId: 'Fr_Balise',
+        gatewayId: '!43588a20'
       }
     */
 
     const rawData =
-      '0a3b0d08a7594315ffffffff22130803120f0db3d0f115158bd4a5b71873b80120353422e83d3dd9bbb866450000204060b3ffffffffffffffff01780512084c6f6e67466173741a09216132306131316238'
+      '0a480d208a584315ffffffff222e080312280d0000461b1500001a0318d801253811d3663d0911d36658c501780b8001d8fbbf0d980107b8010e1801359d02c4263d3811d366580a7804120946725f42616c6973651a09213433353838613230'
 
     const position = toPosition(parseProtobuf(() => meshtastic.ServiceEnvelope.decode(new Buffer(rawData, 'hex'))))
 
     expect(position).to.deep.eq({
-      altitude: 115,
+      altitude: 216,
       channel: 0,
-      channelId: 'LongFast',
-      from: 1129948936,
-      gatewayId: Number('0xa20a11b8'),
-      latitude: 368169139,
-      longitude: -1213868917,
-      nodeId: 1129948936,
-      packetId: 1038623284,
+      channelId: 'Fr_Balise',
+      from: 1129876000,
+      gatewayId: 1129876000,
+      latitude: 457572352,
+      longitude: 52035584,
+      nodeId: 1129876000,
+      packetId: 650379933,
+      pdop: 197,
+      precisionBits: 14,
+      satsInView: 7,
+      time: 1725108536,
+      timestamp: 1725108489,
       to: 4294967295,
       //
       createdAt: undefined,

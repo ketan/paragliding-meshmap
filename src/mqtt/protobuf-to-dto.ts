@@ -16,7 +16,7 @@ import { decodeLog } from '#helpers/logger'
 export function toServiceEnvelope(payload: Buffer, mqttTopic: string, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet!
 
-  return new ServiceEnvelope({
+  const serviceEnvelope = new ServiceEnvelope({
     from: packet.from!,
     to: packet.to!,
 
@@ -25,6 +25,8 @@ export function toServiceEnvelope(payload: Buffer, mqttTopic: string, envelope: 
     channelId: envelope.channelId,
     gatewayId: toBigInt(envelope.gatewayId),
   })
+  decodeLog(serviceEnvelope)
+  return serviceEnvelope
 }
 
 export function toTextMessage(envelope: meshtastic.ServiceEnvelope) {
@@ -78,8 +80,13 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
     latitude: positionPB.latitudeI,
     longitude: positionPB.longitudeI,
     altitude: positionPB.altitude,
+    satsInView: positionPB.satsInView,
+    precisionBits: positionPB.precisionBits,
+    timestamp: positionPB.timestamp,
+    time: positionPB.time,
+    pdop: positionPB.PDOP,
   })
-  decodeLog(position)
+  decodeLog(position, positionPB)
   return position
 }
 

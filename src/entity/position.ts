@@ -36,6 +36,21 @@ export default class Position extends BaseType {
   @Column({ type: 'integer', nullable: true })
   altitude?: number | null
 
+  @Column({ type: 'integer', nullable: true })
+  satsInView: number
+
+  @Column({ type: 'integer', nullable: true })
+  precisionBits: number
+
+  @Column({ type: 'bigint', nullable: true })
+  timestamp: number
+
+  @Column({ type: 'bigint', nullable: true })
+  time: number
+
+  @Column({ type: 'integer', nullable: true })
+  pdop: number
+
   constructor(opts: Partial<Position> = {}) {
     super()
     _.assign(this, opts)

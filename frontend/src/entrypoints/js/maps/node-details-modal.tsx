@@ -11,6 +11,8 @@ import { NameValue } from './node-details-modal/name-value'
 import { Traceroutes } from './node-details-modal/traceroutes'
 import { LoadedState } from './loaded-state.tsx'
 import { Position } from './position.tsx'
+import { DateTime } from 'luxon'
+import _ from 'lodash'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
@@ -70,6 +72,11 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     </>
   )
 
+  const earliestTime = _([node.positionTimestamp, node.positionUpdatedAt])
+    .compact()
+    .map((t) => DateTime.fromISO(t))
+    .min()!
+
   return (
     <Modal onClose={onClose} isOpen={true} header={node.longName || `UNKNOWN`}>
       {image}
@@ -88,7 +95,12 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           <NameValue name="Hardware" value={hardwareModel} /> {firmwareVersion}
         </div>
       </div>
-      <Position node={node} />
+      <Position
+        positionAttrs={{
+          ...node,
+          time: earliestTime,
+        }}
+      />
       <DeviceMetrics node={node} deviceMetrics={deviceMetrics} />
       <EnvironmentMetrics node={node} environmentMetrics={environmentMetrics} />
       <Traceroutes node={node} traceRoutes={traceRoutes} allNodes={allNodes} />

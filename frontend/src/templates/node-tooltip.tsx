@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
 import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
-import { BROADCAST_ADDR, googleMapsLink, nodeRole, randomHex, timeAgo } from '../entrypoints/js/utils/ui-util'
+import { BROADCAST_ADDR, googleMapsLink, nodeRole, positionPrecision, randomHex, timeAgo } from '../entrypoints/js/utils/ui-util'
 import { HardwareModelIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
@@ -44,6 +44,10 @@ const location = (node: NodesEntityForUI) => {
       },
     }),
     keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
+    keyValue({ key: 'Satellites', value: node.satsInView }),
+    keyValue({ key: 'Position Acquired at', value: node.positionTimestamp, renderer: timeAgo }),
+    keyValue({ key: 'Position Precision', value: positionPrecision(node) }),
+    keyValue({ key: 'Position DOP', value: node.positionPdop }),
   ]
 }
 

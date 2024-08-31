@@ -8,6 +8,12 @@ export interface PositionDTO {
   longitude: number
   altitude: number
   createdAt: Date
+  // meta
+  pdop?: number
+  timestamp?: number
+  time?: number
+  precisionBits?: number
+  satsInView?: number
 }
 
 @Entity()

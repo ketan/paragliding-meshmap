@@ -78,11 +78,15 @@ export interface NodesEntity {
   nodeId: number
   numOnlineLocalNodes?: number
   outbox?: MessageOut[]
+  positionPdop?: number
   positionPrecision?: number
+  positionPrecisionBits?: number
+  positionTimestamp?: string
   positionUpdatedAt?: string
   region?: number
   relativeHumidity?: number
   role?: number
+  satsInView?: number
   shortName?: string
   temperature?: number
   updatedAt: string
@@ -101,6 +105,11 @@ export interface PositionsEntity {
   longitude?: number
   nodeId: number
   packetId?: number
+  pdop?: number
+  precisionBits?: number
+  satsInView?: number
+  time?: string
+  timestamp?: string
   to: number
   updatedAt: string
 }

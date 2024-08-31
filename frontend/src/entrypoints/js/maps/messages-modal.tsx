@@ -59,7 +59,6 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
 
   useEffect(() => {
     if (loadedState === 'loaded') {
-      console.log(`Scrolling to end of page`, elementRefForEndOfPage.current)
       elementRefForEndOfPage.current?.scrollIntoView(false)
     }
   }, [loadedState, messages])

@@ -75,6 +75,8 @@ export const HardwareModelIDToName = {
   '74': 'RADIOMASTER_900_BANDIT',
   '75': 'ME25LS01_4Y10TD',
   '76': 'RP2040_FEATHER_RFM95',
+  '77': 'M5STACK_COREBASIC',
+  '78': 'M5STACK_CORE2',
   '255': 'PRIVATE_HW',
 } as Record<number, string>
 
@@ -155,6 +157,8 @@ export const HardwareModelNameToID = {
   RADIOMASTER_900_BANDIT: 74,
   ME25LS01_4Y10TD: 75,
   RP2040_FEATHER_RFM95: 76,
+  M5STACK_COREBASIC: 77,
+  M5STACK_CORE2: 78,
   PRIVATE_HW: 255,
 } as Record<string, number>
 

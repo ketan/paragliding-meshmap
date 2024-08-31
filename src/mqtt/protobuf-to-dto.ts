@@ -12,6 +12,7 @@ import Waypoint from '#entity/waypoint'
 import PowerMetric from '#entity/power_metric'
 import Position from '#entity/position'
 import { decodeLog } from '#helpers/logger'
+import { DateTime } from 'luxon'
 
 export function toServiceEnvelope(payload: Buffer, mqttTopic: string, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet!
@@ -82,8 +83,8 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
     altitude: positionPB.altitude,
     satsInView: positionPB.satsInView,
     precisionBits: positionPB.precisionBits,
-    timestamp: positionPB.timestamp,
-    time: positionPB.time,
+    timestamp: positionPB.timestamp ? DateTime.fromMillis(positionPB.timestamp * 1000).toJSDate() : undefined,
+    time: positionPB.time ? DateTime.fromMillis(positionPB.time * 1000).toJSDate() : undefined,
     pdop: positionPB.PDOP,
   })
   decodeLog(position, positionPB)

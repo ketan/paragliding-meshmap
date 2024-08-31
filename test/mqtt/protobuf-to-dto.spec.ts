@@ -2,6 +2,7 @@ import { parseProtobuf } from '#helpers/utils'
 import { meshtastic } from '../../src/gen/meshtastic-protobufs.js'
 import { toMapReport, toNeighborInfo, toNode, toPosition, toTextMessage } from '#mqtt/protobuf-to-dto'
 import { expect } from 'chai'
+import { DateTime } from 'luxon'
 
 describe('protobuf-to-dto', () => {
   it('should create text message', () => {
@@ -94,8 +95,8 @@ describe('protobuf-to-dto', () => {
       pdop: 197,
       precisionBits: 14,
       satsInView: 7,
-      time: 1725108536,
-      timestamp: 1725108489,
+      time: DateTime.fromMillis(1725108536 * 1000).toJSDate(),
+      timestamp: DateTime.fromMillis(1725108489 * 1000).toJSDate(),
       to: 4294967295,
       //
       createdAt: undefined,
@@ -166,6 +167,11 @@ describe('protobuf-to-dto', () => {
       updatedAt: undefined,
       uptimeSeconds: undefined,
       voltage: undefined,
+
+      positionPdop: undefined,
+      positionPrecisionBits: undefined,
+      positionTimestamp: undefined,
+      satsInView: undefined,
     })
   })
 

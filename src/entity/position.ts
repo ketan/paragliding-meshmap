@@ -2,6 +2,7 @@ import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } fro
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 import { PositionDTO } from '#entity/map_report'
+import { dateTimeType } from '#helpers/migration-helper'
 
 @Entity()
 export default class Position extends BaseType {
@@ -42,11 +43,11 @@ export default class Position extends BaseType {
   @Column({ type: 'integer', nullable: true })
   precisionBits: number
 
-  @Column({ type: 'bigint', nullable: true })
-  timestamp: number
+  @Column({ ...dateTimeType(), nullable: true })
+  timestamp?: Date
 
-  @Column({ type: 'bigint', nullable: true })
-  time: number
+  @Column({ ...dateTimeType(), nullable: true })
+  time?: Date
 
   @Column({ type: 'integer', nullable: true })
   pdop: number
@@ -68,7 +69,7 @@ export default class Position extends BaseType {
 
   static async forNode(db: EntityManager | DataSource, nodeId: number, since: Date) {
     return (await db.getRepository(this).find({
-      select: ['createdAt', 'latitude', 'longitude', 'altitude', 'id'],
+      select: ['createdAt', 'latitude', 'longitude', 'altitude', 'id', 'pdop', 'time', 'timestamp', 'precisionBits', 'satsInView'],
       where: {
         nodeId,
         createdAt: MoreThanOrEqual(since),

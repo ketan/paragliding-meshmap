@@ -3,7 +3,6 @@ import {
   EnvironmentMetricsEntity,
   NeighbourInfosEntity,
   NodesEntity,
-  PositionsEntity,
   TextMessagesEntity,
   TraceroutesEntity,
 } from './db-entities'
@@ -16,18 +15,25 @@ export interface NodesEntityForUI extends Omit<NodesEntity, 'latitude' | 'longit
   nodeIdHex: string
 }
 
-export interface PositionsEntityJSON extends Pick<PositionsEntity, 'latitude' | 'longitude' | 'altitude' | 'createdAt' | 'id'> {}
+export interface PositionsEntityJSON {
+  id: number
+  latitude: number
+  longitude: number
+  altitude: number
+  createdAt: string
+
+  pdop?: number
+  timestamp?: string
+  time?: string
+  precisionBits?: number
+  satsInView?: number
+}
 
 export interface MessagesEntityForUI extends Pick<TextMessagesEntity, 'createdAt' | 'from' | 'to' | 'text' | 'id'> {}
 
-export interface PositionData {
-  latitude: number
-  longitude: number
-  altitude?: number
-  time: DateTime
+export interface PositionData extends Omit<PositionsEntityJSON, 'timestamp' | 'createdAt' | 'time'> {
+  time?: DateTime
 }
-
-export type TextMessagesEntityForUI = Pick<TextMessagesEntity, 'id' | 'to' | 'from' | 'text' | 'createdAt'>
 
 export type DeviceMetricsEntityForUI = Pick<
   DeviceMetricsEntity,

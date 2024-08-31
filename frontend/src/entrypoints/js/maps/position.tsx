@@ -1,19 +1,24 @@
 import { Header } from './node-details-modal/header.tsx'
 import { NameValue } from './node-details-modal/name-value.tsx'
-import { googleMapsLink, timeAgo } from '../utils/ui-util.tsx'
+import { googleMapsLink, positionPrecision, timeAgo } from '../utils/ui-util.tsx'
 import { PointTuple } from 'leaflet'
 import { DateTime } from 'luxon'
 
 interface PositionProps {
   latLng?: PointTuple
-  positionUpdatedAt?: string | Date | DateTime
+  // positionUpdatedAt?: string | Date | DateTime
   altitude?: number
+  positionPdop?: number
+  positionPrecisionBits?: number
+  time?: string | null | Date | DateTime
+  satsInView?: number
 }
 
-export function Position({ node, title = 'Position' }: { node: PositionProps; title?: string }) {
-  if (!node?.positionUpdatedAt) {
+export function Position({ positionAttrs, title = 'Position' }: { positionAttrs: PositionProps; title?: string }) {
+  if (!positionAttrs?.time) {
     return
   }
+
   return (
     <>
       <Header str={title} />
@@ -22,25 +27,34 @@ export function Position({ node, title = 'Position' }: { node: PositionProps; ti
           <NameValue
             name={`Location`}
             renderer={() => {
-              if (!node.latLng) {
+              if (!positionAttrs.latLng) {
                 return
               }
               return (
                 <>
-                  <a target="_blank" rel="noreferrer" href={googleMapsLink(node.latLng)}>
-                    {node.latLng.join(', ')}
+                  <a target="_blank" rel="noreferrer" href={googleMapsLink(positionAttrs.latLng)}>
+                    {positionAttrs.latLng.join(', ')}
                   </a>{' '}
-                  {timeAgo(node.positionUpdatedAt, true)}
+                  {timeAgo(positionAttrs.time, true)}
                 </>
               )
             }}
           />
         </div>
         <div>
-          <NameValue name="Altitude" value={node.altitude} unit="m" />
+          <NameValue name="Altitude" value={positionAttrs.altitude} unit="m" />
         </div>
         <div>
-          <NameValue name="Position updated" value={node.positionUpdatedAt} renderer={timeAgo} />
+          <NameValue name="Satellites in view" value={positionAttrs.satsInView} />
+        </div>
+        <div>
+          <NameValue name="Time of acquiring last position" value={positionAttrs.time} renderer={timeAgo} />
+        </div>
+        <div>
+          <NameValue name="Meshtastic position precision" value={positionPrecision(positionAttrs)} />
+        </div>
+        <div>
+          <NameValue name="Position DOP" value={positionAttrs.positionPdop} />
         </div>
       </div>
     </>

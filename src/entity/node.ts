@@ -81,6 +81,14 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   relativeHumidity?: number
   @Column({ type: 'double precision', nullable: true })
   temperature?: number
+  @Column({ type: 'integer', nullable: true })
+  satsInView: number
+  @Column({ type: 'integer', nullable: true })
+  positionPrecisionBits: number
+  @Column({ ...dateTimeType(), nullable: true })
+  positionTimestamp: Date
+  @Column({ type: 'integer', nullable: true })
+  positionPdop: number
 
   constructor(opts: Partial<Node> = {}) {
     super()
@@ -156,6 +164,11 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         latitude: BaseType.sanitizeNumber(position.latitude), // unlikely that lat/lon/alt are exactly `0`
         longitude: BaseType.sanitizeNumber(position.longitude),
         altitude: BaseType.sanitizeNumber(position.altitude),
+
+        positionPdop: BaseType.sanitizeNumber(position.pdop),
+        positionTimestamp: _([position.time, position.timestamp]).compact().min(),
+        positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
+        satsInView: BaseType.sanitizeNumber(position.satsInView),
       },
       this.conflictResolve
     )

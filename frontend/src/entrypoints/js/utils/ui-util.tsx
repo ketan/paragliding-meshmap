@@ -56,6 +56,12 @@ export function sanitizeNodeProperties(node: NodesEntity): NodesEntityForUI {
   return returnValue
 }
 
+export function positionPrecision(node: { positionPrecisionBits?: number }) {
+  if (node.positionPrecisionBits === 32) {
+    return 'High'
+  }
+}
+
 export function nodeName(node: Partial<NodeNameAttributes>) {
   return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
 }

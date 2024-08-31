@@ -11,6 +11,7 @@ import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
 import { toast } from 'react-toastify'
 import { nodeName, sanitizeLatLong } from '../utils/ui-util.tsx'
+import _ from 'lodash'
 
 interface TrackLogProps {
   node?: NodesEntityForUI
@@ -77,19 +78,24 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
     }
   }
 
-  private filteredPositions(positionData: PositionsEntityJSON[]) {
+  private filteredPositions(positionData: PositionsEntityJSON[]): PositionData[] {
     return positionData
       .filter((point) => point.latitude && point.longitude)
       .map((position) => {
         const latLong = sanitizeLatLong(position.latitude! / 10000000, position.longitude! / 10000000)!
 
+        const earliestTime = _([position.time, position.timestamp, position.createdAt]).compact().min()!
+
         return {
           id: position.id,
           latitude: latLong[0],
           longitude: latLong[1],
+          time: DateTime.fromISO(earliestTime),
           altitude: position.altitude,
-          time: DateTime.fromISO(position.createdAt),
-        } as PositionData
+          pdop: position.pdop,
+          precisionBits: position.precisionBits,
+          satsInView: position.satsInView,
+        }
       })
       .sort((a, b) => {
         return a.time.diff(b.time).toMillis()
@@ -185,12 +191,19 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
   }
 
   private positionTooltip(position: PositionData) {
-    const node = {
-      latLng: [position.latitude, position.longitude] as PointTuple,
-      positionUpdatedAt: position.time.toISOTime()!,
-      altitude: position.altitude,
-    }
-    const element = <Position node={node} title={`Position for ${nodeName(this.props.node!)}`} />
+    const element = (
+      <Position
+        positionAttrs={{
+          latLng: [position.latitude, position.longitude] as PointTuple,
+          altitude: position.altitude,
+          time: position.time,
+          satsInView: position.satsInView,
+          positionPdop: position.pdop,
+          positionPrecisionBits: position.precisionBits,
+        }}
+        title={`Position for ${nodeName(this.props.node!)}`}
+      />
+    )
     return renderToString(element)
   }
 }

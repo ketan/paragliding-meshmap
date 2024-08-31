@@ -176,13 +176,14 @@ app.get('/api/device-config', async function (req, res) {
   const shortName = (req.query.shortName || '').toString()
   const longName = (req.query.longName || '').toString()
   const skylinesId = (req.query.skylinesId || '').toString()
+  const adminPass = (req.query.adminPass || '<').toString()
 
   if (_.isEmpty(shortName) || _.isEmpty(longName) || _.isEmpty(skylinesId)) {
     return res.status(400).json({
       message: `You must specify shortName, longName and skylinesId`,
     })
   }
-  const dp = createDeviceProfile(shortName, longName, skylinesId)
+  const dp = createDeviceProfile(shortName, longName, skylinesId, adminPass)
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })

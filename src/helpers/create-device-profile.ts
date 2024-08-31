@@ -12,7 +12,6 @@ function getDeviceProfile() {
   }
 
   return new meshtastic.DeviceProfile({
-    channelUrl: 'https://meshtastic.org/e/#CgkSAQEoAToCCCAKDhIBPBoFYWRtaW4oATABEg8IATgKQANIAVAeaAHABgE',
     config: new meshtastic.LocalConfig({
       position: new meshtastic.Config.PositionConfig({
         positionBroadcastSecs: 180,
@@ -23,7 +22,6 @@ function getDeviceProfile() {
         gpsMode: 1,
       }),
       power: new meshtastic.Config.PowerConfig(),
-      network: new meshtastic.Config.NetworkConfig(),
       bluetooth: new meshtastic.Config.BluetoothConfig({
         enabled: true,
         mode: meshtastic.Config.BluetoothConfig.PairingMode.FIXED_PIN,
@@ -39,6 +37,19 @@ function getDeviceProfile() {
         sx126xRxBoostedGain: true,
         ignoreMqtt: true,
       }),
+      network: new meshtastic.Config.NetworkConfig({
+        wifiEnabled: false,
+      }),
+      security: new meshtastic.Config.SecurityConfig({
+        // adminChannelEnabled: false,
+        // serialEnabled: true,
+      }),
+      device: new meshtastic.Config.DeviceConfig({
+        serialEnabled: true,
+        role: meshtastic.Config.DeviceConfig.Role.CLIENT,
+        tzdef: 'IST-5:30',
+        nodeInfoBroadcastSecs: 3600,
+      }),
     }),
     moduleConfig: new meshtastic.LocalModuleConfig({
       neighborInfo: new meshtastic.ModuleConfig.NeighborInfoConfig({
@@ -53,11 +64,10 @@ function getDeviceProfile() {
         proxyToClientEnabled: true,
         mapReportingEnabled: true,
         mapReportSettings: new meshtastic.ModuleConfig.MapReportSettings({
-          publishIntervalSecs: 120,
+          publishIntervalSecs: 7200,
           positionPrecision: 32,
         }),
       }),
-
       serial: new meshtastic.ModuleConfig.SerialConfig(),
       externalNotification: new meshtastic.ModuleConfig.ExternalNotificationConfig(),
       storeForward: new meshtastic.ModuleConfig.StoreForwardConfig(),
@@ -73,9 +83,37 @@ function getDeviceProfile() {
   })
 }
 
-export function createDeviceProfile(shortName: string, longName: string, skylinesId: string) {
+export function createDeviceProfile(shortName: string, longName: string, skylinesId: string, adminPass: string) {
   const deviceProfile = getDeviceProfile()
   deviceProfile.shortName = shortName
   deviceProfile.longName = `${longName}/${skylinesId}`
+
+  const chset = new meshtastic.ChannelSet({
+    settings: [
+      new meshtastic.ChannelSettings({
+        moduleSettings: {
+          positionPrecision: 32,
+        },
+        uplinkEnabled: true,
+        psk: Buffer.from('AQ==', 'base64url'), // default channel key
+      }),
+      new meshtastic.ChannelSettings({
+        downlinkEnabled: true,
+        uplinkEnabled: true,
+        name: 'admin',
+        psk: Buffer.from(adminPass),
+      }),
+    ],
+    loraConfig: deviceProfile.config?.lora,
+  })
+
+  const url = new Buffer(meshtastic.ChannelSet.encode(chset).finish())
+    .toString('base64url')
+    .replace('=', '')
+    .replace('+', '-')
+    .replace('/', '_')
+  deviceProfile.channelUrl = `https://meshtastic.org/e/#${url}`
+
+  errLog(JSON.stringify(deviceProfile, null, 2))
   return deviceProfile
 }

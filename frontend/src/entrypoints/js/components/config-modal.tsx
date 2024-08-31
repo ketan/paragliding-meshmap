@@ -21,6 +21,7 @@ interface Inputs {
   shortName: string
   longName: string
   skylinesId: string
+  adminPass: string
 }
 
 export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
@@ -32,17 +33,13 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ longName, shortName, skylinesId }) => {
-    const queryString = qs.stringify({
-      shortName: shortName,
-      longName: longName,
-      skylinesId: skylinesId,
-    })
+  const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
+    const queryString = qs.stringify(inputs)
     try {
       const resp = await fetch(`/api/device-config?${queryString}`)
       if (resp.status === 200) {
         const blob = await resp.blob()
-        download(blob, shortName)
+        download(blob, inputs.shortName)
       } else {
         setErrorMessage(
           <>
@@ -171,6 +168,32 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
               </a>{' '}
               You will need to signup on skylines website, navigate to <em className="font-extrabold">Settings&gt;Live Tracking</em> and
               copy the live tracking key here.
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="adminPass" className="block text-sm font-medium text-gray-700">
+              Remote Admin password
+            </label>
+            <input
+              type="text"
+              {...register('adminPass', {
+                required: 'This field is required.',
+                minLength: {
+                  value: 3,
+                  message: 'Minimum length is 3.',
+                },
+                maxLength: {
+                  value: 5,
+                  message: 'Maximum length is 5.',
+                },
+              })}
+              aria-invalid={errors.adminPass ? 'true' : 'false'}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            {errors.adminPass && <p className="mt-1 text-xs text-red-500">{errors.adminPass.message}</p>}
+            <p className="mt-1 text-xs text-gray-500">
+              Set a 3-5 character password for remote access to the Meshtastic device for any technical support.
             </p>
           </div>
           <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded">

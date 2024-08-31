@@ -1841,6 +1841,8 @@ export namespace meshtastic {
     RADIOMASTER_900_BANDIT = 74,
     ME25LS01_4Y10TD = 75,
     RP2040_FEATHER_RFM95 = 76,
+    M5STACK_COREBASIC = 77,
+    M5STACK_CORE2 = 78,
     PRIVATE_HW = 255,
   }
 
@@ -2656,6 +2658,7 @@ export namespace meshtastic {
       BACKGROUND = 10,
       DEFAULT = 64,
       RELIABLE = 70,
+      HIGH = 100,
       ACK = 120,
       MAX = 127,
     }
@@ -6191,6 +6194,7 @@ export namespace meshtastic {
     BMP3XX = 26,
     ICM20948 = 27,
     MAX17048 = 28,
+    CUSTOM_SENSOR = 29,
   }
 
   /** Properties of a Nau7802Config. */
@@ -6578,5 +6582,53 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LocalModuleConfig
+  }
+
+  /** Properties of a ChannelSet. */
+  interface IChannelSet {
+    /** Channel list with settings */
+    settings?: meshtastic.IChannelSettings[] | null
+
+    /** LoRa config */
+    loraConfig?: meshtastic.Config.ILoRaConfig | null
+  }
+
+  /**
+   * This is the most compact possible representation for a set of channels.
+   * It includes only one PRIMARY channel (which must be first) and
+   * any SECONDARY channels.
+   * No DISABLED channels are included.
+   * This abstraction is used only on the the 'app side' of the world (ie python, javascript and android etc) to show a group of Channels as a (long) URL
+   */
+  class ChannelSet implements IChannelSet {
+    /**
+     * Constructs a new ChannelSet.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IChannelSet)
+
+    /** Channel list with settings */
+    public settings: meshtastic.IChannelSettings[]
+
+    /** LoRa config */
+    public loraConfig?: meshtastic.Config.ILoRaConfig | null
+
+    /**
+     * Encodes the specified ChannelSet message. Does not implicitly {@link meshtastic.ChannelSet.verify|verify} messages.
+     * @param message ChannelSet message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IChannelSet, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a ChannelSet message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns ChannelSet
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.ChannelSet
   }
 }

@@ -620,7 +620,9 @@ enum HardwareModel {
    *
    */
 RP2040_FEATHER_RFM95 = 76;
-
+  /* M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, Paper) https://m5stack.com/ */
+  M5STACK_COREBASIC=77;
+  M5STACK_CORE2=78;
   /*
    * ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
@@ -1017,6 +1019,11 @@ message MeshPacket {
      * assume it is important and use a slightly higher priority
      */
     RELIABLE = 70;
+
+    /*
+     * Higher priority for specific message types (portnums) to distinguish between other reliable packets.
+     */ 
+    HIGH = 100;
 
     /*
      * Ack/naks are sent with very high priority to ensure that retransmission

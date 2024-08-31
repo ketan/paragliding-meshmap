@@ -11,7 +11,8 @@ npx pbjs \
   --wrap es6 \
   --out src/gen/meshtastic-protobufs.js \
   src/protos/meshtastic/mqtt.proto \
-  src/protos/meshtastic/clientonly.proto
+  src/protos/meshtastic/clientonly.proto \
+  src/protos/meshtastic/apponly.proto
 
 sed -i -e 's@"protobufjs/minimal"@"protobufjs/minimal.js"@g' -e 's@import \* as \$protobuf @import \$protobuf @g' src/gen/meshtastic-protobufs.js
 

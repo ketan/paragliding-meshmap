@@ -33,7 +33,7 @@ export function EnvironmentMetrics({
     })) || []
 
   type MetricType = 'temperature' | 'relativeHumidity' | 'barometricPressure'
-  type MetricDefinition = { key: MetricType; unit: string; name: string }
+  type MetricDefinition = { key: MetricType; unit: string; name: string; precision: number }
 
   return (
     <>
@@ -44,13 +44,15 @@ export function EnvironmentMetrics({
             {
               key: 'temperature',
               unit: '\u2103',
+              precision: 0,
               name: 'Temperature',
             },
-            { key: 'relativeHumidity', unit: '%', name: 'Relative Humidity' },
+            { key: 'relativeHumidity', unit: '%', name: 'Relative Humidity', precision: 0 },
             {
               key: 'barometricPressure',
               unit: 'hPa',
               name: 'Barometric Pressure',
+              precision: 2,
             },
           ] as MetricDefinition[]
         ).map((eachMetric) => {
@@ -76,7 +78,13 @@ export function EnvironmentMetrics({
                     tickFormatter={(unixTime) => DateTime.fromMillis(unixTime).toFormat('HH:MM')}
                   />
 
-                  <YAxis yAxisId={eachMetric.key} unit={eachMetric.unit} scale="linear" domain={['auto']} />
+                  <YAxis
+                    yAxisId={eachMetric.key}
+                    unit={eachMetric.unit}
+                    scale="linear"
+                    domain={['auto']}
+                    tickFormatter={(value) => Number(value).toFixed(eachMetric.precision)}
+                  />
                   <YAxis yAxisId="dummy" orientation="right" unit={eachMetric.unit} scale="linear" />
 
                   <Line

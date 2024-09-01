@@ -16,6 +16,7 @@ import _ from 'lodash'
 interface TrackLogProps {
   node?: NodesEntityForUI
   map?: Map
+  layer: L.LayerGroup
 }
 
 interface TrackLogState {
@@ -67,7 +68,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         this.gpxLayer = undefined
         this.gpxLayer = this.createGPXLayer(this.state.positions!)
         if (this.gpxLayer) {
-          this.gpxLayer.addTo(this.props.map!)
+          this.gpxLayer.addTo(this.props.layer)
           this.props.map!.fitBounds(this.gpxLayer.getBounds())
         } else {
           toast('There are no track logs for this node')

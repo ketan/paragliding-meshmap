@@ -115,6 +115,8 @@ export default class MapApp extends Component<MapProps, MapState> {
     disableClusteringAtZoom: 10,
   })
 
+  readonly tracklogLayerGroup = new L.LayerGroup()
+
   readonly groupedLayers = new L.Control.GroupedLayers(
     MapTiles.allLayers(),
     {
@@ -123,6 +125,9 @@ export default class MapApp extends Component<MapProps, MapState> {
         Routers: this.allRouterNodesLayerGroup,
         Clustered: this.allClusteredLayerGroup,
         None: new L.LayerGroup(),
+      },
+      Overlays: {
+        TrackLog: this.tracklogLayerGroup,
       },
     },
     {
@@ -272,7 +277,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           updateDuration={(newDuration) => this.setState({ messageSince: newDuration })}
           toggleFilter={() => this.toggleMessageFilter()}
         />
-        <TrackLog node={this.state.trackLogToShow} map={this.state.map} />
+        <TrackLog node={this.state.trackLogToShow} map={this.state.map} layer={this.tracklogLayerGroup} />
       </Page>
     )
   }
@@ -298,6 +303,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     })
     this.configureGroupedLayers()
     this.allClusteredLayerGroup.addTo(this.state.map!)
+    this.tracklogLayerGroup.addTo(this.state.map!)
     new MapTiles(this.props.mapType).addDefaultLayerToMap(this.state.map!)
     addLegendToMap(this.state.map!)
     this.state.mapInitialized.resolve()

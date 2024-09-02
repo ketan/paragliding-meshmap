@@ -42,6 +42,9 @@ const typescriptCode = await definition
       column.optional = false
     }
 
+    if (column.propertyName === 'flyXcToken') {
+      column.propertyName = 'flyXCToken'
+    }
     if (column.propertyName === 'neighbours') {
       column.propertyType = 'Neighbour[]'
     }

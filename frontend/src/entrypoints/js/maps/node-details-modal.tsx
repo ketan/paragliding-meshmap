@@ -13,6 +13,8 @@ import { LoadedState } from './loaded-state.tsx'
 import { Position } from './position.tsx'
 import { DateTime } from 'luxon'
 import _ from 'lodash'
+import { CopyIcon } from '../utils/icon-constants.ts'
+import { Tooltip } from '../components/tooltip.tsx'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
@@ -77,6 +79,28 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     .map((t) => DateTime.fromISO(t))
     .min()!
 
+  function flyXCToken(node: NodesEntityForUI) {
+    const flyXCToken = node.flyXCToken
+
+    if (!flyXCToken) {
+      return
+    }
+    return (
+      <div>
+        <NameValue name="Fly XC ID" value={flyXCToken} />
+
+        <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3">
+          <CopyIcon
+            className="w-5 h-5 inline-block p-0.5"
+            onClick={() => {
+              navigator.clipboard.writeText(flyXCToken)
+            }}
+          />
+        </Tooltip>
+      </div>
+    )
+  }
+
   return (
     <Modal onClose={onClose} isOpen={true} header={node.longName || `UNKNOWN`}>
       {image}
@@ -91,6 +115,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         <div>
           <NameValue name="Hex ID" value={node.nodeIdHex} /> / <NameValue name="ID" value={node.nodeId} />
         </div>
+        {flyXCToken(node)}
         <div>
           <NameValue name="Hardware" value={hardwareModel} /> {firmwareVersion}
         </div>

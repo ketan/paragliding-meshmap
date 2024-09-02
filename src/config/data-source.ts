@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url'
 import { dbConnectionOptions } from '#config/db-connection-opts-parser'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
+import PgBoss from 'pg-boss'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -40,8 +41,8 @@ class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrateg
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const dbUrl = process.env.DATABASE_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`
-
+export const dbUrl = process.env.DATABASE_URL || `sqlite:///${__dirname}/../../tmp/paragliding-meshmap.sqlite3`
+export const pgBoss = new PgBoss(dbUrl)
 const { dbConnectionOpts, driver } = dbConnectionOptions(dbUrl)
 
 export const connString = <DataSourceOptions>{

@@ -62,7 +62,7 @@ export interface NodesEntity {
   channelUtilization?: number
   createdAt: string
   firmwareVersion?: string
-  flyXcToken?: string
+  flyXCToken?: string
   hardwareModel?: number
   hasDefaultChannel?: boolean
   inbox?: MessageIn[]
@@ -99,6 +99,8 @@ export interface PositionsEntity {
   createdAt: string
   from: number
   gatewayId?: number
+  groundSpeed?: number
+  groundTrack?: number
   id: number
   latitude?: number
   longitude?: number

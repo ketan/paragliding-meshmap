@@ -92,7 +92,7 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
       const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
       await trx.save(tm)
 
-      from.outboundMessage(tm, purgeOlderThan)
+      await from.outboundMessage(tm, purgeOlderThan)
       to.inboundMessage(tm, purgeOlderThan)
 
       await trx.save([from, to], { reload: false })

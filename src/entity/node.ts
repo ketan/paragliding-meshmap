@@ -108,11 +108,11 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
 
     if (nodeId && shortName && longName && nodeId !== '' && shortName !== '' && longName !== '') {
       const value = `${nodeId}-${shortName}-${longName}`
-      this.flyXCToken = uuidv5(value, await this.creaetFlyXCTokenNamespaceIfNotExisting())
+      this.flyXCToken = uuidv5(value, await this.createFlyXCTokenNamespaceIfNotExisting())
     }
   }
 
-  private async creaetFlyXCTokenNamespaceIfNotExisting() {
+  private async createFlyXCTokenNamespaceIfNotExisting() {
     if (!Node.flyXCTokenNamespace) {
       const flyXCTokenNamespace =
         (await Configs.byName(AppDataSource, 'flyXCTokenNamespace')) ||

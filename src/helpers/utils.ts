@@ -1,4 +1,5 @@
 import { AbortError } from 'p-retry'
+import { protobufDecode } from '#helpers/logger'
 
 export function toBigInt(str: number | string | undefined | null): number | undefined {
   if (typeof str === 'number') {
@@ -30,7 +31,9 @@ export function secondsAgo(secs: number) {
 
 export function parseProtobuf<T>(f: () => T): T {
   try {
-    return f()
+    const protobuf = f()
+    protobufDecode(protobuf)
+    return protobuf
   } catch (e: unknown) {
     if (typeof e === 'string' || e instanceof Error) {
       throw new AbortError(e)

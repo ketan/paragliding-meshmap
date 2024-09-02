@@ -78,7 +78,7 @@ export function isDesktop() {
 
 export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: boolean = false) {
   if (timestamp) {
-    const dateTime = getDateTime(timestamp)
+    const dateTime = parseDateTime(timestamp)
     return (
       <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-end" className="text-nowrap">
         {addParens ? '(' : null}
@@ -91,8 +91,8 @@ export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: 
 }
 
 export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration): NodeStatus {
-  const updatedAt = getDateTime(node.updatedAt)
-  const now = DateTime.local()
+  const updatedAt = parseDateTime(node.updatedAt)
+  const now = DateTime.now()
 
   if (now.diff(updatedAt) < onlineAge) {
     return 'online'
@@ -103,7 +103,7 @@ export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge:
   }
 }
 
-function getDateTime(timestamp: string | Date | DateTime) {
+export function parseDateTime(timestamp: string | Date | DateTime) {
   if (typeof timestamp === 'string') {
     return DateTime.fromISO(timestamp)
   } else if (timestamp instanceof Date) {

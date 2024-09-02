@@ -7,7 +7,6 @@ import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
 import { MapContainer } from 'react-leaflet'
 import { NodeRoleNameToID } from '../../../hardware-modules'
-import { HardwareModel } from '../../../interfaces'
 import { NodesEntityForUI } from '../../../nodes-entity'
 import { addLegendToMap, cssClassFor } from '../../../templates/legend'
 import { nodePositionView } from '../../../templates/node-position'
@@ -72,7 +71,6 @@ interface AllData {
   newerNodes: Record<number, NodesEntityForUI>
   newerNodesWithPosition: Record<number, NodesEntityForUI>
   markers: Record<number, L.Marker>
-  hardwareModels: HardwareModel[]
 }
 
 interface MapState extends Partial<AllData>, UIConfig, QueryParams {
@@ -158,16 +156,9 @@ export default class MapApp extends Component<MapProps, MapState> {
     const now = DateTime.now()
 
     try {
-      const [nodesResponse, hardwareModelsResponse] = await Promise.all([fetch('/api/nodes'), fetch('/api/hardware-models')])
-      if (
-        hardwareModelsResponse.status == 200 ||
-        (hardwareModelsResponse.status == 304 && nodesResponse.status == 200) ||
-        nodesResponse.status == 304
-      ) {
-        const [hardwareModels, rawNodes]: [HardwareModel[], NodesEntityForUI[]] = await Promise.all([
-          hardwareModelsResponse.json(),
-          nodesResponse.json(),
-        ])
+      const [nodesResponse] = await Promise.all([fetch('/api/nodes')])
+      if (nodesResponse.status == 200 || nodesResponse.status == 304) {
+        const rawNodes = await nodesResponse.json()
 
         const allNodes = sanitizeNodesProperties(rawNodes).reduce(
           (acc, eachNode) => {
@@ -177,7 +168,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           {} as Record<number, NodesEntityForUI>
         )
 
-        this.setState({ hardwareModels, allNodes }, () => {
+        this.setState({ allNodes }, () => {
           const newerNodes: Record<number, NodesEntityForUI> = {}
           const newerNodesWithPosition: Record<number, NodesEntityForUI> = {}
 
@@ -202,9 +193,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           })
         })
       } else {
-        logger(
-          `Error fetching data, node response was ${nodesResponse.status}, hardware models response was ${hardwareModelsResponse.status}`
-        )
+        logger(`Error fetching data, node response was ${nodesResponse.status}`)
         this.state.dataLoaded.reject()
       }
     } catch (err) {

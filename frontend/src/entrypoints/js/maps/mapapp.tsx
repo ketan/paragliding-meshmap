@@ -95,7 +95,7 @@ export default class MapApp extends Component<MapProps, MapState> {
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
     configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P2D'),
-    configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'P71D'),
+    configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'P1D'),
     configNodesOnlineAge: Duration.fromISO(localStorage.configNodesOnlineAge || 'PT1H'),
     mapInitialized: Promise.withResolvers(),
     dataLoaded: Promise.withResolvers(),

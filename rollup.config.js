@@ -47,6 +47,7 @@ export default defineConfig({
     'lodash',
     'luxon',
     'newrelic',
+    'node:crypto',
     'os',
     'p-queue',
     'p-retry',
@@ -58,5 +59,6 @@ export default defineConfig({
     'ts-parse-database-url',
     'typeorm',
     'url',
+    'uuid',
   ],
 })

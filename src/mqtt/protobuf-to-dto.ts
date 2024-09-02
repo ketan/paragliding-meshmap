@@ -67,7 +67,6 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
   }
 
   const positionPB = parseProtobuf(() => meshtastic.Position.decode(payload))
-
   const position = new Position({
     nodeId: packet.from!,
     to: packet.to!,
@@ -83,6 +82,8 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
     altitude: positionPB.altitude,
     satsInView: positionPB.satsInView,
     precisionBits: positionPB.precisionBits,
+    groundSpeed: sanitizeNumber(positionPB.groundSpeed),
+    groundTrack: sanitizeNumber(positionPB.groundTrack),
     timestamp: positionPB.timestamp ? DateTime.fromMillis(positionPB.timestamp * 1000).toJSDate() : undefined,
     time: positionPB.time ? DateTime.fromMillis(positionPB.time * 1000).toJSDate() : undefined,
     pdop: positionPB.PDOP,

@@ -52,6 +52,12 @@ export default class Position extends BaseType {
   @Column({ type: 'integer', nullable: true })
   pdop: number
 
+  @Column({ type: 'double precision', nullable: true })
+  groundSpeed?: number
+
+  @Column({ type: 'double precision', nullable: true })
+  groundTrack?: number
+
   constructor(opts: Partial<Position> = {}) {
     super()
     _.assign(this, opts)

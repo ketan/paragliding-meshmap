@@ -88,6 +88,8 @@ describe('protobuf-to-dto', () => {
       channelId: 'Fr_Balise',
       from: 1129876000,
       gatewayId: 1129876000,
+      groundSpeed: 11,
+      groundTrack: 28311000,
       latitude: 457572352,
       longitude: 52035584,
       nodeId: 1129876000,

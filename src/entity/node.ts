@@ -207,7 +207,6 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
       satsInView: BaseType.sanitizeNumber(position.satsInView),
     })
-
     return await repository.save(node)
   }
 

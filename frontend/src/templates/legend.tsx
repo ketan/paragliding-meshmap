@@ -1,5 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import L from 'leaflet'
+import { NodeStatus } from '../entrypoints/js/utils/ui-util.tsx'
 
 export const legendReactDOM = (
   <div className="p-3">
@@ -15,7 +16,7 @@ export const legendReactDOM = (
       Disconnected
     </div>
     <div className="relative pl-4">
-      <span className={`absolute h-3 w-3 rounded-full bg-red-600 border-3 top-0.5 left-0`}></span>
+      <span className={`absolute h-3 w-3 rounded-full bg-gray-600 border-3 top-0.5 left-0`}></span>
       Offline Too Long
     </div>
   </div>
@@ -35,7 +36,7 @@ export function addLegendToMap(map: L.Map) {
   legend.addTo(map)
 }
 
-export function cssClassFor(str: 'online' | 'offline' | 'disconnected' | 'start-track' | 'end-track') {
+export function cssClassFor(str: NodeStatus | 'start-track' | 'end-track') {
   const commonClasses = `text-white rounded-full border-4 border-none marker-location node-status-${str}`
 
   switch (str) {
@@ -45,9 +46,9 @@ export function cssClassFor(str: 'online' | 'offline' | 'disconnected' | 'start-
       return `bg-amber-600 ${commonClasses}`
     case 'online':
       return `bg-green-600 ${commonClasses}`
-    case 'disconnected':
+    case 'old':
       return `bg-purple-600 ${commonClasses}`
     case 'offline':
-      return `bg-red-600 ${commonClasses}`
+      return `bg-gray-600 ${commonClasses}`
   }
 }

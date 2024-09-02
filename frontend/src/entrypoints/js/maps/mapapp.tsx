@@ -17,6 +17,7 @@ import {
   isDesktop,
   MessageParams,
   nodeName,
+  nodeStatus,
   sanitizeLatLong,
   sanitizeNodesProperties,
   sanitizeNumber,
@@ -63,6 +64,7 @@ interface UIConfig {
 
   // Nodes older than this are considered offline
   configNodesOfflineAge: Duration
+  configNodesOnlineAge: Duration
 }
 
 interface AllData {
@@ -92,8 +94,9 @@ export default class MapApp extends Component<MapProps, MapState> {
 
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
-    configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P7D'),
+    configNodesMaxAge: Duration.fromISO(localStorage.configNodesMaxAge || 'P2D'),
     configNodesOfflineAge: Duration.fromISO(localStorage.configNodesOfflineAge || 'P71D'),
+    configNodesOnlineAge: Duration.fromISO(localStorage.configNodesOnlineAge || 'PT1H'),
     mapInitialized: Promise.withResolvers(),
     dataLoaded: Promise.withResolvers(),
     messageTo: BROADCAST_ADDR,
@@ -381,19 +384,8 @@ export default class MapApp extends Component<MapProps, MapState> {
   }
 
   private getIconClassFor(node: NodesEntityForUI) {
-    let icon = cssClassFor('disconnected')
-    if (node.mqttConnectionState === 'online') {
-      icon = cssClassFor('online')
-    }
-
-    const now = DateTime.now()
-    const age = now.diff(DateTime.fromISO(node.updatedAt))
-
-    if (age > this.state.configNodesOfflineAge) {
-      icon = cssClassFor('offline')
-    }
-
-    return icon
+    const status = nodeStatus(node, this.state.configNodesOnlineAge, this.state.configNodesOfflineAge)
+    return cssClassFor(status)
   }
 
   private createMarkers() {
@@ -418,7 +410,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         html: nodePositionView(nodeName(eachNode)),
         iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],
       }),
-      zIndexOffset: eachNode.mqttConnectionState === 'online' ? 1000 : -1000,
+      zIndexOffset: nodeStatus(eachNode, this.state.configNodesOnlineAge, this.state.configNodesOfflineAge) === 'online' ? 1000 : -1000,
     })
 
     const tooltipOffset = isDesktop() ? new L.Point(iconSize.x / 2 + 2, -16) : new L.Point(0, -16)
@@ -479,6 +471,8 @@ export default class MapApp extends Component<MapProps, MapState> {
 
         tooltipReactRoot.render(
           <NodeTooltip
+            offlineAge={this.state.configNodesOfflineAge}
+            onlineAge={this.state.configNodesOnlineAge}
             showDetail={() => this.showDetails(eachNode)}
             showTrackLog={() => this.showTrackLog(eachNode)}
             showMessages={() => this.showMessages(eachNode)}
@@ -514,6 +508,8 @@ export default class MapApp extends Component<MapProps, MapState> {
 
       popupReactRoot?.render(
         <NodeTooltip
+          offlineAge={this.state.configNodesOfflineAge}
+          onlineAge={this.state.configNodesOnlineAge}
           node={eachNode}
           showDetail={() => this.showDetails(eachNode)}
           showTrackLog={() => this.showTrackLog(eachNode)}

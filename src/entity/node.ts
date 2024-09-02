@@ -58,10 +58,6 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   @Column({ ...dateTimeType(), nullable: true })
   positionUpdatedAt?: Date
   @Column({ type: 'text', nullable: true })
-  mqttConnectionState?: string
-  @Column({ ...dateTimeType(), nullable: true })
-  mqttConnectionStateUpdatedAt?: Date
-  @Column({ type: 'text', nullable: true })
   firmwareVersion?: string
   @Column({ type: 'boolean', nullable: true })
   hasDefaultChannel?: boolean
@@ -140,17 +136,6 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         positionPrecision: mr.positionPrecision,
         numOnlineLocalNodes: mr.numOnlineLocalNodes,
         positionUpdatedAt: new Date(),
-      },
-      this.conflictResolve
-    )
-  }
-
-  static async updateMqttStatus(trx: EntityManager, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
-    return await trx.getRepository(Node).upsert(
-      {
-        nodeId,
-        mqttConnectionState,
-        mqttConnectionStateUpdatedAt,
       },
       this.conflictResolve
     )

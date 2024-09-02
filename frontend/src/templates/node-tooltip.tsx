@@ -1,25 +1,40 @@
 import _ from 'lodash'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
 import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
-import { BROADCAST_ADDR, googleMapsLink, nodeRole, positionPrecision, randomHex, timeAgo } from '../entrypoints/js/utils/ui-util'
+import {
+  BROADCAST_ADDR,
+  googleMapsLink,
+  nodeRole,
+  nodeStatus,
+  positionPrecision,
+  randomHex,
+  timeAgo,
+} from '../entrypoints/js/utils/ui-util'
 import { HardwareModelIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
 import { nodeUrl } from '../entrypoints/js/utils/link-utils'
 
-function mqttStatus(node: NodesEntityForUI) {
-  if (node.mqttConnectionState === 'online') {
+function status(node: NodesEntityForUI, onlineAge: Duration, offlineAge: Duration) {
+  const status = nodeStatus(node, onlineAge, offlineAge)
+  if (status === 'online') {
     return (
       <>
-        <span className="text-green-600">Online</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
+        <span className="text-green-600">Online</span> {timeAgo(node.updatedAt, true)}
+      </>
+    )
+  } else if (status === 'old') {
+    return (
+      <>
+        <span className="text-purple-600">Old</span> {timeAgo(node.updatedAt, true)}
       </>
     )
   } else {
     return (
       <>
-        <span className="text-purple-600">Offline</span> {timeAgo(node.mqttConnectionStateUpdatedAt, true)}
+        <span className="text-gray-600">Offline</span> {timeAgo(node.updatedAt, true)}
       </>
     )
   }
@@ -140,9 +155,12 @@ interface Props {
   showDetail: (node: NodesEntityForUI) => void
   showTrackLog: (node: NodesEntityForUI) => void
   showMessages: (node: NodesEntityForUI) => void
+
+  onlineAge: Duration
+  offlineAge: Duration
 }
 
-export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMessages }: Props) {
+export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMessages, offlineAge, onlineAge }: Props) {
   const image = imageForModel(node.hardwareModel) ? (
     <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
   ) : null
@@ -194,7 +212,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
   const elements = [
     nodeName,
     keyValue({ key: 'Short Name', value: node.shortName }),
-    keyValue({ key: 'MQTT Status', renderer: () => mqttStatus(node) }),
+    keyValue({ key: 'Status', renderer: () => status(node, onlineAge, offlineAge) }),
     padding(),
     location(node),
     padding(),

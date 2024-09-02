@@ -55,17 +55,6 @@ export async function purgeData(db: DataSource, cliOptions: MQTTCLIOptions, logg
   }
 }
 
-export async function updateMQTTStatus(db: DataSource, nodeId: number, mqttConnectionState: string, mqttConnectionStateUpdatedAt: Date) {
-  await db.transaction(async (trx) => {
-    try {
-      await Node.updateMqttStatus(trx, nodeId, mqttConnectionState, mqttConnectionStateUpdatedAt)
-    } catch (e) {
-      errLog(`Unable to update mqtt status`, { err: e })
-      throw e
-    }
-  })
-}
-
 export async function createServiceEnvelope(db: DataSource, mqttTopic: string, payload: Buffer, envelope: meshtastic.ServiceEnvelope) {
   const packet = envelope.packet
 

@@ -70,8 +70,6 @@ export interface NodesEntity {
   longName?: string
   longitude?: number
   modemPreset?: number
-  mqttConnectionState?: string
-  mqttConnectionStateUpdatedAt?: string
   neighbourBroadcastIntervalSecs?: number
   neighbours?: Neighbour[]
   neighboursUpdatedAt?: string

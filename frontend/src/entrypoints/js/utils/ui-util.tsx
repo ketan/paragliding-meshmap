@@ -8,6 +8,8 @@ import { NodeRoleIDToName } from '../../../hardware-modules.ts'
 
 export const BROADCAST_ADDR = Number('0xffffffff')
 
+export type NodeStatus = 'online' | 'old' | 'offline'
+
 export function googleMapsLink(point: L.PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
 }
@@ -86,6 +88,19 @@ export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: 
     )
   }
   return
+}
+
+export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration): NodeStatus {
+  const updatedAt = getDateTime(node.updatedAt)
+  const now = DateTime.local()
+
+  if (now.diff(updatedAt) < onlineAge) {
+    return 'online'
+  } else if (now.diff(updatedAt) < offlineAge) {
+    return 'old'
+  } else {
+    return 'offline'
+  }
 }
 
 function getDateTime(timestamp: string | Date | DateTime) {

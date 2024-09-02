@@ -1,4 +1,4 @@
-import { parseProtobuf, toBigInt } from '#helpers/utils'
+import { parseProtobuf } from '#helpers/utils'
 import { decrypt } from './decryption.js'
 import { MQTTCLIOptions } from '#helpers/cli'
 import {
@@ -10,21 +10,13 @@ import {
   createOrUpdateWaypoint,
   createServiceEnvelope,
   saveTextMessage,
-  updateMQTTStatus,
   updateNodeWithPosition,
 } from './mqtt-orm.js'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { DataSource } from 'typeorm'
-import { decodeLog } from '#helpers/logger'
 
 export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions, topic: string, payload: Buffer) {
-  if (topic.includes('/stat/!')) {
-    await handleNodeStatusMessage(db, topic, payload)
-    return
-  }
-
   if (topic.includes('/stat/')) {
-    // ignore
     return
   }
 
@@ -62,15 +54,5 @@ export async function processMessage(db: DataSource, cliOptions: MQTTCLIOptions,
       case meshtastic.PortNum.MAP_REPORT_APP:
         return await createMapReports(db, envelope)
     }
-  }
-}
-
-export async function handleNodeStatusMessage(db: DataSource, topic: string, buffer: Buffer) {
-  const nodeIdHex = topic.split('/').at(-1)
-  const nodeId = toBigInt(nodeIdHex)
-  if (nodeId) {
-    const mqttConnectionState = buffer.toString()
-    decodeLog(`MQTT status`, { nodeIdHex, nodeId, mqttConnectionState })
-    await updateMQTTStatus(db, nodeId, mqttConnectionState, new Date())
   }
 }

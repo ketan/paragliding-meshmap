@@ -62,6 +62,7 @@ export interface NodesEntity {
   channelUtilization?: number
   createdAt: string
   firmwareVersion?: string
+  flyXcToken?: string
   hardwareModel?: number
   hasDefaultChannel?: boolean
   inbox?: MessageIn[]

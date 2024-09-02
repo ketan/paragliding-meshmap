@@ -152,8 +152,6 @@ describe('protobuf-to-dto', () => {
       latitude: undefined,
       longitude: undefined,
       modemPreset: undefined,
-      mqttConnectionState: undefined,
-      mqttConnectionStateUpdatedAt: undefined,
       neighbourBroadcastIntervalSecs: undefined,
       neighbours: undefined,
       neighboursUpdatedAt: undefined,
@@ -172,6 +170,8 @@ describe('protobuf-to-dto', () => {
       positionPrecisionBits: undefined,
       positionTimestamp: undefined,
       satsInView: undefined,
+
+      flyXCToken: undefined,
     })
   })
 

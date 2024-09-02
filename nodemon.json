@@ -1,6 +1,6 @@
 {
   "watch": ["src", "package.json", "tsconfig.json", ".env**", "yarn.lock"],
-  "ignore": ["test", "build", "tmp", "dist"],
+  "ignore": ["test", "build", "tmp", "dist", "frontend/dist"],
   "ext": "*",
   "verbose": true
 }

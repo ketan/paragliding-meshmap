@@ -16,9 +16,24 @@ describe('Node', () => {
       const purgeOlderThan = Duration.fromISO('PT11M')
 
       const n = new Node()
-      const m1 = { from: 1, to: 123, text: 'abc', createdAt: DateTime.now().minus(Duration.fromISO('PT10M')).toJSDate() }
-      const m2 = { from: 2, to: 123, text: 'pqr', createdAt: DateTime.now().minus(Duration.fromISO('PT20M')).toJSDate() }
-      const m3 = { from: 3, to: 123, text: 'xyz', createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate() }
+      const m1 = {
+        from: 1,
+        to: 123,
+        text: 'abc',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT10M')).toJSDate(),
+      }
+      const m2 = {
+        from: 2,
+        to: 123,
+        text: 'pqr',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT20M')).toJSDate(),
+      }
+      const m3 = {
+        from: 3,
+        to: 123,
+        text: 'xyz',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate(),
+      }
 
       n.inboundMessage(m1, purgeOlderThan)
       n.inboundMessage(m2, purgeOlderThan)
@@ -42,9 +57,24 @@ describe('Node', () => {
       const purgeOlderThan = Duration.fromISO('PT21M')
 
       const n = new Node()
-      const m1 = { to: 1, from: 123, text: 'abc', createdAt: DateTime.now().minus(Duration.fromISO('PT10M')).toJSDate() }
-      const m2 = { to: 2, from: 123, text: 'pqr', createdAt: DateTime.now().minus(Duration.fromISO('PT20M')).toJSDate() }
-      const m3 = { to: 3, from: 123, text: 'xyz', createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate() }
+      const m1 = {
+        to: 1,
+        from: 123,
+        text: 'abc',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT10M')).toJSDate(),
+      }
+      const m2 = {
+        to: 2,
+        from: 123,
+        text: 'pqr',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT20M')).toJSDate(),
+      }
+      const m3 = {
+        to: 3,
+        from: 123,
+        text: 'xyz',
+        createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate(),
+      }
       n.outboundMessage(m1, purgeOlderThan)
       n.outboundMessage(m2, purgeOlderThan)
       n.outboundMessage(m3, purgeOlderThan)
@@ -164,7 +194,7 @@ describe('Node', () => {
 
       const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
       expect(_.omitBy(node, _.isNil))
-        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt'])
+        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt', 'flyXCToken'])
         .to.deep.equal(_.omitBy(em, _.isNil))
     })
 
@@ -191,8 +221,45 @@ describe('Node', () => {
 
       const node = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
       expect(_.omitBy(node, _.isNil))
-        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt'])
+        .to.excluding(['createdAt', 'updatedAt', 'id', 'positionUpdatedAt', 'flyXCToken'])
         .to.deep.equal(_.omitBy(em, _.isNil))
+    })
+  })
+
+  describe('createflyXCToken', () => {
+    it('should generate a flyXCToken when nodeId, shortName, and longName are present', async () => {
+      const node = new Node({ nodeId: 123, shortName: 'short', longName: 'long' })
+
+      await AppDataSource.getRepository(Node).save(node)
+      expect(node.flyXCToken).to.exist
+    })
+
+    it('should not generate a flyXCToken if nodeId is missing', async () => {
+      const node = new Node({ shortName: 'short', longName: 'long' })
+      try {
+        await AppDataSource.getRepository(Node).save(node)
+      } catch (ignore) {
+        // not allowed to save a node without a nodeId
+      }
+      expect(node.flyXCToken).to.not.exist
+    })
+
+    it('should not generate a flyXCToken if shortName is missing', async () => {
+      const node = new Node({ nodeId: 123, longName: 'long' })
+      await AppDataSource.getRepository(Node).save(node)
+      expect(node.flyXCToken).to.not.exist
+    })
+
+    it('should not generate a flyXCToken if longName is missing', async () => {
+      const node = new Node({ nodeId: 123, shortName: 'short' })
+      await AppDataSource.getRepository(Node).save(node)
+      expect(node.flyXCToken).to.not.exist
+    })
+
+    it('should not overwrite an existing flyXCToken', async () => {
+      const node = new Node({ nodeId: 123, shortName: 'short', longName: 'long', flyXCToken: 'existing-token' })
+      await AppDataSource.getRepository(Node).save(node)
+      expect(node.flyXCToken).to.equal('existing-token')
     })
   })
 })

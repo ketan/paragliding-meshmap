@@ -10,12 +10,11 @@ import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
 import _ from 'lodash'
-import { BROADCAST_ADDR } from '#helpers/utils'
+import { BROADCAST_ADDR, sendToFlyXC } from '#helpers/utils'
 import { v5 as uuidv5 } from 'uuid'
-import { AppDataSource, pgBoss } from '#config/data-source'
+import { AppDataSource } from '#config/data-source'
 import { Configs } from '#entity/configs'
 import { randomUUID } from 'node:crypto'
-import { flyXCLog } from '#helpers/logger'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -217,8 +216,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       return
     }
 
-    flyXCLog(`Queuing position update for ${node.shortName} (${node.flyXCToken})`)
-    await pgBoss.send('fly-xc', {
+    await sendToFlyXC({
       type: 'position',
       user_id: node.flyXCToken,
       time: DateTime.now().toMillis(),
@@ -278,13 +276,13 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     this.outbox ||= []
     this.outbox.unshift({ to: tm.to, text: tm.text, time: tm.createdAt.toISOString() })
     if (tm.to === BROADCAST_ADDR) {
-      flyXCLog(`Queuing text message update for ${this.shortName} (${this.flyXCToken})`)
-      await pgBoss.send('fly-xc', {
+      const data = {
         type: 'message',
         user_id: this.flyXCToken,
         time: tm.createdAt.getTime(),
         message: tm.text,
-      })
+      }
+      await sendToFlyXC(data)
     }
     if (purgeOlderThan) {
       this.outbox = this.outbox.filter((msg) => {

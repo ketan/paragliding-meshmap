@@ -1,5 +1,6 @@
 import { AbortError } from 'p-retry'
-import { protobufDecode } from '#helpers/logger'
+import { flyXCLog, protobufDecode } from '#helpers/logger'
+import { pgBoss } from '#config/data-source'
 
 export function toBigInt(str: number | string | undefined | null): number | undefined {
   if (typeof str === 'number') {
@@ -42,6 +43,17 @@ export function parseProtobuf<T>(f: () => T): T {
     } else {
       throw new AbortError(`Unknown error parsing protobuf`)
     }
+  }
+}
+
+export async function sendToFlyXC(payload: object) {
+  const flyXCApiKey = process.env.FLYXC_API_KEY
+  const flyXCApiUrl = process.env.FLYXC_API_URL
+
+  if (flyXCApiKey && flyXCApiUrl) {
+    flyXCLog('Sending to FlyXC')
+    await pgBoss.send('fly-xc', payload)
+    flyXCLog('Sent to FlyXC')
   }
 }
 

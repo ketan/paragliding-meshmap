@@ -30,7 +30,12 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
   }
 
   await pgBoss.start()
-  await pgBoss.createQueue('fly-xc')
+  await pgBoss.createQueue('fly-xc', {
+    retryLimit: 3,
+    retryBackoff: true,
+    retryDelay: 30,
+    name: 'fly-xc',
+  })
 
   pgBoss.work(
     'fly-xc',

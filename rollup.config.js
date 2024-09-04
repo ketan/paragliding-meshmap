@@ -52,6 +52,7 @@ export default defineConfig({
     'p-queue',
     'p-retry',
     'path',
+    'pg-boss',
     'pluralize',
     'protobufjs/minimal.js',
     'reflect-metadata',

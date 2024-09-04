@@ -75,10 +75,10 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
               if (response.status === 200) {
                 return await response.text()
               } else {
-                throw 'Failed to send data'
+                throw 'Failed to send data. Got a non-200 response'
               }
             } catch (e) {
-              flyXCLog(`Failed to send data`, e)
+              errLog(`Failed to send data`, e)
               throw e
             }
           })

@@ -51,35 +51,38 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
         return await Promise.all(
           jobs.map(async (job) => {
             flyXCLog(`Picked up job`, job.data)
-            try {
-              const requestHeaders = {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              }
+            const requestHeaders = {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }
 
-              const response = await fetch(flyXCApiUrl, {
-                method: 'POST',
-                headers: _.assign(
-                  {
-                    Authorization: `Bearer ${flyXCApiKey}`,
-                  },
-                  requestHeaders
-                ),
-                body: JSON.stringify(job.data),
-              })
-              flyXCLog(`Sending job to ${flyXCApiUrl}`)
-              flyXCLog({ requestHeaders })
-              flyXCLog({ body: JSON.stringify(job.data) })
-              flyXCLog(`Response`, response)
+            const response = await fetch(flyXCApiUrl, {
+              method: 'POST',
+              headers: _.assign(
+                {
+                  Authorization: `Bearer ${flyXCApiKey}`,
+                },
+                requestHeaders
+              ),
+              body: JSON.stringify(job.data),
+            })
+            flyXCLog(`Sending job to ${flyXCApiUrl}`)
+            flyXCLog({ requestHeaders })
+            flyXCLog({ body: JSON.stringify(job.data) })
+            flyXCLog(`Response`, response)
 
-              if (response.status === 200) {
-                return await response.text()
-              } else {
-                throw 'Failed to send data. Got a non-200 response'
-              }
-            } catch (e) {
-              errLog(`Failed to send data`, e)
-              throw e
+            if (
+              response.status === 200 || // all ok
+              response.status === 400 || // ignore, probably some bad data that we're sending
+              response.status == 401 || // authentication error, nothing we can do to fix
+              response.status == 403 // ignore, auth error, nothing we can do to fix
+            ) {
+              return await response.text()
+            } else if (response.status === 429) {
+              // rate limited, retry
+              throw 'Rate limited, retry'
+            } else {
+              throw 'Failed to send data. Got a non-200 response'
             }
           })
         )

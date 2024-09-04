@@ -77,11 +77,14 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
               response.status == 401 || // authentication error, nothing we can do to fix
               response.status == 403 // ignore, auth error, nothing we can do to fix
             ) {
+              flyXCLog(`Job sent`, response.status)
               return await response.text()
             } else if (response.status === 429) {
+              errLog(`Rate limited, retrying`, response)
               // rate limited, retry
               throw 'Rate limited, retry'
             } else {
+              errLog(`Failed to send data. Got a non-200 response`, response)
               throw 'Failed to send data. Got a non-200 response'
             }
           })

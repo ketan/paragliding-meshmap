@@ -262,4 +262,30 @@ describe('Node', () => {
       expect(node.flyXCToken).to.equal('existing-token')
     })
   })
+
+  describe('createOrUpdate', () => {
+    it('should create a new node if it does not exist', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      const node = new Node({ nodeId: 123, shortName: 'short', longName: 'long' })
+      await node.createOrUpdate(AppDataSource.manager)
+
+      const savedNode = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(savedNode).to.exist
+      expect(savedNode).to.deep.include({ nodeId: 123, shortName: 'short', longName: 'long' })
+    })
+
+    it('should update an existing node if it already exists', async () => {
+      expect(await Node.find(AppDataSource)).to.be.empty
+
+      await AppDataSource.manager.save(new Node({ nodeId: 123, shortName: 'oldShort', longName: 'oldLong' }))
+
+      const node = new Node({ nodeId: 123, shortName: 'newShort', longName: 'newLong' })
+      await node.createOrUpdate(AppDataSource.manager)
+
+      const updatedNode = await Node.findOne(AppDataSource, { where: { nodeId: 123 } })
+      expect(updatedNode).to.exist
+      expect(updatedNode).to.deep.include({ nodeId: 123, shortName: 'newShort', longName: 'newLong' })
+    })
+  })
 })

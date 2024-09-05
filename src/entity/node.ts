@@ -248,9 +248,10 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
 
   async createOrUpdate(trx: EntityManager) {
     const repository = trx.getRepository(Node)
-    const node = (await repository.findOne({ where: { nodeId: this.nodeId } })) || new Node({ nodeId: this.nodeId })
+    const nodeFromDB = (await repository.findOne({ where: { nodeId: this.nodeId } })) || new Node({ nodeId: this.nodeId })
 
-    this.merge(node)
+    nodeFromDB.merge(this)
+    this.merge(nodeFromDB)
 
     return await trx.getRepository(Node).save(this)
   }

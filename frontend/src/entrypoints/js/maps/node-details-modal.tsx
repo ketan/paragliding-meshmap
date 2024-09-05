@@ -13,7 +13,7 @@ import { LoadedState } from './loaded-state.tsx'
 import { Position } from './position.tsx'
 import { DateTime } from 'luxon'
 import _ from 'lodash'
-import { CopyIcon } from '../utils/icon-constants.ts'
+import { ArrowUpRightFromSquareIcon, CopyIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
 
 interface Props {
@@ -96,6 +96,12 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
               navigator.clipboard.writeText(flyXCToken)
             }}
           />
+        </Tooltip>
+
+        <Tooltip tooltipText="Configure your device in Fly XC" className="border-sm inline-block rounded border ml-3">
+          <a href="https://flyxc.app/devices" target="_blank" rel="noreferrer">
+            <ArrowUpRightFromSquareIcon className="w-5 h-5 inline-block p-0.5" />
+          </a>
         </Tooltip>
       </div>
     )

@@ -13,6 +13,7 @@ import { nodePositionView } from '../../../templates/node-position'
 import { NodeTooltip } from '../../../templates/node-tooltip'
 import { Page } from '../components/page'
 import {
+  BROADCAST_ADDR,
   isDesktop,
   MessageParams,
   nodeName,
@@ -29,7 +30,6 @@ import { NodeDetailsModal } from './node-details-modal'
 import { TrackLog } from './track-log.tsx'
 import { getTextSize } from '../utils/text-size.ts'
 import { MessagesModal } from './messages-modal.tsx'
-import { BROADCAST_ADDR } from '#helpers/utils'
 
 const logger = debug('meshmap')
 logger.enabled = true

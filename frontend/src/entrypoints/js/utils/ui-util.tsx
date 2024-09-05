@@ -5,10 +5,27 @@ import { NodesEntity } from '../../../db-entities'
 import { NodeNameAttributes, NodesEntityForUI } from '../../../nodes-entity'
 import { Tooltip } from '../components/tooltip'
 import { NodeRoleIDToName } from '../../../hardware-modules.ts'
+import { cssClassFor } from '../../../templates/legend.tsx'
 
 export const BROADCAST_ADDR = Number('0xffffffff')
 
 export type NodeStatus = 'online' | 'old' | 'offline'
+
+export interface LatLng {
+  lat: number
+  lng: number
+}
+
+export interface LatLngZoom {
+  coords?: LatLng
+  zoom?: number
+}
+
+export interface QueryParams extends LatLngZoom {
+  nodeId?: number
+  showConfigurationPopup: boolean
+  msg?: MessageParams
+}
 
 export function googleMapsLink(point: L.PointTuple) {
   return `https://maps.google.com/?q=${point[0]},${point[1]}`
@@ -88,6 +105,53 @@ export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: 
     )
   }
   return
+}
+
+export function getQueryParams(): QueryParams {
+  const queryParams = new URLSearchParams(window.location.search)
+
+  const queryLat = queryParams.get('lat')
+  const queryLng = queryParams.get('lng')
+
+  const coords = sanitizeLatLong(queryLat, queryLng)
+  const zoom = sanitizeNumber(queryParams.get('zoom'))
+  const nodeId = sanitizeNumber(queryParams.get('nodeId'))
+  const showConfigurationPopup = queryParams.has('configure')
+
+  const msgFrom = queryParams.get('from')
+  const msgTo = queryParams.get('to')
+  const msgSince = queryParams.get('since')
+
+  const retval: QueryParams = {
+    showConfigurationPopup,
+  }
+
+  if (coords) {
+    retval.coords = { lat: coords[0], lng: coords[1] }
+  }
+  if (zoom) {
+    retval.zoom = zoom
+  }
+  if (nodeId) {
+    retval.nodeId = nodeId
+  }
+  if (msgTo && msgFrom) {
+    const from = sanitizeNumber(msgFrom)
+    const to = sanitizeNumber(msgTo)
+    if (from && to) {
+      retval.msg = {
+        from: from,
+        to: to,
+        since: msgSince,
+      }
+    }
+  }
+  return retval
+}
+
+export function getIconClassFor(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration) {
+  const status = nodeStatus(node, onlineAge, offlineAge)
+  return cssClassFor(status)
 }
 
 export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration): NodeStatus {

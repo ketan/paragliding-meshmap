@@ -6,6 +6,9 @@ import { EnvironmentMetricsEntityForUI, NodesEntityForUI } from '../../../../nod
 import { Header } from './header'
 import { NameValue } from './name-value'
 
+type MetricType = 'temperature' | 'relativeHumidity' | 'barometricPressure'
+type MetricDefinition = { key: MetricType; unit: string; name: string; precision: number }
+
 export function EnvironmentMetrics({
   node,
   environmentMetrics,
@@ -13,10 +16,6 @@ export function EnvironmentMetrics({
   node: NodesEntityForUI
   environmentMetrics?: EnvironmentMetricsEntityForUI[] | null
 }) {
-  if (!environmentMetrics || environmentMetrics.length === 0) {
-    return
-  }
-
   const [activeSeries, setActiveSeries] = useState<Array<DataKey<unknown> | unknown>>([])
   const handleLegendClick = (dataKey: DataKey<unknown> | undefined) => {
     if (activeSeries.includes(dataKey)) {
@@ -26,14 +25,15 @@ export function EnvironmentMetrics({
     }
   }
 
+  if (!environmentMetrics || environmentMetrics.length === 0) {
+    return
+  }
+
   const environmentMetricsData: (Omit<EnvironmentMetricsEntityForUI, 'createdAt'> & { createdAt: number })[] =
     environmentMetrics?.map((metric) => ({
       ...metric,
       createdAt: DateTime.fromISO(metric.createdAt).toMillis(),
     })) || []
-
-  type MetricType = 'temperature' | 'relativeHumidity' | 'barometricPressure'
-  type MetricDefinition = { key: MetricType; unit: string; name: string; precision: number }
 
   return (
     <>

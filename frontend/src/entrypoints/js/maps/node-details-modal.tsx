@@ -23,39 +23,43 @@ interface Props {
 }
 
 export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
-  if (!node) {
-    return null
-  }
-
   const [loadedState, setLoadedState] = useState<LoadedState>(null)
   const [deviceMetrics, setDeviceMetrics] = useState<DeviceMetricsEntityForUI[] | null>(null)
   const [environmentMetrics, setEnvironmentMetrics] = useState<EnvironmentMetricsEntityForUI[] | null>(null)
   const [traceRoutes, setTraceRoutes] = useState<TraceroutesEntityForUI[] | null>(null)
 
-  async function loadData() {
-    setLoadedState('loading')
-    const [deviceMetricsResp, environmentMetricsResp, traceRoutesResp] = await Promise.all([
-      fetch(`/api/node/${node!.nodeId}/device-metrics`),
-      fetch(`/api/node/${node!.nodeId}/environment-metrics`),
-      fetch(`/api/node/${node!.nodeId}/trace-routes`),
-    ])
-
-    if (deviceMetricsResp.status === 200 && environmentMetricsResp.status === 200 && traceRoutesResp.status === 200) {
-      setDeviceMetrics(await deviceMetricsResp.json())
-      setEnvironmentMetrics(await environmentMetricsResp.json())
-      setTraceRoutes(await traceRoutesResp.json())
-
-      setLoadedState('loaded')
-    } else {
-      setLoadedState('error')
-    }
-  }
-
   useEffect(() => {
+    async function loadData() {
+      if (!node) {
+        return
+      }
+      setLoadedState('loading')
+
+      const [deviceMetricsResp, environmentMetricsResp, traceRoutesResp] = await Promise.all([
+        fetch(`/api/node/${node.nodeId}/device-metrics`),
+        fetch(`/api/node/${node.nodeId}/environment-metrics`),
+        fetch(`/api/node/${node.nodeId}/trace-routes`),
+      ])
+
+      if (deviceMetricsResp.status === 200 && environmentMetricsResp.status === 200 && traceRoutesResp.status === 200) {
+        setDeviceMetrics(await deviceMetricsResp.json())
+        setEnvironmentMetrics(await environmentMetricsResp.json())
+        setTraceRoutes(await traceRoutesResp.json())
+
+        setLoadedState('loaded')
+      } else {
+        setLoadedState('error')
+      }
+    }
+
     if (!loadedState) {
       loadData()
     }
-  })
+  }, [loadedState, node])
+
+  if (!node) {
+    return null
+  }
 
   const image = imageForModel(node.hardwareModel) ? (
     <img

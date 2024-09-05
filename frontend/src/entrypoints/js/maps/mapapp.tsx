@@ -8,16 +8,18 @@ import ReactDOM from 'react-dom/client'
 import { MapContainer } from 'react-leaflet'
 import { NodeRoleNameToID } from '../../../hardware-modules'
 import { NodesEntityForUI } from '../../../nodes-entity'
-import { addLegendToMap, cssClassFor } from '../../../templates/legend'
+import { addLegendToMap } from '../../../templates/legend'
 import { nodePositionView } from '../../../templates/node-position'
 import { NodeTooltip } from '../../../templates/node-tooltip'
 import { Page } from '../components/page'
 import {
   BROADCAST_ADDR,
+  getIconClassFor,
+  getQueryParams,
   isDesktop,
-  MessageParams,
   nodeName,
   nodeStatus,
+  QueryParams,
   sanitizeLatLong,
   sanitizeNodesProperties,
   sanitizeNumber,
@@ -34,22 +36,6 @@ import { MessagesModal } from './messages-modal.tsx'
 const logger = debug('meshmap')
 logger.enabled = true
 const MAX_ZOOM = 22
-
-interface LatLng {
-  lat: number
-  lng: number
-}
-
-interface LatLngZoom {
-  coords?: LatLng
-  zoom?: number
-}
-
-interface QueryParams extends LatLngZoom {
-  nodeId?: number
-  showConfigurationPopup: boolean
-  msg?: MessageParams
-}
 
 interface MapProps {
   mapType: MapTypes
@@ -137,7 +123,7 @@ export default class MapApp extends Component<MapProps, MapState> {
   )
 
   async componentDidMount() {
-    const { coords, zoom, nodeId, showConfigurationPopup } = this.getQueryParams()
+    const { coords, zoom, nodeId, showConfigurationPopup } = getQueryParams()
 
     if (showConfigurationPopup) {
       this.setState({ configModalVisible: true })
@@ -205,7 +191,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       logger(`Map and data loaded`)
       const markers = this.createMarkers()
       this.setState({ markers }, () => {
-        const queryParams = this.getQueryParams()
+        const queryParams = getQueryParams()
         if (queryParams.nodeId) {
           this.flyToNode(queryParams.nodeId)
         } else {
@@ -315,66 +301,19 @@ export default class MapApp extends Component<MapProps, MapState> {
     setMapUrlParams({ nodeId: false })
   }
 
-  private getQueryParams(): QueryParams {
-    const queryParams = new URLSearchParams(window.location.search)
-
-    const queryLat = queryParams.get('lat')
-    const queryLng = queryParams.get('lng')
-
-    const coords = sanitizeLatLong(queryLat, queryLng)
-    const zoom = sanitizeNumber(queryParams.get('zoom'))
-    const nodeId = sanitizeNumber(queryParams.get('nodeId'))
-    const showConfigurationPopup = queryParams.has('configure')
-
-    const msgFrom = queryParams.get('from')
-    const msgTo = queryParams.get('to')
-    const msgSince = queryParams.get('since')
-
-    const retval: QueryParams = {
-      showConfigurationPopup,
-    }
-
-    if (coords) {
-      retval.coords = { lat: coords[0], lng: coords[1] }
-    }
-    if (zoom) {
-      retval.zoom = zoom
-    }
-    if (nodeId) {
-      retval.nodeId = nodeId
-    }
-    if (msgTo && msgFrom) {
-      const from = sanitizeNumber(msgFrom)
-      const to = sanitizeNumber(msgTo)
-      if (from && to) {
-        retval.msg = {
-          from: from,
-          to: to,
-          since: msgSince,
-        }
-      }
-    }
-    return retval
-  }
-
   private maybeFlyToCurrentLocation() {
-    const queryParams = this.getQueryParams()
+    const queryParams = getQueryParams()
 
     // if no coords in query params, get current location, and fly to it
     if (!queryParams.coords) {
       navigator.geolocation.getCurrentPosition((pos) => {
         const latLng = sanitizeLatLong(pos.coords.latitude, pos.coords.longitude)
-        const currentQueryParams = this.getQueryParams()
+        const currentQueryParams = getQueryParams()
         if (latLng && !currentQueryParams.coords) {
           this.state.map?.flyTo(latLng, 17, { animate: false })
         }
       })
     }
-  }
-
-  private getIconClassFor(node: NodesEntityForUI) {
-    const status = nodeStatus(node, this.state.configNodesOnlineAge, this.state.configNodesOfflineAge)
-    return cssClassFor(status)
   }
 
   private createMarkers() {
@@ -394,7 +333,7 @@ export default class MapApp extends Component<MapProps, MapState> {
 
     const marker = L.marker(eachNode.offsetLatLng!, {
       icon: L.divIcon({
-        className: this.getIconClassFor(eachNode),
+        className: getIconClassFor(eachNode, this.state.configNodesOnlineAge, this.state.configNodesOfflineAge),
         iconSize: iconSize,
         html: nodePositionView(nodeName(eachNode)),
         iconAnchor: [iconSize.x / 2, iconSize.y / 2 + 16],

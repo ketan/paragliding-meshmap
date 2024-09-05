@@ -5,6 +5,7 @@ import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js'
 import pluginReactJSXConfig from 'eslint-plugin-react/configs/jsx-runtime.js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
+import hooksPlugin from 'eslint-plugin-react-hooks'
 
 export default [
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
@@ -17,6 +18,15 @@ export default [
   ...tseslint.configs.strict,
   pluginReactConfig,
   pluginReactJSXConfig,
+  {
+    plugins: {
+      'react-hooks': hooksPlugin,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
   {
     plugins: {
       'react-refresh': reactRefresh,

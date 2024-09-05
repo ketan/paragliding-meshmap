@@ -110,10 +110,6 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
   }
 
   function Voltage({ data }: { data: (Omit<DeviceMetricsEntityForUI, 'createdAt'> & { createdAt: number })[] }) {
-    if (!node?.voltage && !node.batteryLevel) {
-      return
-    }
-
     const [activeSeries, setActiveSeries] = useState<Array<DataKey<unknown> | unknown>>([])
     const handleLegendClick = (dataKey: DataKey<unknown> | undefined) => {
       if (activeSeries.includes(dataKey)) {
@@ -121,6 +117,10 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
       } else {
         setActiveSeries((prev) => [...prev, dataKey])
       }
+    }
+
+    if (!node?.voltage && !node.batteryLevel) {
+      return
     }
     return (
       <>

@@ -222,7 +222,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       time: DateTime.now().toMillis(),
       latitude: position.latitude / 10000000,
       longitude: position.longitude / 10000000,
-      altitude: position.altitude,
+      altitude: position.altitude || 0,
       ground_speed: position.groundSpeed || 0,
     })
   }

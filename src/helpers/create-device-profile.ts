@@ -72,10 +72,10 @@ function getDeviceProfile() {
   })
 }
 
-export function createDeviceProfile(shortName: string, longName: string, skylinesId: string) {
+export function createDeviceProfile(shortName: string, longName: string) {
   const deviceProfile = getDeviceProfile()
   deviceProfile.shortName = shortName
-  deviceProfile.longName = `${longName}/${skylinesId}`
+  deviceProfile.longName = longName
 
   const chset = new meshtastic.ChannelSet({
     settings: [

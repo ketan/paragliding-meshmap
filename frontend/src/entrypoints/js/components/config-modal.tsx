@@ -20,7 +20,6 @@ function download(blob: Blob, shortName: string) {
 interface Inputs {
   shortName: string
   longName: string
-  skylinesId: string
 }
 
 export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
@@ -32,11 +31,10 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ longName, shortName, skylinesId }) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({ longName, shortName }) => {
     const queryString = qs.stringify({
       shortName: shortName,
       longName: longName,
-      skylinesId: skylinesId,
     })
     try {
       const resp = await fetch(`/api/device-config?${queryString}`)
@@ -142,36 +140,6 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             />
             {errors.longName && <p className="mt-1 text-xs text-red-500">{errors.longName.message}</p>}
             <p className="mt-1 text-xs text-gray-500">Enter a name 5-12 characters long.</p>
-          </div>
-          <div>
-            <label htmlFor="skylinesId" className="block text-sm font-medium text-gray-700">
-              Skylines ID
-            </label>
-            <input
-              type="text"
-              {...register('skylinesId', {
-                required: 'This field is required.',
-                minLength: {
-                  value: 6,
-                  message: 'Minimum length is 8.',
-                },
-                maxLength: {
-                  value: 10,
-                  message: 'Maximum length is 10.',
-                },
-              })}
-              aria-invalid={errors.skylinesId ? 'true' : 'false'}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-            {errors.skylinesId && <p className="mt-1 text-xs text-red-500">{errors.skylinesId.message}</p>}
-            <p className="mt-1 text-xs text-gray-500">
-              Enter your{' '}
-              <a href="https://skylines.aero/settings/tracking" target="_blank" rel="noreferrer">
-                Skylines ID.
-              </a>{' '}
-              You will need to signup on skylines website, navigate to <em className="font-extrabold">Settings&gt;Live Tracking</em> and
-              copy the live tracking key here.
-            </p>
           </div>
           <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded">
             Generate my config

@@ -175,14 +175,13 @@ app.get('/api/hardware-models', async function (_req, res) {
 app.get('/api/device-config', async function (req, res) {
   const shortName = (req.query.shortName || '').toString()
   const longName = (req.query.longName || '').toString()
-  const skylinesId = (req.query.skylinesId || '').toString()
 
-  if (_.isEmpty(shortName) || _.isEmpty(longName) || _.isEmpty(skylinesId)) {
+  if (_.isEmpty(shortName) || _.isEmpty(longName)) {
     return res.status(400).json({
-      message: `You must specify shortName, longName and skylinesId`,
+      message: `You must specify shortName, longName`,
     })
   }
-  const dp = createDeviceProfile(shortName, longName, skylinesId)
+  const dp = createDeviceProfile(shortName, longName)
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })

@@ -96,6 +96,7 @@ export default defineConfig({
   plugins: [
     legacy({
       targets: ['last 2 versions and not dead, > 0.3%, Firefox ESR'],
+      modernPolyfills: true,
     }),
     defineIconConstants(),
     react(),

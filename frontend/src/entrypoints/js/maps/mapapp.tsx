@@ -24,6 +24,7 @@ import {
   sanitizeNodesProperties,
   sanitizeNumber,
   setMapUrlParams,
+  TRACKER_API_BASE_URL,
 } from '../utils/ui-util'
 import { mapEventsHandler } from './map-events-handler'
 import { MapTiles, MapTypes } from './map-providers'
@@ -142,7 +143,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     const now = DateTime.now()
 
     try {
-      const [nodesResponse] = await Promise.all([fetch('/api/nodes')])
+      const nodesResponse = await fetch(`${TRACKER_API_BASE_URL}/api/nodes`)
       if (nodesResponse.status == 200 || nodesResponse.status == 304) {
         const rawNodes = await nodesResponse.json()
 

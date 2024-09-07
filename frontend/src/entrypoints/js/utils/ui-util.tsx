@@ -7,6 +7,7 @@ import { Tooltip } from '../components/tooltip'
 import { NodeRoleIDToName } from '../../../hardware-modules.ts'
 import { cssClassFor } from '../../../templates/legend.tsx'
 
+export const TRACKER_API_BASE_URL = __TRACKER_API_BASE_URL__ || ''
 export const BROADCAST_ADDR = Number('0xffffffff')
 
 export type NodeStatus = 'online' | 'old' | 'offline'

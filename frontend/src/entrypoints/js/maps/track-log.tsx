@@ -10,7 +10,7 @@ import { Gradient } from 'typescript-color-gradient'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
 import { toast } from 'react-toastify'
-import { nodeName, sanitizeLatLong } from '../utils/ui-util.tsx'
+import { nodeName, sanitizeLatLong, TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import _ from 'lodash'
 
 interface TrackLogProps {
@@ -57,7 +57,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
     }
     this.setState({ loadedState: 'loading' })
 
-    const response = await fetch(`/api/node/${this.props.node!.nodeId}/positions`)
+    const response = await fetch(`${TRACKER_API_BASE_URL}/api/node/${this.props.node!.nodeId}/positions`)
     if (response.status === 200 || response.status === 304) {
       const trackLogs = (await response.json()) as PositionsEntityJSON[]
       const positions = this.filteredPositions(trackLogs)

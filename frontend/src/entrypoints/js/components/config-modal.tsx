@@ -4,6 +4,7 @@ import qs from 'qs'
 import { kebabCase } from 'lodash'
 import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 
 function download(blob: Blob, shortName: string) {
   const url = window.URL.createObjectURL(blob)
@@ -37,7 +38,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
       longName: longName,
     })
     try {
-      const resp = await fetch(`/api/device-config?${queryString}`)
+      const resp = await fetch(`${TRACKER_API_BASE_URL}/api/device-config?${queryString}`)
       if (resp.status === 200) {
         const blob = await resp.blob()
         download(blob, shortName)

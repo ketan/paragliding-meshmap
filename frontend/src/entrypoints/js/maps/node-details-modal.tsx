@@ -15,6 +15,7 @@ import { DateTime } from 'luxon'
 import _ from 'lodash'
 import { ArrowUpRightFromSquareIcon, CopyIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
+import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
@@ -36,9 +37,9 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
       setLoadedState('loading')
 
       const [deviceMetricsResp, environmentMetricsResp, traceRoutesResp] = await Promise.all([
-        fetch(`/api/node/${node.nodeId}/device-metrics`),
-        fetch(`/api/node/${node.nodeId}/environment-metrics`),
-        fetch(`/api/node/${node.nodeId}/trace-routes`),
+        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics`),
+        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/environment-metrics`),
+        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/trace-routes`),
       ])
 
       if (deviceMetricsResp.status === 200 && environmentMetricsResp.status === 200 && traceRoutesResp.status === 200) {

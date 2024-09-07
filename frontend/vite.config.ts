@@ -108,6 +108,7 @@ export default defineConfig({
 
   define: {
     __GIT_SHA__: JSON.stringify(commitHash),
+    __TRACKER_API_BASE_URL__: JSON.stringify('https://tracker.bircom.in'),
   },
 
   root: __dirname,

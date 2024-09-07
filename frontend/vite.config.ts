@@ -130,7 +130,7 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': `https://tracker.bircom.in/api/`,
+      '/api': `http://localhost:3333/`,
     },
   },
 })

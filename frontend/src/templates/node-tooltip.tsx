@@ -62,7 +62,7 @@ const location = (node: NodesEntityForUI) => {
     keyValue({ key: 'Satellites', value: node.satsInView }),
     keyValue({ key: 'Position Acquired at', value: node.positionTimestamp, renderer: timeAgo }),
     keyValue({ key: 'Position Precision', value: positionPrecision(node) }),
-    keyValue({ key: 'Position DOP', value: node.positionPdop }),
+    keyValue({ key: 'Position DOP', value: node.positionPdop / 100 }),
   ]
 }
 

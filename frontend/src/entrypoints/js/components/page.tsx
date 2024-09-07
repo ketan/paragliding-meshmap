@@ -90,8 +90,8 @@ export function HeaderIcon({
 function ApplicationName() {
   return (
     <div className="my-auto leading-tight hidden md:block">
-      <a className="font-bold sm:text-sm md:text-base lg:text-xl text-nowrap" href="/">
-        Meshtastic map
+      <a className="font-bold sm:text-sm md:text-base lg:text-xl text-nowrap" href="https://bircom.in/">
+        Bircom Tracker 
       </a>
     </div>
   )

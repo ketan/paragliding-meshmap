@@ -18,16 +18,7 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   logger(`Starting mqtt with options`, cliOptions)
 
-  const clientIdConfig =
-    (await Configs.byName(db, 'mqttClientId')) ||
-    new Configs({
-      key: 'mqttClientId',
-      value: 'paragliding-meshmap-' + Math.random().toString(16).substring(2, 8),
-    })
-
-  if (!clientIdConfig.id) {
-    await clientIdConfig.save(db)
-  }
+  const clientIdConfig = await Configs.mqttClientId(db)
 
   await pgBoss.start()
   await pgBoss.createQueue('fly-xc', {

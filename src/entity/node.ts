@@ -12,9 +12,8 @@ import TextMessage from './text_message.js'
 import _ from 'lodash'
 import { BROADCAST_ADDR, sendToFlyXC } from '#helpers/utils'
 import { v5 as uuidv5 } from 'uuid'
-import { AppDataSource } from '#config/data-source'
 import { Configs } from '#entity/configs'
-import { randomUUID } from 'node:crypto'
+import { AppDataSource } from '#config/data-source'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -114,18 +113,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
 
   private async createFlyXCTokenNamespaceIfNotExisting() {
     if (!Node.flyXCTokenNamespace) {
-      const flyXCTokenNamespace =
-        (await Configs.byName(AppDataSource, 'flyXCTokenNamespace')) ||
-        new Configs({
-          key: 'flyXCTokenNamespace',
-          value: randomUUID(),
-        })
-
-      if (!flyXCTokenNamespace.id) {
-        await flyXCTokenNamespace.save(AppDataSource)
-      }
-
-      Node.flyXCTokenNamespace = flyXCTokenNamespace
+      Node.flyXCTokenNamespace = await Configs.flyXCTokenNamespace(AppDataSource)
     }
 
     return Node.flyXCTokenNamespace.value as string

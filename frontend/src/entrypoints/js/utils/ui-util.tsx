@@ -74,7 +74,7 @@ export function sanitizeNodeProperties(node: NodesEntity): NodesEntityForUI {
   }
 
   if (node.positionPdop && !isNaN(node.positionPdop)) {
-    returnValue.positionPdop = node.positionPdop
+    returnValue.positionPdop = node.positionPdop / 100
   }
 
   return returnValue

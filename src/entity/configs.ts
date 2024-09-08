@@ -18,45 +18,36 @@ export class Configs extends BaseType {
     _.assign(this, opts)
   }
 
-  static async allConfigs(trx: EntityManager | DataSource) {
-    return await this.find(trx)
-  }
-
   private static async byName(trx: EntityManager | DataSource, key: string) {
     return await this.findOne(trx, { where: { key: key } })
   }
 
-  private async save(db: EntityManager | DataSource) {
+  async save(db: EntityManager | DataSource) {
     return await db.getRepository(Configs).save(this)
   }
 
   static async flyXCTokenNamespace(db: DataSource | EntityManager) {
-    const flyXCTokenNamespace =
-      (await this.byName(db, 'flyXCTokenNamespace')) ||
-      new Configs({
-        key: 'flyXCTokenNamespace',
-        value: randomUUID(),
-      })
+    const flyXCTokenNamespace = await this.byName(db, 'flyXCTokenNamespace')
 
-    if (!flyXCTokenNamespace.id) {
-      await flyXCTokenNamespace.save(db)
+    if (flyXCTokenNamespace) {
+      return flyXCTokenNamespace
     }
 
-    return flyXCTokenNamespace
+    return await new Configs({
+      key: 'flyXCTokenNamespace',
+      value: randomUUID(),
+    }).save(db)
   }
 
   static async mqttClientId(db: DataSource | EntityManager) {
-    const clientIdConfig =
-      (await Configs.byName(db, 'mqttClientId')) ||
-      new Configs({
-        key: 'mqttClientId',
-        value: 'paragliding-meshmap-' + Math.random().toString(16).substring(2, 8),
-      })
-
-    if (!clientIdConfig.id) {
-      await clientIdConfig.save(db)
+    const clientIdConfig = await Configs.byName(db, 'mqttClientId')
+    if (clientIdConfig) {
+      return clientIdConfig
     }
 
-    return clientIdConfig
+    return await new Configs({
+      key: 'mqttClientId',
+      value: 'paragliding-meshmap-' + Math.random().toString(16).substring(2, 8),
+    }).save(db)
   }
 }

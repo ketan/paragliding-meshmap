@@ -19,7 +19,7 @@ function getDeviceProfile() {
         positionFlags: 811,
         broadcastSmartMinimumDistance: 100,
         broadcastSmartMinimumIntervalSecs: 30,
-        gpsMode: 1,
+        gpsMode: meshtastic.Config.PositionConfig.GpsMode.ENABLED,
       }),
       power: new meshtastic.Config.PowerConfig(),
       network: new meshtastic.Config.NetworkConfig(),

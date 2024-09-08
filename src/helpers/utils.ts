@@ -2,6 +2,8 @@ import { AbortError } from 'p-retry'
 import { flyXCLog, protobufDecode } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 
+export const BROADCAST_ADDR = Number('0xffffffff')
+
 export function toBigInt(str: number | string | undefined | null): number | undefined {
   if (typeof str === 'number') {
     return str
@@ -56,5 +58,3 @@ export async function sendToFlyXC(payload: object) {
     flyXCLog('Sent to FlyXC')
   }
 }
-
-export const BROADCAST_ADDR = Number('0xffffffff')

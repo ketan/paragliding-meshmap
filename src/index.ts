@@ -176,16 +176,32 @@ app.get('/api/device-config', async function (req, res) {
   const shortName = (req.query.shortName || '').toString()
   const longName = (req.query.longName || '').toString()
 
-  if (_.isEmpty(shortName) || _.isEmpty(longName)) {
-    return res.status(400).json({
-      message: `You must specify shortName, longName`,
-    })
+  const errors = []
+
+  if (shortName.length < 2 || shortName.length > 4) {
+    errors.push('shortName must be between 2 and 4 characters')
   }
+
+  if (longName.length < 5 || longName.length > 10) {
+    errors.push('longName must be between 5 and 10 characters')
+  }
+
+  if (!shortName) {
+    errors.push('shortName cannot be blank')
+  }
+
+  if (!longName) {
+    errors.push('longName cannot be blank')
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ messages: errors })
+  }
+
   const dp = createDeviceProfile(shortName, longName)
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })
-
 if (!isDevelopment) {
   app.use(
     expressStaticGzip(`${__dirname}/public`, {

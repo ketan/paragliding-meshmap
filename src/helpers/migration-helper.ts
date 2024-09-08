@@ -34,33 +34,6 @@ export async function dropIndices(queryRunner: QueryRunner, tableName: string, c
     )
   )
 }
-
-export async function makeColumnsJSONB(queryRunner: QueryRunner, table: string, columnNames: string[]) {
-  if (queryRunner.connection.driver.options.type !== 'postgres') {
-    return
-  }
-
-  for (let index = 0; index < columnNames.length; index++) {
-    const column = columnNames[index]
-    await queryRunner.query(`
-        ALTER TABLE ${table}
-            ALTER COLUMN ${column} SET DATA TYPE jsonb USING ${column}::jsonb;
-    `)
-  }
-}
-
-export async function makeColumnsJSON(queryRunner: QueryRunner, table: string, columnNames: string[]) {
-  if (queryRunner.connection.driver.options.type !== 'postgres') {
-    return
-  }
-
-  for (let index = 0; index < columnNames.length; index++) {
-    const column = columnNames[index]
-    await queryRunner.query(`ALTER TABLE ${table}
-        ALTER COLUMN ${column} SET DATA TYPE json USING ${column}::json;`)
-  }
-}
-
 export async function makeColumnsTimestamp(queryRunner: QueryRunner, table: string, columnNames: string[]) {
   if (queryRunner.connection.driver.options.type !== 'postgres') {
     return
@@ -102,24 +75,6 @@ export async function makeColumnNullable(queryRunner: QueryRunner, tableName: st
     )
   }
 }
-
-export async function makeColumnNonNullable(queryRunner: QueryRunner, tableName: string, columnNames: string[]) {
-  const table = await queryRunner.getTable(tableName)
-
-  for (let index = 0; index < columnNames.length; index++) {
-    const columnName = columnNames[index]
-    const existingColumn = table?.findColumnByName(columnName)
-    if (!existingColumn) {
-      throw Error(`Column ${columnName} not found in table ${tableName}`)
-    }
-    await queryRunner.changeColumn(
-      tableName,
-      columnName,
-      new TableColumn({ type: existingColumn.type, name: columnName, isNullable: false })
-    )
-  }
-}
-
 export function dateTimeType(): { type: ColumnType & string } | { type: ColumnType & string; precision: number } {
   if (AppDataSource.driver.supportedDataTypes.includes('datetime')) {
     return { type: 'datetime' }

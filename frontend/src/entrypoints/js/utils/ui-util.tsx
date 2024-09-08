@@ -73,6 +73,10 @@ export function sanitizeNodeProperties(node: NodesEntity): NodesEntityForUI {
     returnValue.offsetLatLng = sanitizeLatLong(node.latitude / 10000000, node.longitude / 10000000)
   }
 
+  if (node.positionPdop && !isNaN(node.positionPdop)) {
+    returnValue.positionPdop = node.positionPdop
+  }
+
   return returnValue
 }
 

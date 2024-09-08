@@ -58,70 +58,81 @@ const location = (node: NodesEntityForUI) => {
         )
       },
     }),
-    keyValue({ key: 'Altitude', value: node.altitude, unit: 'm' }),
-    keyValue({ key: 'Satellites', value: node.satsInView }),
+    keyValue([
+      { key: 'Altitude', value: node.altitude, unit: 'm' },
+      { key: 'Satellites', value: node.satsInView },
+    ]),
     keyValue({ key: 'Position Acquired at', value: node.positionTimestamp, renderer: timeAgo }),
     keyValue({ key: 'Position Precision', value: positionPrecision(node) }),
-    keyValue({ key: 'Position DOP', value: node.positionPdop, precision: 2 }),
   ]
 }
 
 type Value = ReactNode | ReactNode[]
 
-type KeyValueType<T> = {
-  key: string
-  precision?: number
-  unit?: string
-} & ({ renderer: () => Value } | { value: T })
+type KeyValueType<T> =
+  | ({
+      key: string
+      precision?: number
+      unit?: string
+    } & ({ renderer: () => Value } | { value: T }))
+  | Iterable<KeyValueType<T>>
 
-const keyValue = function <T>(args: KeyValueType<T>) {
-  const title = <span className="font-extrabold me-1">{args.key}:</span>
+const keyValue = function <T>(data: KeyValueType<T>) {
+  const types = Array.isArray(data) ? data : [data]
 
-  if ('renderer' in args) {
-    const value = args.renderer()
-    if (value === null || value === undefined) {
-      return
-    }
-    return (
-      <li key={args.key}>
-        {title}
-        {value}
-      </li>
-    )
-  }
-
-  if ('value' in args) {
-    if (args.value === undefined || args.value === null) {
-      return
-    }
-
-    if (typeof args.value === 'string') {
+  const response = types.map((args) => {
+    const title = <span className={`font-extrabold me-1`}>{args.key}:</span>
+    if ('renderer' in args) {
+      const value = args.renderer()
+      if (value === null || value === undefined) {
+        return
+      }
       return (
-        <li key={args.key}>
+        <>
           {title}
-          {args.value}
-        </li>
+          {value}
+        </>
       )
-    } else if (typeof args.value === 'number') {
-      if (Number.isInteger(args.value)) {
+    }
+
+    if ('value' in args) {
+      if (args.value === undefined || args.value === null) {
+        return
+      }
+
+      if (typeof args.value === 'string') {
         return (
-          <li key={args.key}>
+          <>
             {title}
             {args.value}
-            {args.unit}
-          </li>
+          </>
         )
-      } else {
-        return (
-          <li key={args.key}>
-            {title}
-            {Number(args.value).toFixed(args.precision)}
-            {args.unit}
-          </li>
-        )
+      } else if (typeof args.value === 'number') {
+        if (Number.isInteger(args.value)) {
+          return (
+            <>
+              {title}
+              {args.value}
+              {args.unit}
+            </>
+          )
+        } else {
+          return (
+            <>
+              {title}
+              {Number(args.value).toFixed(args.precision)}
+              {args.unit}
+            </>
+          )
+        }
       }
     }
-  }
+  })
+  const joinedResponse = response.flatMap((element, index) =>
+    index < response.length - 1 ? [element, <span key={`separator-${index}`}> / </span>] : [element]
+  )
+
+  return <li key={types.map((t) => t.key).join('-')}>{joinedResponse}</li>
 }
 
 function lastMessage(node: NodesEntityForUI) {
@@ -220,24 +231,33 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
     padding(),
     keyValue({ key: 'Hardware', value: hardwareModel }),
     keyValue({ key: 'Firmware', value: node.firmwareVersion }),
-    keyValue({ key: 'Voltage', value: node.voltage, precision: 2, unit: 'V' }),
-    keyValue({
-      key: 'Battery',
-      renderer: () => {
-        if (node.batteryLevel === null || node.batteryLevel === undefined) {
-          return
-        }
+    keyValue([
+      { key: 'Voltage', value: node.voltage, precision: 2, unit: 'V' },
+      {
+        key: 'Battery',
+        renderer: () => {
+          if (node.batteryLevel === null || node.batteryLevel === undefined) {
+            return
+          }
 
-        if (node.batteryLevel > 100) {
-          return 'Plugged In'
-        } else {
-          return `${node.batteryLevel}%`
-        }
+          if (node.batteryLevel > 100) {
+            return 'Plugged In'
+          } else {
+            return `${node.batteryLevel}%`
+          }
+        },
       },
-    }),
+    ]),
     padding(),
-    keyValue({ key: 'Ch Util', value: node.channelUtilization, unit: '%', precision: 2 }),
-    keyValue({ key: 'Air Util', value: node.airUtilTx, unit: '%', precision: 2 }),
+    keyValue([
+      { key: 'Ch Util', value: node.channelUtilization, unit: '%', precision: 2 },
+      {
+        key: 'Air Util',
+        value: node.airUtilTx,
+        unit: '%',
+        precision: 2,
+      },
+    ]),
     padding(),
     keyValue({
       key: 'ID',

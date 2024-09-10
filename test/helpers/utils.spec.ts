@@ -35,7 +35,7 @@ describe('Utils', () => {
     it('should parse protobuf correctly', () => {
       const mockProtobuf = () => ({ foo: 'bar' })
       const result = parseProtobuf(mockProtobuf)
-      expect(result).to.deep.equal({foo: 'bar'})
+      expect(result).to.deep.equal({ foo: 'bar' })
     })
 
     it('should throw AbortError on parsing error', () => {

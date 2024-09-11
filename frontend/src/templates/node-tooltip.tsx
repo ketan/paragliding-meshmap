@@ -128,8 +128,9 @@ const keyValue = function <T>(data: KeyValueType<T>) {
       }
     }
   })
-  const joinedResponse = response.flatMap((element, index) =>
-    index < response.length - 1 ? [element, <span key={`separator-${index}`}> / </span>] : [element]
+
+  const joinedResponse = _.compact(response).flatMap((element, index, array) =>
+    array.length - 1 !== index ? [element, <span key={`separator-${index}`}> / </span>] : element
   )
 
   return <li key={types.map((t) => t.key).join('-')}>{joinedResponse}</li>

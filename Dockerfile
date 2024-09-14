@@ -27,4 +27,7 @@ ENV TZ=UTC
 
 EXPOSE 3333
 
+HEALTHCHECK --interval=5s --timeout=3s --start-period=30s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3333/api/health-check || exit 1
+
 CMD ["sh", "-c", "node index.js"]

@@ -172,6 +172,15 @@ app.get('/api/hardware-models', async function (_req, res) {
   res.json(hardwareModels)
 })
 
+app.get('/api/health-check', async (_req, res) => {
+  try {
+    await db.query('SELECT 1+1')
+    res.status(200).json({ status: 'ok' })
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message })
+  }
+})
+
 app.get('/api/device-config', async function (req, res) {
   const shortName = (req.query.shortName || '').toString()
   const longName = (req.query.longName || '').toString()

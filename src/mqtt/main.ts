@@ -11,16 +11,9 @@ import { DataSource } from 'typeorm'
 import { Configs } from '#entity/configs'
 import { pgBoss } from '#config/data-source'
 import _ from 'lodash'
+import { sendTelegramMessage } from '#helpers/utils'
 
-export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) {
-  const logger = debug('meshmap:mqtt')
-  logger.enabled = true
-
-  logger(`Starting mqtt with options`, cliOptions)
-
-  const clientIdConfig = await Configs.mqttClientId(db)
-
-  await pgBoss.start()
+async function flyXCJobProcessor() {
   await pgBoss.createQueue('fly-xc', {
     retryLimit: 3,
     retryBackoff: true,
@@ -83,6 +76,50 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
       }
     }
   )
+}
+
+async function telegramJobProcessor() {
+  await pgBoss.createQueue('telegram', {
+    retryLimit: 3,
+    retryBackoff: true,
+    retryDelay: 30,
+    name: 'telegram',
+  })
+
+  pgBoss.work<{ from: string; message: string }>(
+    'telegram',
+    {
+      batchSize: 10,
+      pollingIntervalSeconds: 10,
+    },
+    async (jobs) => {
+      const botToken = process.env.TELEGRAM_BOT_TOKEN
+      const chatId = process.env.TELEGRAM_CHAT_ID
+      const msgThreadId = process.env.TELEGRAM_MESSAGE_THREAD_ID
+
+      if (!botToken || !chatId || !msgThreadId) {
+        throw new Error('Telegram bot token or chat ID or thread id is not set')
+      }
+
+      for (const job of jobs) {
+        await sendTelegramMessage(botToken, chatId, msgThreadId, job.data.from, job.data.message)
+      }
+    }
+  )
+}
+
+export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) {
+  const logger = debug('meshmap:mqtt')
+  logger.enabled = true
+
+  logger(`Starting mqtt with options`, cliOptions)
+
+  const clientIdConfig = await Configs.mqttClientId(db)
+
+  await pgBoss.start()
+
+  await telegramJobProcessor()
+  await flyXCJobProcessor()
 
   const clientId = clientIdConfig.value!.toString()
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {

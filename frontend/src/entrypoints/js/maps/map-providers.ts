@@ -1,7 +1,7 @@
 import L, { TileLayer } from 'leaflet'
 import _ from 'lodash'
 
-export type MapTypes = 'Open Street Map' | 'Google Satellite' | 'Google Hybrid'
+export type MapTypes = 'Open Street Map' | 'Google Satellite' | 'Google Hybrid' | 'ESRI Satellite'
 
 enum GoogleMapLayers {
   roadsBuildings = 'm',
@@ -19,7 +19,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       maxZoom: 22, // increase from 18 to 22
       maxNativeZoom: 18,
       minZoom: 2,
-      attribution: `Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Data <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | v${__GIT_SHA__}`,
+      attribution: `Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | v${__GIT_SHA__}`,
     }),
   },
 
@@ -29,7 +29,7 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       maxNativeZoom: 18,
       minZoom: 2,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      attribution: `Tiles &copy; Google | Data <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | v${__GIT_SHA__}`,
+      attribution: `Tiles &copy; <a target="_blank" rel="noreferrer" href="https://maps.google.com/">Google</a> | v${__GIT_SHA__}`,
     }),
   },
 
@@ -39,7 +39,16 @@ const mapProviders: Record<MapTypes, { tileProvider: TileLayer }> = {
       maxNativeZoom: 18,
       minZoom: 2,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      attribution: `Tiles &copy; Google | Data <a target="_blank" rel="noreferrer" href="https://meshtastic.org/docs/software/integrations/mqtt/">Meshtastic</a> | v${__GIT_SHA__}`,
+      attribution: `Tiles &copy; <a target="_blank" rel="noreferrer" href="https://maps.google.com/">Google</a> | v${__GIT_SHA__}`,
+    }),
+  },
+  'ESRI Satellite': {
+    tileProvider: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 21,
+      maxNativeZoom: 21,
+      minZoom: 2,
+      attribution:
+        'Tiles &copy; <a target="_blank" rel="noreferrer" href="https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/basemap-attribution/">Esri</a> | v${__GIT_SHA__}',
     }),
   },
 }

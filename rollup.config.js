@@ -39,6 +39,7 @@ export default defineConfig({
     'crypto',
     'debug',
     'dotenv-flow/config',
+    'escape-html',
     'express',
     'express-async-errors',
     'express-static-gzip',

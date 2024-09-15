@@ -2131,6 +2131,13 @@
   dependencies:
     "@types/leaflet" "*"
 
+"@types/leaflet.polylinemeasure@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/leaflet.polylinemeasure/-/leaflet.polylinemeasure-1.0.4.tgz#479a17dc5b03a2bcfd7e983d5ade2cc9674a48fb"
+  integrity sha512-o8lWax8B44zYFhijFEqfjnIIh4eaYKPA4n50QlSk0pT1MEZYDVW0htz/7oAbTq129Kci6Q8DcufXx1uf+qIx3g==
+  dependencies:
+    "@types/leaflet" "*"
+
 "@types/leaflet@*", "@types/leaflet@^1.9.12":
   version "1.9.12"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.12.tgz#a6626a0b3fba36fd34723d6e95b22e8024781ad6"
@@ -5391,6 +5398,11 @@ leaflet.markercluster@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/leaflet.markercluster/-/leaflet.markercluster-1.5.3.tgz#9cdb52a4eab92671832e1ef9899669e80efc4056"
   integrity sha512-vPTw/Bndq7eQHjLBVlWpnGeLa3t+3zGiuM7fJwCkiMFq+nmRuG3RI3f7f4N4TDX7T4NpbAXpR2+NTRSEGfCSeA==
+
+leaflet.polylinemeasure@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/leaflet.polylinemeasure/-/leaflet.polylinemeasure-3.0.0.tgz#7d86322cf89b6832da1c8ec1e548ebd647c3e81d"
+  integrity sha512-PTTHz7NBJiWmNFetH8hb3leQNM15qoM9Xe7VDKh1Hyat/M+USqFYeoa0A0LAecsqsjUqA63Rzux4SivoyrSFkA==
 
 leaflet@^1.0.1, leaflet@^1.6.0, leaflet@^1.9.4:
   version "1.9.4"

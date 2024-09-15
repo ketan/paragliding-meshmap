@@ -1,7 +1,8 @@
 import debug from 'debug'
-import L from 'leaflet'
+import L, { Control } from 'leaflet'
 import 'leaflet-groupedlayercontrol'
 import 'leaflet.markercluster'
+import 'leaflet.polylinemeasure'
 import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -281,6 +282,15 @@ export default class MapApp extends Component<MapProps, MapState> {
       closeAllToolTipsAndPopupsAndPopups: this.closeAllToolTipsAndPopupsAndPopups.bind(this),
     })
     this.configureGroupedLayers()
+    L.control
+      .polylineMeasure({
+        position: 'topleft',
+        unit: 'kilometres',
+        showBearings: true,
+        clearMeasurementsOnStop: false,
+        showClearControl: true,
+      } as Control.PolylineMeasureOptions)
+      .addTo(this.state.map!)
     this.allClusteredLayerGroup.addTo(this.state.map!)
     this.tracklogLayerGroup.addTo(this.state.map!)
     new MapTiles(this.props.mapType).addDefaultLayerToMap(this.state.map!)

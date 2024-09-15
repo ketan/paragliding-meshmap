@@ -1,5 +1,5 @@
 import { AbortError } from 'p-retry'
- import { flyXCLog, protobufDecode, telegramLog } from '#helpers/logger'
+import { flyXCLog, protobufDecode, telegramLog } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 import { NodeNameAttributes } from '../../frontend/src/nodes-entity.js'
 import _ from 'lodash'

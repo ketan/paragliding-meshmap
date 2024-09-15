@@ -6,7 +6,7 @@
 @import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 /*! grouped layer control */
 @import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
-
+@import 'leaflet.polylinemeasure/Leaflet.PolylineMeasure.css';
 @import './tailwind.scss';
 @import 'react-tooltip/dist/react-tooltip.css';
 @import 'react-toastify/dist/ReactToastify.css';
@@ -72,4 +72,8 @@ a.button {
       @apply border-t-amber-600;
     }
   }
+}
+
+.polyline-measure-tooltip {
+  @apply text-sm p-2;
 }

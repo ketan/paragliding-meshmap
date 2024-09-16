@@ -9,7 +9,6 @@ import { EnvironmentMetrics } from './node-details-modal/environment-metrics'
 import { Header } from './node-details-modal/header'
 import { NameValue } from './node-details-modal/name-value'
 import { Traceroutes } from './node-details-modal/traceroutes'
-import { LoadedState } from './loaded-state.tsx'
 import { Position } from './position.tsx'
 import { DateTime } from 'luxon'
 import _ from 'lodash'
@@ -24,7 +23,6 @@ interface Props {
 }
 
 export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
-  const [loadedState, setLoadedState] = useState<LoadedState>(null)
   const [deviceMetrics, setDeviceMetrics] = useState<DeviceMetricsEntityForUI[] | null>(null)
   const [environmentMetrics, setEnvironmentMetrics] = useState<EnvironmentMetricsEntityForUI[] | null>(null)
   const [traceRoutes, setTraceRoutes] = useState<TraceroutesEntityForUI[] | null>(null)
@@ -34,7 +32,6 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
       if (!node) {
         return
       }
-      setLoadedState('loading')
 
       const [deviceMetricsResp, environmentMetricsResp, traceRoutesResp] = await Promise.all([
         fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics`),
@@ -46,17 +43,11 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         setDeviceMetrics(await deviceMetricsResp.json())
         setEnvironmentMetrics(await environmentMetricsResp.json())
         setTraceRoutes(await traceRoutesResp.json())
-
-        setLoadedState('loaded')
-      } else {
-        setLoadedState('error')
       }
     }
 
-    if (!loadedState) {
-      loadData()
-    }
-  }, [loadedState, node])
+    loadData()
+  }, [node])
 
   if (!node) {
     return null

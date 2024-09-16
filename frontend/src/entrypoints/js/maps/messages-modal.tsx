@@ -27,29 +27,29 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
   const [messages, setMessages] = useState<MessagesEntityForUI[]>([])
   const elementRefForEndOfPage = React.createRef<HTMLDivElement>()
 
-  async function loadData() {
-    setLoadedState('loading')
-    qs.stringify(
-      _.omitBy(
-        {
-          since: since.toISO(),
-          to: to,
-        },
-        _.isNil
-      )
-    )
-    const messagesResponse = await fetch(`${TRACKER_API_BASE_URL}/api/node/${from}/sent-messages?to=${to}&since=${since.toISO()}`)
-    if (messagesResponse.status == 200 || messagesResponse.status == 304) {
-      const messages = (await messagesResponse.json()) as MessagesEntityForUI[]
-      setMessages(messages)
-      setLoadedState('loaded')
-      setMessageUrlParams({ from: from!, to: to!, since: since?.rescale().toISO() })
-    } else {
-      setLoadedState('error')
-    }
-  }
-
   useEffect(() => {
+    async function loadData() {
+      setLoadedState('loading')
+      qs.stringify(
+        _.omitBy(
+          {
+            since: since.toISO(),
+            to: to,
+          },
+          _.isNil
+        )
+      )
+      const messagesResponse = await fetch(`${TRACKER_API_BASE_URL}/api/node/${from}/sent-messages?to=${to}&since=${since.toISO()}`)
+      if (messagesResponse.status == 200 || messagesResponse.status == 304) {
+        const messages = (await messagesResponse.json()) as MessagesEntityForUI[]
+        setMessages(messages)
+        setLoadedState('loaded')
+        setMessageUrlParams({ from: from!, to: to!, since: since?.rescale().toISO() })
+      } else {
+        setLoadedState('error')
+      }
+    }
+
     if (from) {
       loadData()
     }
@@ -61,7 +61,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
     if (loadedState === 'loaded') {
       elementRefForEndOfPage.current?.scrollIntoView(false)
     }
-  }, [loadedState, messages])
+  }, [loadedState, messages, elementRefForEndOfPage])
 
   function renderMessagesIfAny() {
     if (loadedState !== 'loaded') {

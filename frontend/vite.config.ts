@@ -108,7 +108,7 @@ export default defineConfig({
 
   define: {
     __GIT_SHA__: JSON.stringify(commitHash),
-    __TRACKER_API_BASE_URL__: JSON.stringify('https://tracker.bircom.in'),
+    __TRACKER_API_BASE_URL__: process.env.NODE_ENV === 'production' ? JSON.stringify('https://tracker.bircom.in') : JSON.stringify(''),
   },
 
   root: __dirname,

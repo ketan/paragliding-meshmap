@@ -218,7 +218,6 @@ if (!isDevelopment) {
 
 app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   errLog('HTTP error', { err, url: req.url, method: req.method, body: req.body, headers: req.headers })
-  console.log('HTTP error', { err })
   if (err instanceof HttpError) {
     res.status(err.status).json({
       error: err.message,

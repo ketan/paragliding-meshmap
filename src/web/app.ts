@@ -24,6 +24,7 @@ import _ from 'lodash'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { createDeviceProfile } from '#helpers/create-device-profile'
 import { AppDataSource } from '#config/data-source'
+import { errLog } from '#helpers/logger'
 
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development'
@@ -197,7 +198,7 @@ app.get('/api/device-config', async function (req, res) {
 })
 if (!isDevelopment) {
   app.use(
-    expressStaticGzip(`${__dirname}/public`, {
+    expressStaticGzip(`${__dirname}/../public`, {
       serveStatic: {
         etag: true,
         setHeaders: (res, path) => {
@@ -211,11 +212,13 @@ if (!isDevelopment) {
     })
   )
   app.get('*', async (_req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
   })
 }
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+  errLog('HTTP error', { err, url: req.url, method: req.method, body: req.body, headers: req.headers })
+  console.log('HTTP error', { err })
   if (err instanceof HttpError) {
     res.status(err.status).json({
       error: err.message,

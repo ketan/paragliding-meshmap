@@ -109,8 +109,8 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
                   message: 'Minimum length is 2.',
                 },
                 maxLength: {
-                  value: 5,
-                  message: 'Maximum length is 5.',
+                  value: 4,
+                  message: 'Maximum length is 4.',
                 },
               })}
               aria-invalid={errors.shortName ? 'true' : 'false'}
@@ -140,7 +140,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             {errors.longName && <p className="mt-1 text-xs text-red-500">{errors.longName.message}</p>}
-            <p className="mt-1 text-xs text-gray-500">Enter a name 5-10 characters long.</p>
+            <p className="mt-1 text-xs text-gray-500">Enter a name 5-12 characters long.</p>
           </div>
           <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded">
             Generate my config

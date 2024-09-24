@@ -182,25 +182,17 @@ app.get('/api/health-check', async (_req, res) => {
 })
 
 app.get('/api/device-config', async function (req, res) {
-  const shortName = (req.query.shortName || '').toString()
-  const longName = (req.query.longName || '').toString()
+  const shortName = (req.query.shortName || '').toString().trim()
+  const longName = (req.query.longName || '').toString().trim()
 
   const errors = []
 
   if (shortName.length < 2 || shortName.length > 4) {
-    errors.push('shortName must be between 2 and 4 characters')
+    errors.push('Short name must be between 2 and 4 characters')
   }
 
-  if (longName.length < 5 || longName.length > 10) {
-    errors.push('longName must be between 5 and 10 characters')
-  }
-
-  if (!shortName) {
-    errors.push('shortName cannot be blank')
-  }
-
-  if (!longName) {
-    errors.push('longName cannot be blank')
+  if (longName.length < 5 || longName.length > 12) {
+    errors.push('Long name must be between 5 and 10 characters')
   }
 
   if (errors.length > 0) {

@@ -1,4 +1,4 @@
-import { errLog, flyXCLog, perfLog } from '#helpers/logger'
+import { errLog, perfLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
 import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
@@ -10,73 +10,8 @@ import os from 'os'
 import { DataSource } from 'typeorm'
 import { Configs } from '#entity/configs'
 import { pgBoss } from '#config/data-source'
-import _ from 'lodash'
-import { sendTelegramMessage } from '#helpers/utils'
-
-async function flyXCJobProcessor() {
-  await pgBoss.createQueue('fly-xc', {
-    retryLimit: 3,
-    retryBackoff: true,
-    retryDelay: 30,
-    name: 'fly-xc',
-  })
-
-  pgBoss.work(
-    'fly-xc',
-    {
-      batchSize: 10,
-      pollingIntervalSeconds: 10,
-    },
-    async (jobs) => {
-      const flyXCApiKey = process.env.FLYXC_API_KEY
-      const flyXCApiUrl = process.env.FLYXC_API_URL
-
-      if (flyXCApiKey && flyXCApiUrl) {
-        return await Promise.all(
-          jobs.map(async (job) => {
-            flyXCLog(`Picked up job`, job.data)
-            const requestHeaders = {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            }
-
-            const response = await fetch(flyXCApiUrl, {
-              method: 'POST',
-              headers: _.assign(
-                {
-                  Authorization: `Bearer ${flyXCApiKey}`,
-                },
-                requestHeaders
-              ),
-              body: JSON.stringify(job.data),
-            })
-            flyXCLog(`Sending job to ${flyXCApiUrl}`)
-            flyXCLog({ requestHeaders })
-            flyXCLog({ body: JSON.stringify(job.data) })
-            flyXCLog(`Response`, response)
-
-            if (
-              response.status === 200 || // all ok
-              response.status === 400 || // ignore, probably some bad data that we're sending
-              response.status == 401 || // authentication error, nothing we can do to fix
-              response.status == 403 // ignore, auth error, nothing we can do to fix
-            ) {
-              flyXCLog(`Job sent`, response.status)
-              return await response.text()
-            } else if (response.status === 429) {
-              errLog(`Rate limited, retrying`, response)
-              // rate limited, retry
-              throw 'Rate limited, retry'
-            } else {
-              errLog(`Failed to send data. Got a non-200 response`, response)
-              throw 'Failed to send data. Got a non-200 response'
-            }
-          })
-        )
-      }
-    }
-  )
-}
+import { flyXCJobProcessor } from '#helpers/fly-xc'
+import { sendTelegramMessage } from '#helpers/telegram'
 
 async function telegramJobProcessor() {
   await pgBoss.createQueue('telegram', {

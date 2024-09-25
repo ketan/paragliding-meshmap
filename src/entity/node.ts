@@ -10,10 +10,12 @@ import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
 import _ from 'lodash'
-import { BROADCAST_ADDR, nodeName, sendToFlyXC, sendToTelegram } from '#helpers/utils'
+import { BROADCAST_ADDR, nodeName } from '#helpers/utils'
 import { v5 as uuidv5 } from 'uuid'
 import { Configs } from '#entity/configs'
 import { AppDataSource } from '#config/data-source'
+import { sendToFlyXCJob } from '#helpers/fly-xc'
+import { sendToTelegram } from '#helpers/telegram'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -204,7 +206,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       return
     }
 
-    await sendToFlyXC({
+    const positionPayload = {
       type: 'position',
       user_id: node.flyXCToken,
       time: DateTime.now().toMillis(),
@@ -212,7 +214,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       longitude: position.longitude / 10000000,
       altitude: position.altitude || 0,
       ground_speed: position.groundSpeed || 0,
-    })
+    }
+    await sendToFlyXCJob(positionPayload)
   }
 
   static async updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {
@@ -271,7 +274,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         time: tm.createdAt.getTime(),
         message: tm.text,
       }
-      await sendToFlyXC(data)
+      await sendToFlyXCJob(data)
       await sendToTelegram(nodeName(this), tm.text)
     }
     if (purgeOlderThan) {

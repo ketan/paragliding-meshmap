@@ -12,6 +12,7 @@ import { Configs } from '#entity/configs'
 import { pgBoss } from '#config/data-source'
 import { flyXCJobProcessor } from '#helpers/fly-xc'
 import { sendTelegramMessage } from '#helpers/telegram'
+import { pureTrackIOJobProcessor } from '#helpers/pure-track'
 
 async function telegramJobProcessor() {
   await pgBoss.createQueue('telegram', {
@@ -55,6 +56,7 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   await telegramJobProcessor()
   await flyXCJobProcessor()
+  await pureTrackIOJobProcessor()
 
   const clientId = clientIdConfig.value!.toString()
   const client = mqtt.connect(cliOptions.mqttBrokerUrl, {

@@ -1,6 +1,9 @@
 import { errLog, flyXCLog } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 import _ from 'lodash'
+import Position from '#entity/position'
+import { DateTime } from 'luxon'
+import Node from '#entity/node'
 
 interface PositionPayload {
   altitude: number
@@ -93,4 +96,19 @@ export async function flyXCJobProcessor() {
       }
     }
   )
+}
+
+export function flyXCPositionPayload(node: Node, position: Position) {
+  if (!(position.latitude && position.longitude && node.flyXCToken)) {
+    return
+  }
+  return {
+    type: 'position',
+    user_id: node.flyXCToken,
+    time: DateTime.now().toMillis(),
+    latitude: position.latitude / 10000000,
+    longitude: position.longitude / 10000000,
+    altitude: position.altitude || 0,
+    ground_speed: position.groundSpeed || 0,
+  }
 }

@@ -14,8 +14,9 @@ import { BROADCAST_ADDR, nodeName } from '#helpers/utils'
 import { v5 as uuidv5 } from 'uuid'
 import { Configs } from '#entity/configs'
 import { AppDataSource } from '#config/data-source'
-import { sendToFlyXCJob } from '#helpers/fly-xc'
+import { flyXCPositionPayload, sendToFlyXCJob } from '#helpers/fly-xc'
 import { sendToTelegram } from '#helpers/telegram'
+import { pureTrackPositionPayload, sendToPureTrackIOJob } from '#helpers/pure-track'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -202,20 +203,14 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   private static async maybeSendCoordinates(node: Node, position: Position) {
-    if (!(position.latitude && position.longitude && node.flyXCToken)) {
-      return
+    const flyXCPayLoad = flyXCPositionPayload(node, position)
+    if (flyXCPayLoad) {
+      await sendToFlyXCJob(flyXCPayLoad)
     }
-
-    const positionPayload = {
-      type: 'position',
-      user_id: node.flyXCToken,
-      time: DateTime.now().toMillis(),
-      latitude: position.latitude / 10000000,
-      longitude: position.longitude / 10000000,
-      altitude: position.altitude || 0,
-      ground_speed: position.groundSpeed || 0,
+    const pureTrackPayload = pureTrackPositionPayload(node, position)
+    if (pureTrackPayload) {
+      await sendToPureTrackIOJob(pureTrackPayload)
     }
-    await sendToFlyXCJob(positionPayload)
   }
 
   static async updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {

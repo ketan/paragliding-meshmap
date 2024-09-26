@@ -27,27 +27,59 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   const [environmentMetrics, setEnvironmentMetrics] = useState<EnvironmentMetricsEntityForUI[] | null>(null)
   const [traceRoutes, setTraceRoutes] = useState<TraceroutesEntityForUI[] | null>(null)
 
+  const [deviceMetricsDuration, setDeviceMetricsDuration] = useState('P3D')
+  const [environmentMetricsDuration, setEnvironmentMetricsDuration] = useState('P3D')
+  const [traceRoutesDuration, setTraceRoutesDuration] = useState('P3D')
+
   useEffect(() => {
     async function loadData() {
       if (!node) {
         return
       }
 
-      const [deviceMetricsResp, environmentMetricsResp, traceRoutesResp] = await Promise.all([
-        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics`),
-        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/environment-metrics`),
-        fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/trace-routes`),
-      ])
+      const deviceMetricsResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics?since=${deviceMetricsDuration}`)
 
-      if (deviceMetricsResp.status === 200 && environmentMetricsResp.status === 200 && traceRoutesResp.status === 200) {
+      if (deviceMetricsResp.status === 200) {
         setDeviceMetrics(await deviceMetricsResp.json())
+      }
+    }
+
+    loadData()
+  }, [deviceMetricsDuration, node])
+
+  useEffect(() => {
+    async function loadData() {
+      if (!node) {
+        return
+      }
+
+      const environmentMetricsResp = await fetch(
+        `${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/environment-metrics?since=${environmentMetricsDuration}`
+      )
+
+      if (environmentMetricsResp.status === 200) {
         setEnvironmentMetrics(await environmentMetricsResp.json())
+      }
+    }
+
+    loadData()
+  }, [environmentMetricsDuration, node])
+
+  useEffect(() => {
+    async function loadData() {
+      if (!node) {
+        return
+      }
+
+      const traceRoutesResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/trace-routes?since=${traceRoutesDuration}`)
+
+      if (traceRoutesResp.status === 200) {
         setTraceRoutes(await traceRoutesResp.json())
       }
     }
 
     loadData()
-  }, [node])
+  }, [node, traceRoutesDuration])
 
   if (!node) {
     return null
@@ -128,9 +160,20 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           time: earliestTime,
         }}
       />
-      <DeviceMetrics node={node} deviceMetrics={deviceMetrics} />
-      <EnvironmentMetrics node={node} environmentMetrics={environmentMetrics} />
-      <Traceroutes node={node} traceRoutes={traceRoutes} allNodes={allNodes} />
+      <DeviceMetrics node={node} deviceMetrics={deviceMetrics} duration={deviceMetricsDuration} updateDuration={setDeviceMetricsDuration} />
+      <EnvironmentMetrics
+        node={node}
+        environmentMetrics={environmentMetrics}
+        duration={environmentMetricsDuration}
+        updateDuration={setEnvironmentMetricsDuration}
+      />
+      <Traceroutes
+        node={node}
+        traceRoutes={traceRoutes}
+        allNodes={allNodes}
+        duration={traceRoutesDuration}
+        updateDuration={setTraceRoutesDuration}
+      />
     </Modal>
   )
 }

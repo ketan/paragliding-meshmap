@@ -5,6 +5,7 @@ import { DataKey } from 'recharts/types/util/types'
 import { EnvironmentMetricsEntityForUI, NodesEntityForUI } from '../../../../nodes-entity'
 import { Header } from './header'
 import { NameValue } from './name-value'
+import { DurationSelect } from '../../components/duration-select.tsx'
 
 type MetricType = 'temperature' | 'relativeHumidity' | 'barometricPressure'
 type MetricDefinition = { key: MetricType; unit: string; name: string; precision: number }
@@ -12,9 +13,13 @@ type MetricDefinition = { key: MetricType; unit: string; name: string; precision
 export function EnvironmentMetrics({
   node,
   environmentMetrics,
+  updateDuration,
+  duration,
 }: {
   node: NodesEntityForUI
   environmentMetrics?: EnvironmentMetricsEntityForUI[] | null
+  updateDuration: (duration: string) => void
+  duration: string
 }) {
   const [activeSeries, setActiveSeries] = useState<Array<DataKey<unknown> | unknown>>([])
   const handleLegendClick = (dataKey: DataKey<unknown> | undefined) => {
@@ -37,7 +42,9 @@ export function EnvironmentMetrics({
 
   return (
     <>
-      <Header str="Environment Metrics" />
+      <Header str="Environment Metrics">
+        <DurationSelect duration={duration} updateDuration={updateDuration} />
+      </Header>
       <div className="p-2 px-4 text-sm md:text-md">
         {(
           [

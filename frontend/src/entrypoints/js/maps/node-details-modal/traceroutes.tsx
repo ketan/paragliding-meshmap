@@ -2,15 +2,20 @@ import { NodesEntityForUI, TraceroutesEntityForUI } from '../../../../nodes-enti
 import { nodeUrl } from '../../utils/link-utils'
 import { timeAgo } from '../../utils/ui-util'
 import { Header } from './header'
+import { DurationSelect } from '../../components/duration-select.tsx'
 
 export function Traceroutes({
   allNodes,
   node,
   traceRoutes,
+  updateDuration,
+  duration,
 }: {
   allNodes?: Record<number, NodesEntityForUI>
   node: NodesEntityForUI
   traceRoutes?: TraceroutesEntityForUI[] | null
+  updateDuration: (value: string) => void
+  duration: string
 }) {
   if (!traceRoutes || traceRoutes.length === 0) {
     return
@@ -19,7 +24,9 @@ export function Traceroutes({
   const fromNode = node
   return (
     <>
-      <Header str="Traceroutes" />
+      <Header str="Traceroutes">
+        <DurationSelect duration={duration} updateDuration={updateDuration} />
+      </Header>
       <div className="p-2 px-4 text-sm md:text-md">
         <div>
           {traceRoutes

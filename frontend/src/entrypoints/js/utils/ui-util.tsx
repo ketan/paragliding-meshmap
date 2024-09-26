@@ -254,7 +254,7 @@ export function nodeRole(node: NodesEntity) {
   return role || `UNKNOWN`
 }
 
-export function duration(seconds?: number | null) {
+export function humanizedStringDuration(seconds?: number | null) {
   if (!seconds) {
     return
   }

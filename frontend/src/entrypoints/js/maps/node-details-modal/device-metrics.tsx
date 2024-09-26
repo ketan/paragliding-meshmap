@@ -3,11 +3,22 @@ import { useState } from 'react'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { DataKey } from 'recharts/types/util/types'
 import { DeviceMetricsEntityForUI, NodesEntityForUI } from '../../../../nodes-entity'
-import { duration } from '../../utils/ui-util'
+import { humanizedStringDuration } from '../../utils/ui-util'
 import { Header } from './header'
 import { NameValue } from './name-value'
+import { DurationSelect } from '../../components/duration-select.tsx'
 
-export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI; deviceMetrics?: DeviceMetricsEntityForUI[] | null }) {
+export function DeviceMetrics({
+  deviceMetrics,
+  node,
+  updateDuration,
+  duration,
+}: {
+  node: NodesEntityForUI
+  deviceMetrics?: DeviceMetricsEntityForUI[] | null
+  updateDuration: (duration: string) => void
+  duration: string
+}) {
   if (!deviceMetrics || deviceMetrics.length === 0) {
     return
   }
@@ -20,13 +31,15 @@ export function DeviceMetrics({ deviceMetrics, node }: { node: NodesEntityForUI;
 
   return (
     <>
-      <Header str="Device Metrics" />
+      <Header str="Device Metrics">
+        <DurationSelect duration={duration} updateDuration={updateDuration} />
+      </Header>
       <div className="p-2 px-4 text-sm md:text-md">
         <AirUtilChUtil data={deviceMetricsData} />
 
         <Voltage data={deviceMetricsData} />
         <div>
-          <NameValue name="Uptime" value={duration(node?.uptimeSeconds)} />
+          <NameValue name="Uptime" value={humanizedStringDuration(node?.uptimeSeconds)} />
         </div>
       </div>
     </>

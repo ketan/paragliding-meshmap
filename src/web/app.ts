@@ -123,7 +123,8 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
 app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, parseSinceParam(req))
+  const since = parseSinceParam(req, 'P7D')
+  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since)
 
   res.header('cache-control', 'public,max-age=60')
   res.json(deviceMetrics)
@@ -132,7 +133,7 @@ app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
 app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const since = parseSinceParam(req)
+  const since = parseSinceParam(req, 'P7D')
 
   const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since)
 
@@ -143,7 +144,8 @@ app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
 app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const neighbours = await NeighbourInfo.forNode(db, nodeId, parseSinceParam(req))
+  const since = parseSinceParam(req)
+  const neighbours = await NeighbourInfo.forNode(db, nodeId, since)
 
   res.header('cache-control', 'public,max-age=60')
   res.json(neighbours)

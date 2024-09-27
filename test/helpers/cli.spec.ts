@@ -15,6 +15,7 @@ describe('cli', () => {
       purgeDataOlderThan: Duration.fromISO('P7D'),
       dumpStatsEvery: Duration.fromISO('PT5M'),
       collectServiceEnvelopes: false,
+      dedupeDuration: Duration.fromISO('PT30S')
     })
   })
 

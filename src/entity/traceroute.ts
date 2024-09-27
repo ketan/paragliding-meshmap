@@ -1,7 +1,8 @@
-import { Column, DataSource, Entity, EntityManager, MoreThanOrEqual } from 'typeorm'
+import { Between, Column, DataSource, Entity, EntityManager } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
 import { jsonType } from '#helpers/migration-helper'
+import { DateTime, Duration } from 'luxon'
 
 @Entity()
 export default class Traceroute extends BaseType {
@@ -34,12 +35,12 @@ export default class Traceroute extends BaseType {
     _.assign(this, opts)
   }
 
-  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date, duration: Duration) {
     return await this.find(db, {
       select: ['route', 'to', 'createdAt'],
       where: {
         from: nodeId,
-        createdAt: MoreThanOrEqual(since),
+        createdAt: Between(since, DateTime.fromJSDate(since).plus(duration).toJSDate()),
       },
       order: {
         createdAt: 'asc',

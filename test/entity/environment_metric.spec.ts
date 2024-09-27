@@ -2,7 +2,7 @@ import { AppDataSource } from '#config/data-source'
 import { expect } from 'chai'
 import { secondsAgo } from '#helpers/utils'
 import EnvironmentMetric from '#entity/environment_metric'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 
 describe('EnvironmentMetric', () => {
   it('should find recent similar metric', async () => {
@@ -48,7 +48,7 @@ describe('EnvironmentMetric', () => {
     const nodeId = 123
 
     return AppDataSource.transaction(async (trx) => {
-      expect(await EnvironmentMetric.forNode(trx, nodeId, since)).to.be.empty
+      expect(await EnvironmentMetric.forNode(trx, nodeId, since, Duration.fromISO('PT10S'))).to.be.empty
 
       const metrics = [
         new EnvironmentMetric({
@@ -77,7 +77,7 @@ describe('EnvironmentMetric', () => {
 
       await trx.save(metrics)
 
-      const metricsForNode = await EnvironmentMetric.forNode(trx, nodeId, since)
+      const metricsForNode = await EnvironmentMetric.forNode(trx, nodeId, since, Duration.fromISO('PT10S'))
       expect(metricsForNode).to.deepEqualIgnoreUndefined([
         {
           temperature: 32,

@@ -6,19 +6,14 @@ import { DeviceMetricsEntityForUI, NodesEntityForUI } from '../../../../nodes-en
 import { humanizedStringDuration } from '../../utils/ui-util'
 import { Header } from './header'
 import { NameValue } from './name-value'
-import { DurationSelect } from '../../components/duration-select.tsx'
+import { DurationDropdownProps, DurationSelect } from '../../components/duration-select.tsx'
 
-export function DeviceMetrics({
-  deviceMetrics,
-  node,
-  updateDuration,
-  duration,
-}: {
+interface Props extends DurationDropdownProps {
   node: NodesEntityForUI
   deviceMetrics?: DeviceMetricsEntityForUI[] | null
-  updateDuration: (duration: string) => void
-  duration: string
-}) {
+}
+
+export function DeviceMetrics({ deviceMetrics, node, ...rest }: Props) {
   if (!deviceMetrics || deviceMetrics.length === 0) {
     return
   }
@@ -32,7 +27,7 @@ export function DeviceMetrics({
   return (
     <>
       <Header str="Device Metrics">
-        <DurationSelect duration={duration} updateDuration={updateDuration} />
+        <DurationSelect {...rest} />
       </Header>
       <div className="p-2 px-4 text-sm md:text-md">
         <AirUtilChUtil data={deviceMetricsData} />

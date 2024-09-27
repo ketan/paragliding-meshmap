@@ -10,7 +10,7 @@ import { Header } from './node-details-modal/header'
 import { NameValue } from './node-details-modal/name-value'
 import { Traceroutes } from './node-details-modal/traceroutes'
 import { Position } from './position.tsx'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import _ from 'lodash'
 import { ArrowUpRightFromSquareIcon, CopyIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
@@ -22,14 +22,23 @@ interface Props {
   onClose: () => void
 }
 
+function toParams(start: Duration, duration: Duration) {
+  return `since=${start.plus(duration).rescale().toISO()}&duration=${duration.rescale().toISO()}`
+}
+
 export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   const [deviceMetrics, setDeviceMetrics] = useState<DeviceMetricsEntityForUI[] | null>(null)
   const [environmentMetrics, setEnvironmentMetrics] = useState<EnvironmentMetricsEntityForUI[] | null>(null)
   const [traceRoutes, setTraceRoutes] = useState<TraceroutesEntityForUI[] | null>(null)
 
-  const [deviceMetricsDuration, setDeviceMetricsDuration] = useState('P3D')
-  const [environmentMetricsDuration, setEnvironmentMetricsDuration] = useState('P3D')
-  const [traceRoutesDuration, setTraceRoutesDuration] = useState('P3D')
+  const [deviceMetricsSelectedDuration, setDeviceMetricsSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [deviceMetricsDurationSinceNow, setDeviceMetricsDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
+
+  const [environmentMetricsSelectedDuration, setEnvironmentMetricsSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [environmentMetricsDurationSinceNow, setEnvironmentMetricsDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
+
+  const [traceRoutesSelectedDuration, setTraceRoutesSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [traceRoutesDurationSinceNow, setTraceRoutesDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
 
   useEffect(() => {
     async function loadData() {
@@ -37,7 +46,9 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         return
       }
 
-      const deviceMetricsResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics?since=${deviceMetricsDuration}`)
+      const params = toParams(deviceMetricsDurationSinceNow, deviceMetricsSelectedDuration)
+
+      const deviceMetricsResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/device-metrics?${params}`)
 
       if (deviceMetricsResp.status === 200) {
         setDeviceMetrics(await deviceMetricsResp.json())
@@ -45,7 +56,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     }
 
     loadData()
-  }, [deviceMetricsDuration, node])
+  }, [deviceMetricsDurationSinceNow, deviceMetricsSelectedDuration, node])
 
   useEffect(() => {
     async function loadData() {
@@ -53,9 +64,9 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         return
       }
 
-      const environmentMetricsResp = await fetch(
-        `${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/environment-metrics?since=${environmentMetricsDuration}`
-      )
+      const params = toParams(environmentMetricsDurationSinceNow, environmentMetricsSelectedDuration)
+
+      const environmentMetricsResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/environment-metrics?${params}`)
 
       if (environmentMetricsResp.status === 200) {
         setEnvironmentMetrics(await environmentMetricsResp.json())
@@ -63,7 +74,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     }
 
     loadData()
-  }, [environmentMetricsDuration, node])
+  }, [environmentMetricsDurationSinceNow, environmentMetricsSelectedDuration, node])
 
   useEffect(() => {
     async function loadData() {
@@ -71,7 +82,9 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         return
       }
 
-      const traceRoutesResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/trace-routes?since=${traceRoutesDuration}`)
+      const params = toParams(traceRoutesDurationSinceNow, traceRoutesSelectedDuration)
+
+      const traceRoutesResp = await fetch(`${TRACKER_API_BASE_URL}/api/node/${node.nodeId}/trace-routes?${params}`)
 
       if (traceRoutesResp.status === 200) {
         setTraceRoutes(await traceRoutesResp.json())
@@ -79,7 +92,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     }
 
     loadData()
-  }, [node, traceRoutesDuration])
+  }, [node, traceRoutesDurationSinceNow, traceRoutesSelectedDuration])
 
   if (!node) {
     return null
@@ -160,19 +173,30 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
           time: earliestTime,
         }}
       />
-      <DeviceMetrics node={node} deviceMetrics={deviceMetrics} duration={deviceMetricsDuration} updateDuration={setDeviceMetricsDuration} />
+      <DeviceMetrics
+        node={node}
+        deviceMetrics={deviceMetrics}
+        selectedDuration={deviceMetricsSelectedDuration}
+        setSelectedDuration={setDeviceMetricsSelectedDuration}
+        durationSinceNow={deviceMetricsDurationSinceNow}
+        setDurationSinceNow={setDeviceMetricsDurationSinceNow}
+      />
       <EnvironmentMetrics
         node={node}
         environmentMetrics={environmentMetrics}
-        duration={environmentMetricsDuration}
-        updateDuration={setEnvironmentMetricsDuration}
+        selectedDuration={environmentMetricsSelectedDuration}
+        setSelectedDuration={setEnvironmentMetricsSelectedDuration}
+        durationSinceNow={environmentMetricsDurationSinceNow}
+        setDurationSinceNow={setEnvironmentMetricsDurationSinceNow}
       />
       <Traceroutes
         node={node}
         traceRoutes={traceRoutes}
         allNodes={allNodes}
-        duration={traceRoutesDuration}
-        updateDuration={setTraceRoutesDuration}
+        selectedDuration={traceRoutesSelectedDuration}
+        setSelectedDuration={setTraceRoutesSelectedDuration}
+        durationSinceNow={traceRoutesDurationSinceNow}
+        setDurationSinceNow={setTraceRoutesDurationSinceNow}
       />
     </Modal>
   )

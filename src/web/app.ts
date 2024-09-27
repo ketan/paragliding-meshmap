@@ -38,12 +38,18 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 if (isDevelopment) {
+  app.use((await import('morgan')).default('dev'))
   app.use((await import('compression')).default())
 }
 
 function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
   const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
   return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
+}
+
+function parseDurationParam(req: Request, defaultValue: string = `PT0S`) {
+  const duration = typeof req.query.duration === 'string' ? req.query.duration : defaultValue
+  return Duration.fromISO(duration)
 }
 
 class HttpError extends Error {
@@ -124,7 +130,9 @@ app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
   const since = parseSinceParam(req, 'P7D')
-  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since)
+  const duration = parseDurationParam(req)
+
+  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since, duration)
 
   res.header('cache-control', 'public,max-age=60')
   res.json(deviceMetrics)
@@ -134,8 +142,9 @@ app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
   const since = parseSinceParam(req, 'P7D')
+  const duration = parseDurationParam(req)
 
-  const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since)
+  const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since, duration)
 
   res.header('cache-control', 'public,max-age=60')
   res.json(environmentMetrics)
@@ -154,7 +163,10 @@ app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
 app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const traceRoutes = await Traceroute.forNode(db, nodeId, parseSinceParam(req))
+  const since = parseSinceParam(req)
+  const duration = parseDurationParam(req)
+
+  const traceRoutes = await Traceroute.forNode(db, nodeId, since, duration)
 
   res.header('cache-control', 'public,max-age=60')
   res.json(traceRoutes)

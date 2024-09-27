@@ -1,6 +1,7 @@
-import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
+import { Between, Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
+import { DateTime, Duration } from 'luxon'
 
 @Entity()
 export default class EnvironmentMetric extends BaseType {
@@ -50,7 +51,7 @@ export default class EnvironmentMetric extends BaseType {
     })
   }
 
-  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+  static async forNode(db: DataSource | EntityManager, nodeId: number, since: Date, duration: Duration) {
     return this.find(db, {
       select: {
         temperature: true,
@@ -60,7 +61,7 @@ export default class EnvironmentMetric extends BaseType {
       },
       where: {
         nodeId: nodeId,
-        createdAt: MoreThanOrEqual(since),
+        createdAt: Between(since, DateTime.fromJSDate(since).plus(duration).toJSDate()),
       },
       order: {
         createdAt: 'asc',

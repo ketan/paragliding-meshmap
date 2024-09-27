@@ -1,6 +1,6 @@
 import DeviceMetric from '#entity/device_metric'
 import { AppDataSource } from '#config/data-source'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { expect } from 'chai'
 import { secondsAgo } from '#helpers/utils'
 
@@ -46,7 +46,7 @@ describe('DeviceMetric', () => {
     const nodeId = 123
 
     return AppDataSource.transaction(async (trx) => {
-      expect(await DeviceMetric.forNode(trx, nodeId, since)).to.be.empty
+      expect(await DeviceMetric.forNode(trx, nodeId, since, Duration.fromISO('PT10S'))).to.be.empty
 
       const metrics = [
         new DeviceMetric({
@@ -70,7 +70,7 @@ describe('DeviceMetric', () => {
 
       await trx.save(metrics)
 
-      const metricsForNode = await DeviceMetric.forNode(trx, nodeId, since)
+      const metricsForNode = await DeviceMetric.forNode(trx, nodeId, since, Duration.fromISO('PT10S'))
       expect(metricsForNode).to.deepEqualIgnoreUndefined([
         {
           batteryLevel: 99,

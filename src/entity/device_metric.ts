@@ -1,6 +1,7 @@
-import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
+import { Between, Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_type.js'
 import _ from 'lodash'
+import { DateTime, Duration } from 'luxon'
 
 @Entity()
 export default class DeviceMetric extends BaseType {
@@ -42,12 +43,12 @@ export default class DeviceMetric extends BaseType {
     })
   }
 
-  static forNode(db: DataSource | EntityManager, nodeId: number, since: Date) {
+  static forNode(db: DataSource | EntityManager, nodeId: number, since: Date, duration: Duration) {
     return this.find(db, {
       select: ['batteryLevel', 'voltage', 'channelUtilization', 'airUtilTx', 'createdAt'],
       where: {
         nodeId: nodeId,
-        createdAt: MoreThanOrEqual(since),
+        createdAt: Between(since, DateTime.fromJSDate(since).plus(duration).toJSDate()),
       },
       order: {
         createdAt: 'asc',

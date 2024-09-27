@@ -246,6 +246,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         <NodeDetailsModal
           allNodes={this.state.allNodes}
           node={this.state.nodeToShow}
+          key={this.state.nodeToShow?.nodeId}
           onClose={() => this.setState({ nodeToShow: undefined })}
         />
         <MessagesModal

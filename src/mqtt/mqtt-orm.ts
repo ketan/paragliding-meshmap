@@ -1,5 +1,5 @@
 import { errLog } from '#helpers/logger'
-import { parseProtobuf, secondsAgo } from '#helpers/utils'
+import { parseProtobuf } from '#helpers/utils'
 import debug from 'debug'
 import { AbortError } from 'p-retry'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
@@ -19,7 +19,7 @@ import {
 } from './protobuf-to-dto.js'
 import { DataSource } from 'typeorm'
 import Node from '#entity/node'
-import { Duration } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { ENTITY_TYPES } from '#helpers/entity-types'
 
 export async function dumpStats(db: DataSource, logger: debug.Debugger) {
@@ -74,7 +74,12 @@ export async function createServiceEnvelope(db: DataSource, mqttTopic: string, p
   })
 }
 
-export async function saveTextMessage(db: DataSource, envelope: meshtastic.ServiceEnvelope, purgeOlderThan: Duration) {
+export async function saveTextMessage(
+  db: DataSource,
+  envelope: meshtastic.ServiceEnvelope,
+  purgeOlderThan: Duration,
+  dedupeDuration: Duration
+) {
   const tm = toTextMessage(envelope)
 
   if (!tm) {
@@ -83,7 +88,7 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
 
   await db.transaction(async (trx) => {
     try {
-      const recentSimilarMessage = await tm.findRecentSimilarMessage(trx, secondsAgo(15))
+      const recentSimilarMessage = await tm.findRecentSimilarMessage(trx, DateTime.now().minus(dedupeDuration).toJSDate())
 
       if (recentSimilarMessage) {
         return
@@ -103,7 +108,7 @@ export async function saveTextMessage(db: DataSource, envelope: meshtastic.Servi
   })
 }
 
-export async function updateNodeWithPosition(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
+export async function updateNodeWithPosition(db: DataSource, envelope: meshtastic.ServiceEnvelope, dedupeDuration: Duration) {
   const newPosition = toPosition(envelope)
 
   if (!newPosition) {
@@ -113,7 +118,7 @@ export async function updateNodeWithPosition(db: DataSource, envelope: meshtasti
   await db.transaction(async (trx) => {
     try {
       if (newPosition.latitude != null && newPosition.longitude != null) {
-        const recentPosition = await newPosition.findRecentPosition(trx, secondsAgo(15))
+        const recentPosition = await newPosition.findRecentPosition(trx, DateTime.now().minus(dedupeDuration).toJSDate())
         if (recentPosition) {
           return
         }
@@ -182,7 +187,7 @@ export async function createOrUpdateNeighborInfo(db: DataSource, envelope: mesht
   })
 }
 
-export async function createOrUpdateTelemetryData(db: DataSource, envelope: meshtastic.ServiceEnvelope) {
+export async function createOrUpdateTelemetryData(db: DataSource, envelope: meshtastic.ServiceEnvelope, dedupeDuration: Duration) {
   const packet = envelope.packet
   const payload = packet?.decoded?.payload
 
@@ -206,7 +211,7 @@ export async function createOrUpdateTelemetryData(db: DataSource, envelope: mesh
       if (telemetry.variant === 'deviceMetrics') {
         const deviceMetric = toDeviceMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await deviceMetric.findRecentSimilarMetric(trx, secondsAgo(15))
+        const recentSimilarMetric = await deviceMetric.findRecentSimilarMetric(trx, DateTime.now().minus(dedupeDuration).toJSDate())
 
         if (recentSimilarMetric) {
           return
@@ -216,7 +221,7 @@ export async function createOrUpdateTelemetryData(db: DataSource, envelope: mesh
       } else if (telemetry.variant === 'environmentMetrics') {
         const environmentMetric = toEnvironmentMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await environmentMetric.findRecentSimilarMetric(trx, secondsAgo(15))
+        const recentSimilarMetric = await environmentMetric.findRecentSimilarMetric(trx, DateTime.now().minus(dedupeDuration).toJSDate())
         if (recentSimilarMetric) {
           return
         }
@@ -225,7 +230,7 @@ export async function createOrUpdateTelemetryData(db: DataSource, envelope: mesh
       } else if (telemetry.variant === 'powerMetrics') {
         const powerMetric = toPowerMetric(telemetry, nodeId)
 
-        const recentSimilarMetric = await powerMetric.findRecentSimilarMetric(trx, secondsAgo(15))
+        const recentSimilarMetric = await powerMetric.findRecentSimilarMetric(trx, DateTime.now().minus(dedupeDuration).toJSDate())
 
         if (recentSimilarMetric) {
           return

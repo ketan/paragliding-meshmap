@@ -44,6 +44,12 @@ export function addOpts(command: Command) {
   )
 
   command.option('--collect-service-envelopes', 'Whether to collect service envelopes', false)
+  command.option(
+    '--dedupe-duration <duration>',
+    'Dedupe similar packets received over MQTT that were received within this duration (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations)',
+    parseDuration,
+    Duration.fromISO('PT30S')
+  )
 }
 
 export function webCLIParse(argv?: readonly string[], parseOptions?: ParseOptions) {
@@ -77,6 +83,7 @@ export interface MQTTCLIOptions {
   purgeDataOlderThan: Duration
   dumpStatsEvery: Duration
   collectServiceEnvelopes: boolean
+  dedupeDuration: Duration
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

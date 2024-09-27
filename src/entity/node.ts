@@ -10,7 +10,7 @@ import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
 import _ from 'lodash'
-import { BROADCAST_ADDR, nodeName } from '#helpers/utils'
+import { BROADCAST_ADDR } from '#helpers/utils'
 import { v5 as uuidv5 } from 'uuid'
 import { Configs } from '#entity/configs'
 import { AppDataSource } from '#config/data-source'
@@ -270,7 +270,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         message: tm.text,
       }
       await sendToFlyXCJob(data)
-      await sendToTelegram(nodeName(this), tm.text)
+      await sendToTelegram(this, tm.text)
     }
     if (purgeOlderThan) {
       this.outbox = this.outbox.filter((msg) => {

@@ -1,14 +1,21 @@
 import { telegramLog } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 import escape from 'escape-html'
+import Node from '#entity/node'
+import { NodeNameAttributes } from '../../frontend/src/nodes-entity.js'
+import _ from 'lodash'
 
-export async function sendToTelegram(nodeName: string, text: string) {
+export function nodeName(node: Partial<NodeNameAttributes>) {
+  return _.compact([node.longName, node.shortName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
+}
+
+export async function sendToTelegram(node: Node, text: string) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
 
   if (botToken && chatId) {
     telegramLog('Sending to Telegram')
-    await pgBoss.send('telegram', { from: nodeName, message: text })
+    await pgBoss.send('telegram', { from: nodeName(node), message: text })
     telegramLog('Sent to Telegram')
   }
 }

@@ -1,7 +1,5 @@
 import { AbortError } from 'p-retry'
 import { protobufDecode } from '#helpers/logger'
-import { NodeNameAttributes } from '../../frontend/src/nodes-entity.js'
-import _ from 'lodash'
 
 export const BROADCAST_ADDR = Number('0xffffffff')
 
@@ -47,8 +45,4 @@ export function parseProtobuf<T>(f: () => T): T {
       throw new AbortError(`Unknown error parsing protobuf`)
     }
   }
-}
-
-export function nodeName(node: Partial<NodeNameAttributes>) {
-  return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
 }

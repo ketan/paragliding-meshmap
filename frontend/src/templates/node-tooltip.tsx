@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { DateTime, Duration } from 'luxon'
-import { ReactNode, useEffect } from 'react'
+import { Fragment, ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
 import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
 import {
@@ -88,10 +88,10 @@ const keyValue = function <T>(data: KeyValueType<T>) {
         return
       }
       return (
-        <>
+        <Fragment key={args.key}>
           {title}
           {value}
-        </>
+        </Fragment>
       )
     }
 
@@ -102,27 +102,27 @@ const keyValue = function <T>(data: KeyValueType<T>) {
 
       if (typeof args.value === 'string') {
         return (
-          <>
+          <Fragment key={args.key}>
             {title}
             {args.value}
-          </>
+          </Fragment>
         )
       } else if (typeof args.value === 'number') {
         if (Number.isInteger(args.value)) {
           return (
-            <>
+            <Fragment key={args.key}>
               {title}
               {args.value}
               {args.unit}
-            </>
+            </Fragment>
           )
         } else {
           return (
-            <>
+            <Fragment key={args.key}>
               {title}
               {Number(args.value).toFixed(args.precision)}
               {args.unit}
-            </>
+            </Fragment>
           )
         }
       }

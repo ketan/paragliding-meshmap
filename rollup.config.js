@@ -47,6 +47,7 @@ export default defineConfig({
     'glob',
     'lodash',
     'luxon',
+    'morgan',
     'newrelic',
     'node:crypto',
     'os',

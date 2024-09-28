@@ -1,6 +1,5 @@
 import { Command, InvalidArgumentError, ParseOptions } from 'commander'
 import { Duration } from 'luxon'
-import { toBigInt } from '#helpers/utils'
 
 function parseDuration(value: string) {
   const duration = Duration.fromISO(value.toUpperCase())
@@ -17,12 +16,17 @@ function parseDuration(value: string) {
 const defaultDuration = Duration.fromISO('P7D')
 
 function parseNodeId(value: string, previous: number[]) {
-  const nodeId = toBigInt(value)
-  if (nodeId) {
-    return previous.concat(nodeId)
+  let nodeId
+  if (value.startsWith('0x')) {
+    nodeId = Number(value)
   } else {
-    return previous
+    nodeId = Number(value)
   }
+
+  if (nodeId && !isNaN(nodeId)) {
+    return previous.concat(nodeId)
+  }
+  return previous
 }
 
 export function addOpts(command: Command) {

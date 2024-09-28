@@ -56,9 +56,9 @@ describe('cli', () => {
   })
 
   it('should parse --filter-node-forwarding', () => {
-    expect(webCLIParse(['--filter-node-forwarding', '1', '2', '3'], { from: 'user' }).filterNodeForwarding).to.deep.eq([1, 2, 3])
+    expect(webCLIParse(['--filter-node-forwarding', '198', '2', '3'], { from: 'user' }).filterNodeForwarding).to.deep.eq([198, 2, 3])
     expect(
-      webCLIParse(['--filter-node-forwarding', '1', '--filter-node-forwarding', '2'], { from: 'user' }).filterNodeForwarding
-    ).to.deep.eq([1, 2])
+      webCLIParse(['--filter-node-forwarding', '1', '--filter-node-forwarding', '0xabc'], { from: 'user' }).filterNodeForwarding
+    ).to.deep.eq([1, 2748])
   })
 })

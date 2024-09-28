@@ -21,18 +21,7 @@ import { DataSource } from 'typeorm'
 import Node from '#entity/node'
 import { DateTime, Duration } from 'luxon'
 import { ENTITY_TYPES } from '#helpers/entity-types'
-
-export async function dumpStats(db: DataSource, logger: debug.Debugger) {
-  const response = await db.query<
-    {
-      relname: string
-      n_live_tup: bigint
-      n_dead_tup: bigint
-    }[]
-  >(`SELECT relname, n_live_tup, n_dead_tup
-     FROM pg_stat_user_tables`)
-  logger(`Record count (estimates)`, response)
-}
+import { dumpStats } from '#helpers/stats'
 
 export async function purgeData(db: DataSource, cliOptions: MQTTCLIOptions, logger: debug.Debugger) {
   if (cliOptions.purgeDataOlderThan) {

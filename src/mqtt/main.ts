@@ -1,6 +1,6 @@
 import { errLog, perfLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
-import { dumpStats, purgeData } from '#mqtt/mqtt-orm'
+import { purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
 import debug from 'debug'
 import pRetry from 'p-retry'
@@ -13,6 +13,7 @@ import { pgBoss } from '#config/data-source'
 import { flyXCJobProcessor } from '#helpers/fly-xc'
 import { sendTelegramMessage } from '#helpers/telegram'
 import { pureTrackIOJobProcessor } from '#helpers/pure-track'
+import { dumpStats } from '#helpers/stats'
 
 async function telegramJobProcessor() {
   await pgBoss.createQueue('telegram', {

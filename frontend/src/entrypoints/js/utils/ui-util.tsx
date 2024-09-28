@@ -52,9 +52,6 @@ export function sanitizeLatLong(lat: number | string | undefined | null, lon: nu
   lon = sanitizeNumber(lon)
 
   if (lat && lon) {
-    if (lon <= 100) {
-      lon += 360
-    }
     return [lat, lon] as L.PointTuple
   }
 }

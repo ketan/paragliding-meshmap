@@ -135,7 +135,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     if (coords) {
       this.setState({ coords, zoom })
     } else {
-      this.setState({ coords: { lat: 21, lng: 79 + 360 }, zoom: 5 })
+      this.setState({ coords: { lat: 21, lng: 79 }, zoom: 5 })
     }
 
     if (nodeId) {

@@ -31,13 +31,13 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
   const [environmentMetrics, setEnvironmentMetrics] = useState<EnvironmentMetricsEntityForUI[] | null>(null)
   const [traceRoutes, setTraceRoutes] = useState<TraceroutesEntityForUI[] | null>(null)
 
-  const [deviceMetricsSelectedDuration, setDeviceMetricsSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [deviceMetricsSelectedDuration, setDeviceMetricsSelectedDuration] = useState(Duration.fromObject({ days: 3 }))
   const [deviceMetricsDurationSinceNow, setDeviceMetricsDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
 
-  const [environmentMetricsSelectedDuration, setEnvironmentMetricsSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [environmentMetricsSelectedDuration, setEnvironmentMetricsSelectedDuration] = useState(Duration.fromObject({ days: 3 }))
   const [environmentMetricsDurationSinceNow, setEnvironmentMetricsDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
 
-  const [traceRoutesSelectedDuration, setTraceRoutesSelectedDuration] = useState(Duration.fromObject({ days: 1 }))
+  const [traceRoutesSelectedDuration, setTraceRoutesSelectedDuration] = useState(Duration.fromObject({ days: 3 }))
   const [traceRoutesDurationSinceNow, setTraceRoutesDurationSinceNow] = useState(Duration.fromObject({ days: 0 }))
 
   useEffect(() => {

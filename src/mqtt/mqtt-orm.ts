@@ -78,7 +78,8 @@ export async function saveTextMessage(
   db: DataSource,
   envelope: meshtastic.ServiceEnvelope,
   purgeOlderThan: Duration,
-  dedupeDuration: Duration
+  dedupeDuration: Duration,
+  filterNodeIds: number[]
 ) {
   const tm = toTextMessage(envelope)
 
@@ -97,7 +98,7 @@ export async function saveTextMessage(
       const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
       await trx.save(tm)
 
-      await from.outboundMessage(tm, purgeOlderThan)
+      await from.outboundMessage(tm, purgeOlderThan, filterNodeIds)
       to.inboundMessage(tm, purgeOlderThan)
 
       await trx.save([from, to], { reload: false })
@@ -108,7 +109,12 @@ export async function saveTextMessage(
   })
 }
 
-export async function updateNodeWithPosition(db: DataSource, envelope: meshtastic.ServiceEnvelope, dedupeDuration: Duration) {
+export async function updateNodeWithPosition(
+  db: DataSource,
+  envelope: meshtastic.ServiceEnvelope,
+  dedupeDuration: Duration,
+  filterNodeIds: number[]
+) {
   const newPosition = toPosition(envelope)
 
   if (!newPosition) {
@@ -124,7 +130,7 @@ export async function updateNodeWithPosition(db: DataSource, envelope: meshtasti
         }
 
         await trx.save(newPosition, { reload: false })
-        await Node.updatePosition(trx, newPosition)
+        await Node.updatePosition(trx, newPosition, filterNodeIds)
       }
     } catch (e) {
       errLog(`Unable to update node position`, { err: e, newPosition, envelope })

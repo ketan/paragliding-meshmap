@@ -182,7 +182,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     return await repository.save(node)
   }
 
-  static async updatePosition(trx: EntityManager, position: Position) {
+  static async updatePosition(trx: EntityManager, position: Position, filterNodeIds: number[]) {
     const repository = trx.getRepository(Node)
     const node = (await repository.findOne({ where: { nodeId: position.from } })) || new Node({ nodeId: position.from })
 
@@ -198,19 +198,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
       satsInView: BaseType.sanitizeNumber(position.satsInView),
     })
-    await this.maybeSendCoordinates(node, position)
+    await this.maybeForwardCoordinates(node, position, filterNodeIds)
     return await repository.save(node)
-  }
-
-  private static async maybeSendCoordinates(node: Node, position: Position) {
-    const flyXCPayLoad = flyXCPositionPayload(node, position)
-    if (flyXCPayLoad) {
-      await sendToFlyXCJob(flyXCPayLoad)
-    }
-    const pureTrackPayload = pureTrackPositionPayload(node, position)
-    if (pureTrackPayload) {
-      await sendToPureTrackIOJob(pureTrackPayload)
-    }
   }
 
   static async updateNeighbors(trx: EntityManager, neighborInfo: NeighbourInfo) {
@@ -258,19 +247,12 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  async outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration) {
+  async outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration, filterNodeIds: number[]) {
     const now = DateTime.now()
     this.outbox ||= []
     this.outbox.unshift({ to: tm.to, text: tm.text, time: tm.createdAt.toISOString() })
     if (tm.to === BROADCAST_ADDR) {
-      const data = {
-        type: 'message',
-        user_id: this.flyXCToken,
-        time: tm.createdAt.getTime(),
-        message: tm.text,
-      }
-      await sendToFlyXCJob(data)
-      await sendToTelegram(this, tm.text)
+      await this.forwardMessage(tm, filterNodeIds)
     }
     if (purgeOlderThan) {
       this.outbox = this.outbox.filter((msg) => {
@@ -278,6 +260,35 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
         return messageAge < purgeOlderThan
       })
     }
+  }
+
+  private static async maybeForwardCoordinates(node: Node, position: Position, filterNodeIds: number[]) {
+    if (filterNodeIds && filterNodeIds.includes(node.nodeId)) {
+      return
+    }
+    const flyXCPayLoad = flyXCPositionPayload(node, position)
+    if (flyXCPayLoad) {
+      await sendToFlyXCJob(flyXCPayLoad)
+    }
+    const pureTrackPayload = pureTrackPositionPayload(node, position)
+    if (pureTrackPayload) {
+      await sendToPureTrackIOJob(pureTrackPayload)
+    }
+  }
+
+  private async forwardMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, filterNodeIds: number[]) {
+    if (filterNodeIds && filterNodeIds.includes(tm.from)) {
+      return
+    }
+
+    const data = {
+      type: 'message',
+      user_id: this.flyXCToken,
+      time: tm.createdAt.getTime(),
+      message: tm.text,
+    }
+    await sendToFlyXCJob(data)
+    await sendToTelegram(this, tm.text)
   }
 
   static async findOrBuild(trx: EntityManager, nodeId: number) {

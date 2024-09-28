@@ -16,6 +16,7 @@ describe('cli', () => {
       dumpStatsEvery: Duration.fromISO('PT5M'),
       collectServiceEnvelopes: false,
       dedupeDuration: Duration.fromISO('PT30S'),
+      filterNodeForwarding: [],
     })
   })
 
@@ -52,5 +53,12 @@ describe('cli', () => {
 
   it('should parse dump every args', () => {
     expect(webCLIParse(['--dump-stats-every=PT17M'], { from: 'user' }).dumpStatsEvery).to.deep.eq(Duration.fromISO('PT17M'))
+  })
+
+  it('should parse --filter-node-forwarding', () => {
+    expect(webCLIParse(['--filter-node-forwarding', '1', '2', '3'], { from: 'user' }).filterNodeForwarding).to.deep.eq([1, 2, 3])
+    expect(
+      webCLIParse(['--filter-node-forwarding', '1', '--filter-node-forwarding', '2'], { from: 'user' }).filterNodeForwarding
+    ).to.deep.eq([1, 2])
   })
 })

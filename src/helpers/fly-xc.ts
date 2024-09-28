@@ -5,7 +5,7 @@ import Position from '#entity/position'
 import { DateTime } from 'luxon'
 import Node from '#entity/node'
 
-interface PositionPayload {
+export interface PositionPayload {
   altitude: number
   user_id: string
   latitude: number
@@ -15,7 +15,7 @@ interface PositionPayload {
   longitude: number
 }
 
-interface TextMessagePayload {
+export interface TextMessagePayload {
   user_id: string | undefined
   time: number
   type: string

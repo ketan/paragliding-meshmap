@@ -1,5 +1,6 @@
 import { Command, InvalidArgumentError, ParseOptions } from 'commander'
 import { Duration } from 'luxon'
+import { toBigInt } from '#helpers/utils'
 
 function parseDuration(value: string) {
   const duration = Duration.fromISO(value.toUpperCase())
@@ -14,6 +15,15 @@ function parseDuration(value: string) {
 }
 
 const defaultDuration = Duration.fromISO('P7D')
+
+function parseNodeId(value: string, previous: number[]) {
+  const nodeId = toBigInt(value)
+  if (nodeId) {
+    return previous.concat(nodeId)
+  } else {
+    return previous
+  }
+}
 
 export function addOpts(command: Command) {
   command.option('--mqtt-broker-url <URL>', 'MQTT Broker URL (e.g: mqtt://mqtt.meshtastic.org)', 'mqtt://mqtt.meshtastic.org')
@@ -44,11 +54,19 @@ export function addOpts(command: Command) {
   )
 
   command.option('--collect-service-envelopes', 'Whether to collect service envelopes', false)
+
   command.option(
     '--dedupe-duration <duration>',
     'Dedupe similar packets received over MQTT that were received within this duration (duration format https://en.wikipedia.org/wiki/ISO_8601#Durations)',
     parseDuration,
     Duration.fromISO('PT30S')
+  )
+
+  command.option(
+    '--filter-node-forwarding <nodes...>',
+    'Do not share the data for nodes with the specified node IDs (in decimal or hexadecimal prefixed with 0x) with external services.',
+    parseNodeId,
+    new Array<number>()
   )
 }
 
@@ -84,6 +102,7 @@ export interface MQTTCLIOptions {
   dumpStatsEvery: Duration
   collectServiceEnvelopes: boolean
   dedupeDuration: Duration
+  filterNodeForwarding: number[]
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

@@ -75,9 +75,9 @@ describe('Node', () => {
         text: 'xyz',
         createdAt: DateTime.now().minus(Duration.fromISO('PT30M')).toJSDate(),
       }
-      n.outboundMessage(m1, purgeOlderThan)
-      n.outboundMessage(m2, purgeOlderThan)
-      n.outboundMessage(m3, purgeOlderThan)
+      n.outboundMessage(m1, purgeOlderThan, [])
+      n.outboundMessage(m2, purgeOlderThan, [])
+      n.outboundMessage(m3, purgeOlderThan, [])
 
       expect(n.outbox).to.deep.equal([m2, m1].map((m) => ({ to: m.to, text: m.text, time: m.createdAt.toISOString() })))
     })

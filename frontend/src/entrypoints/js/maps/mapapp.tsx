@@ -77,6 +77,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
 
 export default class MapApp extends Component<MapProps, MapState> {
   private readonly defaultMessageSince = Duration.fromObject({ days: 7 }).rescale()
+  private loadDataInterval: NodeJS.Timeout | null = null
 
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,
@@ -141,6 +142,30 @@ export default class MapApp extends Component<MapProps, MapState> {
       this.setState({ nodeId })
     }
 
+    await this.loadData()
+    this.loadDataInterval = setInterval(() => this.loadData(), 60500)
+
+    Promise.all([this.state.dataLoaded.promise, this.state.mapInitialized.promise]).then(() => {
+      logger(`Map and data loaded`)
+      const markers = this.createMarkers()
+      this.setState({ markers }, () => {
+        const queryParams = getQueryParams()
+        if (queryParams.nodeId) {
+          this.flyToNode(queryParams.nodeId)
+        } else {
+          this.maybeFlyToCurrentLocation()
+        }
+        if (queryParams.msg) {
+          const node = this.findNodeById(this.state.allNodes, queryParams.msg.from)
+          if (node) {
+            this.showMessages(node)
+          }
+        }
+      })
+    })
+  }
+
+  private async loadData() {
     const now = DateTime.now()
 
     try {
@@ -188,25 +213,12 @@ export default class MapApp extends Component<MapProps, MapState> {
       logger(`Error fetching data`, { err })
       this.state.dataLoaded.reject()
     }
+  }
 
-    Promise.all([this.state.dataLoaded.promise, this.state.mapInitialized.promise]).then(() => {
-      logger(`Map and data loaded`)
-      const markers = this.createMarkers()
-      this.setState({ markers }, () => {
-        const queryParams = getQueryParams()
-        if (queryParams.nodeId) {
-          this.flyToNode(queryParams.nodeId)
-        } else {
-          this.maybeFlyToCurrentLocation()
-        }
-        if (queryParams.msg) {
-          const node = this.findNodeById(this.state.allNodes, queryParams.msg.from)
-          if (node) {
-            this.showMessages(node)
-          }
-        }
-      })
-    })
+  componentWillUnmount() {
+    if (this.loadDataInterval) {
+      clearInterval(this.loadDataInterval)
+    }
   }
 
   render() {

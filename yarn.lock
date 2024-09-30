@@ -8159,10 +8159,10 @@ typeorm@^0.3.20:
     uuid "^9.0.0"
     yargs "^17.6.2"
 
-typescript-color-gradient@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/typescript-color-gradient/-/typescript-color-gradient-3.3.2.tgz#fe5c49eabe52807b1482cd5e1caef2d3acb459e6"
-  integrity sha512-O367R7tKXlmYi2Odyu2KZKegRcTrtfZh6r6XoVHMzI6PSMISMM4m7myVwZuM/BFRaRqpwW4WRQyIVF30DwBe0Q==
+typescript-color-gradient@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/typescript-color-gradient/-/typescript-color-gradient-4.0.0.tgz#ccff2828e03a9e172b06bf3014483431fc04baf1"
+  integrity sha512-Y83uFpgT2gEI/1VQrdMGfi+ImKxc/7as8buaSsFYLMphye34KiakTvbnLBSI+2pc6dgGMcBirffG/NA6injLkA==
 
 typescript-eslint@^7.15.0:
   version "7.18.0"

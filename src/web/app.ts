@@ -75,7 +75,9 @@ function parseNodeIdParam(req: Request) {
 app.get('/api/nodes', async (_req, res) => {
   const allNodes = await Node.find(db)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(allNodes)
 })
 
@@ -89,7 +91,9 @@ app.get('/api/node/:nodeId/positions', async (req, res) => {
 
   const response = [...positions, ...mapReports].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(response)
 })
 
@@ -98,7 +102,9 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
 
   const node = await Node.findOne(db, { where: { nodeId } })
   if (node) {
-    res.header('cache-control', 'public,max-age=60')
+    if (!isDevelopment) {
+      res.header('cache-control', 'public,max-age=60')
+    }
     res.json(node)
   } else {
     res.status(404).json({
@@ -122,7 +128,9 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
 
   const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(outgoingMessages)
 })
 
@@ -134,7 +142,9 @@ app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
 
   const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since, duration)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(deviceMetrics)
 })
 
@@ -146,7 +156,9 @@ app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
 
   const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since, duration)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(environmentMetrics)
 })
 
@@ -156,7 +168,9 @@ app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
   const since = parseSinceParam(req)
   const neighbours = await NeighbourInfo.forNode(db, nodeId, since)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(neighbours)
 })
 
@@ -168,14 +182,18 @@ app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
 
   const traceRoutes = await Traceroute.forNode(db, nodeId, since, duration)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(traceRoutes)
 })
 
 app.get('/api/hardware-models', async function (_req, res) {
   const hardwareModels = await Node.hardwareModels(db)
 
-  res.header('cache-control', 'public,max-age=60')
+  if (!isDevelopment) {
+    res.header('cache-control', 'public,max-age=60')
+  }
   res.json(hardwareModels)
 })
 

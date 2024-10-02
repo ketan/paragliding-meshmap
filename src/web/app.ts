@@ -11,7 +11,7 @@ import Node from '#entity/node'
 import Position from '#entity/position'
 import TextMessage from '#entity/text_message'
 import Traceroute from '#entity/traceroute'
-import { BROADCAST_ADDR } from '#helpers/utils'
+import { BROADCAST_ADDR, mandatoryEnv } from '#helpers/utils'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -25,9 +25,15 @@ import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import { createDeviceProfile } from '#helpers/create-device-profile'
 import { AppDataSource } from '#config/data-source'
 import { errLog } from '#helpers/logger'
+import session from 'express-session'
+import { Session } from '#entity/session'
+import { TypeormStore } from 'connect-typeorm'
+import { doubleCsrf } from 'csrf-csrf'
+import cookieParser from 'cookie-parser'
 
 const environment = process.env.NODE_ENV || 'development'
-const isDevelopment = environment === 'development'
+const isDevelopment = environment === 'development' || environment === 'test'
+const isProduction = !isDevelopment
 
 const db = AppDataSource
 
@@ -41,6 +47,52 @@ if (isDevelopment) {
   app.use((await import('morgan')).default('dev'))
   app.use((await import('compression')).default())
 }
+
+if (isProduction) {
+  app.set('trust proxy', 1) // trust first proxy
+}
+
+app.use(
+  session({
+    secret: mandatoryEnv('SESSION_SECRET'),
+    saveUninitialized: true,
+    resave: false,
+    store: new TypeormStore({
+      cleanupLimit: 2,
+      limitSubquery: false, // If using MariaDB.
+      ttl: 86400,
+    }).connect(db.getRepository(Session)),
+    cookie: {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: true,
+      maxAge: Duration.fromObject({ days: 7 }).toMillis(),
+    },
+  })
+)
+
+const doubleCsrfUtilities = doubleCsrf({
+  getSecret: () => mandatoryEnv('CSRF_SECRET'),
+  getSessionIdentifier: (req) => req.session.id,
+  cookieName: 'x-csrf-token',
+  cookieOptions: {
+    sameSite: true,
+    secure: isProduction,
+  },
+  errorConfig: {
+    statusCode: 403,
+  },
+  size: 64,
+})
+app.use(cookieParser(mandatoryEnv('COOKIE_SECRET'))) // after express-session
+
+app.get('/api/csrf-token', (req, res) => {
+  return res.json({
+    token: doubleCsrfUtilities.generateToken(req, res),
+  })
+})
+
+app.use(['/api/*'], doubleCsrfUtilities.doubleCsrfProtection)
 
 function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
   const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
@@ -75,7 +127,7 @@ function parseNodeIdParam(req: Request) {
 app.get('/api/nodes', async (_req, res) => {
   const allNodes = await Node.find(db)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(allNodes)
@@ -91,7 +143,7 @@ app.get('/api/node/:nodeId/positions', async (req, res) => {
 
   const response = [...positions, ...mapReports].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(response)
@@ -102,7 +154,7 @@ app.get(`/api/node/:nodeId`, async (req, res) => {
 
   const node = await Node.findOne(db, { where: { nodeId } })
   if (node) {
-    if (!isDevelopment) {
+    if (isProduction) {
       res.header('cache-control', 'public,max-age=60')
     }
     res.json(node)
@@ -128,7 +180,7 @@ app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
 
   const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(outgoingMessages)
@@ -142,7 +194,7 @@ app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
 
   const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since, duration)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(deviceMetrics)
@@ -156,7 +208,7 @@ app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
 
   const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since, duration)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(environmentMetrics)
@@ -168,7 +220,7 @@ app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
   const since = parseSinceParam(req)
   const neighbours = await NeighbourInfo.forNode(db, nodeId, since)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(neighbours)
@@ -182,7 +234,7 @@ app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
 
   const traceRoutes = await Traceroute.forNode(db, nodeId, since, duration)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(traceRoutes)
@@ -191,13 +243,13 @@ app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
 app.get('/api/hardware-models', async function (_req, res) {
   const hardwareModels = await Node.hardwareModels(db)
 
-  if (!isDevelopment) {
+  if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
   res.json(hardwareModels)
 })
 
-app.get('/api/health-check', async (_req, res) => {
+app.route('/api/health-check').all(async (_req, res) => {
   try {
     await db.query('SELECT 1+1')
     res.status(200).json({ status: 'ok' })
@@ -228,7 +280,8 @@ app.get('/api/device-config', async function (req, res) {
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })
-if (!isDevelopment) {
+
+if (isProduction) {
   app.use(
     expressStaticGzip(`${__dirname}/../public`, {
       serveStatic: {
@@ -248,12 +301,19 @@ if (!isDevelopment) {
   })
 }
 
-app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
   errLog('HTTP error', { err, url: req.url, method: req.method, body: req.body, headers: req.headers })
   if (err instanceof HttpError) {
-    res.status(err.status).json({
+    return res.status(err.status).json({
       error: err.message,
     })
   }
-  res.status(500).send('Internal server error')
+
+  if (err === doubleCsrfUtilities.invalidCsrfTokenError) {
+    return res.status(403).json({
+      error: 'csrf validation error',
+    })
+  }
+
+  return res.status(500).send('Internal server error')
 })

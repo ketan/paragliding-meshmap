@@ -46,3 +46,11 @@ export function parseProtobuf<T>(f: () => T): T {
     }
   }
 }
+
+export function mandatoryEnv(key: string) {
+  const value = process.env[key]
+  if (value === null || value === undefined) {
+    throw `Environment variable ${key} is not defined`
+  }
+  return value
+}

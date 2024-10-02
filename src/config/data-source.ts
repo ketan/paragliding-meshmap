@@ -12,7 +12,6 @@ import { DataSourceOptions } from 'typeorm/browser'
 import { fileURLToPath } from 'url'
 import { dbConnectionOptions } from '#config/db-connection-opts-parser'
 import _ from 'lodash'
-import { DateTime } from 'luxon'
 import PgBoss from 'pg-boss'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
@@ -64,10 +63,10 @@ export const dbConnectionConcurrency =
     ? 1
     : Number(process.env.DB_CONNECTION_CONCURRENCY) || os.cpus().length
 
-console.log(`Using connection parameters`, connString)
-console.log(`Using connection concurrency`, dbConnectionConcurrency)
-console.log(`Timezone is ${process.env.TZ}`)
-console.log(`System time is ${DateTime.now().toString()}`)
-console.log(`Local time is ${DateTime.local().toString()}`)
-console.log(`new Date is ${new Date().toISOString()}`)
+// console.log(`Using connection parameters`, connString)
+// console.log(`Using connection concurrency`, dbConnectionConcurrency)
+// console.log(`Timezone is ${process.env.TZ}`)
+// console.log(`System time is ${DateTime.now().toString()}`)
+// console.log(`Local time is ${DateTime.local().toString()}`)
+// console.log(`new Date is ${new Date().toISOString()}`)
 export const AppDataSource = new DataSource(connString)

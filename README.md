@@ -8,6 +8,49 @@ yarn run docker:build
 docker run -it -e DEBUG='typeorm*,meshmap*,-mqtt*' -e DATABASE_URL=postgres://username:password@hostname:port/database-name paragliding-meshmap
 ```
 
+# Development
+
+Here's how you set up a development environment for contributing to paragliding-meshmap. The first step
+is to run a postgres database. Keep this running in a terminal:
+
+```bash
+docker run --env=POSTGRES_USER=postgres --env=POSTGRES_PASSWORD=postgres --env=POSTGRES_DB=meshmap -p 5432:5432 --volume=pgdata:/var/lib/postgresql/data -ti postgres:alpine
+```
+
+Set up an environment for your ```yarn``` commands:
+
+```bash
+cp .env.sample .env.development.local
+```
+
+Update the following line in ```.env.development.local``` to connect to the database server you
+started above.
+
+```
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/meshmap
+```
+
+Now build the dependencies and run the backend and frontend together:
+
+```bash
+yarn install
+yarn run build
+yarn run start --mqtt-topics 'msh/#' --mqtt-broker-url=mqtt://mqtt.bircom.in --no-mqtt
+```
+
+Connect to http://localhost:5173 in your web browser, and the application should show up.
+In order to get actual data showing up in the map, you'll need to request credentials to access
+the MQTT (message queuing) server. Contact @ketan about this. Once and if you have them,
+run the app like this:
+
+```
+yarn run start --mqtt-topics 'msh/#' --mqtt-broker-url=mqtt://mqtt.bircom.in --mqtt-username xxx --mqtt-password yyy
+```
+
+Connect again in your web browser. Be patient as the packets take time to trickle in from devices.
+Watch your console logs too, as various packets of node and position data come in, they'll show
+up as ```INSERT``` database statements.
+
 # Credits
 
 - [meshtastic](https://meshtastic.org) for building the great software that allows all of this to work.

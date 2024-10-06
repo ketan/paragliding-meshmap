@@ -5,7 +5,7 @@
 ```bash
 yarn install
 yarn run docker:build
-docker run -it -e DEBUG='typeorm*,meshmap*,-mqtt*' -e DATABASE_URL=postgres://username:password@hostname:port/database-name paragliding-meshmap
+docker run -it -e DATABASE_URL=postgres://username:password@hostname:port/database-name paragliding-meshmap
 ```
 
 # Development
@@ -50,6 +50,18 @@ yarn run start --mqtt-topics 'msh/#' --mqtt-broker-url=mqtt://mqtt.bircom.in --m
 Connect again in your web browser. Be patient as the packets take time to trickle in from devices.
 Watch your console logs too, as various packets of node and position data come in, they'll show
 up as ```INSERT``` database statements.
+
+## Debugging/Troubleshooting
+
+You can debug/troubleshoot things by setting the `DEBUG` variable using the `.env.development.local` file (or setting the `DEBUG` variable directly). Logging is enabled via the [`debug`](https://www.npmjs.com/package/debug) library, and you may checkout advanced usage in the debug library documentation.
+
+The following values are supported for debugging
+
+| Value | Usage |
+|---|---|
+| `typeorm:*` | Enables debugging of `typeorm` used for running DB queries. See [this file]([https://github.com/typeorm/typeorm/blob/master/src/logger/DebugLogger.ts](https://github.com/typeorm/typeorm/blob/e7649d2746f907ff36b1efb600402dedd5f5a499/src/logger/DebugLogger.ts#L13-L23)) for more fine grained logging options |
+| `meshmap:*` | Enable logging options for different features in this application. See [this file](https://github.com/ketan/paragliding-meshmap/blob/main/src/helpers/logger.ts) for more fine grained logging options |
+| `mqtt:*` | Enable logging options for the [mqttjs](https://github.com/mqttjs/MQTT.js) library. |
 
 # Credits
 

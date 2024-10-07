@@ -94,6 +94,7 @@ export interface NodesEntity {
 }
 export interface PositionsEntity {
   altitude?: number
+  aboveGroundLevel?: number
   channel?: number
   channelId?: string
   createdAt: string

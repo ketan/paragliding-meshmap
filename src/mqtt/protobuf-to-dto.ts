@@ -80,6 +80,7 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
     latitude: positionPB.latitudeI,
     longitude: positionPB.longitudeI,
     altitude: positionPB.altitude,
+    aboveGroundLevel: null /* lookupAglI(positionPB.altitude, positionPB.latitudeI, positionPB.longitudeI) */,
     satsInView: positionPB.satsInView,
     precisionBits: positionPB.precisionBits,
     groundSpeed: sanitizeNumber(positionPB.groundSpeed),

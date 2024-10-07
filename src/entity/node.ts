@@ -173,7 +173,6 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       latitude: mr.latitude,
       longitude: mr.longitude,
       altitude: BaseType.sanitizeNumber(mr.altitude),
-      aboveGroundLevel: BaseType.sanitizeNumber(mr.aboveGroundLevel),
       firmwareVersion: mr.firmwareVersion,
       hardwareModel: mr.hardwareModel,
       region: mr.region,

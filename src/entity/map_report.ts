@@ -56,9 +56,6 @@ export default class MapReport extends BaseType {
   altitude?: number
 
   @Column({ type: 'integer', nullable: true })
-  aboveGroundLevel?: number
-
-  @Column({ type: 'integer', nullable: true })
   positionPrecision?: number
 
   @Column({ type: 'integer', nullable: true })

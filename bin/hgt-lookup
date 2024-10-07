@@ -1,33 +1,13 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
-import Hgt from 'node-hgt';
+/*
+ * If you don't have ts-node installed, run this script as:
+ * npx tsx bin/hgt-lookup [lat] [lon]
+ */
+
+import { lookupHgt } from '#helpers/hgt';
 import path from 'path';
 import fs from 'fs';
-
-function loadHgt(directory, lat, lon) {
-    const degreesLat = Math.floor(lat);
-    const degreesLon = Math.floor(lon);
-    const prefix = (lat >= 0 ? 'N' : 'S') + degreesLat.toString().padStart(2, '0');
-    const suffix = (lon >= 0 ? 'E' : 'W') + degreesLon.toString().padStart(3, '0');
-    const filename = path.join(directory, prefix + suffix + ".HGT");
-    if (!fs.existsSync(filename))
-	return null;
-    return new Hgt.Hgt(path.join(directory, prefix + suffix + ".HGT"),
-                       [degreesLat, degreesLon]);
-}
-
-function lookupHgt(lat, lon) {
-    const hgt = loadHgt(path.join(import.meta.dirname, '..', 'hgt'), lat, lon);
-
-    if (!hgt) {
-	console.warn("agl-lookup: no HGT data available for these coordinates");
-	return NaN;
-    }
-
-    // Return elevation in meters above sea level.
-    // By default, elevation is interpolated bilinearly.
-    return hgt.getElevation([lat, lon]);
-}
 
 if (process.argv.length != 4) {
     console.error('agl-lookup: Specify the latitude and longitude on command line');

@@ -38,6 +38,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   @Column({ type: 'integer', nullable: true })
   altitude?: number
   @Column({ type: 'integer', nullable: true })
+  aboveGroundLevel?: number | null
+  @Column({ type: 'integer', nullable: true })
   latitude?: number
   @Column({ type: 'integer', nullable: true })
   longitude?: number
@@ -171,6 +173,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       latitude: mr.latitude,
       longitude: mr.longitude,
       altitude: BaseType.sanitizeNumber(mr.altitude),
+      aboveGroundLevel: BaseType.sanitizeNumber(mr.aboveGroundLevel),
       firmwareVersion: mr.firmwareVersion,
       hardwareModel: mr.hardwareModel,
       region: mr.region,
@@ -194,6 +197,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       latitude: BaseType.sanitizeNumber(position.latitude), // unlikely that lat/lon/alt are exactly `0`
       longitude: BaseType.sanitizeNumber(position.longitude),
       altitude: BaseType.sanitizeNumber(position.altitude),
+      aboveGroundLevel: BaseType.sanitizeNumber(position.aboveGroundLevel),
 
       positionPdop: BaseType.sanitizeNumber(position.pdop),
       positionTimestamp: _([position.time, position.timestamp]).compact().min(),

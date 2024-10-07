@@ -93,6 +93,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
           longitude: latLong[1],
           time: DateTime.fromISO(earliestTime),
           altitude: position.altitude,
+          aboveGroundLevel: position.aboveGroundLevel,
           pdop: position.pdop,
           precisionBits: position.precisionBits,
           satsInView: position.satsInView,

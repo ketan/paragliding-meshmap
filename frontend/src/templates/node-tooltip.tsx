@@ -225,6 +225,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
     nodeName,
     keyValue({ key: 'Short Name', value: node.shortName }),
     keyValue({ key: 'Status', renderer: () => status(node, onlineAge, offlineAge) }),
+    keyValue({ key: 'Activity', value: node.activity }),
     padding(),
     location(node),
     padding(),

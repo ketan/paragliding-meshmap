@@ -93,6 +93,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   positionPdop: number
   @Column({ type: 'text', nullable: true })
   flyXCToken?: string
+  @Column({ type: 'text', nullable: true })
+  activity?: string | null /* 'fly', 'hike', 'concern', null */
 
   static flyXCTokenNamespace: Configs
 
@@ -202,6 +204,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       positionTimestamp: _([position.time, position.timestamp]).compact().min(),
       positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
       satsInView: BaseType.sanitizeNumber(position.satsInView),
+      activity: Node.determineActivity(position),
     })
     await this.maybeForwardCoordinates(node, position, nodeFilter)
     return await repository.save(node)
@@ -224,6 +227,32 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     return (
       (await mgr.query('select hardware_model as hardwareModel, count(hardware_model) as count from nodes group by hardware_model')) || []
     )
+  }
+
+  static determineActivity(position: Position) : string | null {
+    if (position.aboveGroundLevel == null || position.groundSpeed == null ||
+	typeof (position.altitude) != "number") {
+      return null;
+    }
+
+    /*
+     * This is where we would add logic to identify the 'concern' activity (not
+     * currently implemented) based on location, altitude and movement.
+     */
+
+    /* Current logic: AGL > 50M and speed > 5 km/h could be used to detect flying nodes. */
+    if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
+      return 'fly';
+    /* This is an example of identifying the concern activity */
+    } else if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed == 0) {
+      return 'concern';
+    } else if (position.aboveGroundLevel < 50 && position.groundSpeed < 5) {
+      return 'hike';
+    } else if (position.groundSpeed > 0) {
+      return 'travel';
+    } else {
+      return null;
+    }
   }
 
   async createOrUpdate(trx: EntityManager) {

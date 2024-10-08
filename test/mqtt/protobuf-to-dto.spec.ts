@@ -146,6 +146,7 @@ describe('protobuf-to-dto', () => {
       airUtilTx: undefined,
       altitude: undefined,
       aboveGroundLevel: undefined,
+      activity: undefined,
       barometricPressure: undefined,
       batteryLevel: undefined,
       channelUtilization: undefined,

@@ -3,7 +3,14 @@ import Hgt from 'node-hgt'
 import path from 'path'
 import fs from 'fs'
 
-function loadHgt(directory: string, latitude: number, longitude: number) {
+/* The default directory to load HGT files from, can be overriden by tests */
+let directory = path.join(import.meta.dirname, '..', '..', 'hgt');
+
+export function setDirectory(dir: string) {
+  directory = dir;
+}
+
+function loadHgt(latitude: number, longitude: number) {
   const degreesLat = Math.floor(latitude)
   const degreesLon = Math.floor(longitude)
   const prefix = (latitude >= 0 ? 'N' : 'S') + degreesLat.toString().padStart(2, '0')
@@ -21,7 +28,7 @@ function loadHgt(directory: string, latitude: number, longitude: number) {
  * as represented in (floating point) degrees.
  */
 export function lookupHgt(latitude: number, longitude: number) : number | null {
-  const hgt = loadHgt(path.join(import.meta.dirname, '..', '..', 'hgt'), latitude, longitude)
+  const hgt = loadHgt(latitude, longitude)
 
   if (!hgt) {
     hgtLog("no HGT data available for these coordinates", latitude, longitude);

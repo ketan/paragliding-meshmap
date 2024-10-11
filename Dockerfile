@@ -24,6 +24,7 @@ RUN yarn install --network-timeout 1000000 --frozen-lockfile --prod \
 ENV DEBUG_COLORS=true
 ENV NODE_ENV=production
 ENV TZ=UTC
+ENV GIT_SHA=${GIT_SHA}
 
 EXPOSE 3333
 

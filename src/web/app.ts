@@ -30,6 +30,7 @@ import { Session } from '#entity/session'
 import { TypeormStore } from 'connect-typeorm'
 import { doubleCsrf } from 'csrf-csrf'
 import cookieParser from 'cookie-parser'
+import child from 'child_process'
 
 const environment = process.env.NODE_ENV || 'development'
 const isDevelopment = environment === 'development' || environment === 'test'
@@ -46,6 +47,22 @@ const __dirname = path.dirname(__filename)
 if (isDevelopment) {
   app.use((await import('morgan')).default('dev'))
   app.use((await import('compression')).default())
+}
+
+let cachedCommitHash: string | null = null
+
+function getCommitHash() {
+  if (isProduction && cachedCommitHash) {
+    return cachedCommitHash
+  }
+
+  const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString().trim()
+
+  if (isProduction) {
+    cachedCommitHash = commitHash
+  }
+
+  return commitHash
 }
 
 if (isProduction) {
@@ -85,6 +102,12 @@ const doubleCsrfUtilities = doubleCsrf({
   size: 64,
 })
 app.use(cookieParser(mandatoryEnv('COOKIE_SECRET'))) // after express-session
+app.use((_req, res, next) => {
+  if (!res.headersSent) {
+    res.setHeader('X-App-Version', getCommitHash())
+  }
+  next()
+})
 
 app.get('/api/csrf-token', (req, res) => {
   return res.json({

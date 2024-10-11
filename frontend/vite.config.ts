@@ -18,7 +18,7 @@ import legacy from '@vitejs/plugin-legacy'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString()
+const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString().trim()
 
 interface SVGToReactOptions {}
 

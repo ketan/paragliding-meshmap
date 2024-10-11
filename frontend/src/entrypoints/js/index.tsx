@@ -2,6 +2,7 @@
 import '../css/index.scss'
 
 // our stuff
+import './utils/fetch-patch'
 import ReactDOM from 'react-dom/client'
 import MapApp from './maps/mapapp'
 

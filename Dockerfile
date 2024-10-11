@@ -9,7 +9,7 @@ RUN yarn install --network-timeout 1000000 --frozen-lockfile \
 
 
 FROM node:22.8-alpine
-
+ARG GIT_SHA
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT

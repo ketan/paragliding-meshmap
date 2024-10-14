@@ -15,7 +15,7 @@ import { BROADCAST_ADDR, mandatoryEnv } from '#helpers/utils'
 import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import express, { NextFunction, Request, Response } from 'express'
+import express, { NextFunction, Request, Response, Router } from 'express'
 import expressStaticGzip from 'express-static-gzip'
 import responseTime from 'response-time'
 import 'express-async-errors'
@@ -303,6 +303,41 @@ app.get('/api/device-config', async function (req, res) {
 
   res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
 })
+
+const statsRouter = Router()
+
+statsRouter.get('/positions-over-time', async (req, res) => {
+  const since = parseSinceParam(req, 'P1M')
+  const duration = parseDurationParam(req, 'P1M')
+
+  if (isProduction) {
+    res.header('cache-control', 'public,max-age=60')
+  }
+  res.json(await Position.dailyPositionCount(db, since, duration))
+})
+
+statsRouter.get('/positions-by-node-id', async (req, res) => {
+  const since = parseSinceParam(req, 'P7D')
+  const duration = parseDurationParam(req, 'P7D')
+
+  if (isProduction) {
+    res.header('cache-control', 'public,max-age=60')
+  }
+
+  res.json(await Position.countByNodeId(db, since, duration))
+})
+
+statsRouter.get('/positions-by-gateway-id', async (req, res) => {
+  const since = parseSinceParam(req, 'P1D')
+  const duration = parseDurationParam(req, 'P1D')
+
+  if (isProduction) {
+    res.header('cache-control', 'public,max-age=60')
+  }
+  res.json(await Position.countByGatewayId(db, since, duration))
+})
+
+app.use('/api/stats', statsRouter)
 
 if (isProduction) {
   app.use(

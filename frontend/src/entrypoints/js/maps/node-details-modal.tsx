@@ -15,15 +15,12 @@ import _ from 'lodash'
 import { ArrowUpRightFromSquareIcon, CopyIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
 import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
+import { toParams } from '../utils/link-utils.ts'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
   node?: NodesEntityForUI
   onClose: () => void
-}
-
-function toParams(start: Duration, duration: Duration) {
-  return `since=${start.plus(duration).rescale().toISO()}&duration=${duration.rescale().toISO()}`
 }
 
 export function NodeDetailsModal({ node, onClose, allNodes }: Props) {

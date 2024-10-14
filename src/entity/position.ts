@@ -3,6 +3,7 @@ import { BaseType } from './base_type.js'
 import _ from 'lodash'
 import { PositionDTO } from '#entity/map_report'
 import { dateTimeType } from '#helpers/migration-helper'
+import { DateTime, Duration } from 'luxon'
 
 @Entity()
 export default class Position extends BaseType {
@@ -84,5 +85,83 @@ export default class Position extends BaseType {
         createdAt: 'ASC',
       },
     })) as PositionDTO[]
+  }
+
+  static async countByGatewayId(
+    db: EntityManager | DataSource,
+    since: Date,
+    duration: Duration
+  ): Promise<
+    {
+      gatewayId: number
+      count: number
+    }[]
+  > {
+    return await db
+      .getRepository(this)
+      .createQueryBuilder('position')
+      .leftJoinAndSelect('nodes', 'node', 'position.gatewayId = node.nodeId')
+      .select('position.gatewayId', 'gateway_id')
+      .addSelect('COUNT(position.id)', 'count')
+      .addSelect('node.short_name', 'short_name')
+      .addSelect('node.long_name', 'long_name')
+      .where('position.createdAt >= :since', { since })
+      .andWhere('position.createdAt <= :duration', { duration: DateTime.fromJSDate(since).plus(duration).toJSDate() })
+      .groupBy('position.gatewayId')
+      .addGroupBy('node.short_name')
+      .addGroupBy('node.long_name')
+      .orderBy('count', 'DESC')
+      .limit(20)
+      .getRawMany()
+  }
+
+  static async countByNodeId(
+    db: EntityManager | DataSource,
+    since: Date,
+    duration: Duration
+  ): Promise<
+    {
+      nodeId: number
+      count: number
+    }[]
+  > {
+    return await db
+      .getRepository(this)
+      .createQueryBuilder('position')
+      .leftJoinAndSelect('nodes', 'node', 'position.nodeId = node.nodeId')
+      .select('position.nodeId', 'node_id')
+      .addSelect('COUNT(*)', 'count')
+      .addSelect('node.short_name', 'short_name')
+      .addSelect('node.long_name', 'long_name')
+      .where('position.createdAt >= :since', { since })
+      .andWhere('position.createdAt <= :duration', { duration: DateTime.fromJSDate(since).plus(duration).toJSDate() })
+      .groupBy('position.nodeId')
+      .addGroupBy('node.short_name')
+      .addGroupBy('node.long_name')
+      .orderBy('count', 'DESC')
+      .limit(20)
+      .getRawMany()
+  }
+
+  static async dailyPositionCount(
+    db: EntityManager | DataSource,
+    since: Date,
+    duration: Duration
+  ): Promise<
+    {
+      date: string
+      count: number
+    }[]
+  > {
+    return await db
+      .getRepository(this)
+      .createQueryBuilder('position')
+      .select("DATE_TRUNC('day', position.createdAt)", 'date')
+      .addSelect('COUNT(*)', 'count')
+      .where('position.createdAt >= :since', { since })
+      .andWhere('position.createdAt <= :duration', { duration: DateTime.fromJSDate(since).plus(duration).toJSDate() })
+      .groupBy("DATE_TRUNC('day', position.createdAt)")
+      .orderBy('date', 'ASC')
+      .getRawMany()
   }
 }

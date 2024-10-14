@@ -124,7 +124,10 @@ export default defineConfig({
           }
         },
       },
-      input: [resolve(__dirname, `index.html`)],
+      input: [
+        resolve(__dirname, `index.html`),
+        resolve(__dirname, `stats.html`)
+      ],
     },
   },
 

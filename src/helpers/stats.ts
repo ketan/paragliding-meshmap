@@ -3,6 +3,7 @@ import debug from 'debug'
 import Position from '#entity/position'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
+import { Duration } from 'luxon'
 
 async function dumpCounts(db: DataSource, logger: debug.Debugger) {
   const response = await db.query<
@@ -17,20 +18,9 @@ async function dumpCounts(db: DataSource, logger: debug.Debugger) {
 }
 
 async function dumpPositionStats(db: DataSource, logger: debug.Debugger) {
-  const positionRepository = db.getRepository(Position)
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
-
-  const response = await positionRepository
-    .createQueryBuilder('position')
-    .select('position.nodeId', 'node_id')
-    .addSelect('COUNT(*)', 'position_count')
-    .where('position.createdAt >= :twentyFourHoursAgo', { twentyFourHoursAgo })
-    .groupBy('position.nodeId')
-    .orderBy('position_count', 'DESC')
-    .limit(20)
-    .getRawMany()
-
-  logger(`Position count grouped by node`, response)
+  logger(`Position count grouped by node`, await Position.countByNodeId(db, twentyFourHoursAgo, Duration.fromObject({days: 1})))
+  logger(`Position count grouped by gateway`, await Position.countByGatewayId(db, twentyFourHoursAgo, Duration.fromObject({days: 1})))
 }
 
 async function dumpDeviceMetricsStats(db: DataSource, logger: debug.Debugger) {

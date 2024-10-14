@@ -19,8 +19,8 @@ async function dumpCounts(db: DataSource, logger: debug.Debugger) {
 
 async function dumpPositionStats(db: DataSource, logger: debug.Debugger) {
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
-  logger(`Position count grouped by node`, await Position.countByNodeId(db, twentyFourHoursAgo, Duration.fromObject({days: 1})))
-  logger(`Position count grouped by gateway`, await Position.countByGatewayId(db, twentyFourHoursAgo, Duration.fromObject({days: 1})))
+  logger(`Position count grouped by node`, await Position.countByNodeId(db, twentyFourHoursAgo, Duration.fromObject({ days: 1 })))
+  logger(`Position count grouped by gateway`, await Position.countByGatewayId(db, twentyFourHoursAgo, Duration.fromObject({ days: 1 })))
 }
 
 async function dumpDeviceMetricsStats(db: DataSource, logger: debug.Debugger) {

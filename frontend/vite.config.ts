@@ -124,10 +124,7 @@ export default defineConfig({
           }
         },
       },
-      input: [
-        resolve(__dirname, `index.html`),
-        resolve(__dirname, `stats.html`)
-      ],
+      input: [resolve(__dirname, `index.html`), resolve(__dirname, `stats.html`)],
     },
   },
 

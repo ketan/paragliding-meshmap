@@ -1,11 +1,12 @@
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import fs from 'fs'
 import { errLog } from '#helpers/logger'
+import { PathLike } from 'node:fs'
 
-function getDeviceProfile() {
-  if (fs.existsSync('config/default.cfg')) {
+export function getDeviceProfile(path?: PathLike) {
+  if (path && fs.existsSync(path)) {
     try {
-      return meshtastic.DeviceProfile.decode(fs.readFileSync('config/default.cfg'))
+      return meshtastic.DeviceProfile.decode(fs.readFileSync(path))
     } catch (e) {
       errLog(e)
     }
@@ -73,7 +74,7 @@ function getDeviceProfile() {
 }
 
 export function createDeviceProfile(shortName: string, longName: string) {
-  const deviceProfile = getDeviceProfile()
+  const deviceProfile = getDeviceProfile('config/default.cfg')
   deviceProfile.shortName = shortName
   deviceProfile.longName = longName
 

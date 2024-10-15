@@ -303,7 +303,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   private async forwardOutboundMessageFromMe(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, nodeFilter: NodeFilter) {
-    if (nodeFilter && nodeFilter.includes(this)) {
+    if (this.matchesNodeFilter(nodeFilter)) {
       return
     }
 

@@ -15,18 +15,20 @@ function parseDuration(value: string) {
 
 const defaultDuration = Duration.fromISO('P7D')
 
-function parseNodeId(value: string, previous: number[]) {
-  let nodeId
-  if (value.startsWith('0x')) {
+function nodeFilter(value: string, previous: NodeFilter) {
+  let nodeId: number | string | RegExp
+
+  if (value.startsWith('0x') && !isNaN(Number(value))) {
     nodeId = Number(value)
+  } else if (!isNaN(Number(value))) {
+    nodeId = Number(value)
+  } else if (value.startsWith('/') && value.endsWith('/')) {
+    nodeId = new RegExp(value.slice(1, -1))
   } else {
-    nodeId = Number(value)
+    nodeId = value
   }
 
-  if (nodeId && !isNaN(nodeId)) {
-    return previous.concat(nodeId)
-  }
-  return previous
+  return previous.concat(nodeId)
 }
 
 export function addOpts(command: Command) {
@@ -68,8 +70,8 @@ export function addOpts(command: Command) {
 
   command.option(
     '--filter-node-forwarding <nodes...>',
-    'Do not share the data for nodes with the specified node IDs (in decimal or hexadecimal prefixed with 0x) with external services.',
-    parseNodeId,
+    'Do not share the data for the specified nodes (this can include a node ID in decimal or hexadecimal format prefixed with 0x, or a short or long name using regex) with external services.',
+    nodeFilter,
     new Array<number>()
   )
 }
@@ -95,6 +97,8 @@ export function mqttCLIParse(argv?: readonly string[], parseOptions?: ParseOptio
   return program.opts() as MQTTCLIOptions
 }
 
+export type NodeFilter = (number | string | RegExp)[]
+
 export interface MQTTCLIOptions {
   mqttBrokerUrl: string
   mqttUsername: string
@@ -106,7 +110,7 @@ export interface MQTTCLIOptions {
   dumpStatsEvery: Duration
   collectServiceEnvelopes: boolean
   dedupeDuration: Duration
-  filterNodeForwarding: number[]
+  filterNodeForwarding: NodeFilter
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

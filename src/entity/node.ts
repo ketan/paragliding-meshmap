@@ -17,6 +17,7 @@ import { AppDataSource } from '#config/data-source'
 import { flyXCPositionPayload, sendToFlyXCJob } from '#helpers/fly-xc'
 import { sendToTelegram } from '#helpers/telegram'
 import { pureTrackPositionPayload, sendToPureTrackIOJob } from '#helpers/pure-track'
+import { NodeFilter } from '#helpers/cli'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -182,7 +183,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     return await repository.save(node)
   }
 
-  static async updatePosition(trx: EntityManager, position: Position, filterNodeIds: number[]) {
+  static async updatePosition(trx: EntityManager, position: Position, nodeFilter: NodeFilter) {
     const repository = trx.getRepository(Node)
     const node = (await repository.findOne({ where: { nodeId: position.from } })) || new Node({ nodeId: position.from })
 
@@ -198,7 +199,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
       satsInView: BaseType.sanitizeNumber(position.satsInView),
     })
-    await this.maybeForwardCoordinates(node, position, filterNodeIds)
+    await this.maybeForwardCoordinates(node, position, nodeFilter)
     return await repository.save(node)
   }
 
@@ -247,12 +248,12 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  async outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration, filterNodeIds: number[]) {
+  async outboundMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, purgeOlderThan: Duration, nodeFilter: NodeFilter) {
     const now = DateTime.now()
     this.outbox ||= []
     this.outbox.unshift({ to: tm.to, text: tm.text, time: tm.createdAt.toISOString() })
     if (tm.to === BROADCAST_ADDR) {
-      await this.forwardMessage(tm, filterNodeIds)
+      await this.forwardOutboundMessageFromMe(tm, nodeFilter)
     }
     if (purgeOlderThan) {
       this.outbox = this.outbox.filter((msg) => {
@@ -262,8 +263,33 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  private static async maybeForwardCoordinates(node: Node, position: Position, filterNodeIds: number[]) {
-    if (filterNodeIds && filterNodeIds.includes(node.nodeId)) {
+  matchesNodeFilter(filter?: NodeFilter | null): boolean {
+    if (!filter) {
+      return false
+    }
+
+    if (filter.includes(this.nodeId)) {
+      return true
+    }
+
+    for (const item of filter) {
+      if (typeof item === 'string') {
+        if (this.shortName?.toLowerCase() === item.toLowerCase() || this.longName?.toLowerCase() === item.toLowerCase()) {
+          return true
+        }
+      } else if (item instanceof RegExp) {
+        const regex = new RegExp(item, 'i')
+        if (regex.test(this.shortName || '') || regex.test(this.longName || '')) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
+  private static async maybeForwardCoordinates(node: Node, position: Position, nodeFilter: NodeFilter) {
+    if (node.matchesNodeFilter(nodeFilter)) {
       return
     }
     const flyXCPayLoad = flyXCPositionPayload(node, position)
@@ -276,8 +302,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  private async forwardMessage(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, filterNodeIds: number[]) {
-    if (filterNodeIds && filterNodeIds.includes(tm.from)) {
+  private async forwardOutboundMessageFromMe(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, nodeFilter: NodeFilter) {
+    if (nodeFilter && nodeFilter.includes(this)) {
       return
     }
 

@@ -56,9 +56,15 @@ describe('cli', () => {
   })
 
   it('should parse --filter-node-forwarding', () => {
-    expect(webCLIParse(['--filter-node-forwarding', '198', '2', '3'], { from: 'user' }).filterNodeForwarding).to.deep.eq([198, 2, 3])
     expect(
-      webCLIParse(['--filter-node-forwarding', '1', '--filter-node-forwarding', '0xabc'], { from: 'user' }).filterNodeForwarding
-    ).to.deep.eq([1, 2748])
+      webCLIParse(['--filter-node-forwarding', '198', '2', '3', '/BirCom-.*/', '/BC\\d\\d/', 'ABCD', 'some long name'], { from: 'user' })
+        .filterNodeForwarding
+    ).to.deep.eq([198, 2, 3, /BirCom-.*/, /BC\d\d/, 'ABCD', 'some long name'])
+    expect(
+      webCLIParse(
+        ['--filter-node-forwarding', '1', '--filter-node-forwarding', '0xabc', '/BirCom-.*/', '/BC\\d\\d/', 'ABCD', 'some long name'],
+        { from: 'user' }
+      ).filterNodeForwarding
+    ).to.deep.eq([1, 2748, /BirCom-.*/, /BC\d\d/, 'ABCD', 'some long name'])
   })
 })

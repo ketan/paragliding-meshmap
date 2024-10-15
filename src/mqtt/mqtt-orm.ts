@@ -3,7 +3,7 @@ import { parseProtobuf } from '#helpers/utils'
 import debug from 'debug'
 import { AbortError } from 'p-retry'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { MQTTCLIOptions } from '#helpers/cli'
+import { MQTTCLIOptions, NodeFilter } from '#helpers/cli'
 import {
   toDeviceMetric,
   toEnvironmentMetric,
@@ -68,7 +68,7 @@ export async function saveTextMessage(
   envelope: meshtastic.ServiceEnvelope,
   purgeOlderThan: Duration,
   dedupeDuration: Duration,
-  filterNodeIds: number[]
+  nodeFilter: NodeFilter
 ) {
   const tm = toTextMessage(envelope)
 
@@ -87,7 +87,7 @@ export async function saveTextMessage(
       const [from, to] = await Promise.all([Node.findOrBuild(trx, tm.from), Node.findOrBuild(trx, tm.to)])
       await trx.save(tm)
 
-      await from.outboundMessage(tm, purgeOlderThan, filterNodeIds)
+      await from.outboundMessage(tm, purgeOlderThan, nodeFilter)
       to.inboundMessage(tm, purgeOlderThan)
 
       await trx.save([from, to], { reload: false })
@@ -102,7 +102,7 @@ export async function updateNodeWithPosition(
   db: DataSource,
   envelope: meshtastic.ServiceEnvelope,
   dedupeDuration: Duration,
-  filterNodeIds: number[]
+  nodeFilter: NodeFilter
 ) {
   const newPosition = toPosition(envelope)
 
@@ -119,7 +119,7 @@ export async function updateNodeWithPosition(
         }
 
         await trx.save(newPosition, { reload: false })
-        await Node.updatePosition(trx, newPosition, filterNodeIds)
+        await Node.updatePosition(trx, newPosition, nodeFilter)
       }
     } catch (e) {
       errLog(`Unable to update node position`, { err: e, newPosition, envelope })

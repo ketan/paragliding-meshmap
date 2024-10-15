@@ -3,16 +3,39 @@ import fs from 'fs'
 import { errLog } from '#helpers/logger'
 import { PathLike } from 'node:fs'
 
-export function getDeviceProfile(path?: PathLike) {
-  if (path && fs.existsSync(path)) {
-    try {
-      return meshtastic.DeviceProfile.decode(fs.readFileSync(path))
-    } catch (e) {
-      errLog(e)
-    }
-  }
+function channelUrl(loRaConfig: meshtastic.Config.ILoRaConfig) {
+  const chset = new meshtastic.ChannelSet({
+    settings: [
+      new meshtastic.ChannelSettings({
+        moduleSettings: {
+          positionPrecision: 32,
+        },
+        uplinkEnabled: true,
+        psk: Buffer.from('AQ==', 'base64url'), // default channel key
+      }),
+    ],
+    loraConfig: loRaConfig,
+  })
 
-  return new meshtastic.DeviceProfile({
+  const url = new Buffer(meshtastic.ChannelSet.encode(chset).finish())
+    .toString('base64url')
+    .replace('=', '')
+    .replace('+', '-')
+    .replace('/', '_')
+  return `https://meshtastic.org/e/#${url}`
+}
+
+export function getDefaultProfile() {
+  const loRaConfig = new meshtastic.Config.LoRaConfig({
+    usePreset: true,
+    region: meshtastic.Config.LoRaConfig.RegionCode.IN,
+    txEnabled: true,
+    hopLimit: 3,
+    txPower: 0, // default maxiumu
+    sx126xRxBoostedGain: true,
+    ignoreMqtt: true,
+  })
+  const deviceProfile = new meshtastic.DeviceProfile({
     config: new meshtastic.LocalConfig({
       position: new meshtastic.Config.PositionConfig({
         positionBroadcastSecs: 180,
@@ -30,15 +53,7 @@ export function getDeviceProfile(path?: PathLike) {
         fixedPin: 123456,
       }),
       display: new meshtastic.Config.DisplayConfig(),
-      lora: new meshtastic.Config.LoRaConfig({
-        usePreset: true,
-        region: meshtastic.Config.LoRaConfig.RegionCode.IN,
-        txEnabled: true,
-        hopLimit: 3,
-        txPower: 0, // default maxiumu
-        sx126xRxBoostedGain: true,
-        ignoreMqtt: true,
-      }),
+      lora: loRaConfig,
     }),
     moduleConfig: new meshtastic.LocalModuleConfig({
       neighborInfo: new meshtastic.ModuleConfig.NeighborInfoConfig({
@@ -50,6 +65,7 @@ export function getDeviceProfile(path?: PathLike) {
         username: 'uplink',
         password: 'uplink',
         root: 'msh/IN/Bir/mqtt',
+        enabled: true,
         proxyToClientEnabled: true,
         mapReportingEnabled: true,
         mapReportSettings: new meshtastic.ModuleConfig.MapReportSettings({
@@ -71,31 +87,29 @@ export function getDeviceProfile(path?: PathLike) {
       paxcounter: new meshtastic.ModuleConfig.PaxcounterConfig(),
     }),
   })
+
+  return deviceProfile
+}
+
+export function getDeviceProfile(path?: PathLike) {
+  if (path && fs.existsSync(path)) {
+    try {
+      return meshtastic.DeviceProfile.decode(fs.readFileSync(path))
+    } catch (e) {
+      errLog(e)
+    }
+  }
+  return getDefaultProfile()
 }
 
 export function createDeviceProfile(shortName: string, longName: string) {
   const deviceProfile = getDeviceProfile('config/default.cfg')
   deviceProfile.shortName = shortName
   deviceProfile.longName = longName
-
-  const chset = new meshtastic.ChannelSet({
-    settings: [
-      new meshtastic.ChannelSettings({
-        moduleSettings: {
-          positionPrecision: 32,
-        },
-        uplinkEnabled: true,
-        psk: Buffer.from('AQ==', 'base64url'), // default channel key
-      }),
-    ],
-    loraConfig: deviceProfile.config?.lora,
-  })
-
-  const url = new Buffer(meshtastic.ChannelSet.encode(chset).finish())
-    .toString('base64url')
-    .replace('=', '')
-    .replace('+', '-')
-    .replace('/', '_')
-  deviceProfile.channelUrl = `https://meshtastic.org/e/#${url}`
+  if (deviceProfile.config?.lora) {
+    deviceProfile.channelUrl = channelUrl(deviceProfile.config.lora)
+  } else {
+    throw 'Could not find a lora config for device profile ' + deviceProfile
+  }
   return deviceProfile
 }

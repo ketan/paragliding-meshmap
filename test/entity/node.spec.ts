@@ -296,22 +296,22 @@ describe('Node', () => {
       expect(node.matchesNodeFilter(undefined)).to.be.false
     })
 
-    it('should return true if nodeId is in the filter', () => {
+    it('should return matching filter (nodeId) if nodeId is in the filter', () => {
       const node = new Node({ nodeId: 1, shortName: 'test', longName: 'testNode' })
       const filter = [1, 2, 3]
-      expect(node.matchesNodeFilter(filter)).to.be.true
+      expect(node.matchesNodeFilter(filter)).to.eq(1)
     })
 
-    it('should return true if shortName or longName matches a string in the filter', () => {
+    it('should return matching filter (text) if shortName or longName matches a string in the filter', () => {
       const node = new Node({ nodeId: 1, shortName: 'test', longName: 'testNode' })
       const filter = ['test', 'other']
-      expect(node.matchesNodeFilter(filter)).to.be.true
+      expect(node.matchesNodeFilter(filter)).to.eq('test')
     })
 
-    it('should return true if shortName or longName matches a regex in the filter', () => {
+    it('should return matching filter (regex) if shortName or longName matches a regex in the filter', () => {
       const node = new Node({ nodeId: 1, shortName: 'test', longName: 'testNode' })
       const filter = [/test/, /other/]
-      expect(node.matchesNodeFilter(filter)).to.be.true
+      expect(node.matchesNodeFilter(filter)).to.deep.eq(/test/)
     })
 
     it('should return false if nodeId, shortName, and longName do not match the filter', () => {

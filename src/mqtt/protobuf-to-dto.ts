@@ -1,4 +1,5 @@
 import { parseProtobuf, toBigInt } from '#helpers/utils'
+import { lookupAglI } from '#helpers/hgt'
 import { meshtastic } from '../gen/meshtastic-protobufs.js'
 import Node from '#entity/node'
 import DeviceMetric from '#entity/device_metric'
@@ -80,6 +81,7 @@ export function toPosition(envelope: meshtastic.ServiceEnvelope) {
     latitude: positionPB.latitudeI,
     longitude: positionPB.longitudeI,
     altitude: positionPB.altitude,
+    aboveGroundLevel: lookupAglI(positionPB.altitude, positionPB.latitudeI, positionPB.longitudeI),
     satsInView: positionPB.satsInView,
     precisionBits: positionPB.precisionBits,
     groundSpeed: sanitizeNumber(positionPB.groundSpeed),

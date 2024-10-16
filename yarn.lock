@@ -6272,6 +6272,17 @@ node-gyp@8.x:
     tar "^6.1.2"
     which "^2.0.2"
 
+node-hgt@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/node-hgt/-/node-hgt-1.2.3.tgz#1ccc118c7a90b02d22c3ae1815af237321e32878"
+  integrity sha512-y3/3UDO7P+gzsnugn4Nq4KemshPdJ1MHIPGPbyiXvw7D4Ib1l5QeEiqC9Cna1vld4HaFfoMPwJX8Xr/+MW2Q6g==
+  dependencies:
+    extend "^3.0.2"
+    lru-cache "^4.1.3"
+    promise "^8.0.0"
+    request "^2.88.0"
+    yauzl "^2.10.0"
+
 node-releases@^2.0.14, node-releases@^2.0.18:
   version "2.0.18"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.18.tgz#f010e8d35e2fe8d6b2944f03f70213ecedc4ca3f"

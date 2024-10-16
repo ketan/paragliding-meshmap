@@ -71,6 +71,14 @@ a.button {
     &.node-status-end-track {
       @apply border-t-amber-600;
     }
+
+    &.node-activity-fly {
+      @apply border-t-blue-600;
+    }
+
+    &.node-activity-concern {
+      @apply border-t-orange-600;
+    }
   }
 }
 

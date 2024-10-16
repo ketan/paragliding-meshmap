@@ -91,9 +91,11 @@ export interface NodesEntity {
   updatedAt: string
   uptimeSeconds?: number
   voltage?: number
+  activity?: string | null
 }
 export interface PositionsEntity {
   altitude?: number
+  aboveGroundLevel?: number
   channel?: number
   channelId?: string
   createdAt: string

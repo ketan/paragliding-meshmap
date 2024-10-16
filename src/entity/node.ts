@@ -289,10 +289,14 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     return false
   }
 
+  describe() {
+    return `nodeId: ${this.nodeId}/!${this.nodeId?.toString(16)}, shortName: ${this.shortName || 'UNKNOWN'}, longName: ${this.longName || 'UNKNOWN'}`
+  }
+
   private static async maybeForwardCoordinates(node: Node, position: Position, nodeFilter: NodeFilter) {
     const matchedFilter = node.matchesNodeFilter(nodeFilter)
     if (matchedFilter) {
-      filterLog(`Filtered`, this, `because it matched`, matchedFilter)
+      filterLog(`Filtered`, node.describe(), `because it matched`, matchedFilter)
       return
     }
     const flyXCPayLoad = flyXCPositionPayload(node, position)
@@ -308,7 +312,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   private async forwardOutboundMessageFromMe(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, nodeFilter: NodeFilter) {
     const matchedFilter = this.matchesNodeFilter(nodeFilter)
     if (matchedFilter) {
-      filterLog(`Filtered`, this, `because it matched`, matchedFilter)
+      filterLog(`Filtered`, this.describe(), `because it matched`, matchedFilter)
       return
     }
 

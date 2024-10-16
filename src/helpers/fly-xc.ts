@@ -27,9 +27,8 @@ export async function sendToFlyXCJob(payload: PositionPayload | TextMessagePaylo
   const flyXCApiUrl = process.env.FLYXC_API_URL
 
   if (flyXCApiKey && flyXCApiUrl) {
-    flyXCLog('Sending to FlyXC')
+    flyXCLog('Sending', payload)
     await pgBoss.send('fly-xc', payload)
-    flyXCLog('Sent to FlyXC')
   }
 }
 

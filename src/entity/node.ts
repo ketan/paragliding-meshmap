@@ -18,6 +18,7 @@ import { flyXCPositionPayload, sendToFlyXCJob } from '#helpers/fly-xc'
 import { sendToTelegram } from '#helpers/telegram'
 import { pureTrackPositionPayload, sendToPureTrackIOJob } from '#helpers/pure-track'
 import { NodeFilter } from '#helpers/cli'
+import { filterLog } from '#helpers/logger'
 
 @Entity()
 export default class Node extends BaseTypeWithoutPrimaryKey {
@@ -263,24 +264,24 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     }
   }
 
-  matchesNodeFilter(filter?: NodeFilter | null): boolean {
+  matchesNodeFilter(filter?: NodeFilter | null) {
     if (!filter) {
       return false
     }
 
     if (filter.includes(this.nodeId)) {
-      return true
+      return this.nodeId
     }
 
     for (const item of filter) {
       if (typeof item === 'string') {
         if (this.shortName?.toLowerCase() === item.toLowerCase() || this.longName?.toLowerCase() === item.toLowerCase()) {
-          return true
+          return item
         }
       } else if (item instanceof RegExp) {
         const regex = new RegExp(item, 'i')
         if (regex.test(this.shortName || '') || regex.test(this.longName || '')) {
-          return true
+          return item
         }
       }
     }
@@ -289,7 +290,9 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   private static async maybeForwardCoordinates(node: Node, position: Position, nodeFilter: NodeFilter) {
-    if (node.matchesNodeFilter(nodeFilter)) {
+    const matchedFilter = node.matchesNodeFilter(nodeFilter)
+    if (matchedFilter) {
+      filterLog(`Filtered`, this, `because it matched`, matchedFilter)
       return
     }
     const flyXCPayLoad = flyXCPositionPayload(node, position)
@@ -303,7 +306,9 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   private async forwardOutboundMessageFromMe(tm: Pick<TextMessage, 'from' | 'text' | 'to' | 'createdAt'>, nodeFilter: NodeFilter) {
-    if (this.matchesNodeFilter(nodeFilter)) {
+    const matchedFilter = this.matchesNodeFilter(nodeFilter)
+    if (matchedFilter) {
+      filterLog(`Filtered`, this, `because it matched`, matchedFilter)
       return
     }
 

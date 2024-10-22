@@ -1,1 +1,1 @@
-declare module 'node-hgt';
+declare module 'node-hgt'

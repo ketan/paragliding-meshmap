@@ -1,13 +1,13 @@
 import { expect } from 'chai'
-import { setDirectory, lookupHgt, lookupAglI} from '#helpers/hgt'
+import { setDirectory, lookupHgt, lookupAglI } from '#helpers/hgt'
 
 /* Use fixtures from our local directory for the tests */
-setDirectory(import.meta.dirname);
+setDirectory(import.meta.dirname)
 
 describe('Hgt', () => {
   describe('lookupHgt', () => {
     it('should return an elevation', () => {
-      expect(lookupHgt(32.033277, 76.718591)).to.equal(1414.1324076799888);
+      expect(lookupHgt(32.033277, 76.718591)).to.equal(1414.1324076799888)
     })
     it('should return an null when no data', () => {
       expect(lookupHgt(89.033277, 0.718591)).to.be.null

@@ -9,9 +9,9 @@ directory must be populated with files.
 
 These files are named like this:
 
- * N50W120.HGT
- * N00E000.HGT
- * S30W150.HGT
+- N50W120.HGT
+- N00E000.HGT
+- S30W150.HGT
 
 You can download these files from many places, including:
 

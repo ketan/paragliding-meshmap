@@ -45,9 +45,9 @@ export function Position({ positionAttrs, title = 'Position' }: { positionAttrs:
         <div>
           <NameValue name="Altitude" value={positionAttrs.altitude} unit="m" />
         </div>
-	<div>
-	  <NameValue name="Above Ground Level" value={positionAttrs.aboveGroundLevel} unit="m" />
-	</div>
+        <div>
+          <NameValue name="Above Ground Level" value={positionAttrs.aboveGroundLevel} unit="m" />
+        </div>
         <div>
           <NameValue name="Satellites in view" value={positionAttrs.satsInView} />
         </div>

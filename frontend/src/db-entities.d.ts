@@ -55,6 +55,8 @@ export interface NeighbourInfosEntity {
   updatedAt: string
 }
 export interface NodesEntity {
+  aboveGroundLevel?: number
+  activity?: string
   airUtilTx?: number
   altitude?: number
   barometricPressure?: number
@@ -91,11 +93,10 @@ export interface NodesEntity {
   updatedAt: string
   uptimeSeconds?: number
   voltage?: number
-  activity?: string | null
 }
 export interface PositionsEntity {
-  altitude?: number
   aboveGroundLevel?: number
+  altitude?: number
   channel?: number
   channelId?: string
   createdAt: string
@@ -141,6 +142,12 @@ export interface ServiceEnvelopesEntity {
   to?: number
   updatedAt: string
 }
+export interface SessionsEntity {
+  destroyedAt?: string
+  expiredAt: number
+  id: string
+  json: string
+}
 export interface TextMessagesEntity {
   channel: number
   channelId: string
@@ -170,6 +177,14 @@ export interface TraceroutesEntity {
   to: number
   updatedAt: string
   wantResponse: boolean
+}
+export interface UsersEntity {
+  createdAt: string
+  displayName?: string
+  email: string
+  id: number
+  profilePhotoUrl?: string
+  updatedAt: string
 }
 export interface WaypointsEntity {
   channel: number

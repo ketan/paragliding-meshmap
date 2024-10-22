@@ -59,7 +59,8 @@ const location = (node: NodesEntityForUI) => {
       },
     }),
     keyValue([
-      { key: 'Altitude', value: node.altitude, unit: 'm' },
+      { key: 'Alt', value: node.altitude, unit: 'm' },
+      { key: 'AGL', value: node.aboveGroundLevel, unit: 'm' },
       { key: 'Satellites', value: node.satsInView },
     ]),
     keyValue({ key: 'Position Acquired at', value: node.positionTimestamp, renderer: timeAgo }),

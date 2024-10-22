@@ -54,6 +54,7 @@ export default defineConfig({
     'luxon',
     'morgan',
     'newrelic',
+    'node-hgt',
     'node:crypto',
     'os',
     'p-queue',

@@ -20,6 +20,7 @@ export interface PositionsEntityJSON {
   latitude: number
   longitude: number
   altitude: number
+  aboveGroundLevel: number
   createdAt: string
 
   pdop?: number

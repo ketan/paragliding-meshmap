@@ -151,9 +151,10 @@ export function getQueryParams(): QueryParams {
   return retval
 }
 
-export function getIconClassFor(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration) {
+export function getIconClassFor(node: Pick<NodesEntityForUI, 'updatedAt' | 'activity'>, onlineAge: Duration, offlineAge: Duration) {
   const status = nodeStatus(node, onlineAge, offlineAge)
-  return cssClassFor(status)
+  /* Only indicate activity for online nodes */
+  return cssClassFor(status, status == 'online' ? node.activity : null)
 }
 
 export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration): NodeStatus {

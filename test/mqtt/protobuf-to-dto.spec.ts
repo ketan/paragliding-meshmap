@@ -83,6 +83,7 @@ describe('protobuf-to-dto', () => {
     const position = toPosition(parseProtobuf(() => meshtastic.ServiceEnvelope.decode(new Buffer(rawData, 'hex'))))
 
     expect(position).to.deep.eq({
+      aboveGroundLevel: null,
       altitude: 216,
       channel: 0,
       channelId: 'Fr_Balise',
@@ -144,6 +145,8 @@ describe('protobuf-to-dto', () => {
 
       airUtilTx: undefined,
       altitude: undefined,
+      aboveGroundLevel: undefined,
+      activity: undefined,
       barometricPressure: undefined,
       batteryLevel: undefined,
       channelUtilization: undefined,

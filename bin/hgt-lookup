@@ -1,0 +1,25 @@
+#!/usr/bin/env ts-node
+
+/*
+ * If you don't have ts-node installed, run this script as:
+ * npx tsx bin/hgt-lookup [lat] [lon]
+ */
+
+import { lookupHgt } from '#helpers/hgt'
+import path from 'path'
+import fs from 'fs'
+
+if (process.argv.length != 4) {
+  console.error('agl-lookup: Specify the latitude and longitude on command line')
+  process.exit(2)
+}
+
+const lat = parseFloat(process.argv[2])
+const lon = parseFloat(process.argv[3])
+
+if (isNaN(lat) || isNaN(lon)) {
+  console.error('agl-lookup: Specify latitude and longitude as numbers')
+  console.exit(2)
+}
+
+console.log(lookupHgt(lat, lon))

@@ -39,6 +39,9 @@ export default class Position extends BaseType {
   altitude?: number | null
 
   @Column({ type: 'integer', nullable: true })
+  aboveGroundLevel?: number | null
+
+  @Column({ type: 'integer', nullable: true })
   satsInView: number
 
   @Column({ type: 'integer', nullable: true })

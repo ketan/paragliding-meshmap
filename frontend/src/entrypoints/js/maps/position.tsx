@@ -8,6 +8,7 @@ interface PositionProps {
   latLng?: PointTuple
   // positionUpdatedAt?: string | Date | DateTime
   altitude?: number
+  aboveGroundLevel?: number
   positionPdop?: number
   positionPrecisionBits?: number
   time?: string | null | Date | DateTime
@@ -43,6 +44,9 @@ export function Position({ positionAttrs, title = 'Position' }: { positionAttrs:
         </div>
         <div>
           <NameValue name="Altitude" value={positionAttrs.altitude} unit="m" />
+        </div>
+        <div>
+          <NameValue name="Above Ground Level" value={positionAttrs.aboveGroundLevel} unit="m" />
         </div>
         <div>
           <NameValue name="Satellites in view" value={positionAttrs.satsInView} />

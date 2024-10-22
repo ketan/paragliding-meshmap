@@ -34,3 +34,6 @@ coverage/
 *.sql
 *.gz
 .env.*.local
+
+# HGT data
+hgt/*.HGT

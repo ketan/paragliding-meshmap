@@ -1,4 +1,4 @@
-FROM node:22.9-alpine AS build
+FROM node:23.0-alpine AS build
 
 COPY . /app
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN yarn install --network-timeout 1000000 --frozen-lockfile \
   && GIT_SHA=${GIT_SHA} yarn --debug --verbose run build
 
 
-FROM node:22.9-alpine
+FROM node:23.0-alpine
 ARG GIT_SHA
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"

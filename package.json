@@ -110,7 +110,7 @@
     "typeorm-extension": "^3.6.1",
     "typescript": "^5.5.3",
     "typescript-color-gradient": "^3.3.2",
-    "typescript-eslint": "^7.15.0",
+    "typescript-eslint": "^8.12.1",
     "vite": "^5.3.3",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html-inject": "^1.1.2",

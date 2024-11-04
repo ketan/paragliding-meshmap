@@ -147,7 +147,7 @@
     "supports-color": "^9.4.0",
     "ts-parse-database-url": "^1.0.3",
     "typeorm": "^0.3.20",
-    "uuid": "^10.0.0"
+    "uuid": "^11.0.2"
   },
   "engines": {
     "node": ">=22.0"

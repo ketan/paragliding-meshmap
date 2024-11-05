@@ -1,7 +1,7 @@
-import { app } from './web/app.js'
 import { mqttProcessor } from '#mqtt/main'
 import { webCLIParse } from '#helpers/cli'
 import { AppDataSource } from '#config/data-source'
+import { app } from '#web/app'
 
 const cliOptions = webCLIParse()
 

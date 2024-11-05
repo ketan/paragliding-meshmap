@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm'
-import { BaseType } from './base_type.js'
+import { BaseType } from './base_types.js'
 import _ from 'lodash'
 
 @Entity()

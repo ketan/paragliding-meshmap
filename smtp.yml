@@ -1,0 +1,32 @@
+fakesmtp:
+  #The SMTP Server Port used by the Fake SMTP Server
+  port: 8025
+
+  #The binding address of the Fake SMTP Server; Bound to all interfaces by default / no value
+  bindAddress: 127.0.0.1
+
+  #List of recipient addresses which should be blocked/rejected
+  blockedRecipientAddresses:
+    - blocked@example.com
+    - foo@eample.com
+
+  #List of sender email addresses to ignore, as a comma-separated list of regex expressions.
+  filteredEmailRegexList: john@doe\\.com,.*@google\\.com ; empty by default
+
+  #Optional configuration option to specify the maximum allowed message size. The size can be
+  #defined using Spring Boot DataSize value type - https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/boot-features-external-config.html#boot-features-external-config-conversion-datasize.
+  #Default: no limit
+  maxMessageSize: 10MB
+
+  #Configure if TLS is required to connect to the SMTP server. Defaults to false. See TLS section below
+  requireTLS: false
+
+  #When set to true emails will be forwarded to a configured target email system. Therefore
+  #the spring boot mail system needs to be configured. See also
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-email
+  forwardEmails: false
+  authentication:
+    #Username of the client to be authenticated
+    username: myuser
+    #Password of the client to be authenticated
+    password: mysecretpassword

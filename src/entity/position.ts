@@ -1,5 +1,5 @@
 import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
-import { BaseType } from './base_type.js'
+import { BaseType } from './base_types.js'
 import _ from 'lodash'
 import { PositionDTO } from '#entity/map_report'
 import { dateTimeType } from '#helpers/migration-helper'

@@ -5,6 +5,9 @@ import { kebabCase } from 'lodash'
 import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { FormField } from './form-field.tsx'
 
 function download(blob: Blob, shortName: string) {
   const url = window.URL.createObjectURL(blob)
@@ -23,6 +26,16 @@ interface Inputs {
   longName: string
 }
 
+const inputsYupSchema = yup.object().shape({
+  shortName: yup.string().required('Short name is required.').min(2, 'Minimum length is 2.').max(4, 'Maximum length is 4.'),
+  longName: yup.string().required('Long name is required.').min(5, 'Minimum length is 5.').max(12, 'Maximum length is 12.'),
+})
+
+interface Inputs {
+  shortName: string
+  longName: string
+}
+
 export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
   const [errorMessage, setErrorMessage] = useState<ReactNode>()
 
@@ -30,7 +43,11 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    mode: 'onBlur',
+    shouldUnregister: true,
+    resolver: yupResolver(inputsYupSchema),
+  })
 
   const onSubmit: SubmitHandler<Inputs> = async ({ longName, shortName }) => {
     const queryString = qs.stringify({
@@ -69,7 +86,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
       <div className="text-sm md:text-md">
         {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 p-2">
-          <div className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-yellow-200">
+          <div className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-yellow-200 mb-8">
             <p className="font-semibold text-base">Note!</p>
             <ul className="list-disc list-inside space-y-1 md:text-sm text-xs">
               <li>
@@ -96,52 +113,25 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
               <li>Happy meshing! Great winds and clear skies!</li>
             </ul>
           </div>
-          <div>
-            <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
-              Short Name
-            </label>
-            <input
-              type="text"
-              {...register('shortName', {
-                required: 'This field is required.',
-                minLength: {
-                  value: 2,
-                  message: 'Minimum length is 2.',
-                },
-                maxLength: {
-                  value: 4,
-                  message: 'Maximum length is 4.',
-                },
-              })}
-              aria-invalid={errors.shortName ? 'true' : 'false'}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-            {errors.shortName && <p className="mt-1 text-xs text-red-500">{errors.shortName.message}</p>}
-            <p className="mt-1 text-xs text-gray-500">Enter a unique 2-4 character identifier.</p>
-          </div>
-          <div>
-            <label htmlFor="longName" className="block text-sm font-medium text-gray-700">
-              Long Name
-            </label>
-            <input
-              type="text"
-              {...register('longName', {
-                required: 'This field is required.',
-                minLength: {
-                  value: 5,
-                  message: 'Minimum length is 5.',
-                },
-                maxLength: {
-                  value: 12,
-                  message: 'Maximum length is 12.',
-                },
-              })}
-              aria-invalid={errors.longName ? 'true' : 'false'}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-            {errors.longName && <p className="mt-1 text-xs text-red-500">{errors.longName.message}</p>}
-            <p className="mt-1 text-xs text-gray-500">Enter a name 5-12 characters long.</p>
-          </div>
+
+          <FormField
+            id="shortName"
+            label="Short Name"
+            type="text"
+            register={register}
+            errors={errors}
+            helpText="Enter a unique 2-4 character identifier."
+          />
+
+          <FormField
+            id="longName"
+            label="Long Name"
+            type="text"
+            register={register}
+            errors={errors}
+            helpText="Enter a name 5-12 characters long."
+          />
+
           <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded">
             Generate my config
           </button>

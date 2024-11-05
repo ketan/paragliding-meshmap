@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { randomHex } from '../utils/ui-util.tsx'
+
 type TooltipProps = React.HTMLAttributes<HTMLSpanElement> & {
   tooltipText: string
   className?: string

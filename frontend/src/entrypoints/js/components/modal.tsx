@@ -92,11 +92,11 @@ export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, c
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-gray-900 bg-opacity-75 w-full h-full">
       <div
-        className="relative w-[95%] max-w-[95%] sm:w-[90%] sm:max-w-[90%] md:max-w-2xl lg:max-w-2xl mx-auto bg-white rounded-lg shadow-lg max-h-[90vh] overflow-hidden"
+        className="relative w-[95%] max-w-[95%] sm:w-[90%] sm:max-w-[90%] md:max-w-2xl lg:max-w-2xl mx-auto bg-white rounded-lg shadow-lg max-h-[90vh] h-[90vh] flex flex-col"
         ref={ref}
       >
         <div className="flex justify-between items-center p-2 border-b shadow-md">
-          <h2 className="text-xl font-semibold">{header}</h2>
+          <h2 className="text-lg font-semibold">{header}</h2>
           <div className="flex space-x-2">
             {allHeaderButtons.map((button, index) => {
               return (
@@ -107,7 +107,7 @@ export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, c
             })}
           </div>
         </div>
-        <div className="p-2 overflow-y-auto max-h-[70vh]">{children}</div>
+        <div className="p-2 overflow-y-auto flex-grow">{children}</div>
         {bottomButtons()}
       </div>
     </div>

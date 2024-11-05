@@ -1,3 +1,4 @@
+@use 'sass:meta';
 /*! leaflet css */
 @import 'leaflet/dist/leaflet.css';
 /*! markercluster */
@@ -7,7 +8,7 @@
 /*! grouped layer control */
 @import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
 @import 'leaflet.polylinemeasure/Leaflet.PolylineMeasure.css';
-@import './tailwind.scss';
+@include meta.load-css('tailwind.scss');
 @import 'react-tooltip/dist/react-tooltip.css';
 @import 'react-toastify/dist/ReactToastify.css';
 

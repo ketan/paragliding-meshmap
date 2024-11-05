@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import icon from '../../../assets/images/icon.png'
 import { CircleInfoIcon, GearsIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
-import { TooltipDirection } from './tooltip'
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import { ConfigModal } from './config-modal.tsx'
 import glider from '../../../assets/images/glider.png'
-import { Tooltip } from 'react-tooltip'
-import { randomHex } from '../utils/ui-util.tsx'
+import { fetchUserProfile, UserProfile } from '../utils/profile.ts'
+import { getRuntimeEnv } from 'vite-runtime-env-script-plugin/getRuntimeEnv'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
+import { LoadedState } from '../maps/loaded-state.tsx'
+import { ProfileIcon } from './profile-icon.tsx'
+import { HeaderIcon } from './header-icon.tsx'
+import { fetchCsrfToken } from '../utils/csrf.ts'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -20,9 +24,63 @@ interface PageProps extends React.PropsWithChildren {
     show: boolean
     onClick: () => void
   }
+  profileModal: {
+    show: boolean
+    onClick: () => void
+  }
 }
 
 export function Page(props: PageProps) {
+  const [userProfile, setUserProfile] = useState<UserProfile>()
+  const [profileLoadedState, setProfileLoadedState] = useState<LoadedState>()
+
+  useEffect(() => {
+    async function getUserProfile() {
+      setProfileLoadedState('loading')
+      try {
+        const profile = await fetchUserProfile()
+        if (profile) {
+          setUserProfile(profile)
+          setProfileLoadedState('loaded')
+        } else {
+          setProfileLoadedState('error')
+        }
+      } catch (e) {
+        setProfileLoadedState('error')
+        console.log(e)
+      }
+    }
+
+    getUserProfile()
+  }, [])
+
+  async function callback(credential: string) {
+    const data = new URLSearchParams()
+    data.append('credential', credential)
+
+    const response = await fetch('/auth/one-tap/callback', {
+      method: 'post',
+      body: data,
+    })
+
+    const body = await response.json()
+    if (response.ok) {
+      setUserProfile(body.user as UserProfile)
+      await fetchCsrfToken(true)
+    } else {
+      let message = body.message
+      if (typeof body.error === 'string') {
+        message += ' ' + body.error
+      }
+      toast.error(message)
+    }
+  }
+
+  const clientId = getRuntimeEnv('GOOGLE_CLIENT_ID')
+  if (!clientId) {
+    throw 'Unable to get google client id'
+  }
+
   return (
     <>
       <div className="flex flex-col h-full w-full">
@@ -37,6 +95,21 @@ export function Page(props: PageProps) {
             <HeaderActionButtons>
               <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
               <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom-end" onClick={() => props.aboutModal.onClick()} />
+              {profileLoadedState === 'loaded' && userProfile && (
+                <ProfileIcon userProfile={userProfile} onProfileClick={() => props.profileModal.onClick()} />
+              )}
+              {(profileLoadedState === 'loaded' || profileLoadedState === 'error') && !userProfile && (
+                <GoogleOAuthProvider clientId={clientId}>
+                  <GoogleLogin
+                    type="icon"
+                    shape="circle"
+                    itp_support={false}
+                    useOneTap={true}
+                    onSuccess={(response) => response.credential && callback(response.credential)}
+                    onError={() => toast.error('There was an error logging you in!')}
+                  />
+                </GoogleOAuthProvider>
+              )}
               {props.headerIcons}
             </HeaderActionButtons>
           </div>
@@ -54,37 +127,6 @@ export function Page(props: PageProps) {
 
 function HeaderActionButtons(props: React.PropsWithChildren) {
   return <div className="header flex my-auto ml-auto mr-0 sm:mr-2 space-x-1 sm:space-x-2">{props.children}</div>
-}
-
-export function HeaderIcon({
-  icon,
-  tooltip,
-  onClick,
-  tooltipDir,
-}: {
-  icon: React.FunctionComponent<React.SVGAttributes<SVGElement>>
-  onClick?: () => void
-  tooltip: string
-  tooltipDir: TooltipDirection
-  className?: string | undefined
-}) {
-  const id = `tooltip-${randomHex(10)}`
-  return (
-    <>
-      <button
-        className={`has-tooltip rounded-full`}
-        data-tooltip-content={tooltip}
-        data-tooltip-place={tooltipDir}
-        onClick={onClick}
-        data-tooltip-id={id}
-      >
-        <div className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full min-w-6 min-h-6">
-          {React.createElement(icon, { className: 'w-6 h-6' })}
-        </div>
-      </button>
-      <Tooltip id={id} />
-    </>
-  )
 }
 
 function ApplicationName() {

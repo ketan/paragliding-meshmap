@@ -1,5 +1,5 @@
 import { Column, DataSource, Entity, EntityManager, Index } from 'typeorm'
-import { BaseType } from '#entity/base_type'
+import { BaseType } from '#entity/base_types'
 import { jsonType } from '#helpers/migration-helper'
 import _ from 'lodash'
 import { randomUUID } from 'node:crypto'

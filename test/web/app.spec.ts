@@ -99,32 +99,7 @@ describe('App', () => {
     it('should protect API routes with CSRF protection', async () => {
       const response = await request(app).post('/api/health-check')
       expect(response.status).to.equal(403)
-      expect(response.body).to.have.property('error', 'csrf validation error')
+      expect(response.body).to.have.property('error', 'CSRF validation error!')
     })
-
-    // it('should set session cookie', async () => {
-    //   const response = await request(app).get('/api/health-check')
-    //   expect(response.status).to.eq(200)
-    //   expect(response.headers['set-cookie']).to.exist
-    // })
-    //
-    // it('should set CSRF token cookie', async () => {
-    //   const response = await request(app).get('/api/health-check')
-    //   expect(response.status).to.eq(200)
-    //   expect(response.headers['set-cookie']).to.satisfy((cookies: string[]) => cookies.some((cookie) => cookie.startsWith('x-csrf-token=')))
-    // })
-    //
-    // it('should reject requests without CSRF token', async () => {
-    //   const response = await request(app).post('/api/nodes')
-    //   expect(response.status).to.eq(403)
-    // })
-    //
-    // it('should accept requests with valid CSRF token', async () => {
-    //   const agent = request.agent(app)
-    //   await agent.get('/api/health-check') // to set cookies
-    //   // const csrfToken = agent.jar.getCookie('x-csrf-token', CookieAccessInfo.All)?.value
-    //   const response = await agent.post('/api/nodes').send({})
-    //   expect(response.status).to.not.eq(403)
-    // })
   })
 })

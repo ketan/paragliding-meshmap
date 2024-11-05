@@ -2,44 +2,36 @@
 import 'newrelic'
 // then dotenv
 import 'dotenv-flow/config'
-
 //
-import DeviceMetric from '#entity/device_metric'
-import EnvironmentMetric from '#entity/environment_metric'
-import NeighbourInfo from '#entity/neighbour_info'
 import Node from '#entity/node'
-import Position from '#entity/position'
-import TextMessage from '#entity/text_message'
-import Traceroute from '#entity/traceroute'
-import { BROADCAST_ADDR, mandatoryEnv } from '#helpers/utils'
-import { DateTime, Duration } from 'luxon'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import express, { NextFunction, Request, Response, Router } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import expressStaticGzip from 'express-static-gzip'
 import responseTime from 'response-time'
 import 'express-async-errors'
-import MapReport from '#entity/map_report'
-import _ from 'lodash'
-import { meshtastic } from '../gen/meshtastic-protobufs.js'
-import { createDeviceProfile } from '#helpers/create-device-profile'
 import { AppDataSource } from '#config/data-source'
 import { errLog } from '#helpers/logger'
-import session from 'express-session'
-import { Session } from '#entity/session'
-import { TypeormStore } from 'connect-typeorm'
-import { doubleCsrf } from 'csrf-csrf'
-import cookieParser from 'cookie-parser'
-import child from 'child_process'
-
-const environment = process.env.NODE_ENV || 'development'
-const isDevelopment = environment === 'development' || environment === 'test'
-const isProduction = !isDevelopment
+import passport from 'passport'
+import { User } from '#entity/user'
+import { configurePassportPaths, googleOneTapStrategy, googleStrategy, magicLoginStrategy } from '#web/passport'
+import { nodeRouter } from '#web/routes/nodes'
+import { getCommitHash, HttpError, isDevelopment, isProduction, sessionManagementMiddleware, setupCSRFMiddleware } from '#web/helpers'
+import flash from 'connect-flash'
+import { usersRouter } from '#web/routes/users'
+import { identityDocumentsRouter } from '#web/routes/identity-documents'
+import { certificationDocumentsRouter } from '#web/routes/certification-documents'
+import { insuranceDocumentsRouter } from '#web/routes/insurance-documents'
+import { deviceConfigRouter } from '#web/routes/device-config'
+import { statsRouter } from '#web/routes/stats'
 
 const db = AppDataSource
 
 export const app = express()
 app.use(responseTime())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(flash())
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -49,219 +41,58 @@ if (isDevelopment) {
   app.use((await import('compression')).default())
 }
 
-let cachedCommitHash: string | null = null
-
-function getCommitHash() {
-  if (isProduction && cachedCommitHash) {
-    return cachedCommitHash
-  }
-
-  const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString().trim()
-
-  if (isProduction) {
-    cachedCommitHash = commitHash
-  }
-
-  return commitHash
-}
-
 if (isProduction) {
   app.set('trust proxy', 1) // trust first proxy
 }
 
-app.use(
-  session({
-    secret: mandatoryEnv('SESSION_SECRET'),
-    saveUninitialized: true,
-    resave: false,
-    store: new TypeormStore({
-      cleanupLimit: 2,
-      limitSubquery: false, // If using MariaDB.
-      ttl: 86400,
-    }).connect(db.getRepository(Session)),
-    cookie: {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: true,
-      maxAge: Duration.fromObject({ days: 7 }).toMillis(),
-    },
-  })
-)
-
-const doubleCsrfUtilities = doubleCsrf({
-  getSecret: () => mandatoryEnv('CSRF_SECRET'),
-  getSessionIdentifier: (req) => req.session.id,
-  cookieName: 'x-csrf-token',
-  cookieOptions: {
-    sameSite: true,
-    secure: isProduction,
-  },
-  errorConfig: {
-    statusCode: 403,
-  },
-  size: 64,
-})
-app.use(cookieParser(mandatoryEnv('COOKIE_SECRET'))) // after express-session
 app.use((_req, res, next) => {
   if (!res.headersSent) {
     res.setHeader('X-App-Version', getCommitHash())
   }
   next()
 })
+app.use(sessionManagementMiddleware(db))
+
+export const doubleCsrfUtilities = setupCSRFMiddleware(app)
 
 app.get('/api/csrf-token', (req, res) => {
+  res.clearCookie('x-csrf-token')
   return res.json({
     token: doubleCsrfUtilities.generateToken(req, res),
   })
 })
 
-app.use(['/api/*'], doubleCsrfUtilities.doubleCsrfProtection)
-
-function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
-  const since = typeof req.query.since === 'string' ? req.query.since : defaultValue
-  return DateTime.now().minus(Duration.fromISO(since)).toJSDate()
-}
-
-function parseDurationParam(req: Request, defaultValue: string = `PT0S`) {
-  const duration = typeof req.query.duration === 'string' ? req.query.duration : defaultValue
-  return Duration.fromISO(duration)
-}
-
-class HttpError extends Error {
-  status: number
-
-  constructor(status: number, message: string) {
-    super(message)
-    this.status = status
+app.use(['/api/*'], (req, res, next) => {
+  if (['POST', 'PUT', 'DELETE'].includes(req.method.toUpperCase())) {
+    return doubleCsrfUtilities.doubleCsrfProtection(req, res, next)
   }
-}
-
-function parseNodeIdParam(req: Request) {
-  const nodeIdParam = req.params.nodeId
-
-  const nodeId = Number(nodeIdParam)
-  if (!isNaN(nodeId)) {
-    return nodeId
-  }
-
-  throw new HttpError(400, `Invalid node ID ${nodeIdParam}`)
-}
-
-app.get('/api/nodes', async (_req, res) => {
-  const allNodes = await Node.find(db)
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(allNodes)
+  next()
 })
 
-app.get('/api/node/:nodeId/positions', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
+passport.use(googleStrategy())
+passport.use(googleOneTapStrategy())
+passport.use(magicLoginStrategy())
 
-  const [positions, mapReports] = await Promise.all([
-    Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
-    MapReport.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
-  ])
-
-  const response = [...positions, ...mapReports].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(response)
+passport.serializeUser((user: Express.User, done) => {
+  done(null, user.id)
 })
 
-app.get(`/api/node/:nodeId`, async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const node = await Node.findOne(db, { where: { nodeId } })
-  if (node) {
-    if (isProduction) {
-      res.header('cache-control', 'public,max-age=60')
-    }
-    res.json(node)
-  } else {
-    res.status(404).json({
-      message: `Node with ID ${nodeId} not found!`,
+passport.deserializeUser<number>(async (id, done) => {
+  try {
+    const user = await db.getRepository(User).findOne({
+      where: { id },
     })
+    done(null, user)
+  } catch (err) {
+    done(err)
   }
 })
 
-app.get('/api/node/:nodeId/sent-messages', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
+app.use(passport.initialize())
+app.use(passport.session())
+configurePassportPaths(app, doubleCsrfUtilities)
 
-  function parseTo(to: unknown): number | undefined {
-    if (to === 'all') {
-      return
-    } else if (isNaN(Number(to))) {
-      return BROADCAST_ADDR
-    } else {
-      return Number(to)
-    }
-  }
-
-  const outgoingMessages = await TextMessage.outgoing(db, nodeId, parseTo(req.query.to), parseSinceParam(req))
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(outgoingMessages)
-})
-
-app.get('/api/node/:nodeId/device-metrics', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const since = parseSinceParam(req, 'P7D')
-  const duration = parseDurationParam(req)
-
-  const deviceMetrics = await DeviceMetric.forNode(db, nodeId, since, duration)
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(deviceMetrics)
-})
-
-app.get('/api/node/:nodeId/environment-metrics', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const since = parseSinceParam(req, 'P7D')
-  const duration = parseDurationParam(req)
-
-  const environmentMetrics = await EnvironmentMetric.forNode(db, nodeId, since, duration)
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(environmentMetrics)
-})
-
-app.get('/api/node/:nodeId/neighbour-infos', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const since = parseSinceParam(req)
-  const neighbours = await NeighbourInfo.forNode(db, nodeId, since)
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(neighbours)
-})
-
-app.get('/api/node/:nodeId/trace-routes', async (req, res) => {
-  const nodeId = parseNodeIdParam(req)
-
-  const since = parseSinceParam(req)
-  const duration = parseDurationParam(req)
-
-  const traceRoutes = await Traceroute.forNode(db, nodeId, since, duration)
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(traceRoutes)
-})
+app.use('/api', nodeRouter)
 
 app.get('/api/hardware-models', async function (_req, res) {
   const hardwareModels = await Node.hardwareModels(db)
@@ -281,63 +112,12 @@ app.route('/api/health-check').all(async (_req, res) => {
   }
 })
 
-app.get('/api/device-config', async function (req, res) {
-  const shortName = (req.query.shortName || '').toString().trim()
-  const longName = (req.query.longName || '').toString().trim()
-
-  const errors = []
-
-  if (shortName.length < 2 || shortName.length > 4) {
-    errors.push('Short name must be between 2 and 4 characters')
-  }
-
-  if (longName.length < 5 || longName.length > 12) {
-    errors.push('Long name must be between 5 and 12 characters')
-  }
-
-  if (errors.length > 0) {
-    return res.status(400).json({ messages: errors })
-  }
-
-  const dp = createDeviceProfile(shortName, longName)
-
-  res.attachment(_.kebabCase(shortName) + '.cfg').send(meshtastic.DeviceProfile.encode(dp).finish())
-})
-
-const statsRouter = Router()
-
-statsRouter.get('/positions-over-time', async (req, res) => {
-  const since = parseSinceParam(req, 'P1M')
-  const duration = parseDurationParam(req, 'P1M')
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(await Position.dailyPositionCount(db, since, duration))
-})
-
-statsRouter.get('/positions-by-node-id', async (req, res) => {
-  const since = parseSinceParam(req, 'P7D')
-  const duration = parseDurationParam(req, 'P7D')
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-
-  res.json(await Position.countByNodeId(db, since, duration))
-})
-
-statsRouter.get('/positions-by-gateway-id', async (req, res) => {
-  const since = parseSinceParam(req, 'P1D')
-  const duration = parseDurationParam(req, 'P1D')
-
-  if (isProduction) {
-    res.header('cache-control', 'public,max-age=60')
-  }
-  res.json(await Position.countByGatewayId(db, since, duration))
-})
-
 app.use('/api/stats', statsRouter)
+app.use('/api', usersRouter)
+app.use('/api', identityDocumentsRouter)
+app.use('/api', insuranceDocumentsRouter)
+app.use('/api', certificationDocumentsRouter)
+app.use('/api', deviceConfigRouter)
 
 if (isProduction) {
   app.use(
@@ -360,7 +140,15 @@ if (isProduction) {
 }
 
 app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
-  errLog('HTTP error', { err, url: req.url, method: req.method, body: req.body, headers: req.headers })
+  errLog('HTTP error', {
+    err,
+    url: req.url,
+    method: req.method,
+    body: req.body,
+    headers: req.headers,
+    cookies: req.cookies,
+    signedCookies: req.signedCookies,
+  })
   if (err instanceof HttpError) {
     return res.status(err.status).json({
       error: err.message,
@@ -369,7 +157,7 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
 
   if (err === doubleCsrfUtilities.invalidCsrfTokenError) {
     return res.status(403).json({
-      error: 'csrf validation error',
+      error: 'CSRF validation error!',
     })
   }
 

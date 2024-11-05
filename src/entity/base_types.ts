@@ -1,6 +1,7 @@
 import debug from 'debug'
 import { DateTime, Duration } from 'luxon'
 import {
+  Column,
   CreateDateColumn,
   DataSource,
   Entity,
@@ -12,6 +13,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { dateTimeType } from '#helpers/migration-helper'
+import _ from 'lodash'
+import { fileTypeFromBuffer } from 'file-type'
+import fs from 'fs'
 
 @Entity()
 export abstract class BaseTypeWithoutPrimaryKey {
@@ -70,4 +74,50 @@ export abstract class BaseTypeWithoutPrimaryKey {
 export abstract class BaseType extends BaseTypeWithoutPrimaryKey {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number
+}
+
+export type DocumentExtension = 'pdf' | 'png' | 'jpg' | 'tif'
+
+@Entity()
+export abstract class Document extends BaseType {
+  @Column({ type: 'bytea', select: false })
+  document: Buffer
+
+  @Column({ type: 'text' })
+  extension: DocumentExtension
+
+  private static extensionToContentTypeMap: Record<DocumentExtension, string> = {
+    pdf: 'application/pdf',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    tif: 'image/tiff',
+  }
+
+  constructor(opts: Partial<Document> = {}) {
+    super()
+    _.assign(this, opts)
+  }
+
+  getContentType() {
+    const contentType = Document.extensionToContentTypeMap[this.extension]
+    if (!contentType) {
+      throw `Unsupported file extension ${this.extension}`
+    }
+    return contentType
+  }
+
+  async updateWithDocument(filePath: string) {
+    this.document = await fs.promises.readFile(filePath)
+    this.extension = await this.getFileExtension(this.document)
+    return this
+  }
+
+  private async getFileExtension(buffer: Buffer): Promise<DocumentExtension> {
+    const fileType = await fileTypeFromBuffer(buffer)
+    const extension = fileType?.ext as DocumentExtension
+    if (Document.extensionToContentTypeMap[extension]) {
+      return extension
+    }
+    throw `Unsupported file extension detected ${extension} with mime type (${fileType?.mime})`
+  }
 }

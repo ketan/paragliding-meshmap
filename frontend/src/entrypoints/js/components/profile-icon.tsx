@@ -1,0 +1,49 @@
+import { UserProfile } from '../utils/profile.ts'
+import { useState } from 'react'
+import { ArrowRightFromBracketIcon, UserIcon } from '../utils/icon-constants.ts'
+
+import { HeaderIcon } from './header-icon.tsx'
+
+interface ProfileIconProps {
+  userProfile: UserProfile
+  onProfileClick: () => void
+}
+
+export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
+  const [dropdownVisible, setDropdownVisible] = useState(false)
+
+  if (userProfile?.profilePhotoUrl) {
+    const icon = () => (
+      <img src={userProfile.profilePhotoUrl} className="rounded-full min-w-8 max-w-8 min-h-8 max-h-8" alt={`Profile icon`} />
+    )
+    return (
+      <>
+        <HeaderIcon
+          icon={icon}
+          onClick={() => setDropdownVisible(!dropdownVisible)}
+          onMouseOver={() => setDropdownVisible(true)}
+          onMouseOut={() => setDropdownVisible(false)}
+        ></HeaderIcon>
+        <div
+          className={`dropdown-content ${dropdownVisible ? 'block' : 'hidden'} absolute right-4 bg-white shadow-lg z-[10000] rounded border-2 grid grid-cols-1 divide-y`}
+          onMouseOver={() => setDropdownVisible(true)}
+          onMouseOut={() => setDropdownVisible(false)}
+        >
+          {/* Add your custom dropdown content here */}
+          <button className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left" onClick={onProfileClick}>
+            <UserIcon className="h-4 w-4 inline-block mr-3" />
+            Profile
+          </button>
+
+          <button
+            onClick={() => (window.location.href = '/auth/logout')}
+            className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left"
+          >
+            <ArrowRightFromBracketIcon className={'h-4 w-4 inline-block mr-3'} />
+            Logout
+          </button>
+        </div>
+      </>
+    )
+  }
+}

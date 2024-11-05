@@ -1,7 +1,7 @@
 import { dateTimeType, jsonType } from '#helpers/migration-helper'
 import { DateTime, Duration } from 'luxon'
 import { BeforeInsert, BeforeUpdate, Column, DataSource, Entity, EntityManager, Index } from 'typeorm'
-import { BaseType, BaseTypeWithoutPrimaryKey } from './base_type.js'
+import { BaseType, BaseTypeWithoutPrimaryKey } from './base_types.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
@@ -230,7 +230,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
   static determineActivity(position: Position): string | null {
-    if (position.aboveGroundLevel == null || position.groundSpeed == null || typeof position.altitude != 'number') {
+    if (position.aboveGroundLevel == null || position.altitude == null) {
       return null
     }
 
@@ -240,13 +240,11 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
      */
 
     /* Current logic: AGL > 50M and speed > 5 km/h could be used to detect flying nodes. */
-    if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
+    if (position.aboveGroundLevel > 50) {
       return 'fly'
       /* This is an example of identifying the concern activity */
-    } else if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed == 0) {
+    } else if (position.altitude > 1600 && position.aboveGroundLevel < 50 && (position.groundSpeed == null || position.groundSpeed <= 6)) {
       return 'concern'
-    } else if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
-      return 'hike'
     } else {
       return null
     }

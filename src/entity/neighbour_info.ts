@@ -1,5 +1,5 @@
 import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
-import { BaseType } from './base_type.js'
+import { BaseType } from './base_types.js'
 import { Neighbors } from './neighbors.js'
 import _ from 'lodash'
 import { jsonType } from '#helpers/migration-helper'

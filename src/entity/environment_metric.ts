@@ -1,5 +1,5 @@
 import { Between, Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
-import { BaseType } from './base_type.js'
+import { BaseType } from './base_types.js'
 import _ from 'lodash'
 import { DateTime, Duration } from 'luxon'
 

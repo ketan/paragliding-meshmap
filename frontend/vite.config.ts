@@ -1,7 +1,7 @@
 import { transform } from '@svgr/core'
 import jsxPlugin from '@svgr/plugin-jsx'
 import svgoPlugin from '@svgr/plugin-svgo'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 import * as child from 'child_process'
 import { writeFileSync } from 'fs'
 import { readFile } from 'fs/promises'
@@ -102,7 +102,10 @@ export default defineConfig({
     react(),
     svgToReact(),
     injectHTML(),
-    Inspect(),
+    Inspect({
+      build: true,
+      outputDir: `${__dirname}/../tmp/vite-inspect`,
+    }),
     viteCompression(),
   ],
 
@@ -112,7 +115,7 @@ export default defineConfig({
   },
 
   root: __dirname,
-  cacheDir: `${__dirname}/../tmp`,
+  cacheDir: `${__dirname}/../tmp/vite-cache`,
 
   build: {
     sourcemap: true,

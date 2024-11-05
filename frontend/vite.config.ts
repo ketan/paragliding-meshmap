@@ -112,6 +112,8 @@ export default defineConfig({
   },
 
   root: __dirname,
+  cacheDir: `${__dirname}/../tmp`,
+
   build: {
     sourcemap: true,
     // assetsInlineLimit: 1024 * 1024, // 1024KiB

@@ -1140,6 +1140,9 @@ export namespace meshtastic {
 
       /** If true, the device will not process any packets received via LoRa that passed via MQTT anywhere on the path towards it. */
       ignoreMqtt?: boolean | null
+
+      /** Sets the ok_to_mqtt bit on outgoing packets */
+      configOkToMqtt?: boolean | null
     }
 
     /** Lora Config */
@@ -1257,6 +1260,9 @@ export namespace meshtastic {
 
       /** If true, the device will not process any packets received via LoRa that passed via MQTT anywhere on the path towards it. */
       public ignoreMqtt: boolean
+
+      /** Sets the ok_to_mqtt bit on outgoing packets */
+      public configOkToMqtt: boolean
 
       /**
        * Encodes the specified LoRaConfig message. Does not implicitly {@link meshtastic.Config.LoRaConfig.verify|verify} messages.
@@ -1789,6 +1795,7 @@ export namespace meshtastic {
     WIO_WM1110 = 21,
     RAK2560 = 22,
     HELTEC_HRU_3601 = 23,
+    HELTEC_WIRELESS_BRIDGE = 24,
     STATION_G1 = 25,
     RAK11310 = 26,
     SENSELORA_RP2040 = 27,
@@ -1843,6 +1850,11 @@ export namespace meshtastic {
     RP2040_FEATHER_RFM95 = 76,
     M5STACK_COREBASIC = 77,
     M5STACK_CORE2 = 78,
+    RPI_PICO2 = 79,
+    M5STACK_CORES3 = 80,
+    SEEED_XIAO_S3 = 81,
+    MS24SF1 = 82,
+    TLORA_C6 = 83,
     PRIVATE_HW = 255,
   }
 
@@ -2124,6 +2136,8 @@ export namespace meshtastic {
       NOT_AUTHORIZED = 33,
       PKI_FAILED = 34,
       PKI_UNKNOWN_PUBKEY = 35,
+      ADMIN_BAD_SESSION_KEY = 36,
+      ADMIN_PUBLIC_KEY_UNAUTHORIZED = 37,
     }
   }
 
@@ -2172,6 +2186,9 @@ export namespace meshtastic {
      * a message a heart or poop emoji.
      */
     emoji?: number | null
+
+    /** Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT. */
+    bitfield?: number | null
   }
 
   /**
@@ -2229,6 +2246,9 @@ export namespace meshtastic {
      * a message a heart or poop emoji.
      */
     public emoji: number
+
+    /** Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT. */
+    public bitfield?: number | null
 
     /**
      * Encodes the specified Data message. Does not implicitly {@link meshtastic.Data.verify|verify} messages.
@@ -2658,6 +2678,7 @@ export namespace meshtastic {
       BACKGROUND = 10,
       DEFAULT = 64,
       RELIABLE = 70,
+      RESPONSE = 80,
       HIGH = 100,
       ACK = 120,
       MAX = 127,
@@ -2775,7 +2796,7 @@ export namespace meshtastic {
     public viaMqtt: boolean
 
     /** Number of hops away from us this node is (0 if adjacent) */
-    public hopsAway: number
+    public hopsAway?: number | null
 
     /**
      * True if node is in our favorites list
@@ -3601,6 +3622,9 @@ export namespace meshtastic {
 
     /** Has Remote Hardware enabled */
     hasRemoteHardware?: boolean | null
+
+    /** Has PKC capabilities */
+    hasPKC?: boolean | null
   }
 
   /** Device metadata response */
@@ -3640,6 +3664,9 @@ export namespace meshtastic {
 
     /** Has Remote Hardware enabled */
     public hasRemoteHardware: boolean
+
+    /** Has PKC capabilities */
+    public hasPKC: boolean
 
     /**
      * Encodes the specified DeviceMetadata message. Does not implicitly {@link meshtastic.DeviceMetadata.verify|verify} messages.
@@ -4565,13 +4592,17 @@ export namespace meshtastic {
       /** Whether the Module is enabled */
       enabled?: boolean | null
 
-      /** Interval in seconds of how often we can send a message to the mesh when a state change is detected */
+      /**
+       * Interval in seconds of how often we can send a message to the mesh when a
+       * trigger event is detected
+       */
       minimumBroadcastSecs?: number | null
 
       /**
-       * Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
-       * When set to 0, only state changes will be broadcasted
-       * Works as a sort of status heartbeat for peace of mind
+       * Interval in seconds of how often we should send a message to the mesh
+       * with the current state regardless of trigger events When set to 0, only
+       * trigger events will be broadcasted Works as a sort of status heartbeat
+       * for peace of mind
        */
       stateBroadcastSecs?: number | null
 
@@ -4591,11 +4622,8 @@ export namespace meshtastic {
       /** GPIO pin to monitor for state changes */
       monitorPin?: number | null
 
-      /**
-       * Whether or not the GPIO pin state detection is triggered on HIGH (1)
-       * Otherwise LOW (0)
-       */
-      detectionTriggeredHigh?: boolean | null
+      /** The type of trigger event to be used */
+      detectionTriggerType?: meshtastic.ModuleConfig.DetectionSensorConfig.TriggerType | null
 
       /**
        * Whether or not use INPUT_PULLUP mode for GPIO pin
@@ -4615,13 +4643,17 @@ export namespace meshtastic {
       /** Whether the Module is enabled */
       public enabled: boolean
 
-      /** Interval in seconds of how often we can send a message to the mesh when a state change is detected */
+      /**
+       * Interval in seconds of how often we can send a message to the mesh when a
+       * trigger event is detected
+       */
       public minimumBroadcastSecs: number
 
       /**
-       * Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
-       * When set to 0, only state changes will be broadcasted
-       * Works as a sort of status heartbeat for peace of mind
+       * Interval in seconds of how often we should send a message to the mesh
+       * with the current state regardless of trigger events When set to 0, only
+       * trigger events will be broadcasted Works as a sort of status heartbeat
+       * for peace of mind
        */
       public stateBroadcastSecs: number
 
@@ -4641,11 +4673,8 @@ export namespace meshtastic {
       /** GPIO pin to monitor for state changes */
       public monitorPin: number
 
-      /**
-       * Whether or not the GPIO pin state detection is triggered on HIGH (1)
-       * Otherwise LOW (0)
-       */
-      public detectionTriggeredHigh: boolean
+      /** The type of trigger event to be used */
+      public detectionTriggerType: meshtastic.ModuleConfig.DetectionSensorConfig.TriggerType
 
       /**
        * Whether or not use INPUT_PULLUP mode for GPIO pin
@@ -4670,6 +4699,18 @@ export namespace meshtastic {
        * @throws {$protobuf.util.ProtocolError} If required fields are missing
        */
       public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.ModuleConfig.DetectionSensorConfig
+    }
+
+    namespace DetectionSensorConfig {
+      /** TriggerType enum. */
+      enum TriggerType {
+        LOGIC_LOW = 0,
+        LOGIC_HIGH = 1,
+        FALLING_EDGE = 2,
+        RISING_EDGE = 3,
+        EITHER_EDGE_ACTIVE_LOW = 4,
+        EITHER_EDGE_ACTIVE_HIGH = 5,
+      }
     }
 
     /** Properties of an AudioConfig. */
@@ -5261,23 +5302,32 @@ export namespace meshtastic {
        */
       airQualityInterval?: number | null
 
-      /**
-       * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
-       */
+      /** Enable/disable Power metrics */
       powerMeasurementEnabled?: boolean | null
 
       /**
        * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * power metrics to the mesh
        */
       powerUpdateInterval?: number | null
 
+      /** Enable/Disable the power measurement module on-device display */
+      powerScreenEnabled?: boolean | null
+
+      /**
+       * Preferences for the (Health) Telemetry Module
+       * Enable/Disable the telemetry measurement module measurement collection
+       */
+      healthMeasurementEnabled?: boolean | null
+
       /**
        * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * health metrics to the mesh
        */
-      powerScreenEnabled?: boolean | null
+      healthUpdateInterval?: number | null
+
+      /** Enable/Disable the health telemetry module on-device display */
+      healthScreenEnabled?: boolean | null
     }
 
     /** Configuration for both device and environment metrics */
@@ -5321,23 +5371,32 @@ export namespace meshtastic {
        */
       public airQualityInterval: number
 
-      /**
-       * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
-       */
+      /** Enable/disable Power metrics */
       public powerMeasurementEnabled: boolean
 
       /**
        * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * power metrics to the mesh
        */
       public powerUpdateInterval: number
 
+      /** Enable/Disable the power measurement module on-device display */
+      public powerScreenEnabled: boolean
+
+      /**
+       * Preferences for the (Health) Telemetry Module
+       * Enable/Disable the telemetry measurement module measurement collection
+       */
+      public healthMeasurementEnabled: boolean
+
       /**
        * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * health metrics to the mesh
        */
-      public powerScreenEnabled: boolean
+      public healthUpdateInterval: number
+
+      /** Enable/Disable the health telemetry module on-device display */
+      public healthScreenEnabled: boolean
 
       /**
        * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.
@@ -6030,7 +6089,7 @@ export namespace meshtastic {
     /** Number of packets sent */
     numPacketsTx?: number | null
 
-    /** Number of packets received good */
+    /** Number of packets received (both good and bad) */
     numPacketsRx?: number | null
 
     /** Number of packets received that are malformed or violate the protocol */
@@ -6041,6 +6100,21 @@ export namespace meshtastic {
 
     /** Number of nodes total */
     numTotalNodes?: number | null
+
+    /**
+     * Number of received packets that were duplicates (due to multiple nodes relaying).
+     * If this number is high, there are nodes in the mesh relaying packets when it's unnecessary, for example due to the ROUTER/REPEATER role.
+     */
+    numRxDupe?: number | null
+
+    /** Number of packets we transmitted that were a relay for others (not originating from ourselves). */
+    numTxRelay?: number | null
+
+    /**
+     * Number of times we canceled a packet to be relayed, because someone else did it before us.
+     * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
+     */
+    numTxRelayCanceled?: number | null
   }
 
   /** Local device mesh statistics */
@@ -6063,7 +6137,7 @@ export namespace meshtastic {
     /** Number of packets sent */
     public numPacketsTx: number
 
-    /** Number of packets received good */
+    /** Number of packets received (both good and bad) */
     public numPacketsRx: number
 
     /** Number of packets received that are malformed or violate the protocol */
@@ -6074,6 +6148,21 @@ export namespace meshtastic {
 
     /** Number of nodes total */
     public numTotalNodes: number
+
+    /**
+     * Number of received packets that were duplicates (due to multiple nodes relaying).
+     * If this number is high, there are nodes in the mesh relaying packets when it's unnecessary, for example due to the ROUTER/REPEATER role.
+     */
+    public numRxDupe: number
+
+    /** Number of packets we transmitted that were a relay for others (not originating from ourselves). */
+    public numTxRelay: number
+
+    /**
+     * Number of times we canceled a packet to be relayed, because someone else did it before us.
+     * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
+     */
+    public numTxRelayCanceled: number
 
     /**
      * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
@@ -6092,6 +6181,54 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LocalStats
+  }
+
+  /** Properties of a HealthMetrics. */
+  interface IHealthMetrics {
+    /** Heart rate (beats per minute) */
+    heartBpm?: number | null
+
+    /** SpO2 (blood oxygen saturation) level */
+    spO2?: number | null
+
+    /** Body temperature in degrees Celsius */
+    temperature?: number | null
+  }
+
+  /** Health telemetry metrics */
+  class HealthMetrics implements IHealthMetrics {
+    /**
+     * Constructs a new HealthMetrics.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IHealthMetrics)
+
+    /** Heart rate (beats per minute) */
+    public heartBpm?: number | null
+
+    /** SpO2 (blood oxygen saturation) level */
+    public spO2?: number | null
+
+    /** Body temperature in degrees Celsius */
+    public temperature?: number | null
+
+    /**
+     * Encodes the specified HealthMetrics message. Does not implicitly {@link meshtastic.HealthMetrics.verify|verify} messages.
+     * @param message HealthMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IHealthMetrics, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a HealthMetrics message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns HealthMetrics
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.HealthMetrics
   }
 
   /** Properties of a Telemetry. */
@@ -6113,6 +6250,9 @@ export namespace meshtastic {
 
     /** Local device mesh statistics */
     localStats?: meshtastic.ILocalStats | null
+
+    /** Health telemetry metrics */
+    healthMetrics?: meshtastic.IHealthMetrics | null
   }
 
   /** Types of Measurements the telemetry module is equipped to handle */
@@ -6141,8 +6281,11 @@ export namespace meshtastic {
     /** Local device mesh statistics */
     public localStats?: meshtastic.ILocalStats | null
 
+    /** Health telemetry metrics */
+    public healthMetrics?: meshtastic.IHealthMetrics | null
+
     /** Telemetry variant. */
-    public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics' | 'localStats'
+    public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics' | 'localStats' | 'healthMetrics'
 
     /**
      * Encodes the specified Telemetry message. Does not implicitly {@link meshtastic.Telemetry.verify|verify} messages.
@@ -6195,6 +6338,8 @@ export namespace meshtastic {
     ICM20948 = 27,
     MAX17048 = 28,
     CUSTOM_SENSOR = 29,
+    MAX30102 = 30,
+    MLX90614 = 31,
   }
 
   /** Properties of a Nau7802Config. */
@@ -6323,6 +6468,15 @@ export namespace meshtastic {
 
     /** The ModuleConfig of the node */
     moduleConfig?: meshtastic.ILocalModuleConfig | null
+
+    /** Fixed position data */
+    fixedPosition?: meshtastic.IPosition | null
+
+    /** Ringtone for ExternalNotification */
+    ringtone?: string | null
+
+    /** Predefined messages for CannedMessage */
+    cannedMessages?: string | null
   }
 
   /**
@@ -6350,6 +6504,15 @@ export namespace meshtastic {
 
     /** The ModuleConfig of the node */
     public moduleConfig?: meshtastic.ILocalModuleConfig | null
+
+    /** Fixed position data */
+    public fixedPosition?: meshtastic.IPosition | null
+
+    /** Ringtone for ExternalNotification */
+    public ringtone?: string | null
+
+    /** Predefined messages for CannedMessage */
+    public cannedMessages?: string | null
 
     /**
      * Encodes the specified DeviceProfile message. Does not implicitly {@link meshtastic.DeviceProfile.verify|verify} messages.

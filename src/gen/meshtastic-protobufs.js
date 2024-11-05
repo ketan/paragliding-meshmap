@@ -2205,6 +2205,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * particular other nodes (simulating radio out of range). All nodenums listed
        * in ignore_incoming will have packets they send dropped on receive (by router.cpp)
        * @property {boolean|null} [ignoreMqtt] If true, the device will not process any packets received via LoRa that passed via MQTT anywhere on the path towards it.
+       * @property {boolean|null} [configOkToMqtt] Sets the ok_to_mqtt bit on outgoing packets
        */
 
       /**
@@ -2390,6 +2391,14 @@ export const meshtastic = ($root.meshtastic = (() => {
       LoRaConfig.prototype.ignoreMqtt = false
 
       /**
+       * Sets the ok_to_mqtt bit on outgoing packets
+       * @member {boolean} configOkToMqtt
+       * @memberof meshtastic.Config.LoRaConfig
+       * @instance
+       */
+      LoRaConfig.prototype.configOkToMqtt = false
+
+      /**
        * Encodes the specified LoRaConfig message. Does not implicitly {@link meshtastic.Config.LoRaConfig.verify|verify} messages.
        * @function encode
        * @memberof meshtastic.Config.LoRaConfig
@@ -2437,6 +2446,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         }
         if (message.ignoreMqtt != null && Object.hasOwnProperty.call(message, 'ignoreMqtt'))
           writer.uint32(/* id 104, wireType 0 =*/ 832).bool(message.ignoreMqtt)
+        if (message.configOkToMqtt != null && Object.hasOwnProperty.call(message, 'configOkToMqtt'))
+          writer.uint32(/* id 105, wireType 0 =*/ 840).bool(message.configOkToMqtt)
         return writer
       }
 
@@ -2528,6 +2539,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             }
             case 104: {
               message.ignoreMqtt = reader.bool()
+              break
+            }
+            case 105: {
+              message.configOkToMqtt = reader.bool()
               break
             }
             default:
@@ -3561,6 +3576,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} WIO_WM1110=21 WIO Tracker WM1110 family from Seeed Studio. Includes wio-1110-tracker and wio-1110-sdk
    * @property {number} RAK2560=22 RAK2560 Solar base station based on RAK4630
    * @property {number} HELTEC_HRU_3601=23 Heltec HRU-3601: https://heltec.org/project/hru-3601/
+   * @property {number} HELTEC_WIRELESS_BRIDGE=24 Heltec Wireless Bridge
    * @property {number} STATION_G1=25 B&Q Consulting Station Edition G1: https://uniteng.com/wiki/doku.php?id=meshtastic:station
    * @property {number} RAK11310=26 RAK11310 (RP2040 + SX1262)
    * @property {number} SENSELORA_RP2040=27 Makerfabs SenseLoRA Receiver (RP2040 + RFM96)
@@ -3580,7 +3596,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} DIY_V1=39 Custom DIY device based on @NanoVHF schematics: https://github.com/NanoVHF/Meshtastic-DIY/tree/main/Schematics
    * @property {number} NRF52840_PCA10059=40 nRF52840 Dongle : https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dongle/
    * @property {number} DR_DEV=41 Custom Disaster Radio esp32 v3 device https://github.com/sudomesh/disaster-radio/tree/master/hardware/board_esp32_v3
-   * @property {number} M5STACK=42 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, Paper) https://m5stack.com/
+   * @property {number} M5STACK=42 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, CoreS3, Paper) https://m5stack.com/
    * @property {number} HELTEC_V3=43 New Heltec LoRA32 with ESP32-S3 CPU
    * @property {number} HELTEC_WSL_V3=44 New Heltec Wireless Stick Lite with ESP32-S3 CPU
    * @property {number} BETAFPV_2400_TX=45 New BETAFPV ELRS Micro TX Module 2.4G with ESP32 CPU
@@ -3634,8 +3650,13 @@ export const meshtastic = ($root.meshtastic = (() => {
    * https://www.adafruit.com/product/326
    * https://www.adafruit.com/product/938
    * ^^^ short A0 to switch to I2C address 0x3C
-   * @property {number} M5STACK_COREBASIC=77 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, Paper) https://m5stack.com/
+   * @property {number} M5STACK_COREBASIC=77 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, CoreS3, Paper) https://m5stack.com/
    * @property {number} M5STACK_CORE2=78 M5STACK_CORE2 value
+   * @property {number} RPI_PICO2=79 Pico2 with Waveshare Hat, same as Pico
+   * @property {number} M5STACK_CORES3=80 M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, CoreS3, Paper) https://m5stack.com/
+   * @property {number} SEEED_XIAO_S3=81 Seeed XIAO S3 DK
+   * @property {number} MS24SF1=82 Nordic nRF52840+Semtech SX1262 LoRa BLE Combo Module. nRF52840+SX1262 MS24SF1
+   * @property {number} TLORA_C6=83 Lilygo TLora-C6 with the new ESP32-C6 MCU
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -3667,6 +3688,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[21] = 'WIO_WM1110')] = 21
     values[(valuesById[22] = 'RAK2560')] = 22
     values[(valuesById[23] = 'HELTEC_HRU_3601')] = 23
+    values[(valuesById[24] = 'HELTEC_WIRELESS_BRIDGE')] = 24
     values[(valuesById[25] = 'STATION_G1')] = 25
     values[(valuesById[26] = 'RAK11310')] = 26
     values[(valuesById[27] = 'SENSELORA_RP2040')] = 27
@@ -3721,6 +3743,11 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[76] = 'RP2040_FEATHER_RFM95')] = 76
     values[(valuesById[77] = 'M5STACK_COREBASIC')] = 77
     values[(valuesById[78] = 'M5STACK_CORE2')] = 78
+    values[(valuesById[79] = 'RPI_PICO2')] = 79
+    values[(valuesById[80] = 'M5STACK_CORES3')] = 80
+    values[(valuesById[81] = 'SEEED_XIAO_S3')] = 81
+    values[(valuesById[82] = 'MS24SF1')] = 82
+    values[(valuesById[83] = 'TLORA_C6')] = 83
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -4249,6 +4276,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * (i.e you did not send the request on the required bound channel)
      * @property {number} PKI_FAILED=34 The client specified a PKI transport, but the node was unable to send the packet using PKI (and did not send the message at all)
      * @property {number} PKI_UNKNOWN_PUBKEY=35 The receiving node does not have a Public Key to decode with
+     * @property {number} ADMIN_BAD_SESSION_KEY=36 Admin packet otherwise checks out, but uses a bogus or expired session key
+     * @property {number} ADMIN_PUBLIC_KEY_UNAUTHORIZED=37 Admin packet sent using PKC, but not from a public key on the admin key list
      */
     Routing.Error = (function () {
       const valuesById = {},
@@ -4267,6 +4296,8 @@ export const meshtastic = ($root.meshtastic = (() => {
       values[(valuesById[33] = 'NOT_AUTHORIZED')] = 33
       values[(valuesById[34] = 'PKI_FAILED')] = 34
       values[(valuesById[35] = 'PKI_UNKNOWN_PUBKEY')] = 35
+      values[(valuesById[36] = 'ADMIN_BAD_SESSION_KEY')] = 36
+      values[(valuesById[37] = 'ADMIN_PUBLIC_KEY_UNAUTHORIZED')] = 37
       return values
     })()
 
@@ -4296,6 +4327,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number|null} [replyId] If set, this message is intened to be a reply to a previously sent message with the defined id.
      * @property {number|null} [emoji] Defaults to false. If true, then what is in the payload should be treated as an emoji like giving
      * a message a heart or poop emoji.
+     * @property {number|null} [bitfield] Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT.
      */
 
     /**
@@ -4389,6 +4421,23 @@ export const meshtastic = ($root.meshtastic = (() => {
     Data.prototype.emoji = 0
 
     /**
+     * Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT.
+     * @member {number|null|undefined} bitfield
+     * @memberof meshtastic.Data
+     * @instance
+     */
+    Data.prototype.bitfield = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(Data.prototype, '_bitfield', {
+      get: $util.oneOfGetter(($oneOfFields = ['bitfield'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    /**
      * Encodes the specified Data message. Does not implicitly {@link meshtastic.Data.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.Data
@@ -4415,6 +4464,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 7, wireType 5 =*/ 61).fixed32(message.replyId)
       if (message.emoji != null && Object.hasOwnProperty.call(message, 'emoji'))
         writer.uint32(/* id 8, wireType 5 =*/ 69).fixed32(message.emoji)
+      if (message.bitfield != null && Object.hasOwnProperty.call(message, 'bitfield'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.bitfield)
       return writer
     }
 
@@ -4466,6 +4517,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 8: {
             message.emoji = reader.fixed32()
+            break
+          }
+          case 9: {
+            message.bitfield = reader.uint32()
             break
           }
           default:
@@ -5240,6 +5295,8 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number} DEFAULT=64 This priority is used for most messages that don't have a priority set
      * @property {number} RELIABLE=70 If priority is unset but the message is marked as want_ack,
      * assume it is important and use a slightly higher priority
+     * @property {number} RESPONSE=80 If priority is unset but the packet is a response to a request, we want it to get there relatively quickly.
+     * Furthermore, responses stop relaying packets directed to a node early.
      * @property {number} HIGH=100 Higher priority for specific message types (portnums) to distinguish between other reliable packets.
      * @property {number} ACK=120 Ack/naks are sent with very high priority to ensure that retransmission
      * stops as soon as possible
@@ -5253,6 +5310,7 @@ export const meshtastic = ($root.meshtastic = (() => {
       values[(valuesById[10] = 'BACKGROUND')] = 10
       values[(valuesById[64] = 'DEFAULT')] = 64
       values[(valuesById[70] = 'RELIABLE')] = 70
+      values[(valuesById[80] = 'RESPONSE')] = 80
       values[(valuesById[100] = 'HIGH')] = 100
       values[(valuesById[120] = 'ACK')] = 120
       values[(valuesById[127] = 'MAX')] = 127
@@ -5414,11 +5472,11 @@ export const meshtastic = ($root.meshtastic = (() => {
 
     /**
      * Number of hops away from us this node is (0 if adjacent)
-     * @member {number} hopsAway
+     * @member {number|null|undefined} hopsAway
      * @memberof meshtastic.NodeInfo
      * @instance
      */
-    NodeInfo.prototype.hopsAway = 0
+    NodeInfo.prototype.hopsAway = null
 
     /**
      * True if node is in our favorites list
@@ -5428,6 +5486,15 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @instance
      */
     NodeInfo.prototype.isFavorite = false
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(NodeInfo.prototype, '_hopsAway', {
+      get: $util.oneOfGetter(($oneOfFields = ['hopsAway'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
 
     /**
      * Encodes the specified NodeInfo message. Does not implicitly {@link meshtastic.NodeInfo.verify|verify} messages.
@@ -7114,6 +7181,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number|null} [positionFlags] Indicates the device's current enabled position flags
      * @property {meshtastic.HardwareModel|null} [hwModel] Device hardware model
      * @property {boolean|null} [hasRemoteHardware] Has Remote Hardware enabled
+     * @property {boolean|null} [hasPKC] Has PKC capabilities
      */
 
     /**
@@ -7211,6 +7279,14 @@ export const meshtastic = ($root.meshtastic = (() => {
     DeviceMetadata.prototype.hasRemoteHardware = false
 
     /**
+     * Has PKC capabilities
+     * @member {boolean} hasPKC
+     * @memberof meshtastic.DeviceMetadata
+     * @instance
+     */
+    DeviceMetadata.prototype.hasPKC = false
+
+    /**
      * Encodes the specified DeviceMetadata message. Does not implicitly {@link meshtastic.DeviceMetadata.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.DeviceMetadata
@@ -7240,6 +7316,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.hwModel)
       if (message.hasRemoteHardware != null && Object.hasOwnProperty.call(message, 'hasRemoteHardware'))
         writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.hasRemoteHardware)
+      if (message.hasPKC != null && Object.hasOwnProperty.call(message, 'hasPKC'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).bool(message.hasPKC)
       return writer
     }
 
@@ -7299,6 +7377,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 10: {
             message.hasRemoteHardware = reader.bool()
+            break
+          }
+          case 11: {
+            message.hasPKC = reader.bool()
             break
           }
           default:
@@ -9157,18 +9239,19 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @memberof meshtastic.ModuleConfig
        * @interface IDetectionSensorConfig
        * @property {boolean|null} [enabled] Whether the Module is enabled
-       * @property {number|null} [minimumBroadcastSecs] Interval in seconds of how often we can send a message to the mesh when a state change is detected
-       * @property {number|null} [stateBroadcastSecs] Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
-       * When set to 0, only state changes will be broadcasted
-       * Works as a sort of status heartbeat for peace of mind
+       * @property {number|null} [minimumBroadcastSecs] Interval in seconds of how often we can send a message to the mesh when a
+       * trigger event is detected
+       * @property {number|null} [stateBroadcastSecs] Interval in seconds of how often we should send a message to the mesh
+       * with the current state regardless of trigger events When set to 0, only
+       * trigger events will be broadcasted Works as a sort of status heartbeat
+       * for peace of mind
        * @property {boolean|null} [sendBell] Send ASCII bell with alert message
        * Useful for triggering ext. notification on bell
        * @property {string|null} [name] Friendly name used to format message sent to mesh
        * Example: A name "Motion" would result in a message "Motion detected"
        * Maximum length of 20 characters
        * @property {number|null} [monitorPin] GPIO pin to monitor for state changes
-       * @property {boolean|null} [detectionTriggeredHigh] Whether or not the GPIO pin state detection is triggered on HIGH (1)
-       * Otherwise LOW (0)
+       * @property {meshtastic.ModuleConfig.DetectionSensorConfig.TriggerType|null} [detectionTriggerType] The type of trigger event to be used
        * @property {boolean|null} [usePullup] Whether or not use INPUT_PULLUP mode for GPIO pin
        * Only applicable if the board uses pull-up resistors on the pin
        */
@@ -9196,7 +9279,8 @@ export const meshtastic = ($root.meshtastic = (() => {
       DetectionSensorConfig.prototype.enabled = false
 
       /**
-       * Interval in seconds of how often we can send a message to the mesh when a state change is detected
+       * Interval in seconds of how often we can send a message to the mesh when a
+       * trigger event is detected
        * @member {number} minimumBroadcastSecs
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
@@ -9204,9 +9288,10 @@ export const meshtastic = ($root.meshtastic = (() => {
       DetectionSensorConfig.prototype.minimumBroadcastSecs = 0
 
       /**
-       * Interval in seconds of how often we should send a message to the mesh with the current state regardless of changes
-       * When set to 0, only state changes will be broadcasted
-       * Works as a sort of status heartbeat for peace of mind
+       * Interval in seconds of how often we should send a message to the mesh
+       * with the current state regardless of trigger events When set to 0, only
+       * trigger events will be broadcasted Works as a sort of status heartbeat
+       * for peace of mind
        * @member {number} stateBroadcastSecs
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
@@ -9241,13 +9326,12 @@ export const meshtastic = ($root.meshtastic = (() => {
       DetectionSensorConfig.prototype.monitorPin = 0
 
       /**
-       * Whether or not the GPIO pin state detection is triggered on HIGH (1)
-       * Otherwise LOW (0)
-       * @member {boolean} detectionTriggeredHigh
+       * The type of trigger event to be used
+       * @member {meshtastic.ModuleConfig.DetectionSensorConfig.TriggerType} detectionTriggerType
        * @memberof meshtastic.ModuleConfig.DetectionSensorConfig
        * @instance
        */
-      DetectionSensorConfig.prototype.detectionTriggeredHigh = false
+      DetectionSensorConfig.prototype.detectionTriggerType = 0
 
       /**
        * Whether or not use INPUT_PULLUP mode for GPIO pin
@@ -9281,8 +9365,8 @@ export const meshtastic = ($root.meshtastic = (() => {
           writer.uint32(/* id 5, wireType 2 =*/ 42).string(message.name)
         if (message.monitorPin != null && Object.hasOwnProperty.call(message, 'monitorPin'))
           writer.uint32(/* id 6, wireType 0 =*/ 48).uint32(message.monitorPin)
-        if (message.detectionTriggeredHigh != null && Object.hasOwnProperty.call(message, 'detectionTriggeredHigh'))
-          writer.uint32(/* id 7, wireType 0 =*/ 56).bool(message.detectionTriggeredHigh)
+        if (message.detectionTriggerType != null && Object.hasOwnProperty.call(message, 'detectionTriggerType'))
+          writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.detectionTriggerType)
         if (message.usePullup != null && Object.hasOwnProperty.call(message, 'usePullup'))
           writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.usePullup)
         return writer
@@ -9331,7 +9415,7 @@ export const meshtastic = ($root.meshtastic = (() => {
               break
             }
             case 7: {
-              message.detectionTriggeredHigh = reader.bool()
+              message.detectionTriggerType = reader.int32()
               break
             }
             case 8: {
@@ -9345,6 +9429,31 @@ export const meshtastic = ($root.meshtastic = (() => {
         }
         return message
       }
+
+      /**
+       * TriggerType enum.
+       * @name meshtastic.ModuleConfig.DetectionSensorConfig.TriggerType
+       * @enum {number}
+       * @property {number} LOGIC_LOW=0 Event is triggered if pin is low
+       * @property {number} LOGIC_HIGH=1 Event is triggered if pin is high
+       * @property {number} FALLING_EDGE=2 Event is triggered when pin goes high to low
+       * @property {number} RISING_EDGE=3 Event is triggered when pin goes low to high
+       * @property {number} EITHER_EDGE_ACTIVE_LOW=4 Event is triggered on every pin state change, low is considered to be
+       * "active"
+       * @property {number} EITHER_EDGE_ACTIVE_HIGH=5 Event is triggered on every pin state change, high is considered to be
+       * "active"
+       */
+      DetectionSensorConfig.TriggerType = (function () {
+        const valuesById = {},
+          values = Object.create(valuesById)
+        values[(valuesById[0] = 'LOGIC_LOW')] = 0
+        values[(valuesById[1] = 'LOGIC_HIGH')] = 1
+        values[(valuesById[2] = 'FALLING_EDGE')] = 2
+        values[(valuesById[3] = 'RISING_EDGE')] = 3
+        values[(valuesById[4] = 'EITHER_EDGE_ACTIVE_LOW')] = 4
+        values[(valuesById[5] = 'EITHER_EDGE_ACTIVE_HIGH')] = 5
+        return values
+      })()
 
       return DetectionSensorConfig
     })()
@@ -10517,12 +10626,15 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {boolean|null} [airQualityEnabled] Enable/Disable the air quality metrics
        * @property {number|null} [airQualityInterval] Interval in seconds of how often we should try to send our
        * air quality metrics to the mesh
-       * @property {boolean|null} [powerMeasurementEnabled] Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * @property {boolean|null} [powerMeasurementEnabled] Enable/disable Power metrics
        * @property {number|null} [powerUpdateInterval] Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
-       * @property {boolean|null} [powerScreenEnabled] Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * power metrics to the mesh
+       * @property {boolean|null} [powerScreenEnabled] Enable/Disable the power measurement module on-device display
+       * @property {boolean|null} [healthMeasurementEnabled] Preferences for the (Health) Telemetry Module
+       * Enable/Disable the telemetry measurement module measurement collection
+       * @property {number|null} [healthUpdateInterval] Interval in seconds of how often we should try to send our
+       * health metrics to the mesh
+       * @property {boolean|null} [healthScreenEnabled] Enable/Disable the health telemetry module on-device display
        */
 
       /**
@@ -10600,8 +10712,7 @@ export const meshtastic = ($root.meshtastic = (() => {
       TelemetryConfig.prototype.airQualityInterval = 0
 
       /**
-       * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * Enable/disable Power metrics
        * @member {boolean} powerMeasurementEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
@@ -10610,7 +10721,7 @@ export const meshtastic = ($root.meshtastic = (() => {
 
       /**
        * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * power metrics to the mesh
        * @member {number} powerUpdateInterval
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
@@ -10618,13 +10729,38 @@ export const meshtastic = ($root.meshtastic = (() => {
       TelemetryConfig.prototype.powerUpdateInterval = 0
 
       /**
-       * Interval in seconds of how often we should try to send our
-       * air quality metrics to the mesh
+       * Enable/Disable the power measurement module on-device display
        * @member {boolean} powerScreenEnabled
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
        * @instance
        */
       TelemetryConfig.prototype.powerScreenEnabled = false
+
+      /**
+       * Preferences for the (Health) Telemetry Module
+       * Enable/Disable the telemetry measurement module measurement collection
+       * @member {boolean} healthMeasurementEnabled
+       * @memberof meshtastic.ModuleConfig.TelemetryConfig
+       * @instance
+       */
+      TelemetryConfig.prototype.healthMeasurementEnabled = false
+
+      /**
+       * Interval in seconds of how often we should try to send our
+       * health metrics to the mesh
+       * @member {number} healthUpdateInterval
+       * @memberof meshtastic.ModuleConfig.TelemetryConfig
+       * @instance
+       */
+      TelemetryConfig.prototype.healthUpdateInterval = 0
+
+      /**
+       * Enable/Disable the health telemetry module on-device display
+       * @member {boolean} healthScreenEnabled
+       * @memberof meshtastic.ModuleConfig.TelemetryConfig
+       * @instance
+       */
+      TelemetryConfig.prototype.healthScreenEnabled = false
 
       /**
        * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.
@@ -10657,6 +10793,12 @@ export const meshtastic = ($root.meshtastic = (() => {
           writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.powerUpdateInterval)
         if (message.powerScreenEnabled != null && Object.hasOwnProperty.call(message, 'powerScreenEnabled'))
           writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.powerScreenEnabled)
+        if (message.healthMeasurementEnabled != null && Object.hasOwnProperty.call(message, 'healthMeasurementEnabled'))
+          writer.uint32(/* id 11, wireType 0 =*/ 88).bool(message.healthMeasurementEnabled)
+        if (message.healthUpdateInterval != null && Object.hasOwnProperty.call(message, 'healthUpdateInterval'))
+          writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.healthUpdateInterval)
+        if (message.healthScreenEnabled != null && Object.hasOwnProperty.call(message, 'healthScreenEnabled'))
+          writer.uint32(/* id 13, wireType 0 =*/ 104).bool(message.healthScreenEnabled)
         return writer
       }
 
@@ -10716,6 +10858,18 @@ export const meshtastic = ($root.meshtastic = (() => {
             }
             case 10: {
               message.powerScreenEnabled = reader.bool()
+              break
+            }
+            case 11: {
+              message.healthMeasurementEnabled = reader.bool()
+              break
+            }
+            case 12: {
+              message.healthUpdateInterval = reader.uint32()
+              break
+            }
+            case 13: {
+              message.healthScreenEnabled = reader.bool()
               break
             }
             default:
@@ -12509,10 +12663,15 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {number|null} [channelUtilization] Utilization for the current channel, including well formed TX, RX and malformed RX (aka noise).
      * @property {number|null} [airUtilTx] Percent of airtime for transmission used within the last hour.
      * @property {number|null} [numPacketsTx] Number of packets sent
-     * @property {number|null} [numPacketsRx] Number of packets received good
+     * @property {number|null} [numPacketsRx] Number of packets received (both good and bad)
      * @property {number|null} [numPacketsRxBad] Number of packets received that are malformed or violate the protocol
      * @property {number|null} [numOnlineNodes] Number of nodes online (in the past 2 hours)
      * @property {number|null} [numTotalNodes] Number of nodes total
+     * @property {number|null} [numRxDupe] Number of received packets that were duplicates (due to multiple nodes relaying).
+     * If this number is high, there are nodes in the mesh relaying packets when it's unnecessary, for example due to the ROUTER/REPEATER role.
+     * @property {number|null} [numTxRelay] Number of packets we transmitted that were a relay for others (not originating from ourselves).
+     * @property {number|null} [numTxRelayCanceled] Number of times we canceled a packet to be relayed, because someone else did it before us.
+     * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
      */
 
     /**
@@ -12562,7 +12721,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     LocalStats.prototype.numPacketsTx = 0
 
     /**
-     * Number of packets received good
+     * Number of packets received (both good and bad)
      * @member {number} numPacketsRx
      * @memberof meshtastic.LocalStats
      * @instance
@@ -12594,6 +12753,32 @@ export const meshtastic = ($root.meshtastic = (() => {
     LocalStats.prototype.numTotalNodes = 0
 
     /**
+     * Number of received packets that were duplicates (due to multiple nodes relaying).
+     * If this number is high, there are nodes in the mesh relaying packets when it's unnecessary, for example due to the ROUTER/REPEATER role.
+     * @member {number} numRxDupe
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numRxDupe = 0
+
+    /**
+     * Number of packets we transmitted that were a relay for others (not originating from ourselves).
+     * @member {number} numTxRelay
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numTxRelay = 0
+
+    /**
+     * Number of times we canceled a packet to be relayed, because someone else did it before us.
+     * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
+     * @member {number} numTxRelayCanceled
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numTxRelayCanceled = 0
+
+    /**
      * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.LocalStats
@@ -12620,6 +12805,12 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 7, wireType 0 =*/ 56).uint32(message.numOnlineNodes)
       if (message.numTotalNodes != null && Object.hasOwnProperty.call(message, 'numTotalNodes'))
         writer.uint32(/* id 8, wireType 0 =*/ 64).uint32(message.numTotalNodes)
+      if (message.numRxDupe != null && Object.hasOwnProperty.call(message, 'numRxDupe'))
+        writer.uint32(/* id 9, wireType 0 =*/ 72).uint32(message.numRxDupe)
+      if (message.numTxRelay != null && Object.hasOwnProperty.call(message, 'numTxRelay'))
+        writer.uint32(/* id 10, wireType 0 =*/ 80).uint32(message.numTxRelay)
+      if (message.numTxRelayCanceled != null && Object.hasOwnProperty.call(message, 'numTxRelayCanceled'))
+        writer.uint32(/* id 11, wireType 0 =*/ 88).uint32(message.numTxRelayCanceled)
       return writer
     }
 
@@ -12673,6 +12864,18 @@ export const meshtastic = ($root.meshtastic = (() => {
             message.numTotalNodes = reader.uint32()
             break
           }
+          case 9: {
+            message.numRxDupe = reader.uint32()
+            break
+          }
+          case 10: {
+            message.numTxRelay = reader.uint32()
+            break
+          }
+          case 11: {
+            message.numTxRelayCanceled = reader.uint32()
+            break
+          }
           default:
             reader.skipType(tag & 7)
             break
@@ -12682,6 +12885,136 @@ export const meshtastic = ($root.meshtastic = (() => {
     }
 
     return LocalStats
+  })()
+
+  meshtastic.HealthMetrics = (function () {
+    /**
+     * Properties of a HealthMetrics.
+     * @memberof meshtastic
+     * @interface IHealthMetrics
+     * @property {number|null} [heartBpm] Heart rate (beats per minute)
+     * @property {number|null} [spO2] SpO2 (blood oxygen saturation) level
+     * @property {number|null} [temperature] Body temperature in degrees Celsius
+     */
+
+    /**
+     * Constructs a new HealthMetrics.
+     * @memberof meshtastic
+     * @classdesc Health telemetry metrics
+     * @implements IHealthMetrics
+     * @constructor
+     * @param {meshtastic.IHealthMetrics=} [properties] Properties to set
+     */
+    function HealthMetrics(properties) {
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * Heart rate (beats per minute)
+     * @member {number|null|undefined} heartBpm
+     * @memberof meshtastic.HealthMetrics
+     * @instance
+     */
+    HealthMetrics.prototype.heartBpm = null
+
+    /**
+     * SpO2 (blood oxygen saturation) level
+     * @member {number|null|undefined} spO2
+     * @memberof meshtastic.HealthMetrics
+     * @instance
+     */
+    HealthMetrics.prototype.spO2 = null
+
+    /**
+     * Body temperature in degrees Celsius
+     * @member {number|null|undefined} temperature
+     * @memberof meshtastic.HealthMetrics
+     * @instance
+     */
+    HealthMetrics.prototype.temperature = null
+
+    // OneOf field names bound to virtual getters and setters
+    let $oneOfFields
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(HealthMetrics.prototype, '_heartBpm', {
+      get: $util.oneOfGetter(($oneOfFields = ['heartBpm'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(HealthMetrics.prototype, '_spO2', {
+      get: $util.oneOfGetter(($oneOfFields = ['spO2'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(HealthMetrics.prototype, '_temperature', {
+      get: $util.oneOfGetter(($oneOfFields = ['temperature'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    /**
+     * Encodes the specified HealthMetrics message. Does not implicitly {@link meshtastic.HealthMetrics.verify|verify} messages.
+     * @function encode
+     * @memberof meshtastic.HealthMetrics
+     * @static
+     * @param {meshtastic.IHealthMetrics} message HealthMetrics message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    HealthMetrics.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.heartBpm != null && Object.hasOwnProperty.call(message, 'heartBpm'))
+        writer.uint32(/* id 1, wireType 0 =*/ 8).uint32(message.heartBpm)
+      if (message.spO2 != null && Object.hasOwnProperty.call(message, 'spO2'))
+        writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.spO2)
+      if (message.temperature != null && Object.hasOwnProperty.call(message, 'temperature'))
+        writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.temperature)
+      return writer
+    }
+
+    /**
+     * Decodes a HealthMetrics message from the specified reader or buffer.
+     * @function decode
+     * @memberof meshtastic.HealthMetrics
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {meshtastic.HealthMetrics} HealthMetrics
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    HealthMetrics.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.meshtastic.HealthMetrics()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            message.heartBpm = reader.uint32()
+            break
+          }
+          case 2: {
+            message.spO2 = reader.uint32()
+            break
+          }
+          case 3: {
+            message.temperature = reader.float()
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return HealthMetrics
   })()
 
   meshtastic.Telemetry = (function () {
@@ -12695,6 +13028,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {meshtastic.IAirQualityMetrics|null} [airQualityMetrics] Air quality metrics
      * @property {meshtastic.IPowerMetrics|null} [powerMetrics] Power Metrics
      * @property {meshtastic.ILocalStats|null} [localStats] Local device mesh statistics
+     * @property {meshtastic.IHealthMetrics|null} [healthMetrics] Health telemetry metrics
      */
 
     /**
@@ -12759,17 +13093,27 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     Telemetry.prototype.localStats = null
 
+    /**
+     * Health telemetry metrics
+     * @member {meshtastic.IHealthMetrics|null|undefined} healthMetrics
+     * @memberof meshtastic.Telemetry
+     * @instance
+     */
+    Telemetry.prototype.healthMetrics = null
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
     /**
      * Telemetry variant.
-     * @member {"deviceMetrics"|"environmentMetrics"|"airQualityMetrics"|"powerMetrics"|"localStats"|undefined} variant
+     * @member {"deviceMetrics"|"environmentMetrics"|"airQualityMetrics"|"powerMetrics"|"localStats"|"healthMetrics"|undefined} variant
      * @memberof meshtastic.Telemetry
      * @instance
      */
     Object.defineProperty(Telemetry.prototype, 'variant', {
-      get: $util.oneOfGetter(($oneOfFields = ['deviceMetrics', 'environmentMetrics', 'airQualityMetrics', 'powerMetrics', 'localStats'])),
+      get: $util.oneOfGetter(
+        ($oneOfFields = ['deviceMetrics', 'environmentMetrics', 'airQualityMetrics', 'powerMetrics', 'localStats', 'healthMetrics'])
+      ),
       set: $util.oneOfSetter($oneOfFields),
     })
 
@@ -12796,6 +13140,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         $root.meshtastic.PowerMetrics.encode(message.powerMetrics, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
       if (message.localStats != null && Object.hasOwnProperty.call(message, 'localStats'))
         $root.meshtastic.LocalStats.encode(message.localStats, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.healthMetrics != null && Object.hasOwnProperty.call(message, 'healthMetrics'))
+        $root.meshtastic.HealthMetrics.encode(message.healthMetrics, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
       return writer
     }
 
@@ -12839,6 +13185,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 6: {
             message.localStats = $root.meshtastic.LocalStats.decode(reader, reader.uint32())
+            break
+          }
+          case 7: {
+            message.healthMetrics = $root.meshtastic.HealthMetrics.decode(reader, reader.uint32())
             break
           }
           default:
@@ -12886,6 +13236,8 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} ICM20948=27 ICM-20948 9-Axis digital motion processor
    * @property {number} MAX17048=28 MAX17048 1S lipo battery sensor (voltage, state of charge, time to go)
    * @property {number} CUSTOM_SENSOR=29 Custom I2C sensor implementation based on https://github.com/meshtastic/i2c-sensor
+   * @property {number} MAX30102=30 MAX30102 Pulse Oximeter and Heart-Rate Sensor
+   * @property {number} MLX90614=31 MLX90614 non-contact IR temperature sensor.
    */
   meshtastic.TelemetrySensorType = (function () {
     const valuesById = {},
@@ -12920,6 +13272,8 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[27] = 'ICM20948')] = 27
     values[(valuesById[28] = 'MAX17048')] = 28
     values[(valuesById[29] = 'CUSTOM_SENSOR')] = 29
+    values[(valuesById[30] = 'MAX30102')] = 30
+    values[(valuesById[31] = 'MLX90614')] = 31
     return values
   })()
 
@@ -13177,6 +13531,9 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {string|null} [channelUrl] The url of the channels from our node
      * @property {meshtastic.ILocalConfig|null} [config] The Config of the node
      * @property {meshtastic.ILocalModuleConfig|null} [moduleConfig] The ModuleConfig of the node
+     * @property {meshtastic.IPosition|null} [fixedPosition] Fixed position data
+     * @property {string|null} [ringtone] Ringtone for ExternalNotification
+     * @property {string|null} [cannedMessages] Predefined messages for CannedMessage
      */
 
     /**
@@ -13234,6 +13591,30 @@ export const meshtastic = ($root.meshtastic = (() => {
      */
     DeviceProfile.prototype.moduleConfig = null
 
+    /**
+     * Fixed position data
+     * @member {meshtastic.IPosition|null|undefined} fixedPosition
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.fixedPosition = null
+
+    /**
+     * Ringtone for ExternalNotification
+     * @member {string|null|undefined} ringtone
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.ringtone = null
+
+    /**
+     * Predefined messages for CannedMessage
+     * @member {string|null|undefined} cannedMessages
+     * @memberof meshtastic.DeviceProfile
+     * @instance
+     */
+    DeviceProfile.prototype.cannedMessages = null
+
     // OneOf field names bound to virtual getters and setters
     let $oneOfFields
 
@@ -13267,6 +13648,24 @@ export const meshtastic = ($root.meshtastic = (() => {
       set: $util.oneOfSetter($oneOfFields),
     })
 
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_fixedPosition', {
+      get: $util.oneOfGetter(($oneOfFields = ['fixedPosition'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_ringtone', {
+      get: $util.oneOfGetter(($oneOfFields = ['ringtone'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
+    // Virtual OneOf for proto3 optional field
+    Object.defineProperty(DeviceProfile.prototype, '_cannedMessages', {
+      get: $util.oneOfGetter(($oneOfFields = ['cannedMessages'])),
+      set: $util.oneOfSetter($oneOfFields),
+    })
+
     /**
      * Encodes the specified DeviceProfile message. Does not implicitly {@link meshtastic.DeviceProfile.verify|verify} messages.
      * @function encode
@@ -13288,6 +13687,12 @@ export const meshtastic = ($root.meshtastic = (() => {
         $root.meshtastic.LocalConfig.encode(message.config, writer.uint32(/* id 4, wireType 2 =*/ 34).fork()).ldelim()
       if (message.moduleConfig != null && Object.hasOwnProperty.call(message, 'moduleConfig'))
         $root.meshtastic.LocalModuleConfig.encode(message.moduleConfig, writer.uint32(/* id 5, wireType 2 =*/ 42).fork()).ldelim()
+      if (message.fixedPosition != null && Object.hasOwnProperty.call(message, 'fixedPosition'))
+        $root.meshtastic.Position.encode(message.fixedPosition, writer.uint32(/* id 6, wireType 2 =*/ 50).fork()).ldelim()
+      if (message.ringtone != null && Object.hasOwnProperty.call(message, 'ringtone'))
+        writer.uint32(/* id 7, wireType 2 =*/ 58).string(message.ringtone)
+      if (message.cannedMessages != null && Object.hasOwnProperty.call(message, 'cannedMessages'))
+        writer.uint32(/* id 8, wireType 2 =*/ 66).string(message.cannedMessages)
       return writer
     }
 
@@ -13327,6 +13732,18 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 5: {
             message.moduleConfig = $root.meshtastic.LocalModuleConfig.decode(reader, reader.uint32())
+            break
+          }
+          case 6: {
+            message.fixedPosition = $root.meshtastic.Position.decode(reader, reader.uint32())
+            break
+          }
+          case 7: {
+            message.ringtone = reader.string()
+            break
+          }
+          case 8: {
+            message.cannedMessages = reader.string()
             break
           }
           default:

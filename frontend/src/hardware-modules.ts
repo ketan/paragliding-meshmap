@@ -23,6 +23,7 @@ export const HardwareModelIDToName = {
   '21': 'WIO_WM1110',
   '22': 'RAK2560',
   '23': 'HELTEC_HRU_3601',
+  '24': 'HELTEC_WIRELESS_BRIDGE',
   '25': 'STATION_G1',
   '26': 'RAK11310',
   '27': 'SENSELORA_RP2040',
@@ -77,6 +78,11 @@ export const HardwareModelIDToName = {
   '76': 'RP2040_FEATHER_RFM95',
   '77': 'M5STACK_COREBASIC',
   '78': 'M5STACK_CORE2',
+  '79': 'RPI_PICO2',
+  '80': 'M5STACK_CORES3',
+  '81': 'SEEED_XIAO_S3',
+  '82': 'MS24SF1',
+  '83': 'TLORA_C6',
   '255': 'PRIVATE_HW',
 } as Record<number, string>
 
@@ -105,6 +111,7 @@ export const HardwareModelNameToID = {
   WIO_WM1110: 21,
   RAK2560: 22,
   HELTEC_HRU_3601: 23,
+  HELTEC_WIRELESS_BRIDGE: 24,
   STATION_G1: 25,
   RAK11310: 26,
   SENSELORA_RP2040: 27,
@@ -159,6 +166,11 @@ export const HardwareModelNameToID = {
   RP2040_FEATHER_RFM95: 76,
   M5STACK_COREBASIC: 77,
   M5STACK_CORE2: 78,
+  RPI_PICO2: 79,
+  M5STACK_CORES3: 80,
+  SEEED_XIAO_S3: 81,
+  MS24SF1: 82,
+  TLORA_C6: 83,
   PRIVATE_HW: 255,
 } as Record<string, number>
 

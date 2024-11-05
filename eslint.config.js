@@ -12,7 +12,7 @@ export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } } },
   {
-    ignores: ['build/**', 'public/assets/**', 'frontend/dist/**', 'eslint.config.js', 'src/gen/**/*.*'],
+    ignores: ['build/**', 'public/assets/**', 'frontend/dist/**', 'eslint.config.js', 'src/gen/**/*.*', 'tmp/**'],
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.strict,

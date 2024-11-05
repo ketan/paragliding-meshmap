@@ -1643,7 +1643,7 @@
   resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.8.0.tgz#2b31cb9db381d6863727190bb4b1a7be7ce78ce8"
   integrity sha512-Il4y8XwKDV0Bnk0IpA00kGcSQC6I9XOIinW5egTutnwIDfDE+qsD0j+0isW5H76GetY3/Ze0lVxeOXLAUgpegA==
 
-"@swc/core@^1.7.14", "@swc/core@^1.7.26":
+"@swc/core@^1.7.26":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.8.0.tgz#ae9290e6d138abc7c3d6b50fe5223d3c601f9155"
   integrity sha512-EF8C5lp1RKMp3426tAKwQyVbg4Zcn/2FDax3cz8EcOXYQJM/ctB687IvBm9Ciej1wMcQ/dMRg+OB4Xl8BGLBoA==
@@ -4051,7 +4051,7 @@ fast-safe-stringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.1.1.tgz#c406a83b6e70d9e35ce3b30a81141df30aeba884"
   integrity sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==
 
-fastq@^1.17.1, fastq@^1.6.0:
+fastq@^1.6.0:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.17.1.tgz#2a523f07a4e7b1e81a42b91b8bf2254107753b47"
   integrity sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==
@@ -5176,13 +5176,6 @@ knex@^3.1.0:
     tarn "^3.0.2"
     tildify "2.0.0"
 
-leaflet-geometryutil@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/leaflet-geometryutil/-/leaflet-geometryutil-0.10.3.tgz#dda78546abc58723a46b47fd6ffb081f5b63cec4"
-  integrity sha512-Qeas+KsnenE0Km/ydt8km3AqFe7kJhVwuLdbCYM2xe2epsxv5UFEaVJiagvP9fnxS8QvBNbm7DJlDA0tkKo9VA==
-  dependencies:
-    leaflet "^1.6.0"
-
 leaflet-groupedlayercontrol@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/leaflet-groupedlayercontrol/-/leaflet-groupedlayercontrol-0.6.1.tgz#cb7097c798c6b4dee644e8ab84c0e70b6a3e1caa"
@@ -5200,7 +5193,7 @@ leaflet.polylinemeasure@^3.0.0:
   resolved "https://registry.yarnpkg.com/leaflet.polylinemeasure/-/leaflet.polylinemeasure-3.0.0.tgz#7d86322cf89b6832da1c8ec1e548ebd647c3e81d"
   integrity sha512-PTTHz7NBJiWmNFetH8hb3leQNM15qoM9Xe7VDKh1Hyat/M+USqFYeoa0A0LAecsqsjUqA63Rzux4SivoyrSFkA==
 
-leaflet@^1.0.1, leaflet@^1.6.0, leaflet@^1.9.4:
+leaflet@^1.0.1, leaflet@^1.9.4:
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.4.tgz#23fae724e282fa25745aff82ca4d394748db7d8d"
   integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==

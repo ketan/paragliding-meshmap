@@ -12,7 +12,7 @@ export function Tabs({ tabs, children, defaultActiveTab = 0 }: TabProps) {
   useEffect(() => setActiveTab(defaultActiveTab), [defaultActiveTab])
 
   return (
-    <div>
+    <>
       <div className="flex border-b">
         {tabs.map((tab, index) => (
           <button
@@ -24,7 +24,7 @@ export function Tabs({ tabs, children, defaultActiveTab = 0 }: TabProps) {
           </button>
         ))}
       </div>
-      <div className="">{children[activeTab]}</div>
-    </div>
+      {children[activeTab]}
+    </>
   )
 }

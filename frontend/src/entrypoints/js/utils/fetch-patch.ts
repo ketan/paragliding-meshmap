@@ -1,5 +1,6 @@
 // In `frontend/src/entrypoints/js/utils/fetch-patch.ts`
 import { fetchCsrfToken } from './csrf.ts'
+import { toast } from 'react-toastify'
 
 const currentVersion = __GIT_SHA__ // Assuming this is defined globally
 
@@ -9,7 +10,14 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
   const headers = new Headers(init?.headers)
 
   if (['put', 'post', 'delete', 'patch'].includes((init?.method || 'get').toLowerCase())) {
-    headers.set('x-csrf-token', (await fetchCsrfToken())!)
+    const csrfToken = await fetchCsrfToken(true)
+    if (!csrfToken) {
+      toast.error(
+        'Unable to fetch CSRF token! Please retry again, if the problem persists reach out on the meshtastic telegram channel. Thanks!'
+      )
+      throw 'Unable to fetch CSRF token! Please retry again, if the problem persists reach out on the meshtastic telegram channel. Thanks!'
+    }
+    headers.set('x-csrf-token', csrfToken)
   }
 
   const modifiedInit: RequestInit = {

@@ -1,17 +1,13 @@
-import { DeepRequired, FieldErrorsImpl, GlobalError, UseFormRegister } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { fieldsetClassNames, legendClassNames } from '../utils/form-helpers.tsx'
 import { FormField } from './form-field.tsx'
 
 interface EmergencyContactFormProps {
-  register: UseFormRegister<ProfileFormDataWithoutProfileImage>
-
-  errors: Partial<FieldErrorsImpl<DeepRequired<ProfileFormDataWithoutProfileImage>>> & {
-    root?: Record<string, GlobalError> & GlobalError
-  }
+  form: UseFormReturn<ProfileFormDataWithoutProfileImage>
 }
 
-export function EmergencyContactForm({ register, errors }: EmergencyContactFormProps) {
+export function EmergencyContactForm({ form }: EmergencyContactFormProps) {
   return (
     <fieldset className={fieldsetClassNames}>
       <legend className={legendClassNames}>Emergency contact(s)</legend>
@@ -19,8 +15,8 @@ export function EmergencyContactForm({ register, errors }: EmergencyContactFormP
       <FormField
         id="primaryEmergencyContactName"
         label="Primary Emergency Contact Name"
-        register={register}
-        errors={errors}
+        register={form.register}
+        errors={form.formState.errors}
         helpText="Enter the name of your primary emergency contact."
       />
 
@@ -28,16 +24,16 @@ export function EmergencyContactForm({ register, errors }: EmergencyContactFormP
         type="tel"
         id="primaryEmergencyContactPhone"
         label="Primary Emergency Contact Phone Number"
-        register={register}
-        errors={errors}
+        register={form.register}
+        errors={form.formState.errors}
         helpText="Enter the phone number of your primary emergency contact."
       />
 
       <FormField
         id="secondaryEmergencyContactName"
         label="Secondary Emergency Contact Name"
-        register={register}
-        errors={errors}
+        register={form.register}
+        errors={form.formState.errors}
         helpText="Enter the name of your secondary emergency contact."
       />
 
@@ -45,8 +41,8 @@ export function EmergencyContactForm({ register, errors }: EmergencyContactFormP
         type="tel"
         id="secondaryEmergencyContactPhone"
         label="Secondary Emergency Contact Phone Number"
-        register={register}
-        errors={errors}
+        register={form.register}
+        errors={form.formState.errors}
         helpText="Enter the phone number of your secondary emergency contact."
       />
     </fieldset>

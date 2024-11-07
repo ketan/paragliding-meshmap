@@ -1,8 +1,7 @@
-import countryList from 'country-list'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { profileFormDataYUPSchema } from './profile-modal-interfaces.ts'
 import { useForm } from 'react-hook-form'
-import { useFetchDataIntoForm } from '../utils/form-helpers.tsx'
+import { createOnSubmit, useFetchDataIntoForm } from '../utils/form-helpers.tsx'
 import { fetchUserProfile } from '../utils/profile.ts'
 import { PersonalDetailsForm } from './personal-details-form.tsx'
 import { PrimaryParaglidingEquipmentForm } from './primary-paragliding-equipment.tsx'
@@ -11,60 +10,54 @@ import { AddressForm } from './address-form.tsx'
 import { EmergencyContactForm } from './emergency-contact-form.tsx'
 import { MedicalInformationForm } from './medical-information-form.tsx'
 import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
+import { ActionBar } from './action-bar.tsx'
+import { SubmitButton, SubmitButtonIcon } from './submit-button.tsx'
+import { useState } from 'react'
 
-async function onSubmit<T extends object>(data: T) {
-  try {
-    const response = await fetch('/api/profile', {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-
-    const result = await response.json()
-
-    return result
-    console.log('Success:', result)
-  } catch (error) {
-    console.error('Error:', error)
-  }
+async function submitData<T>(data: T): Promise<Response> {
+  return await fetch('/api/profile', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
 }
 
 export function ProfileFormTab() {
-  const countries = countryList.getData().sort((a, b) => a.name.localeCompare(b.name))
+  const [submissionStatus, setSubmissionStatus] = useState<SubmitButtonIcon>()
 
   const resolver = yupResolver(profileFormDataYUPSchema)
-  const {
-    register,
-    handleSubmit,
-    formState: { errors: errors },
-    setValue,
-  } = useForm<ProfileFormDataWithoutProfileImage>({
+
+  const form = useForm<ProfileFormDataWithoutProfileImage>({
     mode: 'onBlur',
     resolver: resolver,
     shouldUnregister: true,
   })
-  useFetchDataIntoForm(setValue, fetchUserProfile)
+
+  useFetchDataIntoForm(form.setValue, fetchUserProfile)
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, (e) => console.log(e))}>
-      <>
-        <PersonalDetailsForm register={register} errors={errors} countries={countries} />
-        <PrimaryParaglidingEquipmentForm register={register} errors={errors} />
-        <SecondaryParaglidingEquipmentForm register={register} errors={errors} />
-        <AddressForm register={register} errors={errors} countries={countries} />
-        <EmergencyContactForm register={register} errors={errors} />
-        <MedicalInformationForm register={register} errors={errors} />
-      </>
-      <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg">
-        Save
-      </button>
+    <form
+      onSubmit={form.handleSubmit(
+        createOnSubmit({
+          submitHandler: submitData,
+          submissionStatus: setSubmissionStatus,
+        }),
+        (e) => console.log(e)
+      )}
+    >
+      <PersonalDetailsForm form={form} />
+      <PrimaryParaglidingEquipmentForm form={form} />
+      <SecondaryParaglidingEquipmentForm form={form} />
+      <AddressForm form={form} />
+      <EmergencyContactForm form={form} />
+      <MedicalInformationForm form={form} />
+
+      <ActionBar>
+        <SubmitButton icon={submissionStatus}>Save</SubmitButton>
+      </ActionBar>
     </form>
   )
 }

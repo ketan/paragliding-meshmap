@@ -32,7 +32,7 @@ export function PersonalDetailsForm({ register, countries, errors }: PersonalDet
       <FormField
         id="primaryPhone"
         type="tel"
-        label="Primary phone number (with country code)"
+        label="Primary phone number"
         register={register}
         errors={errors}
         helpText="Include your country code, e.g., +1 for USA."
@@ -41,7 +41,7 @@ export function PersonalDetailsForm({ register, countries, errors }: PersonalDet
       <FormField
         id="secondaryPhone"
         type="tel"
-        label="Secondary phone number (with country code)"
+        label="Secondary phone number"
         register={register}
         errors={errors}
         helpText="Include your country code, e.g., +1 for USA."

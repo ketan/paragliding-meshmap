@@ -24,10 +24,10 @@ ENV DEBUG_COLORS=true
 ENV NODE_ENV=production
 ENV TZ=UTC
 ENV GIT_SHA=${GIT_SHA}
-
+RUN apk add -U envsubst
 EXPOSE 3333
 
 HEALTHCHECK --interval=5s --timeout=3s --start-period=30s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:3333/api/health-check || exit 1
 
-CMD ["sh", "-c", "node index.js"]
+CMD ["sh", "-c", "envsubst < public/template-runtime-env.js > public/runtime-env.js; exec node index.js"]

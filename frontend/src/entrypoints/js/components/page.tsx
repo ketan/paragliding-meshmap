@@ -57,7 +57,7 @@ export function Page(props: PageProps) {
   async function callback(credential: string) {
     const data = new URLSearchParams()
     data.append('credential', credential)
-
+    setProfileLoadedState('loading')
     const response = await fetch('/auth/one-tap/callback', {
       method: 'post',
       body: data,
@@ -66,8 +66,10 @@ export function Page(props: PageProps) {
     const body = await response.json()
     if (response.ok) {
       setUserProfile(body.user as UserProfile)
+      setProfileLoadedState('loaded')
       await fetchCsrfToken(true)
     } else {
+      setProfileLoadedState('error')
       let message = body.message
       if (typeof body.error === 'string') {
         message += ' ' + body.error

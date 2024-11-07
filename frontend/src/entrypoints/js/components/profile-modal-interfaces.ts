@@ -31,7 +31,6 @@ export interface ProfileFormData {
   dob: string
   nationality: string
   embassyPhone?: string
-  identityDocument: FileList
 
   // primary equipment
   paraglider1Manufacturer: string
@@ -127,11 +126,6 @@ export const profileFormDataYUPSchema = Yup.object().shape({
 
       return optionalPhoneValidator(value)
     }),
-  identityDocument: Yup.mixed<FileList>()
-    .required('Identity document is required')
-    .test('fileRequired', 'Identity document is required', filePresentValidator)
-    .test('fileTooLarge', 'File must be under 2MB', fileSizeValidator)
-    .test('fileType', 'Unsupported file format', imageFileListValidator),
   // primary equipment
   paraglider1Manufacturer: Yup.string().required('Manufacturer is required'),
   paraglider1Model: Yup.string().required('Model is required'),

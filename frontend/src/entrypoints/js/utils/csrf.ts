@@ -1,33 +1,37 @@
 let csrfToken: string | null = null
 
+async function fetchToken() {
+  const response = await fetch('/api/csrf-token', {
+    method: 'GET',
+  })
+
+  if (response.ok) {
+    const data = await response.json()
+    if (data.token) {
+      return data.token
+    }
+  }
+}
+
 export async function fetchCsrfToken(forceReload: boolean = false) {
   if (csrfToken && !forceReload) {
     return csrfToken
   }
 
-  const response = await fetch('/api/csrf-token', {
-    method: 'GET',
-  })
+  for (let i = 0; i < 2; i++) {
+    try {
+      const token = await fetchToken()
 
-  if (!response.ok) {
-    const retryResponse = await fetch('/api/csrf-token', {
-      method: 'GET',
-    })
-
-    if (!retryResponse.ok) {
-      throw new Error('Failed to fetch CSRF token after retry')
+      if (token) {
+        csrfToken = token
+        return csrfToken
+      }
+    } catch (ignore) {
+      // do nothing
     }
-    const data = await response.json()
-    csrfToken = data.token
-    return csrfToken
   }
 
-  const data = await response.json()
-  csrfToken = data.token
-  if (!csrfToken) {
-    throw new Error('CSRF token was empty!')
-  }
-  return csrfToken
+  throw 'Unable to fetch CSRF token!'
 }
 
 fetchCsrfToken()

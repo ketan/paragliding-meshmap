@@ -1,4 +1,4 @@
-import { Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
+import { Between, Column, DataSource, Entity, EntityManager, Index, MoreThanOrEqual } from 'typeorm'
 import { BaseType } from './base_types.js'
 import _ from 'lodash'
 import { PositionDTO } from '#entity/map_report'
@@ -166,5 +166,14 @@ export default class Position extends BaseType {
       .groupBy("DATE_TRUNC('day', position.createdAt)")
       .orderBy('date', 'ASC')
       .getRawMany()
+  }
+
+  static async all(db: DataSource, since: Date, duration: Duration): Promise<Pick<Position, 'latitude' | 'longitude'>[]> {
+    return (await this.find(db, {
+      select: ['latitude', 'longitude'],
+      where: {
+        createdAt: Between(since, DateTime.fromJSDate(since).plus(duration).toJSDate()),
+      },
+    })) as Pick<Position, 'latitude' | 'longitude'>[]
   }
 }

@@ -1949,6 +1949,13 @@
   dependencies:
     "@types/leaflet" "*"
 
+"@types/leaflet.heat@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@types/leaflet.heat/-/leaflet.heat-0.2.4.tgz#0fbc47b409f1eab79697ab6f9e36ce4ab2a3d5cf"
+  integrity sha512-Ocdgf2LUBsPAdQ29KY7QAwe5J5NDq/T2msTsA3OL7eYG3EVjMvkrPqXYJtLbXIauxP9e7bOReDie3GzC7lBLqg==
+  dependencies:
+    "@types/leaflet" "*"
+
 "@types/leaflet.markercluster@^1.5.4":
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/@types/leaflet.markercluster/-/leaflet.markercluster-1.5.5.tgz#e420caf5b9f6300ab4869fc877d08a9eaf200eec"
@@ -5444,6 +5451,11 @@ leaflet-groupedlayercontrol@^0.6.1:
   integrity sha512-xkGeH6ygcryFQI0FUWn6Bz93zlwrOSpeXgJQ3jLRoUQJ5h/Qgrz+GqR9nhBFfikjUKtC1sCKL3eDR9wNTWhLlA==
   dependencies:
     leaflet "^1.0.1"
+
+leaflet.heat@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/leaflet.heat/-/leaflet.heat-0.2.0.tgz#109d8cf586f0adee41f05aff031e27a77fecc229"
+  integrity sha512-Cd5PbAA/rX3X3XKxfDoUGi9qp78FyhWYurFg3nsfhntcM/MCNK08pRkf4iEenO1KNqwVPKCmkyktjW3UD+h9bQ==
 
 leaflet.markercluster@^1.5.3:
   version "1.5.3"

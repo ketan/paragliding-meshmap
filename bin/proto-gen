@@ -1,20 +1,32 @@
 #!/usr/bin/env sh
 
-rm -rf ./src/protos src/gen/meshtastic-protobufs.js src/gen/meshtastic-protobufs.d.ts
+rm -rf ./src/protos/meshtastic src/gen/meshtastic-protobufs.js src/gen/meshtastic-protobufs.d.ts
 mkdir -p src/gen
 
-npx @bufbuild/buf  export buf.build/meshtastic/protobufs -o ./src/protos
+npx @bufbuild/buf export buf.build/meshtastic/protobufs -o ./src/protos/meshtastic
+
+npx pbjs \
+  --target static-module \
+  --no-create  --no-verify --no-convert --no-delimited --no-typeurl --alt-comment \
+  --path ./src/protos/meshtastic \
+  --wrap es6 \
+  --out src/gen/meshtastic-protobufs.js \
+  src/protos/meshtastic/meshtastic/mqtt.proto \
+  src/protos/meshtastic/meshtastic/clientonly.proto \
+  src/protos/meshtastic/meshtastic/apponly.proto
+
 npx pbjs \
   --target static-module \
   --no-create  --no-verify --no-convert --no-delimited --no-typeurl --alt-comment \
   --path ./src/protos \
   --wrap es6 \
-  --out src/gen/meshtastic-protobufs.js \
-  src/protos/meshtastic/mqtt.proto \
-  src/protos/meshtastic/clientonly.proto \
-  src/protos/meshtastic/apponly.proto
+  --out src/gen/meshmap-protobufs.js \
+  src/protos/meshmap.proto \
 
 sed -i -e 's@"protobufjs/minimal"@"protobufjs/minimal.js"@g' -e 's@import \* as \$protobuf @import \$protobuf @g' src/gen/meshtastic-protobufs.js
+sed -i -e 's@"protobufjs/minimal"@"protobufjs/minimal.js"@g' -e 's@import \* as \$protobuf @import \$protobuf @g' src/gen/meshmap-protobufs.js
 
+npx pbts -o src/gen/meshmap-protobufs.d.ts src/gen/meshmap-protobufs.js
 npx pbts -o src/gen/meshtastic-protobufs.d.ts src/gen/meshtastic-protobufs.js
-npx prettier -w src/gen/meshtastic-protobufs.*
+
+npx prettier -w src/gen/*-protobufs.*

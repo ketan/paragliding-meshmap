@@ -24,6 +24,7 @@ import { certificationDocumentsRouter } from '#web/routes/certification-document
 import { insuranceDocumentsRouter } from '#web/routes/insurance-documents'
 import { deviceConfigRouter } from '#web/routes/device-config'
 import { statsRouter } from '#web/routes/stats'
+import { positionsRouter } from '#web/routes/positions'
 
 const db = AppDataSource
 
@@ -118,6 +119,7 @@ app.use('/api', identityDocumentsRouter)
 app.use('/api', insuranceDocumentsRouter)
 app.use('/api', certificationDocumentsRouter)
 app.use('/api', deviceConfigRouter)
+app.use('/api', positionsRouter)
 
 if (isProduction) {
   app.use(

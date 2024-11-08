@@ -1,8 +1,9 @@
 import debug from 'debug'
-import L, { Control } from 'leaflet'
+import L, { Control, HeatLatLngTuple } from 'leaflet'
 import 'leaflet-groupedlayercontrol'
 import 'leaflet.markercluster'
 import 'leaflet.polylinemeasure'
+import 'leaflet.heat'
 import { DateTime, Duration } from 'luxon'
 import { Component } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -35,6 +36,9 @@ import { TrackLog } from './track-log.tsx'
 import { getTextSize } from '../utils/text-size.ts'
 import { MessagesModal } from './messages-modal.tsx'
 import { ProfileModal } from '../components/profile-modal.tsx'
+import { toast } from 'react-toastify'
+import { Meshmap } from '../../../../../src/gen/meshmap-protobufs'
+import _ from 'lodash'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -75,6 +79,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   aboutModalVisible: boolean
   configModalVisible: boolean
   profileModalVisible: boolean
+  heatmapData?: HeatLatLngTuple[]
 }
 
 export default class MapApp extends Component<MapProps, MapState> {
@@ -95,6 +100,9 @@ export default class MapApp extends Component<MapProps, MapState> {
     configModalVisible: false,
     profileModalVisible: false,
   }
+
+  readonly heatLayer = L.heatLayer([], { radius: 10, minOpacity: 20 })
+  readonly heatmapLayerGroup = new L.LayerGroup().addLayer(this.heatLayer)
 
   readonly allClusteredLayerGroup = L.markerClusterGroup({
     showCoverageOnHover: false,
@@ -117,6 +125,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         All: this.allNodesLayerGroup,
         Routers: this.allRouterNodesLayerGroup,
         Clustered: this.allClusteredLayerGroup,
+        Heatmap: this.heatmapLayerGroup,
         None: new L.LayerGroup(),
       },
       Overlays: {
@@ -310,6 +319,12 @@ export default class MapApp extends Component<MapProps, MapState> {
       closeAllToolTipsAndPopupsAndPopups: this.closeAllToolTipsAndPopupsAndPopups.bind(this),
     })
     this.configureGroupedLayers()
+    this.state.map!.on('overlayadd', async (evt) => {
+      if (evt.layer === this.heatmapLayerGroup) {
+        await this.fetchHeatmapData()
+      }
+    })
+
     L.control
       .polylineMeasure({
         position: 'topleft',
@@ -572,5 +587,29 @@ export default class MapApp extends Component<MapProps, MapState> {
     } else {
       this.setState({ messageTo: `all` })
     }
+  }
+
+  private async fetchHeatmapData() {
+    const response = await fetch('/api/positions/heatmap?since=P30D&duration=P30D')
+    if (!response.ok) {
+      toast.error('Unable to fetch data for heatmap!')
+      return
+    }
+
+    const heatmapData = Meshmap.decode(new Uint8Array(await response.arrayBuffer()))
+    this.setState(
+      {
+        heatmapData: _.compact(
+          heatmapData.positions.map((p) => p.latitude && p.longitude && [p.latitude / 10000000, p.longitude / 10000000, 0.01])
+        ),
+      },
+      () => {
+        if (this.state.heatmapData) {
+          this.heatLayer.setLatLngs(this.state.heatmapData)
+        } else {
+          this.heatLayer.setLatLngs([])
+        }
+      }
+    )
   }
 }

@@ -14,9 +14,9 @@ import { nodeName, sanitizeLatLong, TRACKER_API_BASE_URL } from '../utils/ui-uti
 import _ from 'lodash'
 
 interface TrackLogProps {
-  node?: NodesEntityForUI
-  map?: Map
+  map: Map
   layer: L.LayerGroup
+  trackLog: { node: NodesEntityForUI; fitToWindow: boolean }
 }
 
 interface TrackLogState {
@@ -36,13 +36,13 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
   }
 
   componentDidMount() {
-    if (this.props.node) {
+    if (this.props.trackLog.node) {
       this.loadData()
     }
   }
 
   componentDidUpdate(prevProps: Readonly<TrackLogProps>, _prevState: Readonly<TrackLogState>) {
-    if (prevProps.node?.nodeId != this.props.node?.nodeId) {
+    if (prevProps.trackLog.node.nodeId != this.props.trackLog.node.nodeId) {
       this.loadData()
     }
   }
@@ -52,12 +52,12 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
   }
 
   private async loadData() {
-    if (!this.props.node) {
+    if (!this.props.trackLog.node) {
       return
     }
     this.setState({ loadedState: 'loading' })
 
-    const response = await fetch(`${TRACKER_API_BASE_URL}/api/node/${this.props.node!.nodeId}/positions`)
+    const response = await fetch(`${TRACKER_API_BASE_URL}/api/node/${this.props.trackLog.node.nodeId}/positions`)
     if (response.status === 200 || response.status === 304) {
       const trackLogs = (await response.json()) as PositionsEntityJSON[]
       const positions = this.filteredPositions(trackLogs)
@@ -69,7 +69,9 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         this.gpxLayer = this.createGPXLayer(this.state.positions!)
         if (this.gpxLayer) {
           this.gpxLayer.addTo(this.props.layer)
-          this.props.map!.fitBounds(this.gpxLayer.getBounds())
+          if (this.props.trackLog.fitToWindow) {
+            this.props.map.fitBounds(this.gpxLayer.getBounds())
+          }
         } else {
           toast('There are no track logs for this node')
         }
@@ -85,13 +87,13 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       .map((position) => {
         const latLong = sanitizeLatLong(position.latitude! / 10000000, position.longitude! / 10000000)!
 
-        const earliestTime = _([position.time, position.timestamp, position.createdAt]).compact().min()!
+        const earliestTime = _([position.time, position.timestamp, position.createdAt]).compact().min()
 
         return {
           id: position.id,
           latitude: latLong[0],
           longitude: latLong[1],
-          time: DateTime.fromISO(earliestTime),
+          time: DateTime.fromISO(earliestTime!),
           altitude: position.altitude,
           aboveGroundLevel: position.aboveGroundLevel,
           pdop: position.pdop,
@@ -113,7 +115,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
 
     const startPosition = positions.at(0)
     if (startPosition) {
-      const label = `Earliest position for ${nodeName(this.props.node!)}`
+      const label = `Earliest position for ${nodeName(this.props.trackLog.node)}`
       const iconSize = getTextSize(label)
       const startMarker = L.marker([startPosition.latitude, startPosition.longitude], {
         icon: L.divIcon({
@@ -130,7 +132,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
 
     const endPosition = positions.at(-1)
     if (endPosition) {
-      const label = `Last known position for ${nodeName(this.props.node!)}`
+      const label = `Last known position for ${nodeName(this.props.trackLog.node)}`
       const iconSize = getTextSize(label)
       const endMarker = L.marker([endPosition.latitude, endPosition.longitude], {
         icon: L.divIcon({
@@ -188,7 +190,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
         return this.positionTooltip(position)
       })
 
-      this.props.map!.openTooltip(tooltip)
+      this.props.map.openTooltip(tooltip)
     })
   }
 
@@ -203,7 +205,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
           positionPdop: position.pdop,
           positionPrecisionBits: position.precisionBits,
         }}
-        title={`Position for ${nodeName(this.props.node!)}`}
+        title={`Position for ${nodeName(this.props.trackLog.node)}`}
       />
     )
     return renderToString(element)

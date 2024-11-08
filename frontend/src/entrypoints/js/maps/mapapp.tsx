@@ -67,7 +67,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   dataLoaded: PromiseWithResolvers<void>
   mapInitialized: PromiseWithResolvers<void>
   nodeToShow?: NodesEntityForUI
-  trackLogToShow?: NodesEntityForUI
+  trackLogToShow?: { node: NodesEntityForUI; fitToWindow: boolean }
   messageFrom?: number
   messageTo?: number | 'all'
   messageSince: Duration
@@ -283,7 +283,9 @@ export default class MapApp extends Component<MapProps, MapState> {
           <ProfileModal show={this.state.profileModalVisible} onClose={() => this.setState({ profileModalVisible: false })} />
         )}
 
-        <TrackLog node={this.state.trackLogToShow} map={this.state.map} layer={this.tracklogLayerGroup} />
+        {this.state.trackLogToShow && this.state.map && (
+          <TrackLog trackLog={this.state.trackLogToShow} map={this.state.map} layer={this.tracklogLayerGroup} />
+        )}
       </Page>
     )
   }
@@ -439,7 +441,7 @@ export default class MapApp extends Component<MapProps, MapState> {
             offlineAge={this.state.configNodesOfflineAge}
             onlineAge={this.state.configNodesOnlineAge}
             showDetail={() => this.showDetails(eachNode)}
-            showTrackLog={() => this.showTrackLog(eachNode)}
+            showTrackLog={() => this.showTrackLog(eachNode, true)}
             showMessages={() => this.showMessages(eachNode)}
             node={eachNode}
             callback={() => {
@@ -464,6 +466,7 @@ export default class MapApp extends Component<MapProps, MapState> {
     marker.on('click', () => {
       this.closeAllToolTipsAndPopupsAndPopups()
       maybeCreateTooltip()
+      this.showTrackLog(eachNode, false)
 
       const tooltip = new L.Tooltip(eachNode.offsetLatLng!, {
         interactive: true,
@@ -477,7 +480,7 @@ export default class MapApp extends Component<MapProps, MapState> {
           onlineAge={this.state.configNodesOnlineAge}
           node={eachNode}
           showDetail={() => this.showDetails(eachNode)}
-          showTrackLog={() => this.showTrackLog(eachNode)}
+          showTrackLog={() => this.showTrackLog(eachNode, true)}
           showMessages={() => this.showMessages(eachNode)}
           callback={() => {
             tooltip.update()
@@ -509,9 +512,9 @@ export default class MapApp extends Component<MapProps, MapState> {
     this.setState({ nodeToShow: node })
   }
 
-  private showTrackLog(node: NodesEntityForUI) {
+  private showTrackLog(node: NodesEntityForUI, fitToWindow: boolean = false) {
     this.closeAllToolTipsAndPopupsAndPopups()
-    this.setState({ trackLogToShow: node })
+    this.setState({ trackLogToShow: { node: node, fitToWindow: fitToWindow } })
   }
 
   private findNodeById(nodes?: Record<number, NodesEntityForUI>, nodeId?: number | string | null) {

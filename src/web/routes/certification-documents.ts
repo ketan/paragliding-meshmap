@@ -45,11 +45,7 @@ certificationDocumentsRouter.get('/certification-documents/:id', async (req, res
   if (!document) {
     return res.status(404).json({ error: 'Document not found' })
   } else {
-    return res
-      .status(200)
-      .header('Content-Type', document.getContentType())
-      .header('Content-Disposition', `attachment; filename="${_.kebabCase(req.user?.displayName)}-certification.${document.extension}"`)
-      .send(document.document)
+    return res.status(200).header('Content-Type', document.getContentType()).send(document.document)
   }
 })
 

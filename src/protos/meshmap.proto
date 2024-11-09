@@ -1,9 +1,6 @@
 syntax = "proto3";
 
 message Meshmap {
-
-  repeated Position positions = 1;
-
   message Position {
     /*
    * Latitude: multiply by 1e-7 to get degrees in floating point
@@ -15,4 +12,9 @@ message Meshmap {
    */
     sfixed32 longitude = 2;
   }
+
+  message PositionChunk {
+    repeated Position positions = 1;
+  }
+
 }

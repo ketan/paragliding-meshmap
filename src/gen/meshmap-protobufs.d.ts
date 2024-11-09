@@ -1,10 +1,7 @@
 import * as $protobuf from 'protobufjs'
 import Long = require('long')
 /** Properties of a Meshmap. */
-export interface IMeshmap {
-  /** Meshmap positions */
-  positions?: Meshmap.IPosition[] | null
-}
+export interface IMeshmap {}
 
 /** Represents a Meshmap. */
 export class Meshmap implements IMeshmap {
@@ -13,9 +10,6 @@ export class Meshmap implements IMeshmap {
    * @param [properties] Properties to set
    */
   constructor(properties?: IMeshmap)
-
-  /** Meshmap positions. */
-  public positions: Meshmap.IPosition[]
 
   /**
    * Encodes the specified Meshmap message. Does not implicitly {@link Meshmap.verify|verify} messages.
@@ -77,5 +71,41 @@ export namespace Meshmap {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): Meshmap.Position
+  }
+
+  /** Properties of a PositionChunk. */
+  interface IPositionChunk {
+    /** PositionChunk positions */
+    positions?: Meshmap.IPosition[] | null
+  }
+
+  /** Represents a PositionChunk. */
+  class PositionChunk implements IPositionChunk {
+    /**
+     * Constructs a new PositionChunk.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: Meshmap.IPositionChunk)
+
+    /** PositionChunk positions. */
+    public positions: Meshmap.IPosition[]
+
+    /**
+     * Encodes the specified PositionChunk message. Does not implicitly {@link Meshmap.PositionChunk.verify|verify} messages.
+     * @param message PositionChunk message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: Meshmap.IPositionChunk, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a PositionChunk message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns PositionChunk
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): Meshmap.PositionChunk
   }
 }

@@ -14,7 +14,6 @@ export const Meshmap = ($root.Meshmap = (() => {
    * Properties of a Meshmap.
    * @exports IMeshmap
    * @interface IMeshmap
-   * @property {Array.<Meshmap.IPosition>|null} [positions] Meshmap positions
    */
 
   /**
@@ -26,19 +25,10 @@ export const Meshmap = ($root.Meshmap = (() => {
    * @param {IMeshmap=} [properties] Properties to set
    */
   function Meshmap(properties) {
-    this.positions = []
     if (properties)
       for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
         if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
   }
-
-  /**
-   * Meshmap positions.
-   * @member {Array.<Meshmap.IPosition>} positions
-   * @memberof Meshmap
-   * @instance
-   */
-  Meshmap.prototype.positions = $util.emptyArray
 
   /**
    * Encodes the specified Meshmap message. Does not implicitly {@link Meshmap.verify|verify} messages.
@@ -51,9 +41,6 @@ export const Meshmap = ($root.Meshmap = (() => {
    */
   Meshmap.encode = function encode(message, writer) {
     if (!writer) writer = $Writer.create()
-    if (message.positions != null && message.positions.length)
-      for (let i = 0; i < message.positions.length; ++i)
-        $root.Meshmap.Position.encode(message.positions[i], writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
     return writer
   }
 
@@ -75,11 +62,6 @@ export const Meshmap = ($root.Meshmap = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1: {
-          if (!(message.positions && message.positions.length)) message.positions = []
-          message.positions.push($root.Meshmap.Position.decode(reader, reader.uint32()))
-          break
-        }
         default:
           reader.skipType(tag & 7)
           break
@@ -180,6 +162,88 @@ export const Meshmap = ($root.Meshmap = (() => {
     }
 
     return Position
+  })()
+
+  Meshmap.PositionChunk = (function () {
+    /**
+     * Properties of a PositionChunk.
+     * @memberof Meshmap
+     * @interface IPositionChunk
+     * @property {Array.<Meshmap.IPosition>|null} [positions] PositionChunk positions
+     */
+
+    /**
+     * Constructs a new PositionChunk.
+     * @memberof Meshmap
+     * @classdesc Represents a PositionChunk.
+     * @implements IPositionChunk
+     * @constructor
+     * @param {Meshmap.IPositionChunk=} [properties] Properties to set
+     */
+    function PositionChunk(properties) {
+      this.positions = []
+      if (properties)
+        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+          if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+    }
+
+    /**
+     * PositionChunk positions.
+     * @member {Array.<Meshmap.IPosition>} positions
+     * @memberof Meshmap.PositionChunk
+     * @instance
+     */
+    PositionChunk.prototype.positions = $util.emptyArray
+
+    /**
+     * Encodes the specified PositionChunk message. Does not implicitly {@link Meshmap.PositionChunk.verify|verify} messages.
+     * @function encode
+     * @memberof Meshmap.PositionChunk
+     * @static
+     * @param {Meshmap.IPositionChunk} message PositionChunk message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    PositionChunk.encode = function encode(message, writer) {
+      if (!writer) writer = $Writer.create()
+      if (message.positions != null && message.positions.length)
+        for (let i = 0; i < message.positions.length; ++i)
+          $root.Meshmap.Position.encode(message.positions[i], writer.uint32(/* id 1, wireType 2 =*/ 10).fork()).ldelim()
+      return writer
+    }
+
+    /**
+     * Decodes a PositionChunk message from the specified reader or buffer.
+     * @function decode
+     * @memberof Meshmap.PositionChunk
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {Meshmap.PositionChunk} PositionChunk
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    PositionChunk.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+      let end = length === undefined ? reader.len : reader.pos + length,
+        message = new $root.Meshmap.PositionChunk()
+      while (reader.pos < end) {
+        let tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1: {
+            if (!(message.positions && message.positions.length)) message.positions = []
+            message.positions.push($root.Meshmap.Position.decode(reader, reader.uint32()))
+            break
+          }
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    return PositionChunk
   })()
 
   return Meshmap

@@ -36,9 +36,9 @@ import { TrackLog } from './track-log.tsx'
 import { getTextSize } from '../utils/text-size.ts'
 import { MessagesModal } from './messages-modal.tsx'
 import { ProfileModal } from '../components/profile-modal.tsx'
-import { toast } from 'react-toastify'
 import { Meshmap } from '../../../../../src/gen/meshmap-protobufs'
 import _ from 'lodash'
+import { toast } from 'react-toastify'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -596,7 +596,7 @@ export default class MapApp extends Component<MapProps, MapState> {
       return
     }
 
-    const heatmapData = Meshmap.decode(new Uint8Array(await response.arrayBuffer()))
+    const heatmapData = Meshmap.PositionChunk.decode(new Uint8Array(await response.arrayBuffer()))
     this.setState(
       {
         heatmapData: _.compact(

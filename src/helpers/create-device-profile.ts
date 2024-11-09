@@ -17,7 +17,7 @@ function channelUrl(loRaConfig: meshtastic.Config.ILoRaConfig) {
     loraConfig: loRaConfig,
   })
 
-  const url = new Buffer(meshtastic.ChannelSet.encode(chset).finish())
+  const url = Buffer.from(meshtastic.ChannelSet.encode(chset).finish())
     .toString('base64url')
     .replace('=', '')
     .replace('+', '-')

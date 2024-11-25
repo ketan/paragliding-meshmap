@@ -1354,9 +1354,9 @@
   integrity sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==
 
 "@rmp135/sql-ts@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@rmp135/sql-ts/-/sql-ts-2.1.0.tgz#f3044a213284b8b43b45578771715057559e8f2d"
-  integrity sha512-rhu2ar1rgAAAYa+pOVlBf1KBX76eSL249ga0K1/RudQr56TegHZtOU7hn8yfzT2kL1G5rdMw6Fa5djIVYaNvOg==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@rmp135/sql-ts/-/sql-ts-2.2.0.tgz#1027956e82c44bfc59be86664bf034d3caebd45e"
+  integrity sha512-OnZJ0KtNMfR8J81rRXllClkX1ECZNNiREHCjDjrY5Ri6sedma7X61UuAAsTwm/bLX/QI5DHJNT+gXPJl8fK6hw==
   dependencies:
     "@types/pluralize" "^0.0.33"
     change-case "^5.4.3"

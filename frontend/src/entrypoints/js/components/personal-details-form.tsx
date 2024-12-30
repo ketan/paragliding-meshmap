@@ -3,12 +3,26 @@ import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { countries, fieldsetClassNames, legendClassNames } from '../utils/form-helpers.tsx'
 import { FormField } from './form-field.tsx'
 import { CountryDropdown } from './country-dropdown.tsx'
+import { Dropdown } from './dropdown.tsx'
+import { useEffect, useState } from 'react'
+import { fetchLocations } from '../utils/profile.ts'
 
 interface PersonalDetailsFormProps {
   form: UseFormReturn<ProfileFormDataWithoutProfileImage>
 }
 
 export function PersonalDetailsForm({ form }: PersonalDetailsFormProps) {
+  const [locations, setLocations] = useState<string[]>()
+
+  useEffect(() => {
+    async function fetchLocationsIntoForm() {
+      const locations = await fetchLocations()
+      setLocations(locations)
+    }
+
+    fetchLocationsIntoForm()
+  }, [setLocations])
+
   return (
     <fieldset className={fieldsetClassNames}>
       <legend className={legendClassNames}>Your personal details</legend>
@@ -76,6 +90,17 @@ export function PersonalDetailsForm({ form }: PersonalDetailsFormProps) {
         register={form.register}
         errors={form.formState.errors}
         helpText="Non-Indians, please provide your embassy's phone number."
+      />
+
+      <Dropdown
+        size={2}
+        options={(locations || []).map((location) => ({ value: location, label: location }))}
+        multiple={true}
+        id="flightLocations"
+        label="Sites where you fly, choose all that apply"
+        register={form.register}
+        errors={form.formState.errors}
+        helpText="Select the locations where you fly. Your documents will be made availabe to administrators in these locations."
       />
     </fieldset>
   )

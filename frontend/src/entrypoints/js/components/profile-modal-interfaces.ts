@@ -31,6 +31,7 @@ export interface ProfileFormData {
   dob: string
   nationality: string
   embassyPhone?: string
+  flightLocations?: string
 
   // primary equipment
   paraglider1Manufacturer: string

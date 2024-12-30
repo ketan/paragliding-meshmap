@@ -86,3 +86,20 @@ a.button {
 .polyline-measure-tooltip {
   @apply text-sm p-2;
 }
+
+select#flightLocations {
+  option {
+    &::before {
+      content: ' ';
+      @apply mr-6;
+    }
+
+    &:checked {
+      &::before {
+        content: '✓';
+        @apply ml-1;
+        @apply mr-2;
+      }
+    }
+  }
+}

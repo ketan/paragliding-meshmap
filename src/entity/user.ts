@@ -1,10 +1,10 @@
-//
-import { Column, Entity, Index, OneToMany } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, OneToMany, Raw } from 'typeorm'
 import { BaseType } from '#entity/base_types'
 import { IdentityDocument } from '#entity/identity_document'
 import { CertificationDocument } from '#entity/certitication_document'
 import { InsurancePolicyDocument } from '#entity/insurance_policy_document'
 import _ from 'lodash'
+import { jsonType } from '#helpers/migration-helper'
 
 @Entity()
 export class User extends BaseType {
@@ -118,10 +118,38 @@ export class User extends BaseType {
   bloodGroup: string
 
   @Column({ type: 'boolean', nullable: false, default: false })
-  admin: boolean
+  superUser: boolean
+
+  @Column({ type: jsonType(), nullable: true })
+  adminLocations: string[]
+
+  @Column({ type: jsonType(), nullable: true })
+  flightLocations: string[]
 
   constructor(opts: Partial<User> = {}) {
     super()
     _.assign(this, opts)
+  }
+
+  static async findUsersThatCanBeAdministeredBy(db: DataSource | EntityManager, adminUser: User): Promise<User[]> {
+    if (adminUser.superUser) {
+      return await db.getRepository(User).find({
+        order: {
+          updatedAt: 'DESC',
+        },
+        loadEagerRelations: true,
+      })
+    } else if (adminUser.adminLocations && adminUser.adminLocations.length > 0) {
+      return db.getRepository(User).find({
+        where: {
+          flightLocations: Raw((alias) => `${alias} @> :adminLocations`, { adminLocations: JSON.stringify(adminUser.adminLocations) }),
+        },
+        order: {
+          updatedAt: 'DESC',
+        },
+        loadEagerRelations: true,
+      })
+    }
+    throw 'User is not an admin user'
   }
 }

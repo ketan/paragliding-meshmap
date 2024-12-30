@@ -11,13 +11,14 @@ function updateUserData(user: User, body: Partial<User>) {
   const sensitiveFields = [
     'id',
     'email',
-    'admin',
+    'superUser',
     'createdAt',
     'updatedAt',
     'profilePhotoUrl',
     'identityDocument',
     'certificationDocument',
     'insurancePolicies',
+    'adminLocations',
   ] as (keyof User)[]
 
   if (typeof body !== 'object') {
@@ -34,7 +35,7 @@ usersRouter.get('/users', async (req, res) => {
     throw new HttpError(401, 'You are not logged in!')
   }
 
-  if (!req.user?.admin) {
+  if (!req.user?.superUser) {
     return res.status(401).json({ error: 'Not an admin' })
   }
 
@@ -63,7 +64,7 @@ usersRouter.get('/user/:id', async (req, res) => {
     throw new HttpError(401, 'You are not logged in!')
   }
 
-  if (!req.user?.admin) {
+  if (!req.user?.superUser) {
     return res.status(401).json({ error: 'Not an admin' })
   }
 

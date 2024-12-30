@@ -65,6 +65,9 @@ const typescriptCode = await definition
     if (column.propertyName === 'document') {
       column.propertyType = 'Buffer'
     }
+    if (column.propertyName === 'flightLocations' || column.propertyName === 'adminLocations') {
+      column.propertyType = 'string[]'
+    }
     return column
   })
   .toTypescript()

@@ -12,9 +12,11 @@ import TestAgent from 'supertest/lib/agent.js'
 import { Test } from 'supertest'
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions.js'
 import pg from 'pg'
+import chaiAsPromised from 'chai-as-promised'
 
 chai.use(chaiExclude)
 chai.use(chaiDeepEqualIgnoreUndefined)
+chai.use(chaiAsPromised)
 
 const options: PostgresConnectionOptions = AppDataSource.options as PostgresConnectionOptions
 
@@ -112,7 +114,7 @@ export async function createAdminUser() {
     displayName: 'ADmin User',
     email: 'admin@example.com',
     profilePhotoUrl: 'https://example.com/admin-user-profile-pic',
-    admin: true,
+    superUser: true,
   })
   await AppDataSource.getRepository(User).save(user)
 
@@ -125,7 +127,7 @@ export async function createRegularUser() {
       displayName: 'Test User',
       email: 'test-user@example.com',
       profilePhotoUrl: 'https://example.com/test-user-profile-pic',
-      admin: false,
+      superUser: false,
     })
   )
   return await AppDataSource.getRepository(User).findOneByOrFail({ id: user.id })

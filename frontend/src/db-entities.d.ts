@@ -58,6 +58,12 @@ export interface InsurancePolicyDocumentsEntity {
   validityEnd: string
   validityStart: string
 }
+export interface LocationsEntity {
+  createdAt: string
+  id: number
+  location: string
+  updatedAt: string
+}
 export interface MapReportsEntity {
   altitude?: number
   createdAt: string
@@ -212,7 +218,7 @@ export interface TraceroutesEntity {
 export interface UsersEntity {
   address1?: string
   address2?: string
-  admin: boolean
+  adminLocations?: string[]
   allergies?: string
   bloodGroup?: string
   city?: string
@@ -222,6 +228,7 @@ export interface UsersEntity {
   dob?: string
   email: string
   embassyPhone?: string
+  flightLocations?: string[]
   id: number
   medicalConditions?: string
   medications?: string
@@ -243,6 +250,7 @@ export interface UsersEntity {
   secondaryEmergencyContactPhone?: string
   secondaryPhone?: string
   state?: string
+  superUser: boolean
   updatedAt: string
 }
 export interface WaypointsEntity {

@@ -75,7 +75,7 @@ export function PersonalDetailsForm({ form }: PersonalDetailsFormProps) {
         disabled={form.watch('nationality') === 'India'}
         register={form.register}
         errors={form.formState.errors}
-        helpText="Provide the phone number of your embassy."
+        helpText="Non-Indians, please provide your embassy's phone number."
       />
     </fieldset>
   )

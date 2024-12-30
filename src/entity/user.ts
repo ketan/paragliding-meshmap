@@ -152,4 +152,14 @@ export class User extends BaseType {
     }
     throw 'User is not an admin user'
   }
+
+  canSeeDocument(document: IdentityDocument | CertificationDocument | IdentityDocument): boolean {
+    if (document.user.id === this.id) {
+      return true
+    }
+    if (this.superUser) {
+      return true
+    }
+    return _.intersection(this.adminLocations, document.user.flightLocations).length > 0
+  }
 }

@@ -109,11 +109,13 @@ export async function put(agent: TestAgent<Test>, url: string, data?: string | o
   return agent.put(url).set('x-csrf-token', token).send(data)
 }
 
-export async function createAdminUser() {
+export async function createAdminUser(props: Partial<User> = {}) {
+  const randomPrefix = Math.random().toString(36).substring(2, 8)
   const user = new User({
-    displayName: 'ADmin User',
-    email: 'admin@example.com',
-    profilePhotoUrl: 'https://example.com/admin-user-profile-pic',
+    ...props,
+    displayName: `Admin User ${randomPrefix}`,
+    email: `admin-user-${randomPrefix}@example.com`,
+    profilePhotoUrl: `https://example.com/admin-user-profile-pic-${randomPrefix}`,
     superUser: true,
   })
   await AppDataSource.getRepository(User).save(user)
@@ -121,12 +123,14 @@ export async function createAdminUser() {
   return await AppDataSource.getRepository(User).findOneByOrFail({ id: user.id })
 }
 
-export async function createRegularUser() {
+export async function createRegularUser(props: Partial<User> = {}) {
+  const randomPrefix = Math.random().toString(36).substring(2, 8)
   const user = await AppDataSource.getRepository(User).save(
     new User({
-      displayName: 'Test User',
-      email: 'test-user@example.com',
-      profilePhotoUrl: 'https://example.com/test-user-profile-pic',
+      ...props,
+      displayName: `Test User ${randomPrefix}`,
+      email: `test-user-${randomPrefix}@example.com`,
+      profilePhotoUrl: `https://example.com/test-user-profile-pic-${randomPrefix}`,
       superUser: false,
     })
   )

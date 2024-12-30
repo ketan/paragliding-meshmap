@@ -28,24 +28,14 @@ insuranceDocumentsRouter.get('/identity-documents/:id', async (req, res) => {
   }
 
   const documentId = parseIdParam(req)
-  const document = await IdentityDocument.findOne(db, {
-    select: {
-      extension: true,
-      document: true,
-      id: true,
-    },
-    where: {
-      id: documentId,
-      user: {
-        id: req.user.id,
-      },
-    },
-  })
+  const document = await IdentityDocument.byId(db, documentId)
 
   if (!document) {
     return res.status(404).json({ error: 'Document not found' })
-  } else {
+  } else if (req.user.canSeeDocument(document)) {
     return res.status(200).header('Content-Type', document.getContentType()).send(document.document)
+  } else {
+    return res.status(401).json({ error: 'User not authenticated' })
   }
 })
 

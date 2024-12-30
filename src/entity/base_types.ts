@@ -120,4 +120,18 @@ export abstract class Document extends BaseType {
     }
     throw `Unsupported file extension detected ${extension} with mime type (${fileType?.mime})`
   }
+
+  static async byId<T extends Document>(this: { new (): T } & typeof Document, db: DataSource | EntityManager, id: number) {
+    return (await this.findOne(db, {
+      select: {
+        extension: true,
+        document: true,
+        id: true,
+      },
+      where: {
+        id: id,
+      },
+      relations: ['user'],
+    })) as T
+  }
 }

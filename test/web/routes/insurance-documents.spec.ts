@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { app } from '#web/app'
 import { User } from '#entity/user'
 import supertest, { Test } from 'supertest'
-import { createRegularUser, fetchCSRFToken, loginAs, post } from '../../hooks.js'
+import { createAdminUser, createRegularUser, fetchCSRFToken, loginAs, post } from '../../hooks.js'
 import TestAgent from 'supertest/lib/agent.js'
 import { InsurancePolicyDocument } from '#entity/insurance_policy_document'
 import { AppDataSource } from '#config/data-source'
@@ -15,7 +15,7 @@ describe('Insurance Documents API', () => {
 
   beforeEach(async () => {
     agent = supertest.agent(app)
-    user = await createRegularUser()
+    user = await createRegularUser({ flightLocations: ['Location 1', 'Location 2'] })
   })
 
   async function createInsuranceDocument() {
@@ -37,7 +37,6 @@ describe('Insurance Documents API', () => {
     await AppDataSource.getRepository(InsurancePolicyDocument).save(document)
     return await AppDataSource.getRepository(InsurancePolicyDocument).findOneOrFail({
       where: { id: document.id },
-      select: ['validityStart', 'validityEnd', 'id', 'createdAt', 'updatedAt', 'provider', 'policyNumber', 'contactPhone'],
     })
   }
 
@@ -72,6 +71,52 @@ describe('Insurance Documents API', () => {
       const response = await agent.get('/api/insurance-documents/999')
       expect(response.status).to.eq(404)
       expect(response.body.error).to.eq('Document not found')
+    })
+
+    it("should allow admin users to view any user's documents", async () => {
+      const adminUser = await createAdminUser()
+      await loginAs(agent, adminUser)
+
+      const document = await createInsuranceDocument()
+
+      const response = await agent.get(`/api/insurance-documents/${document.id}`)
+      expect(response.status).to.eq(200)
+      expect(response.header['content-type']).to.eq(document.getContentType())
+      expect(response.body).to.deep.eq((await InsurancePolicyDocument.byId(AppDataSource, document.id))?.document)
+    })
+
+    it("should return 401 if non-admin user tries to view another user's document", async () => {
+      const anotherUser = await createRegularUser()
+      await loginAs(agent, anotherUser)
+
+      const document = await createInsuranceDocument()
+
+      const response = await agent.get(`/api/insurance-documents/${document.id}`)
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('User not authenticated')
+    })
+
+    it('should allow location admin users to view documents of users in their location', async () => {
+      const locationAdminUser = await createRegularUser({ adminLocations: [user.flightLocations[0]] })
+      await loginAs(agent, locationAdminUser)
+
+      const document = await createInsuranceDocument()
+
+      const response = await agent.get(`/api/insurance-documents/${document.id}`)
+      expect(response.status).to.eq(200)
+      expect(response.header['content-type']).to.eq(document.getContentType())
+      expect(response.body).to.deep.eq((await InsurancePolicyDocument.byId(AppDataSource, document.id))?.document)
+    })
+
+    it('should not allow location admin users to view documents of users not in their location', async () => {
+      const locationAdminUser = await createRegularUser({ adminLocations: ['Location 3'] })
+      await loginAs(agent, locationAdminUser)
+
+      const document = await createInsuranceDocument()
+
+      const response = await agent.get(`/api/insurance-documents/${document.id}`)
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('User not authenticated')
     })
   })
 
@@ -109,7 +154,9 @@ describe('Insurance Documents API', () => {
         select: ['id', 'document', 'extension', 'user'],
         where: {
           id: response.body.id,
-          user: user,
+          user: {
+            id: user.id,
+          },
         },
       })
 

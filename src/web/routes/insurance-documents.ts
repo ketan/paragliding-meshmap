@@ -15,7 +15,6 @@ insuranceDocumentsRouter.get('/insurance-documents', async (req, res) => {
   }
 
   const documents = await InsurancePolicyDocument.find(db, {
-    select: ['validityStart', 'validityEnd', 'id', 'createdAt', 'updatedAt', 'provider', 'policyNumber', 'contactPhone'],
     where: {
       user: {
         id: req.user.id,
@@ -32,24 +31,14 @@ insuranceDocumentsRouter.get('/insurance-documents/:id', async (req, res) => {
   }
 
   const documentId = parseIdParam(req)
-  const document = await InsurancePolicyDocument.findOne(db, {
-    select: {
-      extension: true,
-      document: true,
-      id: true,
-    },
-    where: {
-      id: documentId,
-      user: {
-        id: req.user.id,
-      },
-    },
-  })
+  const document = await InsurancePolicyDocument.byId(db, documentId)
 
   if (!document) {
     return res.status(404).json({ error: 'Document not found' })
-  } else {
+  } else if (req.user.canSeeDocument(document)) {
     return res.status(200).header('Content-Type', document.getContentType()).send(document.document)
+  } else {
+    return res.status(401).json({ error: 'User not authenticated' })
   }
 })
 

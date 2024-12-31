@@ -101,7 +101,7 @@
     "leaflet.polylinemeasure": "^3.0.0",
     "libphonenumber-js": "^1.11.12",
     "lodash": "^4.17.21",
-    "mocha": "^10.6.0",
+    "mocha": "^11.0.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4",
     "passport-local": "^1.0.0",

@@ -24,7 +24,7 @@ function getCharWidth(c: string) {
     if (!nodeSizeElement) {
       nodeSizeElement = document.createElement('div')
       nodeSizeElement.setAttribute('id', 'test-node-size')
-      nodeSizeElement.classList.add('invisible', '-z-1000', 'relative', '-left-[1000px]', '-top-[1000px]', 'w-auto', 'whitespace-nowrap')
+      nodeSizeElement.classList.add('invisible', '-z-1000', 'absolute', '-left-[1000px]', '-top-[1000px]', 'w-auto', 'whitespace-nowrap')
       document.body.appendChild(nodeSizeElement)
     }
     if (nodeSizeElement) {

@@ -93,9 +93,7 @@ export function Page(props: PageProps) {
             <IconInHeader />
             <ApplicationName />
             {/* banner */}
-            <div className="w-full mx-3 my-auto block relative">
-            {props.bannerMain}
-            </div>
+            <div className="w-full mx-3 my-auto block relative">{props.bannerMain}</div>
             {/* header action buttons */}
             <HeaderActionButtons>
               <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />

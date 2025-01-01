@@ -16,8 +16,10 @@ export function ProfileFormDataTable() {
     async function fetchUsers() {
       try {
         const response = await fetch('/api/users')
-        const data = await response.json()
-        setUsers(data)
+        if (response.status === 200 || response.status === 304) {
+          const data = await response.json()
+          setUsers(data)
+        }
       } catch (error) {
         console.error('Error fetching users:', error)
       }

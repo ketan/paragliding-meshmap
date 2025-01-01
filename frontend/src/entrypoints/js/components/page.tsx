@@ -64,18 +64,24 @@ export function Page(props: PageProps) {
       body: data,
     })
 
-    const body = await response.json()
     if (response.ok) {
+      const body = await response.json()
       setUserProfile(body.user as UserProfile)
       setProfileLoadedState('loaded')
       await fetchCsrfToken(true)
     } else {
-      setProfileLoadedState('error')
-      let message = body.message
-      if (typeof body.error === 'string') {
-        message += ' ' + body.error
+      const respBody = await response.text()
+      try {
+        const body = JSON.parse(respBody)
+        setProfileLoadedState('error')
+        let message = body.message
+        if (typeof body.error === 'string') {
+          message += ' ' + body.error
+        }
+        toast.error(message)
+      } catch (_err) {
+        toast.error('There was an error logging you in!')
       }
-      toast.error(message)
     }
   }
 

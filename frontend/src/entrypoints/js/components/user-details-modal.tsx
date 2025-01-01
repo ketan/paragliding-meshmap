@@ -116,6 +116,13 @@ export function UserDetailsModal({ user, onClose }: ProfileModalProps) {
             </div>
           )}
 
+          {userDetails.flightLocations && (
+            <div className={listItemClass}>
+              <dt className={listItemHeaderClass}>Flying Sites</dt>
+              <dd className={listItemValueClass}>{userDetails.flightLocations.join(', ')}</dd>
+            </div>
+          )}
+
           {userDetails.identityDocuments && userDetails.identityDocuments.length > 0 && (
             <div className={listItemClass}>
               <dt className={listItemHeaderClass}>Identity Document(s)</dt>

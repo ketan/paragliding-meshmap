@@ -6,6 +6,7 @@ import { NodeNameAttributes, NodesEntityForUI } from '../../../nodes-entity'
 import { Tooltip } from '../components/tooltip'
 import { NodeRoleIDToName } from '../../../hardware-modules.ts'
 import { cssClassFor } from '../../../templates/legend.tsx'
+import { UserProfile } from './profile.ts'
 
 export const TRACKER_API_BASE_URL = __TRACKER_API_BASE_URL__ || ''
 export const BROADCAST_ADDR = Number('0xffffffff')
@@ -261,4 +262,8 @@ export function humanizedStringDuration(seconds?: number | null) {
 
 export function randomHex(length: number) {
   return [...Array(length)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+}
+
+export function isAdmin(userProfile: UserProfile) {
+  return (userProfile.adminLocations && userProfile.adminLocations.length > 0) || userProfile.superUser
 }

@@ -35,16 +35,12 @@ usersRouter.get('/users', async (req, res) => {
     throw new HttpError(401, 'You are not logged in!')
   }
 
-  if (!req.user?.superUser) {
+  if (!req.user?.isAdmin()) {
     return res.status(401).json({ error: 'Not an admin' })
   }
 
-  const users = await User.find(db, {
-    order: {
-      updatedAt: 'DESC',
-    },
-    loadEagerRelations: true,
-  })
+  const users = await User.findUsersThatCanBeAdministeredBy(db, req.user)
+
   res.json(users)
 })
 
@@ -91,7 +87,7 @@ usersRouter.get('/profile', (req, res) => {
   if (!req.isAuthenticated || !req.isAuthenticated()) {
     throw new HttpError(401, 'You are not logged in!')
   }
-  res.json(_.omitBy(req.user, _.isNil))
+  res.json(req.user)
 })
 
 usersRouter.put('/profile', async (req, res) => {

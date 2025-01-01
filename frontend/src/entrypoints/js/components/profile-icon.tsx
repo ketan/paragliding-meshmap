@@ -1,8 +1,9 @@
 import { UserProfile } from '../utils/profile.ts'
 import { useState } from 'react'
-import { ArrowRightFromBracketIcon, UserIcon } from '../utils/icon-constants.ts'
+import { ArrowRightFromBracketIcon, UserIcon, UserShieldIcon } from '../utils/icon-constants.ts'
 
 import { HeaderIcon } from './header-icon.tsx'
+import { isAdmin } from '../utils/ui-util.tsx'
 
 interface ProfileIconProps {
   userProfile: UserProfile
@@ -16,6 +17,8 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
     const icon = () => (
       <img src={userProfile.profilePhotoUrl} className="rounded-full min-w-8 max-w-8 min-h-8 max-h-8" alt={`Profile icon`} />
     )
+
+    console.log(userProfile.adminLocations && userProfile.adminLocations.length)
     return (
       <>
         <HeaderIcon
@@ -34,6 +37,16 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
             <UserIcon className="h-4 w-4 inline-block mr-3" />
             Profile
           </button>
+
+          {isAdmin(userProfile) && (
+            <button
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left"
+              onClick={() => (window.location.href = '/users.html')}
+            >
+              <UserShieldIcon className="h-4 w-4 inline-block mr-3" />
+              Users
+            </button>
+          )}
 
           <button
             onClick={() => (window.location.href = '/auth/logout')}

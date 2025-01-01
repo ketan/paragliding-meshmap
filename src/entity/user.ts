@@ -1,4 +1,4 @@
-import { Column, DataSource, Entity, EntityManager, Index, OneToMany, Raw } from 'typeorm'
+import { Column, DataSource, Entity, EntityManager, Index, OneToMany } from 'typeorm'
 import { BaseType } from '#entity/base_types'
 import { IdentityDocument } from '#entity/identity_document'
 import { CertificationDocument } from '#entity/certitication_document'
@@ -140,15 +140,15 @@ export class User extends BaseType {
         loadEagerRelations: true,
       })
     } else if (adminUser.adminLocations && adminUser.adminLocations.length > 0) {
-      return db.getRepository(User).find({
-        where: {
-          flightLocations: Raw((alias) => `${alias} @> :adminLocations`, { adminLocations: JSON.stringify(adminUser.adminLocations) }),
-        },
-        order: {
-          updatedAt: 'DESC',
-        },
-        loadEagerRelations: true,
-      })
+      return db
+        .getRepository(User)
+        .createQueryBuilder('user')
+        .where(
+          'EXISTS (SELECT 1 FROM jsonb_array_elements_text("user"."flight_locations") AS location WHERE location IN (:...locations))',
+          { locations: adminUser.adminLocations }
+        )
+        .orderBy('user.updatedAt', 'DESC')
+        .getMany()
     }
     throw 'User is not an admin user'
   }
@@ -161,5 +161,9 @@ export class User extends BaseType {
       return true
     }
     return _.intersection(this.adminLocations, document.user.flightLocations).length > 0
+  }
+
+  isAdmin() {
+    return (this.adminLocations && this.adminLocations.length > 0) || this.superUser
   }
 }

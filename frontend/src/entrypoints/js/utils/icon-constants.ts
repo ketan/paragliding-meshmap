@@ -2,6 +2,7 @@
 export { default as XMarkIcon } from '../../../../src/assets/images/icons/x-mark.svg?component'
 export { default as WhatsappIcon } from '../../../../src/assets/images/icons/whatsapp.svg?component'
 export { default as UserIcon } from '../../../../src/assets/images/icons/user.svg?component'
+export { default as UserShieldIcon } from '../../../../src/assets/images/icons/user-shield.svg?component'
 export { default as TriangleExclamationIcon } from '../../../../src/assets/images/icons/triangle-exclamation.svg?component'
 export { default as TelegramIcon } from '../../../../src/assets/images/icons/telegram.svg?component'
 export { default as SpinnerIcon } from '../../../../src/assets/images/icons/spinner.svg?component'

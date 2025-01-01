@@ -23,6 +23,10 @@ export interface CertificationFormData {
 
 export interface ProfileFormData {
   // personal details
+  flightLocations?: string[]
+  adminLocations?: string[]
+  superUser: boolean
+
   displayName: string
   profilePhotoUrl: string
   email: string
@@ -31,7 +35,6 @@ export interface ProfileFormData {
   dob: string
   nationality: string
   embassyPhone?: string
-  flightLocations?: string
 
   // primary equipment
   paraglider1Manufacturer: string
@@ -127,6 +130,11 @@ export const profileFormDataYUPSchema = Yup.object().shape({
 
       return optionalPhoneValidator(value)
     }),
+
+  flightLocations: Yup.array(Yup.string().required()).optional(),
+  adminLocations: Yup.array(Yup.string().required()).optional(),
+  superUser: Yup.boolean().required(),
+
   // primary equipment
   paraglider1Manufacturer: Yup.string().required('Manufacturer is required'),
   paraglider1Model: Yup.string().required('Model is required'),

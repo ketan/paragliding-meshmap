@@ -1,4 +1,4 @@
-import { FieldError, FieldPath, FieldValues, UseFormRegister } from 'react-hook-form'
+import { FieldErrors, FieldPath, FieldValues, UseFormRegister } from 'react-hook-form'
 import { errorClassNames, groupClassNames, helpTextClassNames, inputClassNames, labelClassNames } from '../utils/form-helpers.tsx'
 import { DetailedHTMLProps, HTMLInputTypeAttribute, InputHTMLAttributes } from 'react'
 import { phoneNumberFormatOnBlur } from './profile-modal-interfaces.ts'
@@ -8,7 +8,7 @@ export interface FormFieldProps<FV extends FieldValues> {
   label: string
   type?: HTMLInputTypeAttribute
   register: UseFormRegister<FV>
-  errors: Partial<Record<keyof FV, FieldError>>
+  errors: FieldErrors<FV>
   placeholder?: string
   helpText: string
   disabled?: boolean
@@ -30,6 +30,11 @@ export function FormField<FV extends FieldValues>({ id, label, type = 'text', re
     extraOpts.accept = Object.values(extensionToContentTypeMap).join(' ')
   }
 
+  const errorMessages = errors[id]?.message
+  if (errorMessages && typeof errorMessages !== 'string') {
+    throw 'errorMessages must be a string'
+  }
+
   return (
     <div className={groupClassNames}>
       <input
@@ -48,7 +53,7 @@ export function FormField<FV extends FieldValues>({ id, label, type = 'text', re
       <label htmlFor={String(id)} className={labelClassNames + (disabled ? ' !text-black ' : ' ')}>
         {label}
       </label>
-      {errors[id] && <p className={errorClassNames}>{errors[id]?.message}</p>}
+      {errors[id] && <p className={errorClassNames}>{errorMessages}</p>}
       <p className={helpTextClassNames}>{helpText}</p>
     </div>
   )

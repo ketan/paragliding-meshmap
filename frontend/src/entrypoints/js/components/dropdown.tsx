@@ -20,6 +20,11 @@ export function Dropdown<FV extends FieldValues>({
   helpText,
   multiple,
 }: DropdownProps<FV>) {
+  const errorMessages = errors[id]?.message
+  if (errorMessages && typeof errorMessages !== 'string') {
+    throw 'errorMessages must be a string'
+  }
+
   return (
     <div className={groupClassNames}>
       <select
@@ -40,7 +45,7 @@ export function Dropdown<FV extends FieldValues>({
       <label htmlFor={String(id)} className={labelClassNames}>
         {label}
       </label>
-      {errors[id] && <p className={errorClassNames}>{errors[id]?.message}</p>}
+      {errors[id] && <p className={errorClassNames}>{errorMessages}</p>}
       <p className={helpTextClassNames}>{helpText}</p>
     </div>
   )

@@ -69,7 +69,7 @@ export interface ProfileFormData {
 }
 
 export interface AuthModalProps {
-  show: boolean
+  isOpen: boolean
   onClose: () => void
 }
 

@@ -12,6 +12,7 @@ import { LoadedState } from '../maps/loaded-state.tsx'
 import { ProfileIcon } from './profile-icon.tsx'
 import { HeaderIcon } from './header-icon.tsx'
 import { fetchCsrfToken } from '../utils/csrf.ts'
+import { ProfileModal } from './profile-modal.tsx'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -92,7 +93,9 @@ export function Page(props: PageProps) {
             <IconInHeader />
             <ApplicationName />
             {/* banner */}
+            <div className="w-full mx-3 my-auto block relative">
             {props.bannerMain}
+            </div>
             {/* header action buttons */}
             <HeaderActionButtons>
               <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
@@ -122,6 +125,7 @@ export function Page(props: PageProps) {
       </div>
       <ConfigModal onClose={() => props.configModal.onClick()} isOpen={props.configModal.show} />
       <AboutModal onClose={() => props.aboutModal.onClick()} isOpen={props.aboutModal.show} />
+      <ProfileModal onClose={() => props.profileModal.onClick()} isOpen={props.profileModal.show} />
       <ToastContainer hideProgressBar theme="dark" />
     </>
   )

@@ -8,7 +8,7 @@ import { ProfileFormTab } from './profile-form-tab.tsx'
 
 export type ProfileFormDataWithoutProfileImage = Omit<ProfileFormData, 'profilePhotoUrl'>
 
-export function ProfileModal({ show, onClose }: AuthModalProps) {
+export function ProfileModal({ isOpen: show, onClose }: AuthModalProps) {
   if (!show) {
     return null
   }

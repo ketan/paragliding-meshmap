@@ -72,16 +72,14 @@ export class SearchBar extends PureComponent<AllData & { selectCallback: (node: 
   render() {
     return (
       <>
-        <div className="w-full mx-3 my-auto block relative">
-          <input
-            type="text"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
-            value={this.state.searchText}
-            onInput={this.applyFilter.bind(this)}
-            placeholder={`Search ${this.props.nodes.length} nodes...`}
-          />
-          {this.showSearchResults()}
-        </div>
+        <input
+          type="text"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
+          value={this.state.searchText}
+          onInput={this.applyFilter.bind(this)}
+          placeholder={`Search ${this.props.nodes.length} nodes...`}
+        />
+        {this.showSearchResults()}
       </>
     )
   }

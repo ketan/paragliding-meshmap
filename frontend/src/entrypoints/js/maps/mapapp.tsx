@@ -35,7 +35,6 @@ import { NodeDetailsModal } from './node-details-modal'
 import { TrackLog } from './track-log.tsx'
 import { getTextSize } from '../utils/text-size.ts'
 import { MessagesModal } from './messages-modal.tsx'
-import { ProfileModal } from '../components/profile-modal.tsx'
 import { Meshmap } from '../../../../../src/gen/meshmap-protobufs'
 import _ from 'lodash'
 import { toast } from 'react-toastify'
@@ -288,9 +287,6 @@ export default class MapApp extends Component<MapProps, MapState> {
           updateDuration={(newDuration) => this.setState({ messageSince: newDuration })}
           toggleFilter={() => this.toggleMessageFilter()}
         />
-        {this.state.profileModalVisible && (
-          <ProfileModal show={this.state.profileModalVisible} onClose={() => this.setState({ profileModalVisible: false })} />
-        )}
 
         {this.state.trackLogToShow && this.state.map && (
           <TrackLog trackLog={this.state.trackLogToShow} map={this.state.map} layer={this.tracklogLayerGroup} />

@@ -78,7 +78,7 @@ const mandatoryPhoneValidator = (value: string) => {
   return phoneNumber?.isValid()
 }
 
-const optionalPhoneValidator = (value: string | undefined) => {
+const optionalPhoneValidator = (value: string | undefined | null) => {
   if (!value || value.trim() === '') {
     return true
   }
@@ -117,11 +117,12 @@ export const profileFormDataYUPSchema = Yup.object().shape({
       const phoneNumber = parsePhoneNumberFromString(value)
       return phoneNumber?.isValid()
     }),
-  secondaryPhone: Yup.string().optional().test('invalid-phone-number', 'Invalid phone number', optionalPhoneValidator),
+  secondaryPhone: Yup.string().optional().nullable().test('invalid-phone-number', 'Invalid phone number', optionalPhoneValidator),
   dob: Yup.string().required('Date of birth is required'),
   nationality: Yup.string().required('Nationality is required'),
   embassyPhone: Yup.string()
     .optional()
+    .nullable()
     .test('invalid-phone-number', 'Invalid phone number', (value, context) => {
       // Indians don't need to provide embassy number
       if (context.parent.nationality === 'IN') {
@@ -131,36 +132,40 @@ export const profileFormDataYUPSchema = Yup.object().shape({
       return optionalPhoneValidator(value)
     }),
 
-  flightLocations: Yup.array(Yup.string().required()).optional(),
-  adminLocations: Yup.array(Yup.string().required()).optional(),
+  flightLocations: Yup.array(Yup.string().required()).optional().nullable(),
+  adminLocations: Yup.array(Yup.string().required()).optional().nullable(),
   superUser: Yup.boolean().required(),
 
   // primary equipment
   paraglider1Manufacturer: Yup.string().required('Manufacturer is required'),
   paraglider1Model: Yup.string().required('Model is required'),
   paraglider1PrimaryColor: Yup.string().required('Primary colour is required'),
-  paraglider1SecondaryColor: Yup.string().optional(),
+  paraglider1SecondaryColor: Yup.string().optional().nullable(),
 
-  paraglider2Manufacturer: Yup.string().optional(),
+  paraglider2Manufacturer: Yup.string().optional().nullable(),
   paraglider2Model: Yup.string()
     .optional()
+
+    .nullable()
     .when('paraglider2Manufacturer', {
       is: (val: string) => !!val,
       then: (schema) => schema.required('Model is required'),
-      otherwise: (schema) => schema.optional(),
+      otherwise: (schema) => schema.optional().nullable(),
     }),
   paraglider2PrimaryColor: Yup.string()
     .optional()
+
+    .nullable()
     .when('paraglider2Manufacturer', {
       is: (val: string) => !!val,
       then: (schema) => schema.required('Primary colour is required'),
-      otherwise: (schema) => schema.optional(),
+      otherwise: (schema) => schema.optional().nullable(),
     }),
-  paraglider2SecondaryColor: Yup.string().optional(),
+  paraglider2SecondaryColor: Yup.string().optional().nullable(),
 
   // address
   address1: Yup.string().required('Address 1 is required'),
-  address2: Yup.string().optional(),
+  address2: Yup.string().optional().nullable(),
   city: Yup.string().required('City is required'),
   state: Yup.string().required('State is required'),
   postalCode: Yup.string().required('Postal code is required'),
@@ -171,22 +176,28 @@ export const profileFormDataYUPSchema = Yup.object().shape({
   primaryEmergencyContactPhone: Yup.string()
     .required('Primary emergency contact phone is required')
     .test('invalid-phone-number', 'Invalid phone number', mandatoryPhoneValidator),
-  secondaryEmergencyContactName: Yup.string().optional(),
+  secondaryEmergencyContactName: Yup.string().optional().nullable(),
   secondaryEmergencyContactPhone: Yup.string()
     .optional()
+
+    .nullable()
     .when('secondaryEmergencyContactName', {
       is: (val: string) => !!val,
       then: (schema) => schema.required('Secondary emergency contact phone is required'),
-      otherwise: (schema) => schema.optional(),
+      otherwise: (schema) => schema.optional().nullable(),
     }),
   // insurance
 
   // medical
-  medicalConditions: Yup.string().optional(),
-  medications: Yup.string().optional(),
-  allergies: Yup.string().optional(),
-  bloodGroup: Yup.string().optional(),
+  medicalConditions: Yup.string().optional().nullable(),
+  medications: Yup.string().optional().nullable(),
+  allergies: Yup.string().optional().nullable(),
+  bloodGroup: Yup.string().optional().nullable(),
 })
+
+export interface ProfileFormValidation extends Yup.InferType<typeof profileFormDataYUPSchema> {
+  // using interface instead of type generally gives nicer editor feedback
+}
 
 export const insuranceFormDataYUPSchema = Yup.object().shape({
   provider: Yup.string().required('Provider is required'),

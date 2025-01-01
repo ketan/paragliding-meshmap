@@ -1,14 +1,14 @@
 import { UseFormReturn } from 'react-hook-form'
-import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { countries, fieldsetClassNames, legendClassNames } from '../utils/form-helpers.tsx'
 import { FormField } from './form-field.tsx'
 import { CountryDropdown } from './country-dropdown.tsx'
 import { Dropdown } from './dropdown.tsx'
 import { useEffect, useState } from 'react'
 import { fetchLocations } from '../utils/profile.ts'
+import { ProfileFormValidation } from './profile-modal-interfaces.ts'
 
 interface PersonalDetailsFormProps {
-  form: UseFormReturn<ProfileFormDataWithoutProfileImage>
+  form: UseFormReturn<ProfileFormValidation>
 }
 
 export function PersonalDetailsForm({ form }: PersonalDetailsFormProps) {

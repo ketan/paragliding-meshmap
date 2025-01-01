@@ -1,10 +1,10 @@
 import { UseFormReturn } from 'react-hook-form'
-import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { fieldsetClassNames, legendClassNames } from '../utils/form-helpers.tsx'
 import { FormField } from './form-field.tsx'
+import { ProfileFormValidation } from './profile-modal-interfaces.ts'
 
 interface SecondaryParaglidingEquipmentFormProps {
-  form: UseFormReturn<ProfileFormDataWithoutProfileImage>
+  form: UseFormReturn<ProfileFormValidation>
 }
 
 export function SecondaryParaglidingEquipmentForm({ form }: SecondaryParaglidingEquipmentFormProps) {

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { profileFormDataYUPSchema } from './profile-modal-interfaces.ts'
+import { profileFormDataYUPSchema, ProfileFormValidation } from './profile-modal-interfaces.ts'
 import { useForm } from 'react-hook-form'
 import { createOnSubmit, useFetchDataIntoForm } from '../utils/form-helpers.tsx'
 import { fetchUserProfile } from '../utils/profile.ts'
@@ -9,7 +9,6 @@ import { SecondaryParaglidingEquipmentForm } from './secondary-paragliding-equip
 import { AddressForm } from './address-form.tsx'
 import { EmergencyContactForm } from './emergency-contact-form.tsx'
 import { MedicalInformationForm } from './medical-information-form.tsx'
-import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { ActionBar } from './action-bar.tsx'
 import { SubmitButton, SubmitButtonIcon } from './submit-button.tsx'
 import { useState } from 'react'
@@ -30,7 +29,7 @@ export function ProfileFormTab() {
 
   const resolver = yupResolver(profileFormDataYUPSchema)
 
-  const form = useForm<ProfileFormDataWithoutProfileImage>({
+  const form = useForm<ProfileFormValidation>({
     mode: 'onBlur',
     resolver: resolver,
     shouldUnregister: true,

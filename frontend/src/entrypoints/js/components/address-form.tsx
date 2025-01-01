@@ -1,11 +1,11 @@
 import { UseFormReturn } from 'react-hook-form'
-import { ProfileFormDataWithoutProfileImage } from './profile-modal.tsx'
 import { countries, fieldsetClassNames, legendClassNames } from '../utils/form-helpers.tsx'
 import { FormField } from './form-field.tsx'
 import { CountryDropdown } from './country-dropdown.tsx'
+import { ProfileFormValidation } from './profile-modal-interfaces.ts'
 
 interface AddressFormProps {
-  form: UseFormReturn<ProfileFormDataWithoutProfileImage>
+  form: UseFormReturn<ProfileFormValidation>
 }
 
 export function AddressForm({ form }: AddressFormProps) {

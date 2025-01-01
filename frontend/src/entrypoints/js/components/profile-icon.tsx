@@ -18,7 +18,6 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
       <img src={userProfile.profilePhotoUrl} className="rounded-full min-w-8 max-w-8 min-h-8 max-h-8" alt={`Profile icon`} />
     )
 
-    console.log(userProfile.adminLocations && userProfile.adminLocations.length)
     return (
       <>
         <HeaderIcon

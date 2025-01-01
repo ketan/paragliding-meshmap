@@ -74,6 +74,7 @@ export default defineConfig({
     'protobufjs/minimal.js',
     'reflect-metadata',
     'response-time',
+    'stream',
     'typeorm',
     'url',
     'uuid',

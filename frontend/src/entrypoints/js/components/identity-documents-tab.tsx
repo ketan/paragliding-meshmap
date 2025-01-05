@@ -20,6 +20,7 @@ async function fetchIdentityDocuments() {
 
 export function IdentityDocumentsTab() {
   const [showAddIdentityForm, setShowAddIdentityForm] = useState<boolean>(false)
+  const [reloadData, setReloadData] = useState<boolean>(true)
   const [identityDocuments, setIdentityDocuments] = useState<IdentityDocumentsEntity[]>()
 
   useEffect(() => {
@@ -30,11 +31,14 @@ export function IdentityDocumentsTab() {
       }
     }
 
-    fetchData()
-  }, [showAddIdentityForm])
+    if (reloadData) {
+      fetchData()
+      setReloadData(false)
+    }
+  }, [reloadData])
 
   if (!identityDocuments || identityDocuments.length === 0 || showAddIdentityForm) {
-    return <IdentityDetailsForm setShowAddIdentityForm={setShowAddIdentityForm} />
+    return <IdentityDetailsForm setShowAddIdentityForm={setShowAddIdentityForm} onReload={() => setReloadData(true)} />
   } else {
     return <IdentityDocumentsTable identityDocuments={identityDocuments} showAddIdentityForm={() => setShowAddIdentityForm(true)} />
   }

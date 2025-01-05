@@ -20,6 +20,7 @@ async function fetchCertificationDocuments() {
 
 export function CertificationDocumentsTab() {
   const [showAddCertificationForm, setShowAddCertificationForm] = useState<boolean>(false)
+  const [reloadData, setReloadData] = useState<boolean>(true)
   const [certificationDocuments, setCertificationDocuments] = useState<CertificationDocumentsEntity[]>()
 
   useEffect(() => {
@@ -30,11 +31,14 @@ export function CertificationDocumentsTab() {
       }
     }
 
-    fetchData()
-  }, [showAddCertificationForm])
+    if (reloadData) {
+      fetchData()
+      setReloadData(false)
+    }
+  }, [reloadData])
 
   if (!certificationDocuments || certificationDocuments.length === 0 || showAddCertificationForm) {
-    return <CertificationDetailsForm setShowAddCertificationForm={setShowAddCertificationForm} />
+    return <CertificationDetailsForm setShowAddCertificationForm={setShowAddCertificationForm} onReload={() => setReloadData(true)} />
   } else {
     return (
       <CertificationDocumentsTable

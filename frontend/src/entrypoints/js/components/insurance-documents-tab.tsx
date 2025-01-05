@@ -20,6 +20,7 @@ async function fetchInsuranceDocuments() {
 
 export function InsuranceDocumentsTab() {
   const [showAddInsuranceForm, setShowAddInsuranceForm] = useState<boolean>(false)
+  const [reloadData, setReloadData] = useState<boolean>(true)
   const [insuranceDocuments, setInsuranceDocuments] = useState<InsurancePolicyDocumentsEntity[]>()
 
   useEffect(() => {
@@ -30,11 +31,14 @@ export function InsuranceDocumentsTab() {
       }
     }
 
-    fetchData()
-  }, [showAddInsuranceForm])
+    if (reloadData) {
+      fetchData()
+      setReloadData(false)
+    }
+  }, [reloadData])
 
   if (!insuranceDocuments || insuranceDocuments.length === 0 || showAddInsuranceForm) {
-    return <InsuranceDetailsForm setShowAddInsuranceForm={setShowAddInsuranceForm} />
+    return <InsuranceDetailsForm setShowAddInsuranceForm={setShowAddInsuranceForm} onReload={() => setReloadData(true)} />
   } else {
     return (
       <InsuranceDocumentsTable

@@ -9,9 +9,10 @@ import { useState } from 'react'
 
 interface CertificationDetailsFormProps {
   setShowAddCertificationForm: (value: boolean) => void
+  onReload: () => void
 }
 
-export function CertificationDetailsForm({ setShowAddCertificationForm }: CertificationDetailsFormProps) {
+export function CertificationDetailsForm({ setShowAddCertificationForm, onReload }: CertificationDetailsFormProps) {
   const [submissionStatus, setSubmissionStatus] = useState<SubmitButtonIcon>()
 
   const resolver = yupResolver(certificationFormDataYUPSchema)
@@ -29,6 +30,7 @@ export function CertificationDetailsForm({ setShowAddCertificationForm }: Certif
       })
     )(evt)
     setShowAddCertificationForm(false)
+    onReload()
   }
 
   return (

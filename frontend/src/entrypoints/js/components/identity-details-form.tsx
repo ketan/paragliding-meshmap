@@ -9,9 +9,10 @@ import { SubmitButton, SubmitButtonIcon } from './submit-button.tsx'
 
 interface IdentityDetailsFormProps {
   setShowAddIdentityForm: (value: boolean) => void
+  onReload: () => void
 }
 
-export function IdentityDetailsForm({ setShowAddIdentityForm }: IdentityDetailsFormProps) {
+export function IdentityDetailsForm({ setShowAddIdentityForm, onReload }: IdentityDetailsFormProps) {
   const [submissionStatus, setSubmissionStatus] = useState<SubmitButtonIcon>()
 
   const resolver = yupResolver(identityFormDataYUPSchema)
@@ -29,6 +30,7 @@ export function IdentityDetailsForm({ setShowAddIdentityForm }: IdentityDetailsF
       })
     )(evt)
     setShowAddIdentityForm(false)
+    onReload()
   }
 
   return (

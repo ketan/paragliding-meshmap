@@ -9,9 +9,10 @@ import { FormEvent, useState } from 'react'
 
 interface InsuranceDetailsFormProps {
   setShowAddInsuranceForm: (value: boolean) => void
+  onReload: () => void
 }
 
-export function InsuranceDetailsForm({ setShowAddInsuranceForm }: InsuranceDetailsFormProps) {
+export function InsuranceDetailsForm({ setShowAddInsuranceForm, onReload }: InsuranceDetailsFormProps) {
   const [submissionStatus, setSubmissionStatus] = useState<SubmitButtonIcon>()
 
   const resolver = yupResolver(insuranceFormDataYUPSchema)
@@ -30,6 +31,7 @@ export function InsuranceDetailsForm({ setShowAddInsuranceForm }: InsuranceDetai
     )(evt)
 
     setShowAddInsuranceForm(false)
+    onReload()
   }
 
   return (

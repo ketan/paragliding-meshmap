@@ -94,12 +94,14 @@ const imageFileListValidator = (value: FileList) => {
   return ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'image/tiff'].includes(fileType)
 }
 
+const maxAllowedFileSizeInMB = 5
+
 const fileSizeValidator = (value: FileList) => {
   if (!value || value.length === 0) {
     return false
   }
   const file = value[0]
-  return file.size < 1024 * 1024 * 2
+  return file.size < maxAllowedFileSizeInMB * 1024 * 1024
 }
 
 const filePresentValidator = (value: FileList) => {
@@ -201,7 +203,7 @@ export const insuranceFormDataYUPSchema = Yup.object().shape({
   document: Yup.mixed<FileList>()
     .required('Policy copy is required')
     .test('fileRequired', 'Policy copy is required', filePresentValidator)
-    .test('fileTooLarge', 'File must be under 2MB', fileSizeValidator)
+    .test('fileTooLarge', `File must be under ${maxAllowedFileSizeInMB}MB`, fileSizeValidator)
     .test('fileType', 'Unsupported file format', imageFileListValidator),
   validityStart: Yup.string().required('Policy start date is required'),
   validityEnd: Yup.string().required('Policy end date is required'),
@@ -213,7 +215,7 @@ export const certificationFormDataYUPSchema = Yup.object().shape({
   document: Yup.mixed<FileList>()
     .required('Policy copy is required')
     .test('fileRequired', 'Policy copy is required', filePresentValidator)
-    .test('fileTooLarge', 'File must be under 2MB', fileSizeValidator)
+    .test('fileTooLarge', `File must be under ${maxAllowedFileSizeInMB}MB`, fileSizeValidator)
     .test('fileType', 'Unsupported file format', imageFileListValidator),
 })
 
@@ -221,7 +223,7 @@ export const identityFormDataYUPSchema = Yup.object().shape({
   document: Yup.mixed<FileList>()
     .required('Identity document is required')
     .test('fileRequired', 'Identity document is required', filePresentValidator)
-    .test('fileTooLarge', 'File must be under 2MB', fileSizeValidator)
+    .test('fileTooLarge', `File must be under ${maxAllowedFileSizeInMB}MB`, fileSizeValidator)
     .test('fileType', 'Unsupported file format', imageFileListValidator),
 })
 

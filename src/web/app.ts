@@ -26,6 +26,7 @@ import { deviceConfigRouter } from '#web/routes/device-config'
 import { statsRouter } from '#web/routes/stats'
 import { positionsRouter } from '#web/routes/positions'
 import { locationsRouter } from '#web/routes/locations'
+import morganBody from 'morgan-body'
 
 const db = AppDataSource
 
@@ -38,8 +39,16 @@ app.use(flash())
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+morganBody(app, {
+  logIP: false,
+  logReqUserAgent: false,
+  prettify: false,
+  includeNewLine: true,
+  logResponseBody: false,
+  logRequestId: true,
+})
+
 if (isDevelopment) {
-  app.use((await import('morgan')).default('dev'))
   app.use((await import('compression')).default())
 }
 

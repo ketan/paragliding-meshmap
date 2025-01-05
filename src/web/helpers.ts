@@ -11,8 +11,9 @@ import { execSync } from 'node:child_process'
 import formidable from 'formidable'
 
 export const environment = process.env.NODE_ENV || 'development'
-export const isDevelopment = environment === 'development' || environment === 'test'
-export const isProduction = !isDevelopment
+export const isDevelopment = environment === 'development'
+export const isTest = environment === 'test'
+export const isProduction = environment === 'production'
 
 export function parseSinceParam(req: Request, defaultValue: string = `P30D`) {
   const since = typeof req.query.since === 'string' ? req.query.since : defaultValue

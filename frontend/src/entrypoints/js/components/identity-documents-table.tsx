@@ -1,5 +1,6 @@
 import { IdentityDocumentsEntity } from '../../../db-entities'
 import { FileArrowDownIcon } from '../utils/icon-constants.ts'
+import { timeAgo } from '../utils/ui-util.tsx'
 
 export function IdentityDocumentsTable({
   identityDocuments,
@@ -40,7 +41,7 @@ export function IdentityDocumentsTable({
             const classNames = `p-2 whitespace-nowrap text-xs sm:text-sm text-gray-800`
             return (
               <tr key={index} className={`odd:bg-white even:bg-gray-100 cursor-pointer`}>
-                <td className={classNames}>{doc.createdAt}</td>
+                <td className={classNames}>{timeAgo(doc.createdAt)}</td>
                 <td>
                   <a href={`/api/identity-documents/${doc.id}`} target="_blank" rel="noreferrer">
                     <FileArrowDownIcon className={'w-4 h-4'} />

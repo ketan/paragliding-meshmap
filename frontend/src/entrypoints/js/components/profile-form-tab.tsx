@@ -55,7 +55,7 @@ export function ProfileFormTab() {
       <MedicalInformationForm form={form} />
 
       <ActionBar>
-        <SubmitButton icon={submissionStatus}>Save</SubmitButton>
+        <SubmitButton icon={submissionStatus}>Update profile</SubmitButton>
       </ActionBar>
     </form>
   )

@@ -84,7 +84,7 @@ export function InsuranceDetailsForm({ setShowAddInsuranceForm }: InsuranceDetai
         />
       </fieldset>
       <ActionBar>
-        <SubmitButton icon={submissionStatus}>Save</SubmitButton>
+        <SubmitButton icon={submissionStatus}>Upload</SubmitButton>
       </ActionBar>
     </form>
   )

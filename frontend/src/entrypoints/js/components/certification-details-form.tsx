@@ -59,7 +59,7 @@ export function CertificationDetailsForm({ setShowAddCertificationForm }: Certif
         />
       </fieldset>
       <ActionBar>
-        <SubmitButton icon={submissionStatus}>Save</SubmitButton>
+        <SubmitButton icon={submissionStatus}>Upload</SubmitButton>
       </ActionBar>
     </form>
   )

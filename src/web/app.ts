@@ -39,14 +39,18 @@ app.use(flash())
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-morganBody(app, {
-  logIP: false,
-  logReqUserAgent: false,
-  prettify: false,
-  includeNewLine: true,
-  logResponseBody: false,
-  logRequestId: true,
-})
+if (isDevelopment || isProduction) {
+  morganBody(app, {
+    logIP: false,
+    logReqUserAgent: false,
+    prettify: false,
+    includeNewLine: true,
+    logResponseBody: false,
+    logRequestId: true,
+    logRequestBody: isDevelopment,
+    logAllReqHeader: isDevelopment
+  })
+}
 
 if (isDevelopment) {
   app.use((await import('compression')).default())

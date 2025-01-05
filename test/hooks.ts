@@ -101,12 +101,12 @@ export async function fetchCSRFToken(agent: TestAgent<Test>) {
 
 export async function post(agent: TestAgent<Test>, url: string, data?: string | object) {
   const token = await fetchCSRFToken(agent)
-  return agent.post(url).set('x-csrf-token', token).send(data)
+  return agent.post(url).set('x-csrf-token', token).type('json').send(data)
 }
 
 export async function put(agent: TestAgent<Test>, url: string, data?: string | object) {
   const token = await fetchCSRFToken(agent)
-  return agent.put(url).set('x-csrf-token', token).send(data)
+  return agent.put(url).set('x-csrf-token', token).type('json').send(data)
 }
 
 export async function createAdminUser(props: Partial<User> = {}) {
@@ -123,7 +123,7 @@ export async function createAdminUser(props: Partial<User> = {}) {
   return await AppDataSource.getRepository(User).findOneByOrFail({ id: user.id })
 }
 
-export async function createRegularUser(props: Partial<User> = {}) {
+export async function createRegularUser(props: Partial<User> = {}, loadReferences = false) {
   const randomPrefix = Math.random().toString(36).substring(2, 8)
   const user = await AppDataSource.getRepository(User).save(
     new User({
@@ -134,7 +134,10 @@ export async function createRegularUser(props: Partial<User> = {}) {
       superUser: false,
     })
   )
-  return await AppDataSource.getRepository(User).findOneByOrFail({ id: user.id })
+  return await AppDataSource.getRepository(User).findOneOrFail({
+    where: { id: user.id },
+    relations: loadReferences ? ['identityDocuments', 'certificationDocuments', 'insurancePolicies'] : [],
+  })
 }
 
 export async function loginAs(agent: TestAgent<Test>, user: User) {

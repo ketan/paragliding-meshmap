@@ -154,13 +154,22 @@ export class User extends BaseType {
   }
 
   canSeeDocument(document: IdentityDocument | CertificationDocument | IdentityDocument): boolean {
-    if (document.user.id === this.id) {
-      return true
-    }
+    const user = document.user
+
+    return this.canAdminister(user)
+  }
+
+  canAdminister(user: User): boolean {
     if (this.superUser) {
       return true
     }
-    return _.intersection(this.adminLocations, document.user.flightLocations).length > 0
+    if (user.id === this.id) {
+      return true
+    }
+    if (this.adminLocations && this.adminLocations.length > 0) {
+      return _.intersection(this.adminLocations, user.flightLocations).length > 0
+    }
+    return false
   }
 
   isAdmin() {

@@ -4,7 +4,7 @@ import { User } from '#entity/user'
 import { app } from '#web/app'
 import { beforeEach } from 'mocha'
 import { expect } from 'chai'
-import { createRegularUser, loginAs, post, put } from '../../hooks.js'
+import { createAdminUser, createRegularUser, loginAs, post, put } from '../../hooks.js'
 
 describe('Users API', () => {
   describe('PUT /api/profile', () => {
@@ -89,6 +89,16 @@ describe('Users API', () => {
       const loadedUser = await AppDataSource.getRepository(User).findOneByOrFail({ id: originalUser.id })
       expect(loadedUser).to.deepEqualIgnoreUndefined(originalUser)
     })
+
+    it('should return 400 if submitted payload by a logged in user is invalid', async () => {
+      const user = await createRegularUser()
+      const agent = request.agent(app)
+      await loginAs(agent, user)
+
+      const response = await put(agent, '/api/profile', []) // send array instead of object
+      expect(response.status).to.eq(400)
+      expect(response.body.message).to.eq('Unable to parse submitted user data')
+    })
   })
 
   describe('GET /api/profile', () => {
@@ -101,6 +111,148 @@ describe('Users API', () => {
       const response = await agent.get('/api/profile')
       expect(response.status).to.eq(200)
       expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify(user)))
+    })
+
+    it('should return 401 if user is not logged in', async () => {
+      const agent = request(app)
+
+      const response = await agent.get('/api/profile')
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('You are not logged in!')
+    })
+  })
+
+  describe('GET /api/user/:id', () => {
+    it('should get user profile if user id is same as that of logged in user', async () => {
+      const user = await createRegularUser({}, true)
+      const agent = request.agent(app)
+
+      await loginAs(agent, user)
+
+      const response = await agent.get(`/api/user/${user.id}`)
+      expect(response.status).to.eq(200)
+      expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify(user)))
+    })
+
+    it("super users should be able to get any user's profile", async () => {
+      const user = await createRegularUser({}, true)
+      const superUser = await createAdminUser()
+      const agent = request.agent(app)
+
+      await loginAs(agent, superUser)
+
+      const response = await agent.get(`/api/user/${user.id}`)
+      expect(response.status).to.eq(200)
+      expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify(user)))
+    })
+
+    it('location admins should be able to get profile of a user in their location', async () => {
+      const user = await createRegularUser({ flightLocations: ['L1', 'L2'] }, true)
+      const locationAdmin = await createRegularUser({ adminLocations: ['L1', 'L3'] })
+      const agent = request.agent(app)
+
+      await loginAs(agent, locationAdmin)
+
+      const response = await agent.get(`/api/user/${user.id}`)
+      expect(response.status).to.eq(200)
+      expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify(user)))
+    })
+
+    it('location admins should not be able to get profile of a user not in their location', async () => {
+      const user = await createRegularUser({ flightLocations: ['L1', 'L2'] })
+      const locationAdmin = await createRegularUser({ adminLocations: ['L3'] })
+      const agent = request.agent(app)
+
+      await loginAs(agent, locationAdmin)
+
+      const response = await agent.get(`/api/user/${user.id}`)
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('Not an admin')
+    })
+
+    it('should return 401 if user is not an admin and trying to get another user profile', async () => {
+      const user = await createRegularUser()
+      const anotherUser = await createRegularUser()
+      const agent = request.agent(app)
+
+      await loginAs(agent, user)
+
+      const response = await agent.get(`/api/user/${anotherUser.id}`)
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('Not an admin')
+    })
+
+    it('should return 404 if user is not found', async () => {
+      const user = await createRegularUser()
+      const agent = request.agent(app)
+
+      await loginAs(agent, user)
+
+      const response = await agent.get(`/api/user/12345`)
+      expect(response.status).to.eq(404)
+      expect(response.body.message).to.eq('User not found')
+    })
+
+    it('should return 401 if user is not logged in', async () => {
+      const user = await createRegularUser()
+      const agent = request(app)
+
+      const response = await agent.get(`/api/user/${user.id}`)
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('You are not logged in!')
+    })
+  })
+
+  describe('GET /api/users', () => {
+    it('should return 401 if user is not logged in', async () => {
+      const agent = request(app)
+
+      const response = await agent.get('/api/users')
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('You are not logged in!')
+    })
+
+    it('should return 401 if user is not an admin', async () => {
+      const user = await createRegularUser()
+      const agent = request.agent(app)
+
+      await loginAs(agent, user)
+
+      const response = await agent.get('/api/users')
+      expect(response.status).to.eq(401)
+      expect(response.body.error).to.eq('Not an admin')
+    })
+
+    it('should return all users if user is an admin', async () => {
+      const users = [await createRegularUser(), await createRegularUser()]
+      const adminUser = await createAdminUser()
+      const agent = request.agent(app)
+
+      await loginAs(agent, adminUser)
+
+      const response = await agent.get('/api/users')
+      expect(response.status).to.eq(200)
+      expect(response.body).to.be.an('array')
+      expect(response.body.length).to.eq(3)
+      expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify([adminUser, users[1], users[0]])))
+    })
+
+    it('should return all users in a given location if user is a location admin', async () => {
+      const users = [
+        await createRegularUser({ flightLocations: ['L1', 'L2'] }),
+        await createRegularUser({ flightLocations: ['L5', 'L3'] }),
+        await createRegularUser({ flightLocations: ['L4'] }),
+      ]
+      const locationAdmin = await createRegularUser({ adminLocations: ['L1', 'L4'] })
+      const agent = request.agent(app)
+
+      await loginAs(agent, locationAdmin)
+
+      const response = await agent.get('/api/users')
+      expect(response.status).to.eq(200)
+      expect(response.body).to.be.an('array')
+      expect(response.body.length).to.eq(2)
+      expect(response.body).to.deepEqualIgnoreUndefined(JSON.parse(JSON.stringify([users[2], users[0]])))
     })
   })
 })

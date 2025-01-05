@@ -21,8 +21,9 @@ function updateUserData(user: User, body: Partial<User>) {
     'adminLocations',
   ] as (keyof User)[]
 
-  if (typeof body !== 'object') {
+  if (!_.isPlainObject(body)) {
     return
+    throw new HttpError(400, 'Invalid data format')
   }
 
   const nonSensitiveFields = _.omit(body, sensitiveFields)
@@ -60,13 +61,8 @@ usersRouter.get('/user/:id', async (req, res) => {
     throw new HttpError(401, 'You are not logged in!')
   }
 
-  if (!req.user?.superUser) {
-    return res.status(401).json({ error: 'Not an admin' })
-  }
-
   const userId = parseIdParam(req)
-
-  const users = await User.findOne(db, {
+  const user = await User.findOne(db, {
     where: {
       id: userId,
     },
@@ -80,7 +76,16 @@ usersRouter.get('/user/:id', async (req, res) => {
       identityDocuments: true,
     },
   })
-  res.json(users)
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' })
+  }
+
+  if (!req.user?.canAdminister(user)) {
+    return res.status(401).json({ error: 'Not an admin' })
+  }
+
+  res.json(user)
 })
 
 usersRouter.get('/profile', (req, res) => {
@@ -95,20 +100,12 @@ usersRouter.put('/profile', async (req, res) => {
     throw new HttpError(401, 'You are not logged in!')
   }
 
-  const user = await db.getRepository(User).findOne({
-    where: { id: req.user.id },
-  })
-
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' })
-  }
-
   try {
-    const updatedUser = updateUserData(user, req.body)
+    const updatedUser = updateUserData(req.user, req.body)
 
     if (updatedUser) {
       await db.getRepository(User).save(updatedUser)
-      res.json(updatedUser)
+      return res.json(updatedUser)
     } else {
       return res.status(400).json({ message: 'Unable to parse submitted user data' })
     }

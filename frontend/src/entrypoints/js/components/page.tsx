@@ -13,6 +13,7 @@ import { ProfileIcon } from './profile-icon.tsx'
 import { HeaderIcon } from './header-icon.tsx'
 import { fetchCsrfToken } from '../utils/csrf.ts'
 import { ProfileModal } from './profile-modal.tsx'
+import { profileFormDataYUPSchema } from './profile-modal-interfaces.ts'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -54,6 +55,39 @@ export function Page(props: PageProps) {
 
     getUserProfile()
   }, [])
+
+  useEffect(() => {
+    if (!userProfile) {
+      return
+    }
+    try {
+      profileFormDataYUPSchema.validateSync(userProfile, {
+        stripUnknown: true,
+      })
+    } catch (_e) {
+      toast.dismiss()
+      toast.info(
+        <span>
+          If you are a pilot, please provide your information to help us respond quickly in case of an emergency. This information will be
+          kept confidential and used only for search and rescue operations, or if requested by the authorities.{' '}
+          <a
+            href="#"
+            onClick={() => {
+              props.profileModal.onClick()
+              toast.dismiss()
+              return false
+            }}
+          >
+            Click here
+          </a>{' '}
+          to provide the information.
+        </span>,
+        {
+          autoClose: 10000,
+        }
+      )
+    }
+  }, [props.profileModal, userProfile])
 
   async function callback(credential: string) {
     const data = new URLSearchParams()

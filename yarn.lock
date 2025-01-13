@@ -6938,9 +6938,9 @@ performance-now@^2.1.0:
   integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
 
 pg-boss@^10.1.1:
-  version "10.1.5"
-  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-10.1.5.tgz#4d119d8021c75bec90a3582aee608233522f6277"
-  integrity sha512-H87NL6c7N6nTCSCePh16EaSQVSFevNXWdJuzY6PZz4rw+W/nuMKPfI/vYyXS0AdT1g1Q3S3EgeOYOHcB7ZVToQ==
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-10.1.6.tgz#6dea4742fb953b7985ae4b09a6c4d79047801715"
+  integrity sha512-O3ujMF4aL/EDucyTlCpJ2bqNJendWnMKwuLaWDqVVt3CDSJ6/iBRvj3PMiO5exwlqHYLQkZnHCutzdc32nPpOA==
   dependencies:
     cron-parser "^4.9.0"
     pg "^8.13.0"

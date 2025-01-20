@@ -1186,6 +1186,16 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@opentelemetry/api@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.9.0.tgz#d03eba68273dc0f7509e2a3d5cba21eae10379fe"
+  integrity sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==
+
+"@opentelemetry/semantic-conventions@^1.27.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.28.0.tgz#337fb2bca0453d0726696e745f50064411f646d6"
+  integrity sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA==
+
 "@parcel/watcher-android-arm64@2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.5.0.tgz#e32d3dda6647791ee930556aee206fcd5ea0fb7a"
@@ -6411,13 +6421,15 @@ neo-async@^2.6.2:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 newrelic@^12.2.0:
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-12.9.0.tgz#378f812c824b018d00c7513781e5c4c569bd8006"
-  integrity sha512-ay4EVbsfomm79QJhBcbE45S6+f4bFE8e3hPRceoyeyAkMhqhnEC9uQQ7D21i28OJdE197S+UaSx2ph6y2y5mUQ==
+  version "12.11.1"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-12.11.1.tgz#ea207cecfb7927a6f8dab082ca4a3e2e75d00e06"
+  integrity sha512-gL/Tx+JjNcEx1Eb+QmIAPgopiaCU7YMGb4iORIEf/v87/9b8PVICrqUVk0DNJ+1ZO0negZjcHVJnkXQdXz8WDw==
   dependencies:
     "@grpc/grpc-js" "^1.12.2"
     "@grpc/proto-loader" "^0.7.5"
     "@newrelic/security-agent" "^2.2.0"
+    "@opentelemetry/api" "^1.9.0"
+    "@opentelemetry/semantic-conventions" "^1.27.0"
     "@tyriar/fibonacci-heap" "^2.0.7"
     concat-stream "^2.0.0"
     https-proxy-agent "^7.0.1"

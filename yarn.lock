@@ -2127,7 +2127,12 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.16.tgz#94ae78fab4a38d73086e962d0b65c30d816bfb0a"
   integrity sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==
 
-"@types/luxon@^3.4.2", "@types/luxon@~3.4.0":
+"@types/luxon@^3.4.2":
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.6.2.tgz#be6536931801f437eafcb9c0f6d6781f72308041"
+  integrity sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==
+
+"@types/luxon@~3.4.0":
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.4.2.tgz#e4fc7214a420173cea47739c33cdf10874694db7"
   integrity sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==
@@ -6195,7 +6200,12 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-luxon@^3.2.1, luxon@^3.4.4, luxon@~3.5.0:
+luxon@^3.2.1, luxon@^3.4.4:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.6.1.tgz#d283ffc4c0076cb0db7885ec6da1c49ba97e47b0"
+  integrity sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==
+
+luxon@~3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.5.0.tgz#6b6f65c5cd1d61d1fd19dbf07ee87a50bf4b8e20"
   integrity sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==

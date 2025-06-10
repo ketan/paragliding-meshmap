@@ -155,7 +155,7 @@
     "morgan-body": "^2.6.9",
     "newrelic": "^12.2.0",
     "node-hgt": "^1.2.3",
-    "nodemailer": "^6.9.15",
+    "nodemailer": "^7.0.3",
     "p-queue": "^8.0.1",
     "p-retry": "^6.2.0",
     "passport": "^0.7.0",

@@ -3457,9 +3457,9 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.6:
     which "^2.0.1"
 
 csrf-csrf@^3.0.8:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/csrf-csrf/-/csrf-csrf-3.1.0.tgz#d2388ded379bff967a39b4d16824c180c6f9d97e"
-  integrity sha512-kZacFfFbdYFxNnFdigRHCzVAq019vJyUUtgPLjCtzh6jMXcWmf8bGUx/hsqtSEMXaNcPm8iXpjC+hW5aeOsRMg==
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/csrf-csrf/-/csrf-csrf-3.2.2.tgz#6c5139d7689be9bb77b3e5c9eb3ec3aa4678c3ee"
+  integrity sha512-E3TgLWX1e+jqigDva+nFItfqa59UZ+gLR56DVNyL/xawBGwQr8o3U4/o1gP9FZmIWLnWCiIl5ni85MghMCNRfg==
   dependencies:
     http-errors "^2.0.0"
 

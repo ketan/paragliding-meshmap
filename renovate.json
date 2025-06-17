@@ -9,9 +9,22 @@
   "semanticCommitType": "chore",
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
+    },
+    {
+      "automerge": true,
+      "matchPackageNames": [
+        "@types/**"
+      ]
     }
   ]
 }

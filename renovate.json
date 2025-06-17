@@ -21,6 +21,14 @@
       "automerge": true
     },
     {
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
       "automerge": true,
       "matchPackageNames": [
         "@types/**"

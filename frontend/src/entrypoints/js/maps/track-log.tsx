@@ -6,12 +6,12 @@ import { DateTime } from 'luxon'
 import { getTextSize } from '../utils/text-size.ts'
 import { cssClassFor } from '../../../templates/legend.tsx'
 import { nodePositionView } from '../../../templates/node-position.tsx'
-import { Gradient } from 'typescript-color-gradient'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
 import { toast } from 'react-toastify'
 import { nodeName, sanitizeLatLong, TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import _ from 'lodash'
+import { generateGradient } from 'typescript-color-gradient'
 
 interface TrackLogProps {
   map: Map
@@ -148,7 +148,7 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       featureGroup.addLayer(endMarker)
     }
 
-    const colours = new Gradient().setGradient('#0000ff', '#00ff00').setNumberOfColors(positions.length).getColors()
+    const colours = generateGradient(['#0000ff', '#00ff00'], positions.length)
 
     for (let i = 0; i < positions.length; i++) {
       const position = positions[i]

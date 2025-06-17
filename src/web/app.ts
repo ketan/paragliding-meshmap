@@ -48,7 +48,7 @@ if (isDevelopment || isProduction) {
     logResponseBody: false,
     logRequestId: true,
     logRequestBody: isDevelopment,
-    logAllReqHeader: isDevelopment
+    logAllReqHeader: isDevelopment,
   })
 }
 

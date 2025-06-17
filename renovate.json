@@ -1,38 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":semanticCommitType(deps)"
-  ],
+  "extends": ["config:recommended", ":semanticCommitType(deps)"],
   "semanticCommits": "enabled",
   "semanticCommitScope": "deps",
   "semanticCommitType": "chore",
   "packageRules": [
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
     {
-      "matchUpdateTypes": [
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "matchUpdateTypes": ["patch", "pin", "digest"],
       "automerge": true
     },
     {
       "automerge": true,
-      "matchPackageNames": [
-        "@types/**"
-      ]
+      "matchPackageNames": ["@types/**"]
     }
   ]
 }

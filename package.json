@@ -110,7 +110,7 @@
     "qs": "^6.13.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.53.0",
+    "react-hook-form": "^7.58.1",
     "react-leaflet": "^5.0.0",
     "react-toastify": "^11.0.2",
     "react-tooltip": "^5.28.0",

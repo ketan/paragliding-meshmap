@@ -99,7 +99,7 @@
     "leaflet.heat": "^0.2.0",
     "leaflet.markercluster": "^1.5.3",
     "leaflet.polylinemeasure": "^3.0.0",
-    "libphonenumber-js": "^1.11.12",
+    "libphonenumber-js": "^1.12.9",
     "lodash": "^4.17.21",
     "mocha": "^11.0.1",
     "nodemon": "^3.1.4",

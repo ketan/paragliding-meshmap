@@ -73,7 +73,7 @@ export const doubleCsrfUtilities = setupCSRFMiddleware(app)
 app.get('/api/csrf-token', (req, res) => {
   res.clearCookie('x-csrf-token')
   return res.json({
-    token: doubleCsrfUtilities.generateToken(req, res),
+    token: doubleCsrfUtilities.generateCsrfToken(req, res),
   })
 })
 

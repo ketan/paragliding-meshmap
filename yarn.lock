@@ -7272,10 +7272,10 @@ pg-connection-string@^2.7.0, pg-connection-string@^2.9.1:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.9.1.tgz#bb1fd0011e2eb76ac17360dc8fa183b2d3465238"
   integrity sha512-nkc6NpDcvPVpZXxrreI/FOtX3XemeLl8E0qFr6F2Lrm/I8WOnaWNhIPK2Z7OHpw7gh5XJThi6j6ppgNoaT1w4w==
 
-pg-cursor@^2.15.1:
-  version "2.15.1"
-  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.15.1.tgz#f411069e059a1fe75f7ec670838f51a045087961"
-  integrity sha512-H3pT6fqIO1/u55mDGen2v6gvoaIBwVxhoJWEdF0qhQfsF7hXGW1BbJ8CwMtyoZRWZH7fASVoT3p2/4BGUoSxTg==
+pg-cursor@^2.15.2:
+  version "2.15.2"
+  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.15.2.tgz#f5217b9fd5fb843ab999696020998df57eabe4b5"
+  integrity sha512-34QPprl24V91kfXk/zQkHMAQjNfBYB9Ts92R+vE/Ci4GSvm6Due/bTlVF3V8Gw6aLDdvjXCyOJFT2eorxVY0Xg==
 
 pg-int8@1.0.1:
   version "1.0.1"
@@ -7298,11 +7298,11 @@ pg-protocol@^1.10.2:
   integrity sha512-Ci7jy8PbaWxfsck2dwZdERcDG2A0MG8JoQILs+uZNjABFuBuItAZCWUNz8sXRDMoui24rJw7WlXqgpMdBSN/vQ==
 
 pg-query-stream@^4.7.1:
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.10.1.tgz#e0636021ada5fae2aeaefdbbf9b062389715c095"
-  integrity sha512-xxtMwwtM7DbfsGc4H2jd8USjg0JgdhnyzFphTm47VP+YKOw75JSugjFTI2vNL9AVrNKDa/cmlUWkN99taIS1Ng==
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-4.10.2.tgz#344bcdb66ae84f878e77af0ab60e1bb626adb105"
+  integrity sha512-04SbGL5/ENbF1OCQrVbq1vCKpNtRrfaI9bCiRXb4FLRalW9GSC0hZXnBMgGQqNPdzxYF36js8WCW6QABvOqlIg==
   dependencies:
-    pg-cursor "^2.15.1"
+    pg-cursor "^2.15.2"
 
 pg-types@2.2.0, pg-types@^2.2.0:
   version "2.2.0"

@@ -1,4 +1,4 @@
-FROM node:24.2-alpine AS build
+FROM node:24.3-alpine AS build
 
 COPY package.json yarn.lock /app/
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY . /app/
 RUN GIT_SHA=${GIT_SHA} time yarn --debug --verbose run build
 RUN time yarn install --network-timeout 1000000 --frozen-lockfile --prod
 
-FROM node:24.2-alpine
+FROM node:24.3-alpine
 ARG GIT_SHA
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"

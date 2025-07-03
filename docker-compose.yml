@@ -1,6 +1,6 @@
 services:
   meshmap:
-    image: node:22.16
+    image: node:22.17
     ports:
       - '3333:3333'
       - '5173:5173'

@@ -8356,36 +8356,7 @@ ringbufferjs@^2.0.0:
   resolved "https://registry.yarnpkg.com/ringbufferjs/-/ringbufferjs-2.0.0.tgz#09f40e2675a99cfef430b7ec5815ac1bc2e24120"
   integrity sha512-GCOqTzUsTHF7nrqcgtNGAFotXztLgiePpIDpyWZ7R5I02tmfJWV+/yuJc//Hlsd8G+WzI1t/dc2y/w2imDZdog==
 
-rollup@^4.18.1:
-  version "4.44.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.44.1.tgz#641723932894e7acbe6052aea34b8e72ef8b7c8f"
-  integrity sha512-x8H8aPvD+xbl0Do8oez5f5o8eMS3trfCghc4HhLAnCkj7Vl0d1JWGs0UF/D886zLW2rOj2QymV/JcSSsw+XDNg==
-  dependencies:
-    "@types/estree" "1.0.8"
-  optionalDependencies:
-    "@rollup/rollup-android-arm-eabi" "4.44.1"
-    "@rollup/rollup-android-arm64" "4.44.1"
-    "@rollup/rollup-darwin-arm64" "4.44.1"
-    "@rollup/rollup-darwin-x64" "4.44.1"
-    "@rollup/rollup-freebsd-arm64" "4.44.1"
-    "@rollup/rollup-freebsd-x64" "4.44.1"
-    "@rollup/rollup-linux-arm-gnueabihf" "4.44.1"
-    "@rollup/rollup-linux-arm-musleabihf" "4.44.1"
-    "@rollup/rollup-linux-arm64-gnu" "4.44.1"
-    "@rollup/rollup-linux-arm64-musl" "4.44.1"
-    "@rollup/rollup-linux-loongarch64-gnu" "4.44.1"
-    "@rollup/rollup-linux-powerpc64le-gnu" "4.44.1"
-    "@rollup/rollup-linux-riscv64-gnu" "4.44.1"
-    "@rollup/rollup-linux-riscv64-musl" "4.44.1"
-    "@rollup/rollup-linux-s390x-gnu" "4.44.1"
-    "@rollup/rollup-linux-x64-gnu" "4.44.1"
-    "@rollup/rollup-linux-x64-musl" "4.44.1"
-    "@rollup/rollup-win32-arm64-msvc" "4.44.1"
-    "@rollup/rollup-win32-ia32-msvc" "4.44.1"
-    "@rollup/rollup-win32-x64-msvc" "4.44.1"
-    fsevents "~2.3.2"
-
-rollup@^4.43.0:
+rollup@^4.18.1, rollup@^4.43.0:
   version "4.46.2"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.46.2.tgz#09b1a45d811e26d09bed63dc3ecfb6831c16ce32"
   integrity sha512-WMmLFI+Boh6xbop+OAGo9cQ3OgX9MIg7xOQjn+pTCwOkk+FNDAeAemXkJ3HzDJrVXleLOFVa1ipuc1AmEx1Dwg==

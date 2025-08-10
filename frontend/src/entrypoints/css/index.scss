@@ -8,7 +8,8 @@
 /*! grouped layer control */
 @import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
 @import 'leaflet.polylinemeasure/Leaflet.PolylineMeasure.css';
-@include meta.load-css('tailwind.scss');
+@import 'tailwind.css';
+@plugin "@tailwindcss/forms";
 @import 'react-tooltip/dist/react-tooltip.css';
 @import 'react-toastify/dist/ReactToastify.css';
 

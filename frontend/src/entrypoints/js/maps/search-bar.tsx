@@ -50,7 +50,7 @@ export class SearchBar extends PureComponent<AllData & { selectCallback: (node: 
     }
     const { filteredNodes } = this.state
     return (
-      <div className="absolute z-[1001] bg-white w-full border border-gray-200 rounded-lg shadow-md mt-1 overflow-y-scroll max-h-80 divide-y divide-gray-200">
+      <div className="absolute z-1001 bg-white w-full border border-gray-200 rounded-lg shadow-md mt-1 overflow-y-scroll max-h-80 divide-y divide-gray-200">
         {filteredNodes.map((eachNode) => {
           return (
             <div key={eachNode.nodeId} className="p-2 hover:bg-gray-100 cursor-pointer" onClick={() => this.selectNode(eachNode)}>

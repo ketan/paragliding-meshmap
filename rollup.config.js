@@ -26,11 +26,7 @@ export default defineConfig({
     preserveModulesRoot: 'src',
     // compact: true,
   },
-  plugins: [
-    typescript({
-      tslib: './src/tslib.es6.js',
-    }),
-  ],
+  plugins: [typescript({})],
   cache: true,
   external: [
     'async-mqtt',

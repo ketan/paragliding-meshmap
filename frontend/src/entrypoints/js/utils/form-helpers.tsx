@@ -4,7 +4,7 @@ import { toast, ToastContent } from 'react-toastify'
 import { SubmitButtonIcon } from '../components/submit-button.tsx'
 import countryList from 'country-list'
 
-export const inputClassNames = `block py-1.5 px-1 w-full text-sm text-gray-900 bg-transparent focus:bg-blue-50 border-1 rounded-md bg-gray-200 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`
+export const inputClassNames = `block py-1.5 px-1 w-full text-sm text-gray-900 bg-transparent focus:bg-blue-50 border rounded-md bg-gray-200 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`
 export const labelClassNames = `peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-1.5 peer-focus:px-0 px-0 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:px-2 peer-focus:scale-75 peer-focus:-translate-y-6`
 export const groupClassNames = `relative z-0 w-full mb-6 group`
 export const fieldsetClassNames = `border rounded-lg border-gray-300 shadow-lg lg:p-4 lg:m-4 p-4 m-2`

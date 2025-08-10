@@ -27,7 +27,7 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
           onMouseOut={() => setDropdownVisible(false)}
         ></HeaderIcon>
         <div
-          className={`dropdown-content ${dropdownVisible ? 'block' : 'hidden'} absolute right-4 bg-white shadow-lg z-[10000] rounded border-2 grid grid-cols-1 divide-y`}
+          className={`dropdown-content ${dropdownVisible ? 'block' : 'hidden'} absolute right-4 bg-white shadow-lg z-10000 rounded border-2 border-gray-200 grid grid-cols-1 divide-y divide-gray-200`}
           onMouseOver={() => setDropdownVisible(true)}
           onMouseOut={() => setDropdownVisible(false)}
         >

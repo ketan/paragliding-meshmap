@@ -19,7 +19,7 @@ build/
 temp/
 frontend/dist/
 *.sqlite3
-.env
+.env*
 
 # Logs
 logs

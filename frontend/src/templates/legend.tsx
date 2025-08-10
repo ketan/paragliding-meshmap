@@ -8,15 +8,15 @@ export const legendReactDOM = (
     <h3 className="text-2xl pb-2">Legend</h3>
     {/* </div> */}
     <div className="relative pl-4">
-      <span className={`absolute h-3 w-3 rounded-full bg-green-600 border-3 top-0.5 left-0`}></span>
+      <span className={`absolute h-3 w-3 rounded-full bg-green-600 top-0.5 left-0`}></span>
       Connected
     </div>
     <div className="relative pl-4">
-      <span className={`absolute h-3 w-3 rounded-full bg-purple-600 border-3 top-0.5 left-0`}></span>
+      <span className={`absolute h-3 w-3 rounded-full bg-purple-600 top-0.5 left-0`}></span>
       Disconnected
     </div>
     <div className="relative pl-4">
-      <span className={`absolute h-3 w-3 rounded-full bg-gray-600 border-3 top-0.5 left-0`}></span>
+      <span className={`absolute h-3 w-3 rounded-full bg-gray-600 top-0.5 left-0`}></span>
       Offline Too Long
     </div>
   </div>

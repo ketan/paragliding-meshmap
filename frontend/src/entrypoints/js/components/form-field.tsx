@@ -47,10 +47,10 @@ export function FormField<FV extends FieldValues>({ id, label, type = 'text', re
         readOnly={disabled}
         placeholder={' '}
         aria-invalid={errors[id] ? 'true' : 'false'}
-        className={inputClassNames + (disabled ? ' opacity-50 !bg-gray-200' : ' ')}
+        className={inputClassNames + (disabled ? ' opacity-50 bg-gray-200!' : ' ')}
         {...extraOpts}
       />
-      <label htmlFor={String(id)} className={labelClassNames + (disabled ? ' !text-black ' : ' ')}>
+      <label htmlFor={String(id)} className={labelClassNames + (disabled ? ' text-black! ' : ' ')}>
         {label}
       </label>
       {errors[id] && <p className={errorClassNames}>{errorMessages}</p>}

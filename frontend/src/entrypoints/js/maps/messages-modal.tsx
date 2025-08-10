@@ -73,7 +73,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
       const toNode: NodesEntity = { ...nodes[msg.to], nodeId: msg.to }
 
       return (
-        <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-200 p-4 shadow-md shadow-gray-400" key={msg.id}>
+        <div className="max-w-(--breakpoint-sm) rounded-r-xl rounded-tl-xl bg-gray-200 p-4 shadow-md shadow-gray-400" key={msg.id}>
           <span className="font-semibold text-sm">
             <a href={nodeUrl(msg.from)}>{nodeName(fromNode)}</a> →{' '}
             {4294967295 === msg.to ? 'Everyone' : <a href={nodeUrl(msg.to)}>{nodeName(toNode)}</a>}
@@ -106,7 +106,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
       }
 
       return (
-        <div className="max-w-screen-sm rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md">
+        <div className="max-w-(--breakpoint-sm) rounded-r-xl rounded-tl-xl bg-gray-100 p-4 shadow-md">
           <span className="font-semibold text-sm">No messages sent by this user in {since.rescale().toHuman()}.</span>
           {link}
         </div>

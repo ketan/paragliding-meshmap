@@ -35,7 +35,7 @@ export function HeaderIcon({
         data-tooltip-id={id}
       >
         <div className="bg-gray-100 hover:bg-gray-200 p-1 rounded-full min-w-6 min-h-6">
-          {React.createElement(icon, { className: 'w-7 h-7' })}
+          {React.createElement(icon, { className: 'w-8 h-8' })}
         </div>
         {children}
       </button>

@@ -14,6 +14,7 @@ import Inspect from 'vite-plugin-inspect'
 import viteCompression from 'vite-plugin-compression'
 import legacy from '@vitejs/plugin-legacy'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
+import tailwindcss from '@tailwindcss/vite'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -92,6 +93,7 @@ function defineIconConstants(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     legacy({
       targets: ['last 2 versions and not dead, > 0.3%, Firefox ESR'],
       modernPolyfills: true,

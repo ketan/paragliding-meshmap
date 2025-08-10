@@ -96,8 +96,8 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
               </li>
               <li>
                 Bluetooth pin is set as{' '}
-                <code className="font-mono rounded-[0.25em] py-[0.125rem] px-[0.1875rem] my-0 -mx-[0.1875rem] bg-yellow-600">123456</code>,
-                you may change that to more secure pin from the Meshtastic phone application.
+                <code className="font-mono rounded-[0.25em] py-0.5 px-0.75 my-0 -mx-0.75 bg-yellow-600">123456</code>, you may change that
+                to more secure pin from the Meshtastic phone application.
               </li>
 
               <li>Do not turn off Bluetooth on your Meshtastic device, or the app won&apos;t connect.</li>

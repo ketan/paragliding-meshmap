@@ -9209,9 +9209,9 @@ typeorm@^0.3.20:
     yargs "^17.7.2"
 
 typescript-color-gradient@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/typescript-color-gradient/-/typescript-color-gradient-4.0.1.tgz#3d0face3631e64afa0a3c0f7c82b8272599817e4"
-  integrity sha512-7TECtE3bG3W3xFIkEssatbfIPCHf4yTn3Zoxv0v6HZ5FUcsHN0biN9AHfCplYCFDEnw9rIQR/68Xcvb7WAZaxQ==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/typescript-color-gradient/-/typescript-color-gradient-4.1.0.tgz#9c441697a73513f17da0220c1fdbb76aaa0e4530"
+  integrity sha512-XgwZS8BPcr7Bm4izuQOmJOwJhYWyK5V1FY1sgdnUhEJEIFtwyFDMu+8ROcY8iAoaEK7Qld8kQmEGBE3wI35nBQ==
 
 typescript-eslint@^7.15.0:
   version "7.18.0"

@@ -56,7 +56,7 @@ export function DeviceMetrics({ deviceMetrics, node, ...rest }: Props) {
           <NameValue name="Channel Utilization" value={node?.channelUtilization} unit="%" className="mr-4" precision={2} />
           <NameValue name="Air Utilization Tx" value={node?.airUtilTx} unit="%" className="mr-4" precision={2} />
 
-          <ResponsiveContainer height={200} className="content-center mx-auto">
+          <ResponsiveContainer height={200} width='100%' className="mx-auto">
             <LineChart data={data} syncId="nodeDetailsSync">
               <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
 
@@ -150,7 +150,7 @@ export function DeviceMetrics({ deviceMetrics, node, ...rest }: Props) {
               }
             }}
           />
-          <ResponsiveContainer height={200} className="content-center mx-auto">
+          <ResponsiveContainer height={200} className="mx-auto">
             <LineChart data={data} syncId="nodeDetailsSync">
               <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
               <XAxis

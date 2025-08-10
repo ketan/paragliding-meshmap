@@ -67,7 +67,7 @@ export function EnvironmentMetrics({ node, environmentMetrics, ...rest }: Props)
                 precision={2}
                 className={'mr-4'}
               />
-              <ResponsiveContainer height={200} className="content-center mx-auto">
+              <ResponsiveContainer height={200} className="mx-auto">
                 <LineChart data={environmentMetricsData} syncId="nodeDetailsSync">
                   <CartesianGrid stroke="#bbb" strokeDasharray="2 2" />
 

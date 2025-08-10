@@ -139,7 +139,7 @@
     "connect-flash": "^0.1.1",
     "connect-typeorm": "^2.0.0",
     "cookie-parser": "^1.4.6",
-    "csrf-csrf": "^3.0.8",
+    "csrf-csrf": "^4.0.0",
     "debug": "^4.3.5",
     "dotenv-flow": "^4.1.0",
     "escape-html": "^1.0.3",

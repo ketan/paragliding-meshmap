@@ -1381,10 +1381,10 @@
     node-gyp-build "^4.8.1"
     prebuildify "^6.0.1"
 
-"@newrelic/native-metrics@^11.1.0":
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/@newrelic/native-metrics/-/native-metrics-11.1.0.tgz#6a42005dce61a2ff8ba1cae8978cfc98c085a698"
-  integrity sha512-V+FRgRgv6R8LAnVsix8d1bL5SMmBONURaT/6F//rOgycvU7PfPoVEocacpSRzPFxMI27e46iAf3W5fGosbQ8yQ==
+"@newrelic/native-metrics@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@newrelic/native-metrics/-/native-metrics-12.0.0.tgz#6ab7ccfa358fa3d4704adfa8b8f8738096409985"
+  integrity sha512-l0MTkuazDMaEDWJk4ufHVgco4ssWhk/uSUYTn33dFOHAqpHLyxZHxxzKJb4vyZkhRy11UaKNhmNiAiXH557SJQ==
   dependencies:
     nan "^2.22.2"
     node-gyp-build "^4.8.1"
@@ -6990,10 +6990,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-newrelic@^12.2.0:
-  version "12.23.0"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-12.23.0.tgz#9f45ef350f901f1bd00762ebcc51e9e5abd3834c"
-  integrity sha512-SPZdoUgONqwKbUamwL5u8A+Nya+LFWMHRVGL2W3kRuo0nFtJ/7n9Xj/d41fjNfotSkha12rU46S+AMZrgiAO1w==
+newrelic@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-13.0.0.tgz#9643c838607042a5d85155becce2b6f952b43c25"
+  integrity sha512-8V90FJLfC/8J7O4fob0e4cTjR3R4cdQkXrilP6idvdvPas6Zv/pWxcfy0xvtdxpYSxHzKPZSutPsynMlq0D9sA==
   dependencies:
     "@grpc/grpc-js" "^1.13.2"
     "@grpc/proto-loader" "^0.7.5"
@@ -7017,7 +7017,7 @@ newrelic@^12.2.0:
     winston-transport "^4.5.0"
   optionalDependencies:
     "@newrelic/fn-inspect" "^4.4.0"
-    "@newrelic/native-metrics" "^11.1.0"
+    "@newrelic/native-metrics" "^12.0.0"
     "@prisma/prisma-fmt-wasm" "^4.17.0-16.27eb2449f178cd9fe1a4b892d732cc4795f75085"
 
 next-tick@^1.1.0:

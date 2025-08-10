@@ -38,7 +38,7 @@ export function addLegendToMap(map: L.Map) {
 
 export function cssClassFor(str: NodeStatus | 'start-track' | 'end-track', activity?: string | undefined | null) {
   const activityClass = activity ? `node-activity-${activity}` : ''
-  const commonClasses = `text-white rounded-full border-4 border-none marker-location node-status-${str} ${activityClass}`
+  const commonClasses = `text-white rounded-full marker-location node-status-${str} ${activityClass}`
 
   switch (str) {
     case 'start-track':

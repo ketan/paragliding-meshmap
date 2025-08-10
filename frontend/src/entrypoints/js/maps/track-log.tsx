@@ -217,7 +217,7 @@ export class CustomColorIcon extends DivIcon {
 
   constructor(options?: DivIconOptions & { backgroundColor: string }) {
     super({
-      className: `rounded-full border-3`,
+      className: `rounded-full`,
       iconSize: [10, 10],
       ...options,
     })

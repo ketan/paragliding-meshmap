@@ -3476,9 +3476,9 @@ chai-exclude@^3.0.0:
     fclone "^1.0.11"
 
 chai@^5.1.1:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/chai/-/chai-5.2.0.tgz#1358ee106763624114addf84ab02697e411c9c05"
-  integrity sha512-mCuXncKXk5iCLhfhwTc0izo0gtEmpz5CtG2y8GiOINBlMVS6v8TMRc5TaLWKS6692m9+dVVfzgeVxR5UxWHTYw==
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-5.2.1.tgz#a9502462bdc79cf90b4a0953537a9908aa638b47"
+  integrity sha512-5nFxhUrX0PqtyogoYOA8IPswy5sZFTOsBFl/9bNsmDLgsxYTzSZQJDPppDnZPTQbzSEm0hqGjWPzRemQCYbD6A==
   dependencies:
     assertion-error "^2.0.1"
     check-error "^2.1.1"
@@ -6600,9 +6600,9 @@ loose-envify@^1.4.0:
     js-tokens "^3.0.0 || ^4.0.0"
 
 loupe@^3.1.0:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/loupe/-/loupe-3.1.4.tgz#784a0060545cb38778ffb19ccde44d7870d5fdd9"
-  integrity sha512-wJzkKwJrheKtknCOKNEtDK4iqg/MxmZheEMtSTYvnzRdEYaZzmgH976nenp8WdJRdx5Vc1X/9MO0Oszl6ezeXg==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/loupe/-/loupe-3.2.0.tgz#174073ba8e0a1d0d5e43cc08626ed8a19403c344"
+  integrity sha512-2NCfZcT5VGVNX9mSZIxLRkEAegDGBpuQZBy13desuHeVORmBDyAET4TkJr4SjqQy3A8JDofMN6LpkK8Xcm/dlw==
 
 lower-case@^2.0.2:
   version "2.0.2"
@@ -7467,9 +7467,9 @@ pathe@^2.0.2:
   integrity sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==
 
 pathval@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/pathval/-/pathval-2.0.0.tgz#7e2550b422601d4f6b8e26f1301bc8f15a741a25"
-  integrity sha512-vE7JKRyES09KiunauX7nd2Q9/L7lhok4smP9RZTDeD4MVs72Dp2qNFVz39Nz5a0FVEW0BJR6C0DYrq6unoziZA==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/pathval/-/pathval-2.0.1.tgz#8855c5a2899af072d6ac05d11e46045ad0dc605d"
+  integrity sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==
 
 pause@0.0.1:
   version "0.0.1"

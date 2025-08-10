@@ -34,7 +34,7 @@ jobs:
           - 5432:5432
     strategy:
       matrix:
-        node-version: [22.6.x]
+        node-version: [24.5.x]
 
     steps:
       - uses: actions/checkout@v4

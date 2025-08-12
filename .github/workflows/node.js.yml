@@ -37,7 +37,7 @@ jobs:
         node-version: [24.5.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: commit
         uses: prompt/actions-commit-hash@v3
       - name: Use Node.js ${{ matrix.node-version }}

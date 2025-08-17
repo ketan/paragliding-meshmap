@@ -9778,9 +9778,9 @@ supertest@^7.0.0:
     superagent "^10.2.3"
 
 supports-color@^10.0.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-10.1.0.tgz#78416c8bf60b8d34e0ac73046d991374cce1425f"
-  integrity sha512-GBuewsPrhJPftT+fqDa9oI/zc5HNsG9nREqwzoSFDOIqf0NggOZbHQj2TE1P1CDJK8ZogFnlZY9hWoUiur7I/A==
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-10.2.0.tgz#4e2ff2704883c99d95ba659ac5e702f06e12e8ed"
+  integrity sha512-5eG9FQjEjDbAlI5+kdpdyPIBMRH4GfTVDGREVupaZHmVoppknhM29b/S9BkQz7cathp85BVgRi/As3Siln7e0Q==
 
 supports-color@^5.5.0:
   version "5.5.0"

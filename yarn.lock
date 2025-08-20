@@ -15,6 +15,11 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
+"@apm-js-collab/code-transformer@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@apm-js-collab/code-transformer/-/code-transformer-0.6.0.tgz#a5aa9535b3c5c46ca48c59bf13c1be6ba046d559"
+  integrity sha512-iC5vOCBUrfOH9Knpn8TvwvFeDwPtx+HiG90AwAmdJgbWrYALd5S80ZqU/1Y35sYXIemq8O6nvDMcl7htzvuApg==
+
 "@aws-crypto/sha256-browser@5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@aws-crypto/sha256-browser/-/sha256-browser-5.2.0.tgz#153895ef1dba6f9fce38af550e0ef58988eb649e"
@@ -7934,10 +7939,11 @@ neo-async@^2.6.2:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 newrelic@^13.0.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-13.1.0.tgz#2c69403e90cc212fec595ee414e1ea47cdc30b84"
-  integrity sha512-IXyKRY9nFUmUtrglAtMUtbc1i3HjiSrLt1P19FdX1jnAF8qJXTVbP3VAvtj0I4VpEOM0uLVVMhPE+Sp8LYW1iQ==
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-13.2.0.tgz#2b9d4cda12abdfa0389f41208b171d5824d68a64"
+  integrity sha512-hhYGnA97YMnyAvav4h8Tup4u0BIcMQDPnQeMAQvK30f/cTm2jvf77oOVdyJcbi4Cpl5R31btlFm1W9V4JRAbIA==
   dependencies:
+    "@apm-js-collab/code-transformer" "^0.6.0"
     "@grpc/grpc-js" "^1.13.2"
     "@grpc/proto-loader" "^0.7.5"
     "@newrelic/security-agent" "^2.4.2"

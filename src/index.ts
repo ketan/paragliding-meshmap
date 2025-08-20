@@ -2,6 +2,7 @@ import { mqttProcessor } from '#mqtt/main'
 import { webCLIParse } from '#helpers/cli'
 import { AppDataSource } from '#config/data-source'
 import { app } from '#web/app'
+import { autoPartition } from './cron/auto-partition.js'
 
 const cliOptions = webCLIParse()
 
@@ -15,6 +16,10 @@ const port = process.env.PORT || 3333
 app.listen(port)
 
 console.log(`Meshmap server has started on port ${port}. Open http://localhost:${port}/ to see results`)
+
+if (cliOptions.autoPartition) {
+  autoPartition(db)
+}
 
 if (cliOptions.mqtt) {
   await mqttProcessor(db, cliOptions)

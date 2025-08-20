@@ -17,6 +17,7 @@ describe('cli', () => {
       collectServiceEnvelopes: false,
       dedupeDuration: Duration.fromISO('PT30S'),
       filterNodeForwarding: [],
+      autoPartition: true,
     })
   })
 

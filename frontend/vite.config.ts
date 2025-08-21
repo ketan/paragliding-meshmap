@@ -15,6 +15,7 @@ import viteCompression from 'vite-plugin-compression'
 import legacy from '@vitejs/plugin-legacy'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
 import tailwindcss from '@tailwindcss/vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -93,6 +94,14 @@ function defineIconConstants(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: '../node_modules/leaflet/dist/images',
+          dest: 'images',
+        },
+      ],
+    }),
     tailwindcss(),
     legacy({
       targets: ['last 2 versions and not dead, > 0.3%, Firefox ESR'],

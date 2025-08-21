@@ -74,6 +74,8 @@ export function addOpts(command: Command) {
     nodeFilter,
     new Array<number>()
   )
+
+  command.option('--auto-partition', 'Automatically partition the database to improve performance', true)
 }
 
 export function webCLIParse(argv?: readonly string[], parseOptions?: ParseOptions) {
@@ -111,6 +113,7 @@ export interface MQTTCLIOptions {
   collectServiceEnvelopes: boolean
   dedupeDuration: Duration
   filterNodeForwarding: NodeFilter
+  autoPartition: boolean
 }
 
 export interface WebCLIOptions extends MQTTCLIOptions {

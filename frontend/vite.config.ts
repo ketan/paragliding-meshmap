@@ -15,7 +15,6 @@ import viteCompression from 'vite-plugin-compression'
 import legacy from '@vitejs/plugin-legacy'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
 import tailwindcss from '@tailwindcss/vite'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -94,14 +93,6 @@ function defineIconConstants(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    viteStaticCopy({
-      targets: [
-        {
-          src: '../node_modules/leaflet/dist/images',
-          dest: 'images',
-        },
-      ],
-    }),
     tailwindcss(),
     legacy({
       targets: ['last 2 versions and not dead, > 0.3%, Firefox ESR'],
@@ -122,7 +113,7 @@ export default defineConfig({
 
   define: {
     __GIT_SHA__: JSON.stringify(commitHash),
-    __TRACKER_API_BASE_URL__: process.env.NODE_ENV === 'production' ? JSON.stringify('https://tracker.bircom.in') : JSON.stringify(''),
+    __TRACKER_API_BASE_URL__: JSON.stringify(''),
   },
 
   root: __dirname,

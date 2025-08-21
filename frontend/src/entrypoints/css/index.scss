@@ -1,4 +1,5 @@
 @use 'sass:meta';
+@use "tailwindcss";
 /*! leaflet css */
 @import 'leaflet/dist/leaflet.css';
 /*! markercluster */
@@ -8,7 +9,7 @@
 /*! grouped layer control */
 @import 'leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css';
 @import 'leaflet.polylinemeasure/Leaflet.PolylineMeasure.css';
-@import 'tailwindcss';
+
 @plugin "@tailwindcss/forms";
 @import 'react-tooltip/dist/react-tooltip.css';
 @import 'react-toastify/dist/ReactToastify.css';

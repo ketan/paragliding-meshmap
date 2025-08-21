@@ -30,6 +30,8 @@ export default defineConfig({
   cache: true,
   external: [
     'async-mqtt',
+    'morgan-body',
+    'cron',
     'commander',
     'compression',
     'connect-flash',

@@ -56,8 +56,7 @@ export async function autoPartitionTable(tableName: string, db: DataSource) {
 
 export function autoPartition(db: DataSource) {
   CronJob.from({
-    // cronTime: '5 0 * * *', // Every day at 00:05 UTC
-    cronTime: '* * * * *', // Every day at 00:05 UTC
+    cronTime: '5 * * * *', // Every hour on the 5th minute
     runOnInit: true,
     onTick: async () => {
       for (const tableName of PARTITIONED_TABLES) {

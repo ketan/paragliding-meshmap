@@ -4,6 +4,7 @@
   "semanticCommits": "enabled",
   "semanticCommitScope": "deps",
   "semanticCommitType": "chore",
+  "prConcurrentLimit": 20,
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],

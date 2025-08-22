@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm'
 import { CronJob } from 'cron'
 import { createMonthlyPartitions } from '#helpers/create-partition'
-import debug from 'debug'
-const logger = debug('meshmap:auto-partition')
+import { autoPartitionLogger } from '#helpers/logger'
+
 const PARTITIONED_TABLES = [
   'device_metrics',
   'environment_metrics',
@@ -19,7 +19,7 @@ const PARTITIONED_TABLES = [
 export async function autoPartitionTable(tableName: string, db: DataSource) {
   try {
     await db.transaction(async (trx) => {
-      logger(`Auto partitioning ${tableName}`)
+      autoPartitionLogger(`Auto partitioning ${tableName}`)
       const queryRunner = trx.queryRunner
 
       if (!queryRunner) {
@@ -27,7 +27,7 @@ export async function autoPartitionTable(tableName: string, db: DataSource) {
       }
 
       if (!(await queryRunner.hasTable(tableName))) {
-        logger(`Table ${tableName} does not exist, skipping partitioning.`)
+        autoPartitionLogger(`Table ${tableName} does not exist, skipping partitioning.`)
         return false
       }
 
@@ -43,10 +43,10 @@ export async function autoPartitionTable(tableName: string, db: DataSource) {
       const isPartitioned = isPartitionedResponse[0]?.is_partitioned === true || isPartitionedResponse[0]?.is_partitioned === 1
 
       if (isPartitioned) {
-        logger(`Table ${tableName} is partitioned, checking if new partitioned need to be created.`)
+        autoPartitionLogger(`Table ${tableName} is partitioned, checking if new partitioned need to be created.`)
         await createMonthlyPartitions(tableName, queryRunner)
       } else {
-        logger(`Table ${tableName} is not partitioned, skipping.`)
+        autoPartitionLogger(`Table ${tableName} is not partitioned, skipping.`)
       }
     })
   } catch (error) {

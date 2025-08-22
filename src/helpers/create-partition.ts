@@ -1,8 +1,6 @@
 import { QueryRunner } from 'typeorm'
 import { DateTime } from 'luxon'
-import debug from 'debug'
-
-const logger = debug('meshmap:auto-partition')
+import { autoPartitionLogger } from '#helpers/logger'
 
 type ColumnDefinition = {
   column_name: string
@@ -77,7 +75,7 @@ export async function partitionTable(tableName: string, queryRunner: QueryRunner
   // 1. Rename the original table to a temporary name
   await queryRunner.query(`ALTER TABLE ${tableName} RENAME TO ${backupTable};`)
 
-  logger(`Creating partitioned ${tableName}`)
+  autoPartitionLogger(`Creating partitioned ${tableName}`)
   await queryRunner.query(createNewPartitionedTableSQL)
   await createMonthlyPartitions(tableName, queryRunner)
 
@@ -90,7 +88,7 @@ export async function partitionTable(tableName: string, queryRunner: QueryRunner
     await queryRunner.query(`DROP INDEX "${indexname}";`)
     // Replace old table name with new table name in index definition
     // const newIndexDef = indexdef.replace(`${tableName}_old_unpartitioned`, tableName)
-    logger(`Recreating index on ${tableName}:`)
+    autoPartitionLogger(`Recreating index on ${tableName}:`)
     await queryRunner.query(indexdef)
   }
 

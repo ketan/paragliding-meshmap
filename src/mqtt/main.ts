@@ -1,8 +1,7 @@
-import { errLog, perfLog } from '#helpers/logger'
+import { errLog, mqttLogger, perfLog } from '#helpers/logger'
 import { processMessage } from '#mqtt/decoder'
 import { purgeData } from '#mqtt/mqtt-orm'
 import mqtt from 'async-mqtt'
-import debug from 'debug'
 import pRetry from 'p-retry'
 import { MQTTCLIOptions } from '#helpers/cli'
 import PQueue from 'p-queue'
@@ -46,10 +45,9 @@ async function telegramJobProcessor() {
 }
 
 export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) {
-  const logger = debug('meshmap:mqtt')
-  logger.enabled = true
+  mqttLogger.enabled = true
 
-  logger(`Starting mqtt with options`, cliOptions)
+  mqttLogger(`Starting mqtt with options`, cliOptions)
 
   const clientIdConfig = await Configs.mqttClientId(db)
 
@@ -67,9 +65,9 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
   })
 
   client.on('connect', async () => {
-    logger(`Connected to ${cliOptions.mqttBrokerUrl} using client id ${clientId}`)
+    mqttLogger(`Connected to ${cliOptions.mqttBrokerUrl} using client id ${clientId}`)
     client.subscribe(cliOptions.mqttTopics)
-    logger(`Subscribed to `, cliOptions.mqttTopics)
+    mqttLogger(`Subscribed to `, cliOptions.mqttTopics)
   })
 
   const queue = new PQueue({
@@ -105,16 +103,16 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   if (cliOptions.dumpStatsEvery) {
     setInterval(async () => {
-      await dumpStats(db, logger)
+      await dumpStats(db, mqttLogger)
     }, cliOptions.dumpStatsEvery.as('millisecond'))
-    await dumpStats(db, logger)
+    await dumpStats(db, mqttLogger)
   }
 
   if (cliOptions.purgeEvery) {
-    logger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
+    mqttLogger(`Purging data older than ${cliOptions.purgeDataOlderThan.toHuman()} every ${cliOptions.purgeEvery.toHuman()}`)
     setInterval(async () => {
-      await purgeData(db, cliOptions, logger)
+      await purgeData(db, cliOptions, mqttLogger)
     }, cliOptions.purgeEvery.as('millisecond'))
   }
-  await purgeData(db, cliOptions, logger)
+  await purgeData(db, cliOptions, mqttLogger)
 }

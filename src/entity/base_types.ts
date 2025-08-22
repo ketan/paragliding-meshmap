@@ -1,4 +1,3 @@
-import debug from 'debug'
 import { DateTime, Duration } from 'luxon'
 import {
   Column,
@@ -19,9 +18,6 @@ import fs from 'fs'
 
 @Entity()
 export abstract class BaseTypeWithoutPrimaryKey {
-  static logger = debug('meshmap:model')
-  static decodeLogger = debug('meshmap:decode')
-
   @UpdateDateColumn({ ...dateTimeType() })
   @Index()
   updatedAt: Date

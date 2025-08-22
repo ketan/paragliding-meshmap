@@ -1,7 +1,6 @@
 import MagicLoginStrategy from 'passport-magic-login'
 import { mandatoryEnv } from '#helpers/utils'
 import { User } from '#entity/user'
-import nodemailer from 'nodemailer'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { AppDataSource } from '#config/data-source'
 import passport from 'passport'
@@ -10,20 +9,9 @@ import { DoubleCsrfUtilities } from 'csrf-csrf'
 import { Express } from 'express'
 import { GoogleOneTapStrategy } from 'passport-google-one-tap'
 import _ from 'lodash'
+import { mailTransport } from './mailer.js'
 
 const db = AppDataSource
-
-const transport = {
-  host: mandatoryEnv('SMTP_HOST'),
-  port: Number(mandatoryEnv('SMTP_PORT')),
-  secure: mandatoryEnv('SMTP_SSL') === 'true',
-  logger: true,
-  auth: {
-    user: mandatoryEnv('SMTP_USER'),
-    pass: mandatoryEnv('SMTP_PASSWORD'),
-  },
-}
-const transporter = nodemailer.createTransport(transport)
 
 let _magicLoginStrategy: MagicLoginStrategy.default
 
@@ -43,7 +31,7 @@ export function magicLoginStrategy() {
           subject: 'Your Magic Link',
           text: `Click on the following link to log in: ${mandatoryEnv('SITE_BASE_URL')}${href}. This link will expire in ${linkExpiry.rescale().toHuman()}.`,
         }
-        await transporter.sendMail(mailOptions)
+        await mailTransport.sendMail(mailOptions)
       },
       verify: async (payload, done) => {
         try {

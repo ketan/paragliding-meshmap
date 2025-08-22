@@ -90,27 +90,13 @@ export async function submitFormData<T extends object>(data: T, fetchUrl: string
   })
 }
 
-// export function createOnSubmitDeprecated(fetchUrl: string, method: string) {
-//   return async function onSubmit<T extends object>(data: T) {
-//     const formData = formDataFor(data)
-//
-//     try {
-//       const response = await fetch(fetchUrl, {
-//         method: method,
-//         body: formData,
-//         headers: {
-//           Accept: 'application/json',
-//         },
-//       })
-//
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok')
-//       }
-//
-//       const result = await response.json()
-//       console.log('Success:', result)
-//     } catch (error) {
-//       console.error('Error:', error)
-//     }
-//   }
-// }
+export async function submitJSONForm<T extends object>(data: T, fetchUrl: string, method: string): Promise<Response> {
+  return await fetch(fetchUrl, {
+    method: method,
+    body: JSON.stringify(data),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+}

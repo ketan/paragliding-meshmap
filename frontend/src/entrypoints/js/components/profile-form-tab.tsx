@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { profileFormDataYUPSchema, ProfileFormValidation } from './profile-modal-interfaces.ts'
 import { useForm } from 'react-hook-form'
-import { createOnSubmit, useFetchDataIntoForm } from '../utils/form-helpers.tsx'
+import { createOnSubmit, submitJSONForm, useFetchDataIntoForm } from '../utils/form-helpers.tsx'
 import { fetchUserProfile } from '../utils/profile.ts'
 import { PersonalDetailsForm } from './personal-details-form.tsx'
 import { PrimaryParaglidingEquipmentForm } from './primary-paragliding-equipment.tsx'
@@ -12,17 +12,6 @@ import { MedicalInformationForm } from './medical-information-form.tsx'
 import { ActionBar } from './action-bar.tsx'
 import { SubmitButton, SubmitButtonIcon } from './submit-button.tsx'
 import { useState } from 'react'
-
-async function submitData<T>(data: T): Promise<Response> {
-  return await fetch('/api/profile', {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-}
 
 export function ProfileFormTab() {
   const [submissionStatus, setSubmissionStatus] = useState<SubmitButtonIcon>()
@@ -41,7 +30,7 @@ export function ProfileFormTab() {
     <form
       onSubmit={form.handleSubmit(
         createOnSubmit({
-          submitHandler: submitData,
+          submitHandler: (data) => submitJSONForm(data, '/api/profile', 'PUT'),
           submissionStatus: setSubmissionStatus,
         }),
         (e) => console.log(e)

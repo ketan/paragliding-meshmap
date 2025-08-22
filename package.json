@@ -84,7 +84,7 @@
     "@vitejs/plugin-react-swc": "^4.0.0",
     "autoprefixer": "^10.4.19",
     "c8": "^10.1.2",
-    "chai": "^5.1.1",
+    "chai": "^6.0.0",
     "chai-as-promised": "^8.0.0",
     "chai-deep-equal-ignore-undefined": "^1.1.1",
     "chai-exclude": "^3.0.0",

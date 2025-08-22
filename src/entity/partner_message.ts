@@ -19,7 +19,7 @@ export class PartnerMessage extends BaseType {
 
   @BeforeInsert()
   async sendEmail() {
-    const payload = { from: mandatoryEnv('SMTP_SENDER_FROM'), to: this.email, subject: this.subject, text: this.composeEmail() }
+    const payload = { from: mandatoryEnv('SMTP_SENDER_FROM'), to: this.email, subject: '[BIRCOM] Partner request email', text: this.composeEmail() }
     await sendEmail(payload)
   }
 

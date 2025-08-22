@@ -12,7 +12,6 @@ import { fileURLToPath } from 'url'
 import { defineConfig, Plugin, transformWithEsbuild } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import viteCompression from 'vite-plugin-compression'
-import legacy from '@vitejs/plugin-legacy'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -94,10 +93,6 @@ function defineIconConstants(): Plugin {
 export default defineConfig({
   plugins: [
     tailwindcss(),
-    legacy({
-      targets: ['last 2 versions and not dead, > 0.3%, Firefox ESR'],
-      modernPolyfills: true,
-    }),
     defineIconConstants(),
     runtimeEnvScript({
       variables: ['GOOGLE_CLIENT_ID'],

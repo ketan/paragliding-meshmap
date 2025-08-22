@@ -51,8 +51,6 @@ export async function mqttProcessor(db: DataSource, cliOptions: MQTTCLIOptions) 
 
   const clientIdConfig = await Configs.mqttClientId(db)
 
-  await pgBoss.start()
-
   await telegramJobProcessor()
   await flyXCJobProcessor()
   await pureTrackIOJobProcessor()

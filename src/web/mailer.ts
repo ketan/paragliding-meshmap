@@ -1,5 +1,5 @@
-import { mandatoryEnv } from "#helpers/utils"
-import nodemailer from 'nodemailer';
+import { mandatoryEnv } from '#helpers/utils'
+import nodemailer from 'nodemailer'
 
 const transport = {
   host: mandatoryEnv('SMTP_HOST'),

@@ -8,6 +8,8 @@ import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FormField } from './form-field.tsx'
+import { SubmitButton } from './submit-button.tsx'
+import { ActionBar } from './action-bar.tsx'
 
 function download(blob: Blob, shortName: string) {
   const url = window.URL.createObjectURL(blob)
@@ -132,9 +134,9 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
             helpText="Enter a name 5-12 characters long."
           />
 
-          <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded">
-            Generate my config
-          </button>
+          <ActionBar>
+            <SubmitButton>Generate my config</SubmitButton>
+          </ActionBar>
         </form>
       </div>
     </Modal>

@@ -29,7 +29,7 @@ function colorFor(icon?: SubmitButtonIcon) {
   }
 }
 
-export function SubmitButton({ children, icon }: { children: ReactNode; icon: SubmitButtonIcon }) {
+export function SubmitButton({ children, icon }: { children: ReactNode; icon?: SubmitButtonIcon }) {
   return (
     <button type="submit" className={`${colorFor(icon)} text-white py-2 px-4 rounded-md inline-flex items-center relative`}>
       {iconFor(icon)}

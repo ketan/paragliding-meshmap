@@ -26,6 +26,7 @@ export interface LatLngZoom {
 export interface QueryParams extends LatLngZoom {
   nodeId?: number
   showConfigurationPopup: boolean
+  showPartnerPopup: boolean
   msg?: MessageParams
 }
 
@@ -120,6 +121,7 @@ export function getQueryParams(): QueryParams {
   const zoom = sanitizeNumber(queryParams.get('zoom'))
   const nodeId = sanitizeNumber(queryParams.get('nodeId'))
   const showConfigurationPopup = queryParams.has('configure')
+  const showPartnerPopup = queryParams.has('partner')
 
   const msgFrom = queryParams.get('from')
   const msgTo = queryParams.get('to')
@@ -127,6 +129,7 @@ export function getQueryParams(): QueryParams {
 
   const retval: QueryParams = {
     showConfigurationPopup,
+    showPartnerPopup,
   }
 
   if (coords) {
@@ -187,6 +190,7 @@ interface MapParams {
   lng?: number | false
   nodeId?: number | false
   zoom?: number | false
+  partner?: boolean
 }
 
 export interface MessageParams {
@@ -219,9 +223,19 @@ export function setMapUrlParams(opts: MapParams) {
   if (opts.configure) {
     url.searchParams.set('configure', '')
   }
+
   if (opts.configure === false) {
     url.searchParams.delete('configure')
   }
+
+  if (opts.partner) {
+    url.searchParams.set('partner', '')
+  }
+
+  if (opts.partner === false) {
+    url.searchParams.delete('partner')
+  }
+
   setUrl(url)
 }
 

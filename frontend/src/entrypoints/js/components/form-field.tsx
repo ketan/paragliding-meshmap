@@ -37,19 +37,34 @@ export function FormField<FV extends FieldValues>({ id, label, type = 'text', re
 
   return (
     <div className={groupClassNames}>
-      <input
-        type={type || 'text'}
-        id={String(id)}
-        {...register(id)}
-        autoCapitalize="off"
-        autoComplete="off"
-        disabled={disabled}
-        readOnly={disabled}
-        placeholder={' '}
-        aria-invalid={errors[id] ? 'true' : 'false'}
-        className={inputClassNames + (disabled ? ' opacity-50 bg-gray-200!' : ' ')}
-        {...extraOpts}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          id={id}
+          {...register(id)}
+          autoCapitalize="off"
+          autoComplete="off"
+          disabled={disabled}
+          readOnly={disabled}
+          placeholder={' '}
+          aria-invalid={errors[id] ? 'true' : 'false'}
+          className={inputClassNames + (disabled ? ' opacity-50 bg-gray-200!' : ' ')}
+          rows={4}
+        />
+      ) : (
+        <input
+          type={type || 'text'}
+          id={id}
+          {...register(id)}
+          autoCapitalize="off"
+          autoComplete="off"
+          disabled={disabled}
+          readOnly={disabled}
+          placeholder={' '}
+          aria-invalid={errors[id] ? 'true' : 'false'}
+          className={inputClassNames + (disabled ? ' opacity-50 bg-gray-200!' : ' ')}
+          {...extraOpts}
+        />
+      )}
       <label htmlFor={String(id)} className={labelClassNames + (disabled ? ' text-black! ' : ' ')}>
         {label}
       </label>

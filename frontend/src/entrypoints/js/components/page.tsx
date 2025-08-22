@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import icon from '../../../assets/images/icon.png'
-import { CircleInfoIcon, GearsIcon } from '../utils/icon-constants'
+import { CircleInfoIcon, GearsIcon, HandshakeIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
 import { toast, ToastContainer } from 'react-toastify'
 import { ConfigModal } from './config-modal.tsx'
@@ -14,6 +14,7 @@ import { HeaderIcon } from './header-icon.tsx'
 import { fetchCsrfToken } from '../utils/csrf.ts'
 import { ProfileModal } from './profile-modal.tsx'
 import { profileFormDataYUPSchema } from './profile-modal-interfaces.ts'
+import { PartnerModal } from './partner-modal.tsx'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -27,6 +28,10 @@ interface PageProps extends React.PropsWithChildren {
     onClick: () => void
   }
   profileModal: {
+    show: boolean
+    onClick: () => void
+  }
+  partnerModal: {
     show: boolean
     onClick: () => void
   }
@@ -138,6 +143,12 @@ export function Page(props: PageProps) {
             <HeaderActionButtons>
               <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
               <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom-end" onClick={() => props.aboutModal.onClick()} />
+              <HeaderIcon
+                icon={HandshakeIcon}
+                tooltip="Partner with us"
+                tooltipDir="bottom-end"
+                onClick={() => props.partnerModal.onClick()}
+              />
               {profileLoadedState === 'loaded' && userProfile && (
                 <ProfileIcon userProfile={userProfile} onProfileClick={() => props.profileModal.onClick()} />
               )}
@@ -164,6 +175,7 @@ export function Page(props: PageProps) {
       <ConfigModal onClose={() => props.configModal.onClick()} isOpen={props.configModal.show} />
       <AboutModal onClose={() => props.aboutModal.onClick()} isOpen={props.aboutModal.show} />
       <ProfileModal onClose={() => props.profileModal.onClick()} isOpen={props.profileModal.show} />
+      <PartnerModal onClose={() => props.partnerModal.onClick()} isOpen={props.partnerModal.show} />
       <ToastContainer hideProgressBar theme="dark" />
     </>
   )

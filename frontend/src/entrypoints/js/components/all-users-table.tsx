@@ -11,6 +11,7 @@ export function ProfileFormDataTable() {
   const [aboutModalVisible, setAboutModalVisible] = useState(false)
   const [profileModalVisible, setProfileModalVisible] = useState(false)
   const [configModalVisible, setConfigModalVisible] = useState(false)
+  const [partnerModalVisible, setPartnerModelVisible] = useState(false)
 
   useEffect(() => {
     async function fetchUsers() {
@@ -52,6 +53,7 @@ export function ProfileFormDataTable() {
           setConfigModalVisible(!configModalVisible)
         },
       }}
+      partnerModal={{ show: partnerModalVisible, onClick: () => setPartnerModelVisible(!partnerModalVisible) }}
     >
       <div className="flex flex-col bg-white">
         <div className="m-1.5 overflow-x-auto">

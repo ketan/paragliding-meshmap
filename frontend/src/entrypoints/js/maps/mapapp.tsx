@@ -78,6 +78,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
   aboutModalVisible: boolean
   configModalVisible: boolean
   profileModalVisible: boolean
+  partnerModalVisible: boolean
   heatmapData?: HeatLatLngTuple[]
 }
 
@@ -95,8 +96,10 @@ export default class MapApp extends Component<MapProps, MapState> {
     messageTo: BROADCAST_ADDR,
     messageSince: this.defaultMessageSince,
     showConfigurationPopup: false,
+    showPartnerPopup: false,
     aboutModalVisible: false,
     configModalVisible: false,
+    partnerModalVisible: false,
     profileModalVisible: false,
   }
 
@@ -137,10 +140,13 @@ export default class MapApp extends Component<MapProps, MapState> {
   )
 
   async componentDidMount() {
-    const { coords, zoom, nodeId, showConfigurationPopup } = getQueryParams()
+    const { coords, zoom, nodeId, showConfigurationPopup, showPartnerPopup } = getQueryParams()
 
     if (showConfigurationPopup) {
       this.setState({ configModalVisible: true })
+    }
+    if (showPartnerPopup) {
+      this.setState({ partnerModalVisible: true })
     }
 
     if (coords) {
@@ -260,6 +266,14 @@ export default class MapApp extends Component<MapProps, MapState> {
             this.setState({ configModalVisible: !this.state.configModalVisible }, () => {
               setMapUrlParams({ configure: this.state.configModalVisible })
             })
+          },
+        }}
+        partnerModal={{
+          show: this.state.partnerModalVisible,
+          onClick: () => {
+            this.setState({ partnerModalVisible: !this.state.partnerModalVisible }, () =>
+              setMapUrlParams({ partner: this.state.partnerModalVisible })
+            )
           },
         }}
       >

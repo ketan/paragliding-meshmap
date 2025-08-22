@@ -1,8 +1,9 @@
 import { mqttProcessor } from '#mqtt/main'
 import { webCLIParse } from '#helpers/cli'
-import { AppDataSource } from '#config/data-source'
+import { AppDataSource, pgBoss } from '#config/data-source'
 import { app } from '#web/app'
 import { autoPartition } from './cron/auto-partition.js'
+import { emailJobProcessor } from '#helpers/email-job'
 
 const cliOptions = webCLIParse()
 
@@ -20,6 +21,9 @@ console.log(`Meshmap server has started on port ${port}. Open http://localhost:$
 if (cliOptions.autoPartition) {
   autoPartition(db)
 }
+
+await pgBoss.start()
+await emailJobProcessor()
 
 if (cliOptions.mqtt) {
   await mqttProcessor(db, cliOptions)

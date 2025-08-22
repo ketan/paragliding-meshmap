@@ -9,6 +9,7 @@ export { default as SpinnerIcon } from '../../../../src/assets/images/icons/spin
 export { default as PhoneIcon } from '../../../../src/assets/images/icons/phone.svg?component'
 export { default as PassportIcon } from '../../../../src/assets/images/icons/passport.svg?component'
 export { default as MagnifyingGlassIcon } from '../../../../src/assets/images/icons/magnifying-glass.svg?component'
+export { default as HandshakeIcon } from '../../../../src/assets/images/icons/handshake.svg?component'
 export { default as GithubIcon } from '../../../../src/assets/images/icons/github.svg?component'
 export { default as GearsIcon } from '../../../../src/assets/images/icons/gears.svg?component'
 export { default as FilterIcon } from '../../../../src/assets/images/icons/filter.svg?component'

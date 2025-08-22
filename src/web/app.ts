@@ -26,6 +26,7 @@ import { deviceConfigRouter } from '#web/routes/device-config'
 import { statsRouter } from '#web/routes/stats'
 import { positionsRouter } from '#web/routes/positions'
 import { locationsRouter } from '#web/routes/locations'
+import { partnerMessagesRouter } from '#web/routes/partner-messages'
 import morganBody from 'morgan-body'
 
 const db = AppDataSource
@@ -135,6 +136,7 @@ app.use('/api', certificationDocumentsRouter)
 app.use('/api', deviceConfigRouter)
 app.use('/api', positionsRouter)
 app.use('/api', locationsRouter)
+app.use('/api/partner-messages', partnerMessagesRouter)
 
 if (isProduction) {
   app.use(

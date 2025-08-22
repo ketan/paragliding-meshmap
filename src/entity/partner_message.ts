@@ -2,6 +2,7 @@ import { BeforeInsert, Column, Entity } from 'typeorm'
 import { BaseType } from '#entity/base_types'
 import { sendEmail } from '#helpers/email-job'
 import { mandatoryEnv } from '#helpers/utils'
+import _ from 'lodash'
 
 @Entity()
 export class PartnerMessage extends BaseType {
@@ -17,10 +18,24 @@ export class PartnerMessage extends BaseType {
   @Column({ type: 'text', nullable: false })
   message: string
 
+  constructor(opts: Partial<PartnerMessage> = {}) {
+    super()
+    _.assign(this, opts)
+  }
+
+
   @BeforeInsert()
-  async sendEmail() {
-    const payload = { from: mandatoryEnv('SMTP_SENDER_FROM'), to: this.email, subject: '[BIRCOM] Partner request email', text: this.composeEmail() }
-    await sendEmail(payload)
+  async sendNotification() {
+    await sendEmail(this.emailParams())
+  }
+
+  emailParams() {
+    return {
+      from: mandatoryEnv('SMTP_SENDER_FROM'),
+      to: mandatoryEnv('SMTP_SENDER_FROM'),
+      subject: '[BIRCOM] Partner request email',
+      text: this.composeEmail(),
+    }
   }
 
   composeEmail() {

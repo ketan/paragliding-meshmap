@@ -1,12 +1,6 @@
 import { pgBoss } from '#config/data-source'
 import { mailTransport } from '#web/mailer'
-
-type Email = {
-  from: string
-  to: string
-  subject: string
-  text: string
-}
+import Mail from 'nodemailer/lib/mailer/index.js'
 
 export async function emailJobProcessor() {
   await pgBoss.createQueue('email', {
@@ -16,7 +10,7 @@ export async function emailJobProcessor() {
     name: 'email',
   })
 
-  pgBoss.work<Email>(
+  pgBoss.work<Mail.Options>(
     'email',
     {
       batchSize: 10,
@@ -32,6 +26,6 @@ export async function emailJobProcessor() {
   )
 }
 
-export async function sendEmail(email: Email) {
+export async function sendEmail(email: Mail.Options) {
   await pgBoss.send('email', email)
 }

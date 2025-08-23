@@ -1,0 +1,22 @@
+{
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "frontend/src/**/*.{ts,tsx,js,jsx}"
+  ],
+  "test": [
+    "test/**/*.{ts,tsx,js,jsx}"
+  ],
+  "plugins": [
+    "typescript",
+    "vite",
+    "mocha"
+  ],
+  "ignore": [
+    "build/**",
+    "frontend/dist/**",
+    "node_modules/**",
+    "coverage/**",
+    "tmp/**"
+  ]
+}
+

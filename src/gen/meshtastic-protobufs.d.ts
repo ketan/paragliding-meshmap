@@ -104,6 +104,12 @@ export namespace meshtastic {
 
     /** Number of online nodes (heard in the last 2 hours) this node has in its list that were received locally (not via MQTT) */
     numOnlineLocalNodes?: number | null
+
+    /**
+     * User has opted in to share their location (map report) with the mqtt server
+     * Controlled by map_report.should_report_location
+     */
+    hasOptedReportLocation?: boolean | null
   }
 
   /** Information about a node intended to be reported unencrypted to a map using MQTT. */
@@ -160,6 +166,12 @@ export namespace meshtastic {
     public numOnlineLocalNodes: number
 
     /**
+     * User has opted in to share their location (map report) with the mqtt server
+     * Controlled by map_report.should_report_location
+     */
+    public hasOptedReportLocation: boolean
+
+    /**
      * Encodes the specified MapReport message. Does not implicitly {@link meshtastic.MapReport.verify|verify} messages.
      * @param message MapReport message or plain object to encode
      * @param [writer] Writer to encode to
@@ -206,6 +218,9 @@ export namespace meshtastic {
 
     /** Config sessionkey */
     sessionkey?: meshtastic.Config.ISessionkeyConfig | null
+
+    /** Config deviceUi */
+    deviceUi?: meshtastic.IDeviceUIConfig | null
   }
 
   /** Represents a Config. */
@@ -243,8 +258,21 @@ export namespace meshtastic {
     /** Config sessionkey. */
     public sessionkey?: meshtastic.Config.ISessionkeyConfig | null
 
+    /** Config deviceUi. */
+    public deviceUi?: meshtastic.IDeviceUIConfig | null
+
     /** Payload Variant */
-    public payloadVariant?: 'device' | 'position' | 'power' | 'network' | 'display' | 'lora' | 'bluetooth' | 'security' | 'sessionkey'
+    public payloadVariant?:
+      | 'device'
+      | 'position'
+      | 'power'
+      | 'network'
+      | 'display'
+      | 'lora'
+      | 'bluetooth'
+      | 'security'
+      | 'sessionkey'
+      | 'deviceUi'
 
     /**
      * Encodes the specified Config message. Does not implicitly {@link meshtastic.Config.verify|verify} messages.
@@ -316,6 +344,12 @@ export namespace meshtastic {
 
       /** If true, disable the default blinking LED (LED_PIN) behavior on the device */
       ledHeartbeatDisabled?: boolean | null
+
+      /**
+       * Controls buzzer behavior for audio feedback
+       * Defaults to ENABLED
+       */
+      buzzerMode?: meshtastic.Config.DeviceConfig.BuzzerMode | null
     }
 
     /** Configuration */
@@ -376,6 +410,12 @@ export namespace meshtastic {
       public ledHeartbeatDisabled: boolean
 
       /**
+       * Controls buzzer behavior for audio feedback
+       * Defaults to ENABLED
+       */
+      public buzzerMode: meshtastic.Config.DeviceConfig.BuzzerMode
+
+      /**
        * Encodes the specified DeviceConfig message. Does not implicitly {@link meshtastic.Config.DeviceConfig.verify|verify} messages.
        * @param message DeviceConfig message or plain object to encode
        * @param [writer] Writer to encode to
@@ -408,6 +448,7 @@ export namespace meshtastic {
         CLIENT_HIDDEN = 8,
         LOST_AND_FOUND = 9,
         TAK_TRACKER = 10,
+        ROUTER_LATE = 11,
       }
 
       /** Defines the device's behavior for how messages are rebroadcast */
@@ -416,6 +457,17 @@ export namespace meshtastic {
         ALL_SKIP_DECODING = 1,
         LOCAL_ONLY = 2,
         KNOWN_ONLY = 3,
+        NONE = 4,
+        CORE_PORTNUMS_ONLY = 5,
+      }
+
+      /** Defines buzzer behavior for audio feedback */
+      enum BuzzerMode {
+        ALL_ENABLED = 0,
+        DISABLED = 1,
+        NOTIFICATIONS_ONLY = 2,
+        SYSTEM_ONLY = 3,
+        DIRECT_MSG_ONLY = 4,
       }
     }
 
@@ -739,7 +791,7 @@ export namespace meshtastic {
       /** If set, will be use to authenticate to the named wifi */
       wifiPsk?: string | null
 
-      /** NTP server to use if WiFi is conneced, defaults to `0.pool.ntp.org` */
+      /** NTP server to use if WiFi is conneced, defaults to `meshtastic.pool.ntp.org` */
       ntpServer?: string | null
 
       /** Enable Ethernet */
@@ -753,6 +805,12 @@ export namespace meshtastic {
 
       /** rsyslog Server and Port */
       rsyslogServer?: string | null
+
+      /** Flags for enabling/disabling network protocols */
+      enabledProtocols?: number | null
+
+      /** Enable/Disable ipv6 support */
+      ipv6Enabled?: boolean | null
     }
 
     /** Network Config */
@@ -775,7 +833,7 @@ export namespace meshtastic {
       /** If set, will be use to authenticate to the named wifi */
       public wifiPsk: string
 
-      /** NTP server to use if WiFi is conneced, defaults to `0.pool.ntp.org` */
+      /** NTP server to use if WiFi is conneced, defaults to `meshtastic.pool.ntp.org` */
       public ntpServer: string
 
       /** Enable Ethernet */
@@ -789,6 +847,12 @@ export namespace meshtastic {
 
       /** rsyslog Server and Port */
       public rsyslogServer: string
+
+      /** Flags for enabling/disabling network protocols */
+      public enabledProtocols: number
+
+      /** Enable/Disable ipv6 support */
+      public ipv6Enabled: boolean
 
       /**
        * Encodes the specified NetworkConfig message. Does not implicitly {@link meshtastic.Config.NetworkConfig.verify|verify} messages.
@@ -869,6 +933,12 @@ export namespace meshtastic {
          */
         public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.Config.NetworkConfig.IpV4Config
       }
+
+      /** Available flags auxiliary network protocols */
+      enum ProtocolFlags {
+        NO_BROADCAST = 0,
+        UDP_BROADCAST = 1,
+      }
     }
 
     /** Properties of a DisplayConfig. */
@@ -879,7 +949,10 @@ export namespace meshtastic {
        */
       screenOnSecs?: number | null
 
-      /** How the GPS coordinates are formatted on the OLED screen. */
+      /**
+       * Deprecated in 2.7.4: Unused
+       * How the GPS coordinates are formatted on the OLED screen.
+       */
       gpsFormat?: meshtastic.Config.DisplayConfig.GpsCoordinateFormat | null
 
       /**
@@ -914,6 +987,12 @@ export namespace meshtastic {
 
       /** Indicates how to rotate or invert the compass output to accurate display on the display. */
       compassOrientation?: meshtastic.Config.DisplayConfig.CompassOrientation | null
+
+      /**
+       * If false (default), the device will display the time in 24-hour format on screen.
+       * If true, the device will display the time in 12-hour format on screen.
+       */
+      use_12hClock?: boolean | null
     }
 
     /** Display Config */
@@ -930,7 +1009,10 @@ export namespace meshtastic {
        */
       public screenOnSecs: number
 
-      /** How the GPS coordinates are formatted on the OLED screen. */
+      /**
+       * Deprecated in 2.7.4: Unused
+       * How the GPS coordinates are formatted on the OLED screen.
+       */
       public gpsFormat: meshtastic.Config.DisplayConfig.GpsCoordinateFormat
 
       /**
@@ -965,6 +1047,12 @@ export namespace meshtastic {
 
       /** Indicates how to rotate or invert the compass output to accurate display on the display. */
       public compassOrientation: meshtastic.Config.DisplayConfig.CompassOrientation
+
+      /**
+       * If false (default), the device will display the time in 24-hour format on screen.
+       * If true, the device will display the time in 12-hour format on screen.
+       */
+      public use_12hClock: boolean
 
       /**
        * Encodes the specified DisplayConfig message. Does not implicitly {@link meshtastic.Config.DisplayConfig.verify|verify} messages.
@@ -1008,6 +1096,7 @@ export namespace meshtastic {
         OLED_SSD1306 = 1,
         OLED_SH1106 = 2,
         OLED_SH1107 = 3,
+        OLED_SH1107_128_128 = 4,
       }
 
       /** DisplayMode enum. */
@@ -1305,6 +1394,14 @@ export namespace meshtastic {
         MY_433 = 16,
         MY_919 = 17,
         SG_923 = 18,
+        PH_433 = 19,
+        PH_868 = 20,
+        PH_915 = 21,
+        ANZ_433 = 22,
+        KZ_433 = 23,
+        KZ_863 = 24,
+        NP_865 = 25,
+        BR_902 = 26,
       }
 
       /**
@@ -1508,6 +1605,422 @@ export namespace meshtastic {
     }
   }
 
+  /** Properties of a DeviceUIConfig. */
+  interface IDeviceUIConfig {
+    /** A version integer used to invalidate saved files when we make incompatible changes. */
+    version?: number | null
+
+    /** TFT display brightness 1..255 */
+    screenBrightness?: number | null
+
+    /** Screen timeout 0..900 */
+    screenTimeout?: number | null
+
+    /** Screen/Settings lock enabled */
+    screenLock?: boolean | null
+
+    /** DeviceUIConfig settingsLock */
+    settingsLock?: boolean | null
+
+    /** DeviceUIConfig pinCode */
+    pinCode?: number | null
+
+    /** Color theme */
+    theme?: meshtastic.Theme | null
+
+    /** Audible message, banner and ring tone */
+    alertEnabled?: boolean | null
+
+    /** DeviceUIConfig bannerEnabled */
+    bannerEnabled?: boolean | null
+
+    /** DeviceUIConfig ringToneId */
+    ringToneId?: number | null
+
+    /** Localization */
+    language?: meshtastic.Language | null
+
+    /** Node list filter */
+    nodeFilter?: meshtastic.INodeFilter | null
+
+    /** Node list highlightening */
+    nodeHighlight?: meshtastic.INodeHighlight | null
+
+    /** 8 integers for screen calibration data */
+    calibrationData?: Uint8Array | null
+
+    /** Map related data */
+    mapData?: meshtastic.IMap | null
+
+    /** Compass mode */
+    compassMode?: meshtastic.CompassMode | null
+
+    /**
+     * RGB color for BaseUI
+     * 0xRRGGBB format, e.g. 0xFF0000 for red
+     */
+    screenRgbColor?: number | null
+
+    /**
+     * Clockface analog style
+     * true for analog clockface, false for digital clockface
+     */
+    isClockfaceAnalog?: boolean | null
+  }
+
+  /** Represents a DeviceUIConfig. */
+  class DeviceUIConfig implements IDeviceUIConfig {
+    /**
+     * Constructs a new DeviceUIConfig.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IDeviceUIConfig)
+
+    /** A version integer used to invalidate saved files when we make incompatible changes. */
+    public version: number
+
+    /** TFT display brightness 1..255 */
+    public screenBrightness: number
+
+    /** Screen timeout 0..900 */
+    public screenTimeout: number
+
+    /** Screen/Settings lock enabled */
+    public screenLock: boolean
+
+    /** DeviceUIConfig settingsLock. */
+    public settingsLock: boolean
+
+    /** DeviceUIConfig pinCode. */
+    public pinCode: number
+
+    /** Color theme */
+    public theme: meshtastic.Theme
+
+    /** Audible message, banner and ring tone */
+    public alertEnabled: boolean
+
+    /** DeviceUIConfig bannerEnabled. */
+    public bannerEnabled: boolean
+
+    /** DeviceUIConfig ringToneId. */
+    public ringToneId: number
+
+    /** Localization */
+    public language: meshtastic.Language
+
+    /** Node list filter */
+    public nodeFilter?: meshtastic.INodeFilter | null
+
+    /** Node list highlightening */
+    public nodeHighlight?: meshtastic.INodeHighlight | null
+
+    /** 8 integers for screen calibration data */
+    public calibrationData: Uint8Array
+
+    /** Map related data */
+    public mapData?: meshtastic.IMap | null
+
+    /** Compass mode */
+    public compassMode: meshtastic.CompassMode
+
+    /**
+     * RGB color for BaseUI
+     * 0xRRGGBB format, e.g. 0xFF0000 for red
+     */
+    public screenRgbColor: number
+
+    /**
+     * Clockface analog style
+     * true for analog clockface, false for digital clockface
+     */
+    public isClockfaceAnalog: boolean
+
+    /**
+     * Encodes the specified DeviceUIConfig message. Does not implicitly {@link meshtastic.DeviceUIConfig.verify|verify} messages.
+     * @param message DeviceUIConfig message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IDeviceUIConfig, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a DeviceUIConfig message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns DeviceUIConfig
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.DeviceUIConfig
+  }
+
+  /** Properties of a NodeFilter. */
+  interface INodeFilter {
+    /** Filter unknown nodes */
+    unknownSwitch?: boolean | null
+
+    /** Filter offline nodes */
+    offlineSwitch?: boolean | null
+
+    /** Filter nodes w/o public key */
+    publicKeySwitch?: boolean | null
+
+    /** Filter based on hops away */
+    hopsAway?: number | null
+
+    /** Filter nodes w/o position */
+    positionSwitch?: boolean | null
+
+    /** Filter nodes by matching name string */
+    nodeName?: string | null
+
+    /** Filter based on channel */
+    channel?: number | null
+  }
+
+  /** Represents a NodeFilter. */
+  class NodeFilter implements INodeFilter {
+    /**
+     * Constructs a new NodeFilter.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.INodeFilter)
+
+    /** Filter unknown nodes */
+    public unknownSwitch: boolean
+
+    /** Filter offline nodes */
+    public offlineSwitch: boolean
+
+    /** Filter nodes w/o public key */
+    public publicKeySwitch: boolean
+
+    /** Filter based on hops away */
+    public hopsAway: number
+
+    /** Filter nodes w/o position */
+    public positionSwitch: boolean
+
+    /** Filter nodes by matching name string */
+    public nodeName: string
+
+    /** Filter based on channel */
+    public channel: number
+
+    /**
+     * Encodes the specified NodeFilter message. Does not implicitly {@link meshtastic.NodeFilter.verify|verify} messages.
+     * @param message NodeFilter message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INodeFilter, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a NodeFilter message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns NodeFilter
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.NodeFilter
+  }
+
+  /** Properties of a NodeHighlight. */
+  interface INodeHighlight {
+    /** Hightlight nodes w/ active chat */
+    chatSwitch?: boolean | null
+
+    /** Highlight nodes w/ position */
+    positionSwitch?: boolean | null
+
+    /** Highlight nodes w/ telemetry data */
+    telemetrySwitch?: boolean | null
+
+    /** Highlight nodes w/ iaq data */
+    iaqSwitch?: boolean | null
+
+    /** Highlight nodes by matching name string */
+    nodeName?: string | null
+  }
+
+  /** Represents a NodeHighlight. */
+  class NodeHighlight implements INodeHighlight {
+    /**
+     * Constructs a new NodeHighlight.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.INodeHighlight)
+
+    /** Hightlight nodes w/ active chat */
+    public chatSwitch: boolean
+
+    /** Highlight nodes w/ position */
+    public positionSwitch: boolean
+
+    /** Highlight nodes w/ telemetry data */
+    public telemetrySwitch: boolean
+
+    /** Highlight nodes w/ iaq data */
+    public iaqSwitch: boolean
+
+    /** Highlight nodes by matching name string */
+    public nodeName: string
+
+    /**
+     * Encodes the specified NodeHighlight message. Does not implicitly {@link meshtastic.NodeHighlight.verify|verify} messages.
+     * @param message NodeHighlight message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.INodeHighlight, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a NodeHighlight message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns NodeHighlight
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.NodeHighlight
+  }
+
+  /** Properties of a GeoPoint. */
+  interface IGeoPoint {
+    /** Zoom level */
+    zoom?: number | null
+
+    /** Coordinate: latitude */
+    latitude?: number | null
+
+    /** Coordinate: longitude */
+    longitude?: number | null
+  }
+
+  /** Represents a GeoPoint. */
+  class GeoPoint implements IGeoPoint {
+    /**
+     * Constructs a new GeoPoint.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IGeoPoint)
+
+    /** Zoom level */
+    public zoom: number
+
+    /** Coordinate: latitude */
+    public latitude: number
+
+    /** Coordinate: longitude */
+    public longitude: number
+
+    /**
+     * Encodes the specified GeoPoint message. Does not implicitly {@link meshtastic.GeoPoint.verify|verify} messages.
+     * @param message GeoPoint message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IGeoPoint, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a GeoPoint message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns GeoPoint
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.GeoPoint
+  }
+
+  /** Properties of a Map. */
+  interface IMap {
+    /** Home coordinates */
+    home?: meshtastic.IGeoPoint | null
+
+    /** Map tile style */
+    style?: string | null
+
+    /** Map scroll follows GPS */
+    followGps?: boolean | null
+  }
+
+  /** Represents a Map. */
+  class Map implements IMap {
+    /**
+     * Constructs a new Map.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IMap)
+
+    /** Home coordinates */
+    public home?: meshtastic.IGeoPoint | null
+
+    /** Map tile style */
+    public style: string
+
+    /** Map scroll follows GPS */
+    public followGps: boolean
+
+    /**
+     * Encodes the specified Map message. Does not implicitly {@link meshtastic.Map.verify|verify} messages.
+     * @param message Map message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IMap, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a Map message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns Map
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.Map
+  }
+
+  /** CompassMode enum. */
+  enum CompassMode {
+    DYNAMIC = 0,
+    FIXED_RING = 1,
+    FREEZE_HEADING = 2,
+  }
+
+  /** Theme enum. */
+  enum Theme {
+    DARK = 0,
+    LIGHT = 1,
+    RED = 2,
+  }
+
+  /** Localization */
+  enum Language {
+    ENGLISH = 0,
+    FRENCH = 1,
+    GERMAN = 2,
+    ITALIAN = 3,
+    PORTUGUESE = 4,
+    SPANISH = 5,
+    SWEDISH = 6,
+    FINNISH = 7,
+    POLISH = 8,
+    TURKISH = 9,
+    SERBIAN = 10,
+    RUSSIAN = 11,
+    DUTCH = 12,
+    GREEK = 13,
+    NORWEGIAN = 14,
+    SLOVENIAN = 15,
+    UKRAINIAN = 16,
+    BULGARIAN = 17,
+    SIMPLIFIED_CHINESE = 30,
+    TRADITIONAL_CHINESE = 31,
+  }
+
   /** Properties of a Position. */
   interface IPosition {
     /**
@@ -1613,7 +2126,7 @@ export namespace meshtastic {
     precisionBits?: number | null
   }
 
-  /** a gps position */
+  /** A GPS Position */
   class Position implements IPosition {
     /**
      * Constructs a new Position.
@@ -1722,6 +2235,27 @@ export namespace meshtastic {
 
     /** Indicates the bits of precision set by the sending node */
     public precisionBits: number
+
+    /** Position _latitudeI. */
+    public _latitudeI?: 'latitudeI'
+
+    /** Position _longitudeI. */
+    public _longitudeI?: 'longitudeI'
+
+    /** Position _altitude. */
+    public _altitude?: 'altitude'
+
+    /** Position _altitudeHae. */
+    public _altitudeHae?: 'altitudeHae'
+
+    /** Position _altitudeGeoidalSeparation. */
+    public _altitudeGeoidalSeparation?: 'altitudeGeoidalSeparation'
+
+    /** Position _groundSpeed. */
+    public _groundSpeed?: 'groundSpeed'
+
+    /** Position _groundTrack. */
+    public _groundTrack?: 'groundTrack'
 
     /**
      * Encodes the specified Position message. Does not implicitly {@link meshtastic.Position.verify|verify} messages.
@@ -1855,6 +2389,32 @@ export namespace meshtastic {
     SEEED_XIAO_S3 = 81,
     MS24SF1 = 82,
     TLORA_C6 = 83,
+    WISMESH_TAP = 84,
+    ROUTASTIC = 85,
+    MESH_TAB = 86,
+    MESHLINK = 87,
+    XIAO_NRF52_KIT = 88,
+    THINKNODE_M1 = 89,
+    THINKNODE_M2 = 90,
+    T_ETH_ELITE = 91,
+    HELTEC_SENSOR_HUB = 92,
+    RESERVED_FRIED_CHICKEN = 93,
+    HELTEC_MESH_POCKET = 94,
+    SEEED_SOLAR_NODE = 95,
+    NOMADSTAR_METEOR_PRO = 96,
+    CROWPANEL = 97,
+    LINK_32 = 98,
+    SEEED_WIO_TRACKER_L1 = 99,
+    SEEED_WIO_TRACKER_L1_EINK = 100,
+    QWANTZ_TINY_ARMS = 101,
+    T_DECK_PRO = 102,
+    T_LORA_PAGER = 103,
+    GAT562_MESH_TRIAL_TRACKER = 104,
+    WISMESH_TAG = 105,
+    RAK3312 = 106,
+    THINKNODE_M5 = 107,
+    HELTEC_MESH_SOLAR = 108,
+    T_ECHO_LITE = 109,
     PRIVATE_HW = 255,
   }
 
@@ -1907,6 +2467,9 @@ export namespace meshtastic {
      * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
      */
     publicKey?: Uint8Array | null
+
+    /** Whether or not the node can be messaged */
+    isUnmessagable?: boolean | null
   }
 
   /**
@@ -1985,6 +2548,12 @@ export namespace meshtastic {
      * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
      */
     public publicKey: Uint8Array
+
+    /** Whether or not the node can be messaged */
+    public isUnmessagable?: boolean | null
+
+    /** User _isUnmessagable. */
+    public _isUnmessagable?: 'isUnmessagable'
 
     /**
      * Encodes the specified User message. Does not implicitly {@link meshtastic.User.verify|verify} messages.
@@ -2138,6 +2707,7 @@ export namespace meshtastic {
       PKI_UNKNOWN_PUBKEY = 35,
       ADMIN_BAD_SESSION_KEY = 36,
       ADMIN_PUBLIC_KEY_UNAUTHORIZED = 37,
+      RATE_LIMIT_EXCEEDED = 38,
     }
   }
 
@@ -2250,6 +2820,9 @@ export namespace meshtastic {
     /** Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT. */
     public bitfield?: number | null
 
+    /** Data _bitfield. */
+    public _bitfield?: 'bitfield'
+
     /**
      * Encodes the specified Data message. Does not implicitly {@link meshtastic.Data.verify|verify} messages.
      * @param message Data message or plain object to encode
@@ -2267,6 +2840,60 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.Data
+  }
+
+  /** Properties of a KeyVerification. */
+  interface IKeyVerification {
+    /** random value Selected by the requesting node */
+    nonce?: number | Long | null
+
+    /** The final authoritative hash, only to be sent by NodeA at the end of the handshake */
+    hash1?: Uint8Array | null
+
+    /**
+     * The intermediary hash (actually derived from hash1),
+     * sent from NodeB to NodeA in response to the initial message.
+     */
+    hash2?: Uint8Array | null
+  }
+
+  /** The actual over-the-mesh message doing KeyVerification */
+  class KeyVerification implements IKeyVerification {
+    /**
+     * Constructs a new KeyVerification.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IKeyVerification)
+
+    /** random value Selected by the requesting node */
+    public nonce: number | Long
+
+    /** The final authoritative hash, only to be sent by NodeA at the end of the handshake */
+    public hash1: Uint8Array
+
+    /**
+     * The intermediary hash (actually derived from hash1),
+     * sent from NodeB to NodeA in response to the initial message.
+     */
+    public hash2: Uint8Array
+
+    /**
+     * Encodes the specified KeyVerification message. Does not implicitly {@link meshtastic.KeyVerification.verify|verify} messages.
+     * @param message KeyVerification message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IKeyVerification, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a KeyVerification message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns KeyVerification
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.KeyVerification
   }
 
   /** Properties of a Waypoint. */
@@ -2333,6 +2960,12 @@ export namespace meshtastic {
 
     /** Designator icon for the waypoint in the form of a unicode emoji */
     public icon: number
+
+    /** Waypoint _latitudeI. */
+    public _latitudeI?: 'latitudeI'
+
+    /** Waypoint _longitudeI. */
+    public _longitudeI?: 'longitudeI'
 
     /**
      * Encodes the specified Waypoint message. Does not implicitly {@link meshtastic.Waypoint.verify|verify} messages.
@@ -2467,7 +3100,7 @@ export namespace meshtastic {
     rxSnr?: number | null
 
     /**
-     * If unset treated as zero (no forwarding, send to adjacent nodes only)
+     * If unset treated as zero (no forwarding, send to direct neighbor nodes only)
      * if 1, allow hopping through one node, etc...
      * For our usecase real world topologies probably have a max of about 3.
      * This field is normally placed into a few of bits in the header.
@@ -2513,6 +3146,28 @@ export namespace meshtastic {
 
     /** Indicates whether the packet was en/decrypted using PKI */
     pkiEncrypted?: boolean | null
+
+    /**
+     * Last byte of the node number of the node that should be used as the next hop in routing.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    nextHop?: number | null
+
+    /**
+     * Last byte of the node number of the node that will relay/relayed this packet.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    relayNode?: number | null
+
+    /**
+     * Never* sent over the radio links.
+     * Timestamp after which this packet may be sent.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    txAfter?: number | null
+
+    /** Indicates which transport mechanism this packet arrived over */
+    transportMechanism?: meshtastic.MeshPacket.TransportMechanism | null
   }
 
   /**
@@ -2582,7 +3237,7 @@ export namespace meshtastic {
     public rxSnr: number
 
     /**
-     * If unset treated as zero (no forwarding, send to adjacent nodes only)
+     * If unset treated as zero (no forwarding, send to direct neighbor nodes only)
      * if 1, allow hopping through one node, etc...
      * For our usecase real world topologies probably have a max of about 3.
      * This field is normally placed into a few of bits in the header.
@@ -2628,6 +3283,28 @@ export namespace meshtastic {
 
     /** Indicates whether the packet was en/decrypted using PKI */
     public pkiEncrypted: boolean
+
+    /**
+     * Last byte of the node number of the node that should be used as the next hop in routing.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    public nextHop: number
+
+    /**
+     * Last byte of the node number of the node that will relay/relayed this packet.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    public relayNode: number
+
+    /**
+     * *Never* sent over the radio links.
+     * Timestamp after which this packet may be sent.
+     * Set by the firmware internally, clients are not supposed to set this.
+     */
+    public txAfter: number
+
+    /** Indicates which transport mechanism this packet arrived over */
+    public transportMechanism: meshtastic.MeshPacket.TransportMechanism
 
     /** MeshPacket payloadVariant. */
     public payloadVariant?: 'decoded' | 'encrypted'
@@ -2680,6 +3357,7 @@ export namespace meshtastic {
       RELIABLE = 70,
       RESPONSE = 80,
       HIGH = 100,
+      ALERT = 110,
       ACK = 120,
       MAX = 127,
     }
@@ -2690,12 +3368,24 @@ export namespace meshtastic {
       DELAYED_BROADCAST = 1,
       DELAYED_DIRECT = 2,
     }
+
+    /** Enum to identify which transport mechanism this packet arrived over */
+    enum TransportMechanism {
+      TRANSPORT_INTERNAL = 0,
+      TRANSPORT_LORA = 1,
+      TRANSPORT_LORA_ALT1 = 2,
+      TRANSPORT_LORA_ALT2 = 3,
+      TRANSPORT_LORA_ALT3 = 4,
+      TRANSPORT_MQTT = 5,
+      TRANSPORT_MULTICAST_UDP = 6,
+      TRANSPORT_API = 7,
+    }
   }
 
   /** Shared constants between device and phone */
   enum Constants {
     ZERO = 0,
-    DATA_PAYLOAD_LEN = 237,
+    DATA_PAYLOAD_LEN = 233,
   }
 
   /** Properties of a NodeInfo. */
@@ -2730,7 +3420,7 @@ export namespace meshtastic {
     /** True if we witnessed the node over MQTT instead of LoRA transport */
     viaMqtt?: boolean | null
 
-    /** Number of hops away from us this node is (0 if adjacent) */
+    /** Number of hops away from us this node is (0 if direct neighbor) */
     hopsAway?: number | null
 
     /**
@@ -2738,6 +3428,19 @@ export namespace meshtastic {
      * Persists between NodeDB internal clean ups
      */
     isFavorite?: boolean | null
+
+    /**
+     * True if node is in our ignored list
+     * Persists between NodeDB internal clean ups
+     */
+    isIgnored?: boolean | null
+
+    /**
+     * True if node public key has been verified.
+     * Persists between NodeDB internal clean ups
+     * LSB 0 of the bitfield
+     */
+    isKeyManuallyVerified?: boolean | null
   }
 
   /**
@@ -2795,7 +3498,7 @@ export namespace meshtastic {
     /** True if we witnessed the node over MQTT instead of LoRA transport */
     public viaMqtt: boolean
 
-    /** Number of hops away from us this node is (0 if adjacent) */
+    /** Number of hops away from us this node is (0 if direct neighbor) */
     public hopsAway?: number | null
 
     /**
@@ -2803,6 +3506,22 @@ export namespace meshtastic {
      * Persists between NodeDB internal clean ups
      */
     public isFavorite: boolean
+
+    /**
+     * True if node is in our ignored list
+     * Persists between NodeDB internal clean ups
+     */
+    public isIgnored: boolean
+
+    /**
+     * True if node public key has been verified.
+     * Persists between NodeDB internal clean ups
+     * LSB 0 of the bitfield
+     */
+    public isKeyManuallyVerified: boolean
+
+    /** NodeInfo _hopsAway. */
+    public _hopsAway?: 'hopsAway'
 
     /**
      * Encodes the specified NodeInfo message. Does not implicitly {@link meshtastic.NodeInfo.verify|verify} messages.
@@ -2846,6 +3565,20 @@ export namespace meshtastic {
     FLASH_CORRUPTION_UNRECOVERABLE = 13,
   }
 
+  /**
+   * Enum to indicate to clients whether this firmware is a special firmware build, like an event.
+   * The first 16 values are reserved for non-event special firmwares, like the Smart Citizen use case.
+   */
+  enum FirmwareEdition {
+    VANILLA = 0,
+    SMART_CITIZEN = 1,
+    OPEN_SAUCE = 16,
+    DEFCON = 17,
+    BURNING_MAN = 18,
+    HAMVENTION = 19,
+    DIY_EDITION = 127,
+  }
+
   /** Properties of a MyNodeInfo. */
   interface IMyNodeInfo {
     /**
@@ -2865,6 +3598,21 @@ export namespace meshtastic {
      * Phone/PC apps should compare this to their build number and if too low tell the user they must update their app
      */
     minAppVersion?: number | null
+
+    /** Unique hardware identifier for this device */
+    deviceId?: Uint8Array | null
+
+    /** The PlatformIO environment used to build this firmware */
+    pioEnv?: string | null
+
+    /** The indicator for whether this device is running event firmware and which */
+    firmwareEdition?: meshtastic.FirmwareEdition | null
+
+    /**
+     * The number of nodes in the nodedb.
+     * This is used by the phone to know how many NodeInfo packets to expect on want_config
+     */
+    nodedbCount?: number | null
   }
 
   /**
@@ -2896,6 +3644,21 @@ export namespace meshtastic {
      * Phone/PC apps should compare this to their build number and if too low tell the user they must update their app
      */
     public minAppVersion: number
+
+    /** Unique hardware identifier for this device */
+    public deviceId: Uint8Array
+
+    /** The PlatformIO environment used to build this firmware */
+    public pioEnv: string
+
+    /** The indicator for whether this device is running event firmware and which */
+    public firmwareEdition: meshtastic.FirmwareEdition
+
+    /**
+     * The number of nodes in the nodedb.
+     * This is used by the phone to know how many NodeInfo packets to expect on want_config
+     */
+    public nodedbCount: number
 
     /**
      * Encodes the specified MyNodeInfo message. Does not implicitly {@link meshtastic.MyNodeInfo.verify|verify} messages.
@@ -3111,6 +3874,9 @@ export namespace meshtastic {
 
     /** Notification message to the client */
     clientNotification?: meshtastic.IClientNotification | null
+
+    /** Persistent data for device-ui */
+    deviceuiConfig?: meshtastic.IDeviceUIConfig | null
   }
 
   /**
@@ -3193,6 +3959,9 @@ export namespace meshtastic {
     /** Notification message to the client */
     public clientNotification?: meshtastic.IClientNotification | null
 
+    /** Persistent data for device-ui */
+    public deviceuiConfig?: meshtastic.IDeviceUIConfig | null
+
     /** Log levels, chosen to match python logging conventions. */
     public payloadVariant?:
       | 'packet'
@@ -3210,6 +3979,7 @@ export namespace meshtastic {
       | 'mqttClientProxyMessage'
       | 'fileInfo'
       | 'clientNotification'
+      | 'deviceuiConfig'
 
     /**
      * Encodes the specified FromRadio message. Does not implicitly {@link meshtastic.FromRadio.verify|verify} messages.
@@ -3243,6 +4013,21 @@ export namespace meshtastic {
 
     /** The message body of the notification */
     message?: string | null
+
+    /** ClientNotification keyVerificationNumberInform */
+    keyVerificationNumberInform?: meshtastic.IKeyVerificationNumberInform | null
+
+    /** ClientNotification keyVerificationNumberRequest */
+    keyVerificationNumberRequest?: meshtastic.IKeyVerificationNumberRequest | null
+
+    /** ClientNotification keyVerificationFinal */
+    keyVerificationFinal?: meshtastic.IKeyVerificationFinal | null
+
+    /** ClientNotification duplicatedPublicKey */
+    duplicatedPublicKey?: meshtastic.IDuplicatedPublicKey | null
+
+    /** ClientNotification lowEntropyKey */
+    lowEntropyKey?: meshtastic.ILowEntropyKey | null
   }
 
   /**
@@ -3270,6 +4055,32 @@ export namespace meshtastic {
     /** The message body of the notification */
     public message: string
 
+    /** ClientNotification keyVerificationNumberInform. */
+    public keyVerificationNumberInform?: meshtastic.IKeyVerificationNumberInform | null
+
+    /** ClientNotification keyVerificationNumberRequest. */
+    public keyVerificationNumberRequest?: meshtastic.IKeyVerificationNumberRequest | null
+
+    /** ClientNotification keyVerificationFinal. */
+    public keyVerificationFinal?: meshtastic.IKeyVerificationFinal | null
+
+    /** ClientNotification duplicatedPublicKey. */
+    public duplicatedPublicKey?: meshtastic.IDuplicatedPublicKey | null
+
+    /** ClientNotification lowEntropyKey. */
+    public lowEntropyKey?: meshtastic.ILowEntropyKey | null
+
+    /** ClientNotification _replyId. */
+    public _replyId?: 'replyId'
+
+    /** ClientNotification payloadVariant. */
+    public payloadVariant?:
+      | 'keyVerificationNumberInform'
+      | 'keyVerificationNumberRequest'
+      | 'keyVerificationFinal'
+      | 'duplicatedPublicKey'
+      | 'lowEntropyKey'
+
     /**
      * Encodes the specified ClientNotification message. Does not implicitly {@link meshtastic.ClientNotification.verify|verify} messages.
      * @param message ClientNotification message or plain object to encode
@@ -3287,6 +4098,210 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.ClientNotification
+  }
+
+  /** Properties of a KeyVerificationNumberInform. */
+  interface IKeyVerificationNumberInform {
+    /** KeyVerificationNumberInform nonce */
+    nonce?: number | Long | null
+
+    /** KeyVerificationNumberInform remoteLongname */
+    remoteLongname?: string | null
+
+    /** KeyVerificationNumberInform securityNumber */
+    securityNumber?: number | null
+  }
+
+  /** Represents a KeyVerificationNumberInform. */
+  class KeyVerificationNumberInform implements IKeyVerificationNumberInform {
+    /**
+     * Constructs a new KeyVerificationNumberInform.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IKeyVerificationNumberInform)
+
+    /** KeyVerificationNumberInform nonce. */
+    public nonce: number | Long
+
+    /** KeyVerificationNumberInform remoteLongname. */
+    public remoteLongname: string
+
+    /** KeyVerificationNumberInform securityNumber. */
+    public securityNumber: number
+
+    /**
+     * Encodes the specified KeyVerificationNumberInform message. Does not implicitly {@link meshtastic.KeyVerificationNumberInform.verify|verify} messages.
+     * @param message KeyVerificationNumberInform message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IKeyVerificationNumberInform, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a KeyVerificationNumberInform message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns KeyVerificationNumberInform
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.KeyVerificationNumberInform
+  }
+
+  /** Properties of a KeyVerificationNumberRequest. */
+  interface IKeyVerificationNumberRequest {
+    /** KeyVerificationNumberRequest nonce */
+    nonce?: number | Long | null
+
+    /** KeyVerificationNumberRequest remoteLongname */
+    remoteLongname?: string | null
+  }
+
+  /** Represents a KeyVerificationNumberRequest. */
+  class KeyVerificationNumberRequest implements IKeyVerificationNumberRequest {
+    /**
+     * Constructs a new KeyVerificationNumberRequest.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IKeyVerificationNumberRequest)
+
+    /** KeyVerificationNumberRequest nonce. */
+    public nonce: number | Long
+
+    /** KeyVerificationNumberRequest remoteLongname. */
+    public remoteLongname: string
+
+    /**
+     * Encodes the specified KeyVerificationNumberRequest message. Does not implicitly {@link meshtastic.KeyVerificationNumberRequest.verify|verify} messages.
+     * @param message KeyVerificationNumberRequest message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IKeyVerificationNumberRequest, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a KeyVerificationNumberRequest message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns KeyVerificationNumberRequest
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.KeyVerificationNumberRequest
+  }
+
+  /** Properties of a KeyVerificationFinal. */
+  interface IKeyVerificationFinal {
+    /** KeyVerificationFinal nonce */
+    nonce?: number | Long | null
+
+    /** KeyVerificationFinal remoteLongname */
+    remoteLongname?: string | null
+
+    /** KeyVerificationFinal isSender */
+    isSender?: boolean | null
+
+    /** KeyVerificationFinal verificationCharacters */
+    verificationCharacters?: string | null
+  }
+
+  /** Represents a KeyVerificationFinal. */
+  class KeyVerificationFinal implements IKeyVerificationFinal {
+    /**
+     * Constructs a new KeyVerificationFinal.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IKeyVerificationFinal)
+
+    /** KeyVerificationFinal nonce. */
+    public nonce: number | Long
+
+    /** KeyVerificationFinal remoteLongname. */
+    public remoteLongname: string
+
+    /** KeyVerificationFinal isSender. */
+    public isSender: boolean
+
+    /** KeyVerificationFinal verificationCharacters. */
+    public verificationCharacters: string
+
+    /**
+     * Encodes the specified KeyVerificationFinal message. Does not implicitly {@link meshtastic.KeyVerificationFinal.verify|verify} messages.
+     * @param message KeyVerificationFinal message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IKeyVerificationFinal, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a KeyVerificationFinal message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns KeyVerificationFinal
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.KeyVerificationFinal
+  }
+
+  /** Properties of a DuplicatedPublicKey. */
+  interface IDuplicatedPublicKey {}
+
+  /** Represents a DuplicatedPublicKey. */
+  class DuplicatedPublicKey implements IDuplicatedPublicKey {
+    /**
+     * Constructs a new DuplicatedPublicKey.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IDuplicatedPublicKey)
+
+    /**
+     * Encodes the specified DuplicatedPublicKey message. Does not implicitly {@link meshtastic.DuplicatedPublicKey.verify|verify} messages.
+     * @param message DuplicatedPublicKey message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IDuplicatedPublicKey, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a DuplicatedPublicKey message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns DuplicatedPublicKey
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.DuplicatedPublicKey
+  }
+
+  /** Properties of a LowEntropyKey. */
+  interface ILowEntropyKey {}
+
+  /** Represents a LowEntropyKey. */
+  class LowEntropyKey implements ILowEntropyKey {
+    /**
+     * Constructs a new LowEntropyKey.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.ILowEntropyKey)
+
+    /**
+     * Encodes the specified LowEntropyKey message. Does not implicitly {@link meshtastic.LowEntropyKey.verify|verify} messages.
+     * @param message LowEntropyKey message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.ILowEntropyKey, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a LowEntropyKey message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns LowEntropyKey
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.LowEntropyKey
   }
 
   /** Properties of a FileInfo. */
@@ -3625,6 +4640,12 @@ export namespace meshtastic {
 
     /** Has PKC capabilities */
     hasPKC?: boolean | null
+
+    /**
+     * Bit field of boolean for excluded modules
+     * (bitwise OR of ExcludedModules)
+     */
+    excludedModules?: number | null
   }
 
   /** Device metadata response */
@@ -3669,6 +4690,12 @@ export namespace meshtastic {
     public hasPKC: boolean
 
     /**
+     * Bit field of boolean for excluded modules
+     * (bitwise OR of ExcludedModules)
+     */
+    public excludedModules: number
+
+    /**
      * Encodes the specified DeviceMetadata message. Does not implicitly {@link meshtastic.DeviceMetadata.verify|verify} messages.
      * @param message DeviceMetadata message or plain object to encode
      * @param [writer] Writer to encode to
@@ -3687,8 +4714,35 @@ export namespace meshtastic {
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.DeviceMetadata
   }
 
+  /**
+   * Enum for modules excluded from a device's configuration.
+   * Each value represents a ModuleConfigType that can be toggled as excluded
+   * by setting its corresponding bit in the `excluded_modules` bitmask field.
+   */
+  enum ExcludedModules {
+    EXCLUDED_NONE = 0,
+    MQTT_CONFIG = 1,
+    SERIAL_CONFIG = 2,
+    EXTNOTIF_CONFIG = 4,
+    STOREFORWARD_CONFIG = 8,
+    RANGETEST_CONFIG = 16,
+    TELEMETRY_CONFIG = 32,
+    CANNEDMSG_CONFIG = 64,
+    AUDIO_CONFIG = 128,
+    REMOTEHARDWARE_CONFIG = 256,
+    NEIGHBORINFO_CONFIG = 512,
+    AMBIENTLIGHTING_CONFIG = 1024,
+    DETECTIONSENSOR_CONFIG = 2048,
+    PAXCOUNTER_CONFIG = 4096,
+    BLUETOOTH_CONFIG = 8192,
+    NETWORK_CONFIG = 16384,
+  }
+
   /** Properties of a Heartbeat. */
-  interface IHeartbeat {}
+  interface IHeartbeat {
+    /** The nonce of the heartbeat message */
+    nonce?: number | null
+  }
 
   /**
    * A heartbeat message is sent to the node from the client to keep the connection alive.
@@ -3700,6 +4754,9 @@ export namespace meshtastic {
      * @param [properties] Properties to set
      */
     constructor(properties?: meshtastic.IHeartbeat)
+
+    /** The nonce of the heartbeat message */
+    public nonce: number
 
     /**
      * Encodes the specified Heartbeat message. Does not implicitly {@link meshtastic.Heartbeat.verify|verify} messages.
@@ -4456,6 +5513,9 @@ export namespace meshtastic {
 
       /** Bits of precision for the location sent (default of 32 is full precision). */
       positionPrecision?: number | null
+
+      /** Whether we have opted-in to report our location to the map */
+      shouldReportLocation?: boolean | null
     }
 
     /** Settings for reporting unencrypted information about our node to a map via MQTT */
@@ -4471,6 +5531,9 @@ export namespace meshtastic {
 
       /** Bits of precision for the location sent (default of 32 is full precision). */
       public positionPrecision: number
+
+      /** Whether we have opted-in to report our location to the map */
+      public shouldReportLocation: boolean
 
       /**
        * Encodes the specified MapReportSettings message. Does not implicitly {@link meshtastic.ModuleConfig.MapReportSettings.verify|verify} messages.
@@ -4546,9 +5609,15 @@ export namespace meshtastic {
 
       /**
        * Interval in seconds of how often we should try to send our
-       * Neighbor Info to the mesh
+       * Neighbor Info (minimum is 14400, i.e., 4 hours)
        */
       updateInterval?: number | null
+
+      /**
+       * Whether in addition to sending it to MQTT and the PhoneAPI, our NeighborInfo should be transmitted over LoRa.
+       * Note that this is not available on a channel with default key and name.
+       */
+      transmitOverLora?: boolean | null
     }
 
     /** NeighborInfoModule Config */
@@ -4564,9 +5633,15 @@ export namespace meshtastic {
 
       /**
        * Interval in seconds of how often we should try to send our
-       * Neighbor Info to the mesh
+       * Neighbor Info (minimum is 14400, i.e., 4 hours)
        */
       public updateInterval: number
+
+      /**
+       * Whether in addition to sending it to MQTT and the PhoneAPI, our NeighborInfo should be transmitted over LoRa.
+       * Note that this is not available on a channel with default key and name.
+       */
+      public transmitOverLora: boolean
 
       /**
        * Encodes the specified NeighborInfoConfig message. Does not implicitly {@link meshtastic.ModuleConfig.NeighborInfoConfig.verify|verify} messages.
@@ -4970,6 +6045,8 @@ export namespace meshtastic {
         NMEA = 4,
         CALTOPO = 5,
         WS85 = 6,
+        VE_DIRECT = 7,
+        MS_CONFIG = 8,
       }
     }
 
@@ -5459,7 +6536,7 @@ export namespace meshtastic {
       sendBell?: boolean | null
     }
 
-    /** TODO: REPLACE */
+    /** Canned Messages Module Config */
     class CannedMessageConfig implements ICannedMessageConfig {
       /**
        * Constructs a new CannedMessageConfig.
@@ -5684,6 +6761,8 @@ export namespace meshtastic {
     WAYPOINT_APP = 8,
     AUDIO_APP = 9,
     DETECTION_SENSOR_APP = 10,
+    ALERT_APP = 11,
+    KEY_VERIFICATION_APP = 12,
     REPLY_APP = 32,
     IP_TUNNEL_APP = 33,
     PAXCOUNTER_APP = 34,
@@ -5698,6 +6777,8 @@ export namespace meshtastic {
     ATAK_PLUGIN = 72,
     MAP_REPORT_APP = 73,
     POWERSTRESS_APP = 74,
+    RETICULUM_TUNNEL_APP = 76,
+    CAYENNE_APP = 77,
     PRIVATE_APP = 256,
     ATAK_FORWARDER = 257,
     MAX = 511,
@@ -5743,6 +6824,21 @@ export namespace meshtastic {
 
     /** How long the device has been running since the last reboot (in seconds) */
     public uptimeSeconds?: number | null
+
+    /** DeviceMetrics _batteryLevel. */
+    public _batteryLevel?: 'batteryLevel'
+
+    /** DeviceMetrics _voltage. */
+    public _voltage?: 'voltage'
+
+    /** DeviceMetrics _channelUtilization. */
+    public _channelUtilization?: 'channelUtilization'
+
+    /** DeviceMetrics _airUtilTx. */
+    public _airUtilTx?: 'airUtilTx'
+
+    /** DeviceMetrics _uptimeSeconds. */
+    public _uptimeSeconds?: 'uptimeSeconds'
 
     /**
      * Encodes the specified DeviceMetrics message. Does not implicitly {@link meshtastic.DeviceMetrics.verify|verify} messages.
@@ -5821,6 +6917,21 @@ export namespace meshtastic {
 
     /** Wind lull in m/s */
     windLull?: number | null
+
+    /** Radiation in µR/h */
+    radiation?: number | null
+
+    /** Rainfall in the last hour in mm */
+    rainfall_1h?: number | null
+
+    /** Rainfall in the last 24 hours in mm */
+    rainfall_24h?: number | null
+
+    /** Soil moisture measured (% 1-100) */
+    soilMoisture?: number | null
+
+    /** Soil temperature measured (*C) */
+    soilTemperature?: number | null
   }
 
   /** Weather station or other environmental metrics */
@@ -5888,6 +6999,87 @@ export namespace meshtastic {
     /** Wind lull in m/s */
     public windLull?: number | null
 
+    /** Radiation in µR/h */
+    public radiation?: number | null
+
+    /** Rainfall in the last hour in mm */
+    public rainfall_1h?: number | null
+
+    /** Rainfall in the last 24 hours in mm */
+    public rainfall_24h?: number | null
+
+    /** Soil moisture measured (% 1-100) */
+    public soilMoisture?: number | null
+
+    /** Soil temperature measured (*C) */
+    public soilTemperature?: number | null
+
+    /** EnvironmentMetrics _temperature. */
+    public _temperature?: 'temperature'
+
+    /** EnvironmentMetrics _relativeHumidity. */
+    public _relativeHumidity?: 'relativeHumidity'
+
+    /** EnvironmentMetrics _barometricPressure. */
+    public _barometricPressure?: 'barometricPressure'
+
+    /** EnvironmentMetrics _gasResistance. */
+    public _gasResistance?: 'gasResistance'
+
+    /** EnvironmentMetrics _voltage. */
+    public _voltage?: 'voltage'
+
+    /** EnvironmentMetrics _current. */
+    public _current?: 'current'
+
+    /** EnvironmentMetrics _iaq. */
+    public _iaq?: 'iaq'
+
+    /** EnvironmentMetrics _distance. */
+    public _distance?: 'distance'
+
+    /** EnvironmentMetrics _lux. */
+    public _lux?: 'lux'
+
+    /** EnvironmentMetrics _whiteLux. */
+    public _whiteLux?: 'whiteLux'
+
+    /** EnvironmentMetrics _irLux. */
+    public _irLux?: 'irLux'
+
+    /** EnvironmentMetrics _uvLux. */
+    public _uvLux?: 'uvLux'
+
+    /** EnvironmentMetrics _windDirection. */
+    public _windDirection?: 'windDirection'
+
+    /** EnvironmentMetrics _windSpeed. */
+    public _windSpeed?: 'windSpeed'
+
+    /** EnvironmentMetrics _weight. */
+    public _weight?: 'weight'
+
+    /** EnvironmentMetrics _windGust. */
+    public _windGust?: 'windGust'
+
+    /** EnvironmentMetrics _windLull. */
+    public _windLull?: 'windLull'
+
+    /** EnvironmentMetrics _radiation. */
+    public _radiation?: 'radiation'
+
+    /** EnvironmentMetrics _rainfall_1h. */
+    public _rainfall_1h?: 'rainfall_1h'
+
+    /** EnvironmentMetrics _rainfall_24h. */
+    public _rainfall_24h?: 'rainfall_24h'
+
+    /** EnvironmentMetrics _soilMoisture. */
+    public _soilMoisture?: 'soilMoisture'
+
+    /** EnvironmentMetrics _soilTemperature. */
+    public _soilTemperature?: 'soilTemperature'
+
     /**
      * Encodes the specified EnvironmentMetrics message. Does not implicitly {@link meshtastic.EnvironmentMetrics.verify|verify} messages.
      * @param message EnvironmentMetrics message or plain object to encode
@@ -5926,6 +7118,36 @@ export namespace meshtastic {
 
     /** Current (Ch3) */
     ch3Current?: number | null
+
+    /** Voltage (Ch4) */
+    ch4Voltage?: number | null
+
+    /** Current (Ch4) */
+    ch4Current?: number | null
+
+    /** Voltage (Ch5) */
+    ch5Voltage?: number | null
+
+    /** Current (Ch5) */
+    ch5Current?: number | null
+
+    /** Voltage (Ch6) */
+    ch6Voltage?: number | null
+
+    /** Current (Ch6) */
+    ch6Current?: number | null
+
+    /** Voltage (Ch7) */
+    ch7Voltage?: number | null
+
+    /** Current (Ch7) */
+    ch7Current?: number | null
+
+    /** Voltage (Ch8) */
+    ch8Voltage?: number | null
+
+    /** Current (Ch8) */
+    ch8Current?: number | null
   }
 
   /** Power Metrics (voltage / current / etc) */
@@ -5954,6 +7176,84 @@ export namespace meshtastic {
     /** Current (Ch3) */
     public ch3Current?: number | null
 
+    /** Voltage (Ch4) */
+    public ch4Voltage?: number | null
+
+    /** Current (Ch4) */
+    public ch4Current?: number | null
+
+    /** Voltage (Ch5) */
+    public ch5Voltage?: number | null
+
+    /** Current (Ch5) */
+    public ch5Current?: number | null
+
+    /** Voltage (Ch6) */
+    public ch6Voltage?: number | null
+
+    /** Current (Ch6) */
+    public ch6Current?: number | null
+
+    /** Voltage (Ch7) */
+    public ch7Voltage?: number | null
+
+    /** Current (Ch7) */
+    public ch7Current?: number | null
+
+    /** Voltage (Ch8) */
+    public ch8Voltage?: number | null
+
+    /** Current (Ch8) */
+    public ch8Current?: number | null
+
+    /** PowerMetrics _ch1Voltage. */
+    public _ch1Voltage?: 'ch1Voltage'
+
+    /** PowerMetrics _ch1Current. */
+    public _ch1Current?: 'ch1Current'
+
+    /** PowerMetrics _ch2Voltage. */
+    public _ch2Voltage?: 'ch2Voltage'
+
+    /** PowerMetrics _ch2Current. */
+    public _ch2Current?: 'ch2Current'
+
+    /** PowerMetrics _ch3Voltage. */
+    public _ch3Voltage?: 'ch3Voltage'
+
+    /** PowerMetrics _ch3Current. */
+    public _ch3Current?: 'ch3Current'
+
+    /** PowerMetrics _ch4Voltage. */
+    public _ch4Voltage?: 'ch4Voltage'
+
+    /** PowerMetrics _ch4Current. */
+    public _ch4Current?: 'ch4Current'
+
+    /** PowerMetrics _ch5Voltage. */
+    public _ch5Voltage?: 'ch5Voltage'
+
+    /** PowerMetrics _ch5Current. */
+    public _ch5Current?: 'ch5Current'
+
+    /** PowerMetrics _ch6Voltage. */
+    public _ch6Voltage?: 'ch6Voltage'
+
+    /** PowerMetrics _ch6Current. */
+    public _ch6Current?: 'ch6Current'
+
+    /** PowerMetrics _ch7Voltage. */
+    public _ch7Voltage?: 'ch7Voltage'
+
+    /** PowerMetrics _ch7Current. */
+    public _ch7Current?: 'ch7Current'
+
+    /** PowerMetrics _ch8Voltage. */
+    public _ch8Voltage?: 'ch8Voltage'
+
+    /** PowerMetrics _ch8Current. */
+    public _ch8Current?: 'ch8Current'
+
     /**
      * Encodes the specified PowerMetrics message. Does not implicitly {@link meshtastic.PowerMetrics.verify|verify} messages.
      * @param message PowerMetrics message or plain object to encode
@@ -5975,41 +7275,80 @@ export namespace meshtastic {
 
   /** Properties of an AirQualityMetrics. */
   interface IAirQualityMetrics {
-    /** Concentration Units Standard PM1.0 */
+    /** Concentration Units Standard PM1.0 in ug/m3 */
     pm10Standard?: number | null
 
-    /** Concentration Units Standard PM2.5 */
+    /** Concentration Units Standard PM2.5 in ug/m3 */
     pm25Standard?: number | null
 
-    /** Concentration Units Standard PM10.0 */
+    /** Concentration Units Standard PM10.0 in ug/m3 */
     pm100Standard?: number | null
 
-    /** Concentration Units Environmental PM1.0 */
+    /** Concentration Units Environmental PM1.0 in ug/m3 */
     pm10Environmental?: number | null
 
-    /** Concentration Units Environmental PM2.5 */
+    /** Concentration Units Environmental PM2.5 in ug/m3 */
     pm25Environmental?: number | null
 
-    /** Concentration Units Environmental PM10.0 */
+    /** Concentration Units Environmental PM10.0 in ug/m3 */
     pm100Environmental?: number | null
 
-    /** 0.3um Particle Count */
+    /** 0.3um Particle Count in #/0.1l */
     particles_03um?: number | null
 
-    /** 0.5um Particle Count */
+    /** 0.5um Particle Count in #/0.1l */
     particles_05um?: number | null
 
-    /** 1.0um Particle Count */
+    /** 1.0um Particle Count in #/0.1l */
     particles_10um?: number | null
 
-    /** 2.5um Particle Count */
+    /** 2.5um Particle Count in #/0.1l */
     particles_25um?: number | null
 
-    /** 5.0um Particle Count */
+    /** 5.0um Particle Count in #/0.1l */
     particles_50um?: number | null
 
-    /** 10.0um Particle Count */
+    /** 10.0um Particle Count in #/0.1l */
     particles_100um?: number | null
+
+    /** CO2 concentration in ppm */
+    co2?: number | null
+
+    /** CO2 sensor temperature in degC */
+    co2Temperature?: number | null
+
+    /** CO2 sensor relative humidity in % */
+    co2Humidity?: number | null
+
+    /** Formaldehyde sensor formaldehyde concentration in ppb */
+    formFormaldehyde?: number | null
+
+    /** Formaldehyde sensor relative humidity in %RH */
+    formHumidity?: number | null
+
+    /** Formaldehyde sensor temperature in degrees Celsius */
+    formTemperature?: number | null
+
+    /** Concentration Units Standard PM4.0 in ug/m3 */
+    pm40Standard?: number | null
+
+    /** 4.0um Particle Count in #/0.1l */
+    particles_40um?: number | null
+
+    /** PM Sensor Temperature */
+    pmTemperature?: number | null
+
+    /** PM Sensor humidity */
+    pmHumidity?: number | null
+
+    /** PM Sensor VOC Index */
+    pmVocIdx?: number | null
+
+    /** PM Sensor NOx Index */
+    pmNoxIdx?: number | null
+
+    /** Typical Particle Size in um */
+    particlesTps?: number | null
   }
 
   /** Air quality metrics */
@@ -6020,41 +7359,155 @@ export namespace meshtastic {
      */
     constructor(properties?: meshtastic.IAirQualityMetrics)
 
-    /** Concentration Units Standard PM1.0 */
+    /** Concentration Units Standard PM1.0 in ug/m3 */
     public pm10Standard?: number | null
 
-    /** Concentration Units Standard PM2.5 */
+    /** Concentration Units Standard PM2.5 in ug/m3 */
     public pm25Standard?: number | null
 
-    /** Concentration Units Standard PM10.0 */
+    /** Concentration Units Standard PM10.0 in ug/m3 */
     public pm100Standard?: number | null
 
-    /** Concentration Units Environmental PM1.0 */
+    /** Concentration Units Environmental PM1.0 in ug/m3 */
     public pm10Environmental?: number | null
 
-    /** Concentration Units Environmental PM2.5 */
+    /** Concentration Units Environmental PM2.5 in ug/m3 */
     public pm25Environmental?: number | null
 
-    /** Concentration Units Environmental PM10.0 */
+    /** Concentration Units Environmental PM10.0 in ug/m3 */
     public pm100Environmental?: number | null
 
-    /** 0.3um Particle Count */
+    /** 0.3um Particle Count in #/0.1l */
     public particles_03um?: number | null
 
-    /** 0.5um Particle Count */
+    /** 0.5um Particle Count in #/0.1l */
     public particles_05um?: number | null
 
-    /** 1.0um Particle Count */
+    /** 1.0um Particle Count in #/0.1l */
     public particles_10um?: number | null
 
-    /** 2.5um Particle Count */
+    /** 2.5um Particle Count in #/0.1l */
     public particles_25um?: number | null
 
-    /** 5.0um Particle Count */
+    /** 5.0um Particle Count in #/0.1l */
     public particles_50um?: number | null
 
-    /** 10.0um Particle Count */
+    /** 10.0um Particle Count in #/0.1l */
     public particles_100um?: number | null
+
+    /** CO2 concentration in ppm */
+    public co2?: number | null
+
+    /** CO2 sensor temperature in degC */
+    public co2Temperature?: number | null
+
+    /** CO2 sensor relative humidity in % */
+    public co2Humidity?: number | null
+
+    /** Formaldehyde sensor formaldehyde concentration in ppb */
+    public formFormaldehyde?: number | null
+
+    /** Formaldehyde sensor relative humidity in %RH */
+    public formHumidity?: number | null
+
+    /** Formaldehyde sensor temperature in degrees Celsius */
+    public formTemperature?: number | null
+
+    /** Concentration Units Standard PM4.0 in ug/m3 */
+    public pm40Standard?: number | null
+
+    /** 4.0um Particle Count in #/0.1l */
+    public particles_40um?: number | null
+
+    /** PM Sensor Temperature */
+    public pmTemperature?: number | null
+
+    /** PM Sensor humidity */
+    public pmHumidity?: number | null
+
+    /** PM Sensor VOC Index */
+    public pmVocIdx?: number | null
+
+    /** PM Sensor NOx Index */
+    public pmNoxIdx?: number | null
+
+    /** Typical Particle Size in um */
+    public particlesTps?: number | null
+
+    /** AirQualityMetrics _pm10Standard. */
+    public _pm10Standard?: 'pm10Standard'
+
+    /** AirQualityMetrics _pm25Standard. */
+    public _pm25Standard?: 'pm25Standard'
+
+    /** AirQualityMetrics _pm100Standard. */
+    public _pm100Standard?: 'pm100Standard'
+
+    /** AirQualityMetrics _pm10Environmental. */
+    public _pm10Environmental?: 'pm10Environmental'
+
+    /** AirQualityMetrics _pm25Environmental. */
+    public _pm25Environmental?: 'pm25Environmental'
+
+    /** AirQualityMetrics _pm100Environmental. */
+    public _pm100Environmental?: 'pm100Environmental'
+
+    /** AirQualityMetrics _particles_03um. */
+    public _particles_03um?: 'particles_03um'
+
+    /** AirQualityMetrics _particles_05um. */
+    public _particles_05um?: 'particles_05um'
+
+    /** AirQualityMetrics _particles_10um. */
+    public _particles_10um?: 'particles_10um'
+
+    /** AirQualityMetrics _particles_25um. */
+    public _particles_25um?: 'particles_25um'
+
+    /** AirQualityMetrics _particles_50um. */
+    public _particles_50um?: 'particles_50um'
+
+    /** AirQualityMetrics _particles_100um. */
+    public _particles_100um?: 'particles_100um'
+
+    /** AirQualityMetrics _co2. */
+    public _co2?: 'co2'
+
+    /** AirQualityMetrics _co2Temperature. */
+    public _co2Temperature?: 'co2Temperature'
+
+    /** AirQualityMetrics _co2Humidity. */
+    public _co2Humidity?: 'co2Humidity'
+
+    /** AirQualityMetrics _formFormaldehyde. */
+    public _formFormaldehyde?: 'formFormaldehyde'
+
+    /** AirQualityMetrics _formHumidity. */
+    public _formHumidity?: 'formHumidity'
+
+    /** AirQualityMetrics _formTemperature. */
+    public _formTemperature?: 'formTemperature'
+
+    /** AirQualityMetrics _pm40Standard. */
+    public _pm40Standard?: 'pm40Standard'
+
+    /** AirQualityMetrics _particles_40um. */
+    public _particles_40um?: 'particles_40um'
+
+    /** AirQualityMetrics _pmTemperature. */
+    public _pmTemperature?: 'pmTemperature'
+
+    /** AirQualityMetrics _pmHumidity. */
+    public _pmHumidity?: 'pmHumidity'
+
+    /** AirQualityMetrics _pmVocIdx. */
+    public _pmVocIdx?: 'pmVocIdx'
+
+    /** AirQualityMetrics _pmNoxIdx. */
+    public _pmNoxIdx?: 'pmNoxIdx'
+
+    /** AirQualityMetrics _particlesTps. */
+    public _particlesTps?: 'particlesTps'
 
     /**
      * Encodes the specified AirQualityMetrics message. Does not implicitly {@link meshtastic.AirQualityMetrics.verify|verify} messages.
@@ -6115,6 +7568,12 @@ export namespace meshtastic {
      * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
      */
     numTxRelayCanceled?: number | null
+
+    /** Number of bytes used in the heap */
+    heapTotalBytes?: number | null
+
+    /** Number of bytes free in the heap */
+    heapFreeBytes?: number | null
   }
 
   /** Local device mesh statistics */
@@ -6164,6 +7623,12 @@ export namespace meshtastic {
      */
     public numTxRelayCanceled: number
 
+    /** Number of bytes used in the heap */
+    public heapTotalBytes: number
+
+    /** Number of bytes free in the heap */
+    public heapFreeBytes: number
+
     /**
      * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
      * @param message LocalStats message or plain object to encode
@@ -6212,6 +7677,15 @@ export namespace meshtastic {
     /** Body temperature in degrees Celsius */
     public temperature?: number | null
 
+    /** HealthMetrics _heartBpm. */
+    public _heartBpm?: 'heartBpm'
+
+    /** HealthMetrics _spO2. */
+    public _spO2?: 'spO2'
+
+    /** HealthMetrics _temperature. */
+    public _temperature?: 'temperature'
+
     /**
      * Encodes the specified HealthMetrics message. Does not implicitly {@link meshtastic.HealthMetrics.verify|verify} messages.
      * @param message HealthMetrics message or plain object to encode
@@ -6229,6 +7703,105 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.HealthMetrics
+  }
+
+  /** Properties of a HostMetrics. */
+  interface IHostMetrics {
+    /** Host system uptime */
+    uptimeSeconds?: number | null
+
+    /** Host system free memory */
+    freememBytes?: number | Long | null
+
+    /** Host system disk space free for / */
+    diskfree1Bytes?: number | Long | null
+
+    /** Secondary system disk space free */
+    diskfree2Bytes?: number | Long | null
+
+    /** Tertiary disk space free */
+    diskfree3Bytes?: number | Long | null
+
+    /** Host system one minute load in 1/100ths */
+    load1?: number | null
+
+    /** Host system five minute load  in 1/100ths */
+    load5?: number | null
+
+    /** Host system fifteen minute load  in 1/100ths */
+    load15?: number | null
+
+    /**
+     * Optional User-provided string for arbitrary host system information
+     * that doesn't make sense as a dedicated entry.
+     */
+    userString?: string | null
+  }
+
+  /** Linux host metrics */
+  class HostMetrics implements IHostMetrics {
+    /**
+     * Constructs a new HostMetrics.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: meshtastic.IHostMetrics)
+
+    /** Host system uptime */
+    public uptimeSeconds: number
+
+    /** Host system free memory */
+    public freememBytes: number | Long
+
+    /** Host system disk space free for / */
+    public diskfree1Bytes: number | Long
+
+    /** Secondary system disk space free */
+    public diskfree2Bytes?: number | Long | null
+
+    /** Tertiary disk space free */
+    public diskfree3Bytes?: number | Long | null
+
+    /** Host system one minute load in 1/100ths */
+    public load1: number
+
+    /** Host system five minute load  in 1/100ths */
+    public load5: number
+
+    /** Host system fifteen minute load  in 1/100ths */
+    public load15: number
+
+    /**
+     * Optional User-provided string for arbitrary host system information
+     * that doesn't make sense as a dedicated entry.
+     */
+    public userString?: string | null
+
+    /** HostMetrics _diskfree2Bytes. */
+    public _diskfree2Bytes?: 'diskfree2Bytes'
+
+    /** HostMetrics _diskfree3Bytes. */
+    public _diskfree3Bytes?: 'diskfree3Bytes'
+
+    /** HostMetrics _userString. */
+    public _userString?: 'userString'
+
+    /**
+     * Encodes the specified HostMetrics message. Does not implicitly {@link meshtastic.HostMetrics.verify|verify} messages.
+     * @param message HostMetrics message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: meshtastic.IHostMetrics, writer?: $protobuf.Writer): $protobuf.Writer
+
+    /**
+     * Decodes a HostMetrics message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns HostMetrics
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.HostMetrics
   }
 
   /** Properties of a Telemetry. */
@@ -6253,6 +7826,9 @@ export namespace meshtastic {
 
     /** Health telemetry metrics */
     healthMetrics?: meshtastic.IHealthMetrics | null
+
+    /** Linux host metrics */
+    hostMetrics?: meshtastic.IHostMetrics | null
   }
 
   /** Types of Measurements the telemetry module is equipped to handle */
@@ -6284,8 +7860,18 @@ export namespace meshtastic {
     /** Health telemetry metrics */
     public healthMetrics?: meshtastic.IHealthMetrics | null
 
+    /** Linux host metrics */
+    public hostMetrics?: meshtastic.IHostMetrics | null
+
     /** Telemetry variant. */
-    public variant?: 'deviceMetrics' | 'environmentMetrics' | 'airQualityMetrics' | 'powerMetrics' | 'localStats' | 'healthMetrics'
+    public variant?:
+      | 'deviceMetrics'
+      | 'environmentMetrics'
+      | 'airQualityMetrics'
+      | 'powerMetrics'
+      | 'localStats'
+      | 'healthMetrics'
+      | 'hostMetrics'
 
     /**
      * Encodes the specified Telemetry message. Does not implicitly {@link meshtastic.Telemetry.verify|verify} messages.
@@ -6340,6 +7926,19 @@ export namespace meshtastic {
     CUSTOM_SENSOR = 29,
     MAX30102 = 30,
     MLX90614 = 31,
+    SCD4X = 32,
+    RADSENS = 33,
+    INA226 = 34,
+    DFROBOT_RAIN = 35,
+    DPS310 = 36,
+    RAK12035 = 37,
+    MAX17261 = 38,
+    PCT2075 = 39,
+    ADS1X15 = 40,
+    ADS1X15_ALT = 41,
+    SFA30 = 42,
+    SEN5X = 43,
+    TSL2561 = 44,
   }
 
   /** Properties of a Nau7802Config. */
@@ -6513,6 +8112,30 @@ export namespace meshtastic {
 
     /** Predefined messages for CannedMessage */
     public cannedMessages?: string | null
+
+    /** DeviceProfile _longName. */
+    public _longName?: 'longName'
+
+    /** DeviceProfile _shortName. */
+    public _shortName?: 'shortName'
+
+    /** DeviceProfile _channelUrl. */
+    public _channelUrl?: 'channelUrl'
+
+    /** DeviceProfile _config. */
+    public _config?: 'config'
+
+    /** DeviceProfile _moduleConfig. */
+    public _moduleConfig?: 'moduleConfig'
+
+    /** DeviceProfile _fixedPosition. */
+    public _fixedPosition?: 'fixedPosition'
+
+    /** DeviceProfile _ringtone. */
+    public _ringtone?: 'ringtone'
+
+    /** DeviceProfile _cannedMessages. */
+    public _cannedMessages?: 'cannedMessages'
 
     /**
      * Encodes the specified DeviceProfile message. Does not implicitly {@link meshtastic.DeviceProfile.verify|verify} messages.

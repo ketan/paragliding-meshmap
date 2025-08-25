@@ -55,12 +55,13 @@ export const Meshmap = ($root.Meshmap = (() => {
    * @throws {Error} If the payload is not a reader or valid buffer
    * @throws {$protobuf.util.ProtocolError} If required fields are missing
    */
-  Meshmap.decode = function decode(reader, length) {
+  Meshmap.decode = function decode(reader, length, error) {
     if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
     let end = length === undefined ? reader.len : reader.pos + length,
       message = new $root.Meshmap()
     while (reader.pos < end) {
       let tag = reader.uint32()
+      if (tag === error) break
       switch (tag >>> 3) {
         default:
           reader.skipType(tag & 7)
@@ -138,12 +139,13 @@ export const Meshmap = ($root.Meshmap = (() => {
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    Position.decode = function decode(reader, length) {
+    Position.decode = function decode(reader, length, error) {
       if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
       let end = length === undefined ? reader.len : reader.pos + length,
         message = new $root.Meshmap.Position()
       while (reader.pos < end) {
         let tag = reader.uint32()
+        if (tag === error) break
         switch (tag >>> 3) {
           case 1: {
             message.latitude = reader.sfixed32()
@@ -223,12 +225,13 @@ export const Meshmap = ($root.Meshmap = (() => {
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    PositionChunk.decode = function decode(reader, length) {
+    PositionChunk.decode = function decode(reader, length, error) {
       if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
       let end = length === undefined ? reader.len : reader.pos + length,
         message = new $root.Meshmap.PositionChunk()
       while (reader.pos < end) {
         let tag = reader.uint32()
+        if (tag === error) break
         switch (tag >>> 3) {
           case 1: {
             if (!(message.positions && message.positions.length)) message.positions = []

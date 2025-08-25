@@ -4,6 +4,7 @@ package meshtastic;
 
 import "meshtastic/channel.proto";
 import "meshtastic/config.proto";
+import "meshtastic/device_ui.proto";
 import "meshtastic/module_config.proto";
 import "meshtastic/portnums.proto";
 import "meshtastic/telemetry.proto";
@@ -16,7 +17,7 @@ option java_package = "com.geeksville.mesh";
 option swift_prefix = "";
 
 /*
- * a gps position
+ * A GPS Position
  */
 message Position {
   /*
@@ -338,7 +339,7 @@ enum HardwareModel {
    * Heltec HRU-3601: https://heltec.org/project/hru-3601/
    */
   HELTEC_HRU_3601 = 23;
-  
+
   /*
    * Heltec Wireless Bridge
    */
@@ -541,7 +542,7 @@ enum HardwareModel {
   CDEBYTE_EORA_S3 = 61;
 
   /*
-   * TWC_MESH_V4 
+   * TWC_MESH_V4
    * Adafruit NRF52840 feather express with SX1262, SSD1306 OLED and NEO6M GPS
    */
   TWC_MESH_V4 = 62;
@@ -557,28 +558,28 @@ enum HardwareModel {
    * ESP32-D0WDQ6 With SX1276/SKY66122, SSD1306 OLED and No GPS
    */
   RADIOMASTER_900_BANDIT_NANO = 64;
-  
+
   /*
    * Heltec Capsule Sensor V3 with ESP32-S3 CPU, Portable LoRa device that can replace GNSS modules or sensors
    */
   HELTEC_CAPSULE_SENSOR_V3 = 65;
-   
-   /*
+
+  /*
    * Heltec Vision Master T190 with ESP32-S3 CPU, and a 1.90 inch TFT display
    */
   HELTEC_VISION_MASTER_T190 = 66;
-   
-   /*
+
+  /*
    * Heltec Vision Master E213 with ESP32-S3 CPU, and a 2.13 inch E-Ink display
    */
   HELTEC_VISION_MASTER_E213 = 67;
-   
-   /*
+
+  /*
    * Heltec Vision Master E290 with ESP32-S3 CPU, and a 2.9 inch E-Ink display
    */
   HELTEC_VISION_MASTER_E290 = 68;
-   
-   /*
+
+  /*
    * Heltec Mesh Node T114 board with nRF52840 CPU, and a 1.14 inch TFT display, Ultimate low-power design,
    * specifically adapted for the Meshtatic project
    */
@@ -589,11 +590,11 @@ enum HardwareModel {
    */
   SENSECAP_INDICATOR = 70;
 
-   /*
+  /*
    * Seeed studio T1000-E tracker card. NRF52840 w/ LR1110 radio, GPS, button, buzzer, and sensors.
    */
   TRACKER_T1000_E = 71;
-  
+
   /*
    * RAK3172 STM32WLE5 Module (https://store.rakwireless.com/products/wisduo-lpwan-module-rak3172)
    */
@@ -610,7 +611,7 @@ enum HardwareModel {
    */
   RADIOMASTER_900_BANDIT = 74;
 
-   /*
+  /*
    * Minewsemi ME25LS01 (ME25LE01_V1.0). NRF52840 w/ LR1110 radio, buttons and leds and pins.
    */
   ME25LS01_4Y10TD = 75;
@@ -625,7 +626,7 @@ enum HardwareModel {
    *
    */
   RP2040_FEATHER_RFM95 = 76;
-  
+
   /* M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, CoreS3, Paper) https://m5stack.com/ */
   M5STACK_COREBASIC = 77;
   M5STACK_CORE2 = 78;
@@ -635,11 +636,11 @@ enum HardwareModel {
 
   /* M5 esp32 based MCU modules with enclosure, TFT and LORA Shields. All Variants (Basic, Core, Fire, Core2, CoreS3, Paper) https://m5stack.com/ */
   M5STACK_CORES3 = 80;
-  
+
   /* Seeed XIAO S3 DK*/
   SEEED_XIAO_S3 = 81;
 
-   /*
+  /*
    * Nordic nRF52840+Semtech SX1262 LoRa BLE Combo Module. nRF52840+SX1262 MS24SF1
    */
   MS24SF1 = 82;
@@ -648,6 +649,141 @@ enum HardwareModel {
    * Lilygo TLora-C6 with the new ESP32-C6 MCU
    */
   TLORA_C6 = 83;
+
+  /*
+   * WisMesh Tap
+   * RAK-4631 w/ TFT in injection modled case
+   */
+  WISMESH_TAP = 84;
+
+  /*
+   * Similar to PORTDUINO but used by Routastic devices, this is not any
+   * particular device and does not run Meshtastic's code but supports
+   * the same frame format.
+   * Runs on linux, see https://github.com/Jorropo/routastic
+   */
+  ROUTASTIC = 85;
+
+  /*
+   * Mesh-Tab, esp32 based
+   * https://github.com/valzzu/Mesh-Tab
+   */
+  MESH_TAB = 86;
+
+  /*
+   * MeshLink board developed by LoraItalia. NRF52840, eByte E22900M22S (Will also come with other frequencies), 25w MPPT solar charger (5v,12v,18v selectable), support for gps, buzzer, oled or e-ink display, 10 gpios, hardware watchdog
+   * https://www.loraitalia.it
+   */
+  MESHLINK = 87;
+
+  /*
+   * Seeed XIAO nRF52840 + Wio SX1262 kit
+   */
+  XIAO_NRF52_KIT = 88;
+
+  /*
+   * Elecrow ThinkNode M1 & M2
+   * https://www.elecrow.com/wiki/ThinkNode-M1_Transceiver_Device(Meshtastic)_Power_By_nRF52840.html
+   * https://www.elecrow.com/wiki/ThinkNode-M2_Transceiver_Device(Meshtastic)_Power_By_NRF52840.html (this actually uses ESP32-S3)
+   */
+  THINKNODE_M1 = 89;
+  THINKNODE_M2 = 90;
+
+  /*
+   * Lilygo T-ETH-Elite
+   */
+  T_ETH_ELITE = 91;
+
+  /*
+   * Heltec HRI-3621 industrial probe
+   */
+  HELTEC_SENSOR_HUB = 92;
+
+  /*
+   * Reserved Fried Chicken ID for future use
+   */
+  RESERVED_FRIED_CHICKEN = 93;
+
+  /*
+   * Heltec Magnetic Power Bank with Meshtastic compatible
+   */
+  HELTEC_MESH_POCKET = 94;
+
+  /*
+   * Seeed Solar Node
+   */
+  SEEED_SOLAR_NODE = 95;
+
+  /*
+   * NomadStar Meteor Pro https://nomadstar.ch/
+   */
+  NOMADSTAR_METEOR_PRO = 96;
+
+  /*
+   * Elecrow CrowPanel Advance models, ESP32-S3 and TFT with SX1262 radio plugin
+   */
+  CROWPANEL = 97;
+
+  /*
+   * Lilygo LINK32 board with sensors
+   */
+  LINK_32 = 98;
+
+  /*
+   * Seeed Tracker L1
+   */
+  SEEED_WIO_TRACKER_L1 = 99;
+
+  /*
+   * Seeed Tracker L1 EINK driver
+   */
+  SEEED_WIO_TRACKER_L1_EINK = 100;
+
+  /*
+   * Reserved ID for future and past use
+   */
+  QWANTZ_TINY_ARMS = 101;
+
+  /*
+   * Lilygo T-Deck Pro
+   */
+  T_DECK_PRO = 102;
+
+  /*
+   * Lilygo TLora Pager
+   */
+  T_LORA_PAGER = 103;
+
+  /*
+   * GAT562 Mesh Trial Tracker
+   */
+  GAT562_MESH_TRIAL_TRACKER = 104;
+
+  /*
+   * RAKwireless WisMesh Tag
+   */
+  WISMESH_TAG = 105;
+
+  /*
+   * RAKwireless WisBlock Core RAK3312 https://docs.rakwireless.com/product-categories/wisduo/rak3112-module/overview/
+   */
+  RAK3312 = 106;
+
+  /*
+   * Elecrow ThinkNode M5 https://www.elecrow.com/wiki/ThinkNode_M5_Meshtastic_LoRa_Signal_Transceiver_ESP32-S3.html
+   */
+  THINKNODE_M5 = 107;
+
+  /*
+   * MeshSolar is an integrated power management and communication solution designed for outdoor low-power devices.
+   * https://heltec.org/project/meshsolar/
+   */
+  HELTEC_MESH_SOLAR = 108;
+  
+  /*
+   * Lilygo T-Echo Lite
+   */
+  T_ECHO_LITE = 109;
 
   /*
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -731,6 +867,11 @@ message User {
    * This is sent out to other nodes on the mesh to allow them to compute a shared secret key.
    */
   bytes public_key = 8;
+
+  /*
+   * Whether or not the node can be messaged
+   */
+  optional bool is_unmessagable = 9;
 }
 
 /*
@@ -848,6 +989,12 @@ message Routing {
      * Admin packet sent using PKC, but not from a public key on the admin key list
      */
     ADMIN_PUBLIC_KEY_UNAUTHORIZED = 37;
+
+    /*
+     * Airtime fairness rate limit exceeded for a packet
+     * This typically enforced per portnum and is used to prevent a single node from monopolizing airtime
+     */
+    RATE_LIMIT_EXCEEDED = 38;
   }
 
   oneof variant {
@@ -929,6 +1076,27 @@ message Data {
    * Bitfield for extra flags. First use is to indicate that user approves the packet being uploaded to MQTT.
    */
   optional uint32 bitfield = 9;
+}
+
+/*
+ * The actual over-the-mesh message doing KeyVerification
+ */
+message KeyVerification {
+  /*
+   * random value Selected by the requesting node
+   */
+  uint64 nonce = 1;
+
+  /*
+   * The final authoritative hash, only to be sent by NodeA at the end of the handshake
+   */
+  bytes hash1 = 2;
+
+  /*
+   * The intermediary hash (actually derived from hash1),
+   * sent from NodeB to NodeA in response to the initial message.
+   */
+  bytes hash2 = 3;
 }
 
 /*
@@ -1069,8 +1237,13 @@ message MeshPacket {
 
     /*
      * Higher priority for specific message types (portnums) to distinguish between other reliable packets.
-     */ 
+     */
     HIGH = 100;
+
+    /*
+     * Higher priority alert message used for critical alerts which take priority over other reliable packets.
+     */
+    ALERT = 110;
 
     /*
      * Ack/naks are sent with very high priority to ensure that retransmission
@@ -1102,6 +1275,51 @@ message MeshPacket {
      * The message is delayed and was originally a direct message
      */
     DELAYED_DIRECT = 2;
+  }
+
+  /*
+   * Enum to identify which transport mechanism this packet arrived over
+   */
+  enum TransportMechanism {
+    /*
+     * The default case is that the node generated a packet itself
+     */
+    TRANSPORT_INTERNAL = 0;
+
+    /*
+     * Arrived via the primary LoRa radio
+     */
+    TRANSPORT_LORA = 1;
+
+    /*
+     * Arrived via a secondary LoRa radio
+     */
+    TRANSPORT_LORA_ALT1 = 2;
+
+    /*
+     * Arrived via a tertiary LoRa radio
+     */
+    TRANSPORT_LORA_ALT2 = 3;
+
+    /*
+     * Arrived via a quaternary LoRa radio
+     */
+    TRANSPORT_LORA_ALT3 = 4;
+
+    /*
+     * Arrived via an MQTT connection
+     */
+    TRANSPORT_MQTT = 5;
+
+    /*
+     * Arrived via Multicast UDP
+     */
+    TRANSPORT_MULTICAST_UDP = 6;
+
+    /*
+     * Arrived via API connection
+     */
+    TRANSPORT_API = 7;
   }
 
   /*
@@ -1176,7 +1394,7 @@ message MeshPacket {
   float rx_snr = 8;
 
   /*
-   * If unset treated as zero (no forwarding, send to adjacent nodes only)
+   * If unset treated as zero (no forwarding, send to direct neighbor nodes only)
    * if 1, allow hopping through one node, etc...
    * For our usecase real world topologies probably have a max of about 3.
    * This field is normally placed into a few of bits in the header.
@@ -1232,6 +1450,30 @@ message MeshPacket {
    * Indicates whether the packet was en/decrypted using PKI
    */
   bool pki_encrypted = 17;
+
+  /*
+   * Last byte of the node number of the node that should be used as the next hop in routing.
+   * Set by the firmware internally, clients are not supposed to set this.
+   */
+  uint32 next_hop = 18;
+
+  /*
+   * Last byte of the node number of the node that will relay/relayed this packet.
+   * Set by the firmware internally, clients are not supposed to set this.
+   */
+  uint32 relay_node = 19;
+
+  /*
+   * *Never* sent over the radio links.
+   * Timestamp after which this packet may be sent.
+   * Set by the firmware internally, clients are not supposed to set this.
+   */
+  uint32 tx_after = 20;
+
+  /*
+   * Indicates which transport mechanism this packet arrived over
+   */
+  TransportMechanism transport_mechanism = 21;
 }
 
 /*
@@ -1249,7 +1491,7 @@ enum Constants {
    * note: this payload length is ONLY the bytes that are sent inside of the Data protobuf (excluding protobuf overhead). The 16 byte header is
    * outside of this envelope
    */
-  DATA_PAYLOAD_LEN = 237;
+  DATA_PAYLOAD_LEN = 233;
 }
 
 /*
@@ -1316,7 +1558,7 @@ message NodeInfo {
   /*
    * TODO: REMOVE/INTEGRATE
    * Not currently used (till full DSR deployment?) Our current preferred node node for routing - might be the same as num if
-   * we are adjacent Or zero if we don't yet know a route to this node.
+   * we are direct neighbor or zero if we don't yet know a route to this node.
    * fixed32 next_hop = 5;
    */
 
@@ -1340,7 +1582,7 @@ message NodeInfo {
   bool via_mqtt = 8;
 
   /*
-   * Number of hops away from us this node is (0 if adjacent)
+   * Number of hops away from us this node is (0 if direct neighbor)
    */
   optional uint32 hops_away = 9;
 
@@ -1349,6 +1591,19 @@ message NodeInfo {
    * Persists between NodeDB internal clean ups
    */
   bool is_favorite = 10;
+
+  /*
+   * True if node is in our ignored list
+   * Persists between NodeDB internal clean ups
+   */
+  bool is_ignored = 11;
+
+  /*
+   * True if node public key has been verified.
+   * Persists between NodeDB internal clean ups
+   * LSB 0 of the bitfield
+   */
+  bool is_key_manually_verified = 12;
 }
 
 /*
@@ -1434,6 +1689,47 @@ enum CriticalErrorCode {
 }
 
 /*
+ * Enum to indicate to clients whether this firmware is a special firmware build, like an event.
+ * The first 16 values are reserved for non-event special firmwares, like the Smart Citizen use case.
+ */
+enum FirmwareEdition {
+  /*
+   * Vanilla firmware
+   */
+  VANILLA = 0;
+
+  /*
+   * Firmware for use in the Smart Citizen environmental monitoring network
+   */
+  SMART_CITIZEN = 1;
+
+  /*
+   * Open Sauce, the maker conference held yearly in CA
+   */
+  OPEN_SAUCE = 16;
+
+  /*
+   * DEFCON, the yearly hacker conference
+   */
+  DEFCON = 17;
+
+  /*
+   * Burning Man, the yearly hippie gathering in the desert
+   */
+  BURNING_MAN = 18;
+
+  /*
+   * Hamvention, the Dayton amateur radio convention
+   */
+  HAMVENTION = 19;
+
+  /*
+   * Placeholder for DIY and unofficial events
+   */
+  DIY_EDITION = 127;
+}
+
+/*
  * Unique local debugging info for this node
  * Note: we don't include position or the user info, because that will come in the
  * Sent to the phone in response to WantNodes.
@@ -1456,6 +1752,27 @@ message MyNodeInfo {
    * Phone/PC apps should compare this to their build number and if too low tell the user they must update their app
    */
   uint32 min_app_version = 11;
+
+  /*
+   * Unique hardware identifier for this device
+   */
+  bytes device_id = 12;
+
+  /*
+   * The PlatformIO environment used to build this firmware
+   */
+  string pio_env = 13;
+
+  /*
+   * The indicator for whether this device is running event firmware and which
+   */
+  FirmwareEdition firmware_edition = 14;
+
+  /*
+   * The number of nodes in the nodedb.
+   * This is used by the phone to know how many NodeInfo packets to expect on want_config
+   */
+  uint32 nodedb_count = 15;
 }
 
 /*
@@ -1640,6 +1957,11 @@ message FromRadio {
      * Notification message to the client
      */
     ClientNotification clientNotification = 16;
+
+    /*
+     * Persistent data for device-ui
+     */
+    DeviceUIConfig deviceuiConfig = 17;
   }
 }
 
@@ -1668,7 +1990,33 @@ message ClientNotification {
    * The message body of the notification
    */
   string message = 4;
+
+  oneof payload_variant {
+    KeyVerificationNumberInform key_verification_number_inform = 11;
+    KeyVerificationNumberRequest key_verification_number_request = 12;
+    KeyVerificationFinal key_verification_final = 13;
+    DuplicatedPublicKey duplicated_public_key = 14;
+    LowEntropyKey low_entropy_key = 15;
+  }
 }
+
+message KeyVerificationNumberInform {
+  uint64 nonce = 1;
+  string remote_longname = 2;
+  uint32 security_number = 3;
+}
+message KeyVerificationNumberRequest {
+  uint64 nonce = 1;
+  string remote_longname = 2;
+}
+message KeyVerificationFinal {
+  uint64 nonce = 1;
+  string remote_longname = 2;
+  bool isSender = 3;
+  string verification_characters = 4;
+}
+message DuplicatedPublicKey {}
+message LowEntropyKey {}
 
 /*
  * Individual File info for the device
@@ -1859,13 +2207,111 @@ message DeviceMetadata {
    * Has PKC capabilities
    */
   bool hasPKC = 11;
+
+  /*
+   * Bit field of boolean for excluded modules
+   * (bitwise OR of ExcludedModules)
+   */
+  uint32 excluded_modules = 12;
+}
+
+/*
+ * Enum for modules excluded from a device's configuration.
+ * Each value represents a ModuleConfigType that can be toggled as excluded
+ * by setting its corresponding bit in the `excluded_modules` bitmask field.
+ */
+enum ExcludedModules {
+  /*
+   * Default value of 0 indicates no modules are excluded.
+   */
+  EXCLUDED_NONE = 0x0000;
+
+  /*
+   * MQTT module
+   */
+  MQTT_CONFIG = 0x0001;
+
+  /*
+   * Serial module
+   */
+  SERIAL_CONFIG = 0x0002;
+
+  /*
+   * External Notification module
+   */
+  EXTNOTIF_CONFIG = 0x0004;
+
+  /*
+   * Store and Forward module
+   */
+  STOREFORWARD_CONFIG = 0x0008;
+
+  /*
+   * Range Test module
+   */
+  RANGETEST_CONFIG = 0x0010;
+
+  /*
+   * Telemetry module
+   */
+  TELEMETRY_CONFIG = 0x0020;
+
+  /*
+   * Canned Message module
+   */
+  CANNEDMSG_CONFIG = 0x0040;
+
+  /*
+   * Audio module
+   */
+  AUDIO_CONFIG = 0x0080;
+
+  /*
+   * Remote Hardware module
+   */
+  REMOTEHARDWARE_CONFIG = 0x0100;
+
+  /*
+   * Neighbor Info module
+   */
+  NEIGHBORINFO_CONFIG = 0x0200;
+
+  /*
+   * Ambient Lighting module
+   */
+  AMBIENTLIGHTING_CONFIG = 0x0400;
+
+  /*
+   * Detection Sensor module
+   */
+  DETECTIONSENSOR_CONFIG = 0x0800;
+
+  /*
+   * Paxcounter module
+   */
+  PAXCOUNTER_CONFIG = 0x1000;
+
+  /*
+   * Bluetooth config (not technically a module, but used to indicate bluetooth capabilities)
+   */
+  BLUETOOTH_CONFIG = 0x2000;
+
+  /*
+   * Network config (not technically a module, but used to indicate network capabilities)
+   */
+  NETWORK_CONFIG = 0x4000;
 }
 
 /*
  * A heartbeat message is sent to the node from the client to keep the connection alive.
  * This is currently only needed to keep serial connections alive, but can be used by any PhoneAPI.
  */
-message Heartbeat {}
+message Heartbeat {
+  /*
+   * The nonce of the heartbeat message
+   */
+  uint32 nonce = 1;
+}
 
 /*
  * RemoteHardwarePins associated with a node
@@ -1908,7 +2354,7 @@ message ChunkedPayload {
  * Wrapper message for broken repeated oneof support
  */
 message resend_chunks {
-    repeated uint32 chunks = 1;
+  repeated uint32 chunks = 1;
 }
 
 /*

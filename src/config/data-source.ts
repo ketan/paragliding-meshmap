@@ -61,8 +61,17 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export const dbUrl = process.env.DATABASE_URL as string
-export const pgBoss = new PgBoss(dbUrl)
 const dbConnectionOpts = parse.parse(dbUrl)
+
+export const pgBoss = new PgBoss({
+  user: dbConnectionOpts.user,
+  password: dbConnectionOpts.password,
+  host: dbConnectionOpts.host ?? undefined,
+  port: dbConnectionOpts.port ? parseInt(dbConnectionOpts.port) : undefined,
+  database: dbConnectionOpts.database ?? undefined,
+  retentionDays: 7,
+  deleteAfterDays: 7,
+})
 
 // console.log(`Using connection parameters`, connString)
 // console.log(`Using connection concurrency`, dbConnectionConcurrency)

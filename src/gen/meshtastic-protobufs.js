@@ -12866,6 +12866,8 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {number|null} [sender] Send out range test messages from this node
        * @property {boolean|null} [save] Bool value indicating that this node should save a RangeTest.csv file.
        * ESP32 Only
+       * @property {boolean|null} [clearOnReboot] Bool indicating that the node should cleanup / destroy it's RangeTest.csv file.
+       * ESP32 Only
        */
 
       /**
@@ -12908,6 +12910,15 @@ export const meshtastic = ($root.meshtastic = (() => {
       RangeTestConfig.prototype.save = false
 
       /**
+       * Bool indicating that the node should cleanup / destroy it's RangeTest.csv file.
+       * ESP32 Only
+       * @member {boolean} clearOnReboot
+       * @memberof meshtastic.ModuleConfig.RangeTestConfig
+       * @instance
+       */
+      RangeTestConfig.prototype.clearOnReboot = false
+
+      /**
        * Encodes the specified RangeTestConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RangeTestConfig.verify|verify} messages.
        * @function encode
        * @memberof meshtastic.ModuleConfig.RangeTestConfig
@@ -12924,6 +12935,8 @@ export const meshtastic = ($root.meshtastic = (() => {
           writer.uint32(/* id 2, wireType 0 =*/ 16).uint32(message.sender)
         if (message.save != null && Object.hasOwnProperty.call(message, 'save'))
           writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.save)
+        if (message.clearOnReboot != null && Object.hasOwnProperty.call(message, 'clearOnReboot'))
+          writer.uint32(/* id 4, wireType 0 =*/ 32).bool(message.clearOnReboot)
         return writer
       }
 
@@ -12956,6 +12969,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             }
             case 3: {
               message.save = reader.bool()
+              break
+            }
+            case 4: {
+              message.clearOnReboot = reader.bool()
               break
             }
             default:

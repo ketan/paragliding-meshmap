@@ -6303,6 +6303,12 @@ export namespace meshtastic {
        * ESP32 Only
        */
       save?: boolean | null
+
+      /**
+       * Bool indicating that the node should cleanup / destroy it's RangeTest.csv file.
+       * ESP32 Only
+       */
+      clearOnReboot?: boolean | null
     }
 
     /** Preferences for the RangeTestModule */
@@ -6324,6 +6330,12 @@ export namespace meshtastic {
        * ESP32 Only
        */
       public save: boolean
+
+      /**
+       * Bool indicating that the node should cleanup / destroy it's RangeTest.csv file.
+       * ESP32 Only
+       */
+      public clearOnReboot: boolean
 
       /**
        * Encodes the specified RangeTestConfig message. Does not implicitly {@link meshtastic.ModuleConfig.RangeTestConfig.verify|verify} messages.

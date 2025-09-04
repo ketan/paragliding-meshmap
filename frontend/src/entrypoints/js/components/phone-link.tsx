@@ -1,5 +1,5 @@
 import { parsePhoneNumberWithError } from 'libphonenumber-js/max'
-import { TelegramIcon, WhatsappIcon } from '../utils/icon-constants.ts'
+import { IconBrandTelegram, IconBrandWhatsapp } from '@tabler/icons-react'
 
 interface PhoneLinkProps {
   phoneNumber: string
@@ -15,12 +15,12 @@ export function PhoneLink(props: PhoneLinkProps) {
   const telegramURI = `https://t.me/+${parsedPhoneNumber.countryCallingCode}${parsedPhoneNumber.nationalNumber}`
   const whatsappLink = (
     <a href={whatsappURI} target="_blank" rel="noreferrer">
-      <WhatsappIcon className={'w-4 h-4 inline ms-2'} />
+      <IconBrandWhatsapp className={'w-4 h-4 stroke-black inline ms-2'} />
     </a>
   )
   const telegramLink = (
     <a href={telegramURI} target="_blank" rel="noreferrer">
-      <TelegramIcon className={'w-4 h-4 inline ms-2'} />
+      <IconBrandTelegram className={'w-4 h-4 stroke-black inline ms-2'} />
     </a>
   )
   const phoneLink = <a href={phoneURI}>{formattedPhone}</a>

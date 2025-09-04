@@ -940,6 +940,10 @@ export const meshtastic = ($root.meshtastic = (() => {
        * in areas not already covered by other routers, or to bridge around problematic terrain,
        * but should not be given priority over other routers in order to avoid unnecessaraily
        * consuming hops.
+       * @property {number} CLIENT_BASE=12 Description: Treats packets from or to favorited nodes as ROUTER, and all other packets as CLIENT.
+       * Technical Details: Used for stronger attic/roof nodes to distribute messages more widely
+       * from weaker, indoor, or less-well-positioned nodes. Recommended for users with multiple nodes
+       * where one CLIENT_BASE acts as a more powerful base station, such as an attic/roof node.
        */
       DeviceConfig.Role = (function () {
         const valuesById = {},
@@ -956,6 +960,7 @@ export const meshtastic = ($root.meshtastic = (() => {
         values[(valuesById[9] = 'LOST_AND_FOUND')] = 9
         values[(valuesById[10] = 'TAK_TRACKER')] = 10
         values[(valuesById[11] = 'ROUTER_LATE')] = 11
+        values[(valuesById[12] = 'CLIENT_BASE')] = 12
         return values
       })()
 
@@ -1955,7 +1960,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @interface IDisplayConfig
        * @property {number|null} [screenOnSecs] Number of seconds the screen stays on after pressing the user button or receiving a message
        * 0 for default of one minute MAXUINT for always on
-       * @property {meshtastic.Config.DisplayConfig.GpsCoordinateFormat|null} [gpsFormat] Deprecated in 2.7.4: Unused
+       * @property {meshtastic.Config.DisplayConfig.DeprecatedGpsCoordinateFormat|null} [gpsFormat] Deprecated in 2.7.4: Unused
        * How the GPS coordinates are formatted on the OLED screen.
        * @property {number|null} [autoScreenCarouselSecs] Automatically toggles to the next page on the screen like a carousel, based the specified interval in seconds.
        * Potentially useful for devices without user buttons.
@@ -1970,6 +1975,8 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {meshtastic.Config.DisplayConfig.CompassOrientation|null} [compassOrientation] Indicates how to rotate or invert the compass output to accurate display on the display.
        * @property {boolean|null} [use_12hClock] If false (default), the device will display the time in 24-hour format on screen.
        * If true, the device will display the time in 12-hour format on screen.
+       * @property {boolean|null} [useLongNodeName] If false (default), the device will use short names for various display screens.
+       * If true, node names will show in long format
        */
 
       /**
@@ -1998,7 +2005,7 @@ export const meshtastic = ($root.meshtastic = (() => {
       /**
        * Deprecated in 2.7.4: Unused
        * How the GPS coordinates are formatted on the OLED screen.
-       * @member {meshtastic.Config.DisplayConfig.GpsCoordinateFormat} gpsFormat
+       * @member {meshtastic.Config.DisplayConfig.DeprecatedGpsCoordinateFormat} gpsFormat
        * @memberof meshtastic.Config.DisplayConfig
        * @instance
        */
@@ -2088,6 +2095,15 @@ export const meshtastic = ($root.meshtastic = (() => {
       DisplayConfig.prototype.use_12hClock = false
 
       /**
+       * If false (default), the device will use short names for various display screens.
+       * If true, node names will show in long format
+       * @member {boolean} useLongNodeName
+       * @memberof meshtastic.Config.DisplayConfig
+       * @instance
+       */
+      DisplayConfig.prototype.useLongNodeName = false
+
+      /**
        * Encodes the specified DisplayConfig message. Does not implicitly {@link meshtastic.Config.DisplayConfig.verify|verify} messages.
        * @function encode
        * @memberof meshtastic.Config.DisplayConfig
@@ -2122,6 +2138,8 @@ export const meshtastic = ($root.meshtastic = (() => {
           writer.uint32(/* id 11, wireType 0 =*/ 88).int32(message.compassOrientation)
         if (message.use_12hClock != null && Object.hasOwnProperty.call(message, 'use_12hClock'))
           writer.uint32(/* id 12, wireType 0 =*/ 96).bool(message.use_12hClock)
+        if (message.useLongNodeName != null && Object.hasOwnProperty.call(message, 'useLongNodeName'))
+          writer.uint32(/* id 13, wireType 0 =*/ 104).bool(message.useLongNodeName)
         return writer
       }
 
@@ -2192,6 +2210,10 @@ export const meshtastic = ($root.meshtastic = (() => {
               message.use_12hClock = reader.bool()
               break
             }
+            case 13: {
+              message.useLongNodeName = reader.bool()
+              break
+            }
             default:
               reader.skipType(tag & 7)
               break
@@ -2201,32 +2223,15 @@ export const meshtastic = ($root.meshtastic = (() => {
       }
 
       /**
-       * How the GPS coordinates are displayed on the OLED screen.
-       * @name meshtastic.Config.DisplayConfig.GpsCoordinateFormat
+       * Deprecated in 2.7.4: Unused
+       * @name meshtastic.Config.DisplayConfig.DeprecatedGpsCoordinateFormat
        * @enum {number}
-       * @property {number} DEC=0 GPS coordinates are displayed in the normal decimal degrees format:
-       * DD.DDDDDD DDD.DDDDDD
-       * @property {number} DMS=1 GPS coordinates are displayed in the degrees minutes seconds format:
-       * DD°MM'SS"C DDD°MM'SS"C, where C is the compass point representing the locations quadrant
-       * @property {number} UTM=2 Universal Transverse Mercator format:
-       * ZZB EEEEEE NNNNNNN, where Z is zone, B is band, E is easting, N is northing
-       * @property {number} MGRS=3 Military Grid Reference System format:
-       * ZZB CD EEEEE NNNNN, where Z is zone, B is band, C is the east 100k square, D is the north 100k square,
-       * E is easting, N is northing
-       * @property {number} OLC=4 Open Location Code (aka Plus Codes).
-       * @property {number} OSGR=5 Ordnance Survey Grid Reference (the National Grid System of the UK).
-       * Format: AB EEEEE NNNNN, where A is the east 100k square, B is the north 100k square,
-       * E is the easting, N is the northing
+       * @property {number} UNUSED=0 UNUSED value
        */
-      DisplayConfig.GpsCoordinateFormat = (function () {
+      DisplayConfig.DeprecatedGpsCoordinateFormat = (function () {
         const valuesById = {},
           values = Object.create(valuesById)
-        values[(valuesById[0] = 'DEC')] = 0
-        values[(valuesById[1] = 'DMS')] = 1
-        values[(valuesById[2] = 'UTM')] = 2
-        values[(valuesById[3] = 'MGRS')] = 3
-        values[(valuesById[4] = 'OLC')] = 4
-        values[(valuesById[5] = 'OSGR')] = 5
+        values[(valuesById[0] = 'UNUSED')] = 0
         return values
       })()
 
@@ -3218,6 +3223,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * 0xRRGGBB format, e.g. 0xFF0000 for red
      * @property {boolean|null} [isClockfaceAnalog] Clockface analog style
      * true for analog clockface, false for digital clockface
+     * @property {meshtastic.DeviceUIConfig.GpsCoordinateFormat|null} [gpsFormat] How the GPS coordinates are formatted on the OLED screen.
      */
 
     /**
@@ -3381,6 +3387,14 @@ export const meshtastic = ($root.meshtastic = (() => {
     DeviceUIConfig.prototype.isClockfaceAnalog = false
 
     /**
+     * How the GPS coordinates are formatted on the OLED screen.
+     * @member {meshtastic.DeviceUIConfig.GpsCoordinateFormat} gpsFormat
+     * @memberof meshtastic.DeviceUIConfig
+     * @instance
+     */
+    DeviceUIConfig.prototype.gpsFormat = 0
+
+    /**
      * Encodes the specified DeviceUIConfig message. Does not implicitly {@link meshtastic.DeviceUIConfig.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.DeviceUIConfig
@@ -3427,6 +3441,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 17, wireType 0 =*/ 136).uint32(message.screenRgbColor)
       if (message.isClockfaceAnalog != null && Object.hasOwnProperty.call(message, 'isClockfaceAnalog'))
         writer.uint32(/* id 18, wireType 0 =*/ 144).bool(message.isClockfaceAnalog)
+      if (message.gpsFormat != null && Object.hasOwnProperty.call(message, 'gpsFormat'))
+        writer.uint32(/* id 19, wireType 0 =*/ 152).int32(message.gpsFormat)
       return writer
     }
 
@@ -3521,6 +3537,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             message.isClockfaceAnalog = reader.bool()
             break
           }
+          case 19: {
+            message.gpsFormat = reader.int32()
+            break
+          }
           default:
             reader.skipType(tag & 7)
             break
@@ -3528,6 +3548,39 @@ export const meshtastic = ($root.meshtastic = (() => {
       }
       return message
     }
+
+    /**
+     * How the GPS coordinates are displayed on the OLED screen.
+     * @name meshtastic.DeviceUIConfig.GpsCoordinateFormat
+     * @enum {number}
+     * @property {number} DEC=0 GPS coordinates are displayed in the normal decimal degrees format:
+     * DD.DDDDDD DDD.DDDDDD
+     * @property {number} DMS=1 GPS coordinates are displayed in the degrees minutes seconds format:
+     * DD°MM'SS"C DDD°MM'SS"C, where C is the compass point representing the locations quadrant
+     * @property {number} UTM=2 Universal Transverse Mercator format:
+     * ZZB EEEEEE NNNNNNN, where Z is zone, B is band, E is easting, N is northing
+     * @property {number} MGRS=3 Military Grid Reference System format:
+     * ZZB CD EEEEE NNNNN, where Z is zone, B is band, C is the east 100k square, D is the north 100k square,
+     * E is easting, N is northing
+     * @property {number} OLC=4 Open Location Code (aka Plus Codes).
+     * @property {number} OSGR=5 Ordnance Survey Grid Reference (the National Grid System of the UK).
+     * Format: AB EEEEE NNNNN, where A is the east 100k square, B is the north 100k square,
+     * E is the easting, N is the northing
+     * @property {number} MLS=6 Maidenhead Locator System
+     * Described here: https://en.wikipedia.org/wiki/Maidenhead_Locator_System
+     */
+    DeviceUIConfig.GpsCoordinateFormat = (function () {
+      const valuesById = {},
+        values = Object.create(valuesById)
+      values[(valuesById[0] = 'DEC')] = 0
+      values[(valuesById[1] = 'DMS')] = 1
+      values[(valuesById[2] = 'UTM')] = 2
+      values[(valuesById[3] = 'MGRS')] = 3
+      values[(valuesById[4] = 'OLC')] = 4
+      values[(valuesById[5] = 'OSGR')] = 5
+      values[(valuesById[6] = 'MLS')] = 6
+      return values
+    })()
 
     return DeviceUIConfig
   })()
@@ -4117,6 +4170,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} SLOVENIAN=15 Slovenian
    * @property {number} UKRAINIAN=16 Ukrainian
    * @property {number} BULGARIAN=17 Bulgarian
+   * @property {number} CZECH=18 Czech
    * @property {number} SIMPLIFIED_CHINESE=30 Simplified Chinese (experimental)
    * @property {number} TRADITIONAL_CHINESE=31 Traditional Chinese (experimental)
    */
@@ -4141,6 +4195,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[15] = 'SLOVENIAN')] = 15
     values[(valuesById[16] = 'UKRAINIAN')] = 16
     values[(valuesById[17] = 'BULGARIAN')] = 17
+    values[(valuesById[18] = 'CZECH')] = 18
     values[(valuesById[30] = 'SIMPLIFIED_CHINESE')] = 30
     values[(valuesById[31] = 'TRADITIONAL_CHINESE')] = 31
     return values
@@ -4857,13 +4912,16 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} QWANTZ_TINY_ARMS=101 Reserved ID for future and past use
    * @property {number} T_DECK_PRO=102 Lilygo T-Deck Pro
    * @property {number} T_LORA_PAGER=103 Lilygo TLora Pager
-   * @property {number} GAT562_MESH_TRIAL_TRACKER=104 GAT562 Mesh Trial Tracker
+   * @property {number} M5STACK_RESERVED=104 M5Stack Reserved
    * @property {number} WISMESH_TAG=105 RAKwireless WisMesh Tag
    * @property {number} RAK3312=106 RAKwireless WisBlock Core RAK3312 https://docs.rakwireless.com/product-categories/wisduo/rak3112-module/overview/
    * @property {number} THINKNODE_M5=107 Elecrow ThinkNode M5 https://www.elecrow.com/wiki/ThinkNode_M5_Meshtastic_LoRa_Signal_Transceiver_ESP32-S3.html
    * @property {number} HELTEC_MESH_SOLAR=108 MeshSolar is an integrated power management and communication solution designed for outdoor low-power devices.
    * https://heltec.org/project/meshsolar/
    * @property {number} T_ECHO_LITE=109 Lilygo T-Echo Lite
+   * @property {number} HELTEC_V4=110 New Heltec LoRA32 with ESP32-S3 CPU
+   * @property {number} M5STACK_C6L=111 M5Stack C6L
+   * @property {number} M5STACK_CARDPUTER_ADV=112 M5Stack Cardputer Adv
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -4975,12 +5033,15 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[101] = 'QWANTZ_TINY_ARMS')] = 101
     values[(valuesById[102] = 'T_DECK_PRO')] = 102
     values[(valuesById[103] = 'T_LORA_PAGER')] = 103
-    values[(valuesById[104] = 'GAT562_MESH_TRIAL_TRACKER')] = 104
+    values[(valuesById[104] = 'M5STACK_RESERVED')] = 104
     values[(valuesById[105] = 'WISMESH_TAG')] = 105
     values[(valuesById[106] = 'RAK3312')] = 106
     values[(valuesById[107] = 'THINKNODE_M5')] = 107
     values[(valuesById[108] = 'HELTEC_MESH_SOLAR')] = 108
     values[(valuesById[109] = 'T_ECHO_LITE')] = 109
+    values[(valuesById[110] = 'HELTEC_V4')] = 110
+    values[(valuesById[111] = 'M5STACK_C6L')] = 111
+    values[(valuesById[112] = 'M5STACK_CARDPUTER_ADV')] = 112
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -13011,6 +13072,8 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {number|null} [healthUpdateInterval] Interval in seconds of how often we should try to send our
        * health metrics to the mesh
        * @property {boolean|null} [healthScreenEnabled] Enable/Disable the health telemetry module on-device display
+       * @property {boolean|null} [deviceTelemetryEnabled] Enable/Disable the device telemetry module to send metrics to the mesh
+       * Note: We will still send telemtry to the connected phone / client every minute over the API
        */
 
       /**
@@ -13139,6 +13202,15 @@ export const meshtastic = ($root.meshtastic = (() => {
       TelemetryConfig.prototype.healthScreenEnabled = false
 
       /**
+       * Enable/Disable the device telemetry module to send metrics to the mesh
+       * Note: We will still send telemtry to the connected phone / client every minute over the API
+       * @member {boolean} deviceTelemetryEnabled
+       * @memberof meshtastic.ModuleConfig.TelemetryConfig
+       * @instance
+       */
+      TelemetryConfig.prototype.deviceTelemetryEnabled = false
+
+      /**
        * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.
        * @function encode
        * @memberof meshtastic.ModuleConfig.TelemetryConfig
@@ -13175,6 +13247,8 @@ export const meshtastic = ($root.meshtastic = (() => {
           writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.healthUpdateInterval)
         if (message.healthScreenEnabled != null && Object.hasOwnProperty.call(message, 'healthScreenEnabled'))
           writer.uint32(/* id 13, wireType 0 =*/ 104).bool(message.healthScreenEnabled)
+        if (message.deviceTelemetryEnabled != null && Object.hasOwnProperty.call(message, 'deviceTelemetryEnabled'))
+          writer.uint32(/* id 14, wireType 0 =*/ 112).bool(message.deviceTelemetryEnabled)
         return writer
       }
 
@@ -13247,6 +13321,10 @@ export const meshtastic = ($root.meshtastic = (() => {
             }
             case 13: {
               message.healthScreenEnabled = reader.bool()
+              break
+            }
+            case 14: {
+              message.deviceTelemetryEnabled = reader.bool()
               break
             }
             default:

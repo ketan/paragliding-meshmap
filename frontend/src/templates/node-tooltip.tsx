@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { DateTime, Duration } from 'luxon'
 import { Fragment, ReactNode, useEffect } from 'react'
 import { Tooltip } from '../entrypoints/js/components/tooltip'
-import { CopyIcon } from '../entrypoints/js/utils/icon-constants'
 import {
   BROADCAST_ADDR,
   googleMapsLink,
@@ -16,6 +15,7 @@ import { HardwareModelIDToName } from '../hardware-modules'
 import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
 import { nodeUrl } from '../entrypoints/js/utils/link-utils'
+import { IconCopy } from '@tabler/icons-react'
 
 function status(node: NodesEntityForUI, onlineAge: Duration, offlineAge: Duration) {
   const status = nodeStatus(node, onlineAge, offlineAge)
@@ -272,7 +272,7 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
               {node.nodeId} (!{node.nodeId.toString(16)})
             </a>
             <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3">
-              <CopyIcon
+              <IconCopy
                 className="w-5 h-5 inline-block p-0.5"
                 onClick={() => {
                   const absoluteNodeUrl = new URL(link, window.location.href)

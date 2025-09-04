@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import icon from '../../../assets/images/icon.png'
-import { CircleInfoIcon, GearsIcon, HandshakeIcon } from '../utils/icon-constants'
 import { AboutModal } from './about-modal'
 import { toast, ToastContainer } from 'react-toastify'
 import { ConfigModal } from './config-modal.tsx'
@@ -15,6 +14,7 @@ import { fetchCsrfToken } from '../utils/csrf.ts'
 import { ProfileModal } from './profile-modal.tsx'
 import { profileFormDataYUPSchema } from './profile-modal-interfaces.ts'
 import { PartnerModal } from './partner-modal.tsx'
+import { IconInfoCircle, IconSend, IconSettingsCog } from '@tabler/icons-react'
 
 interface PageProps extends React.PropsWithChildren {
   headerIcons?: React.ReactNode
@@ -141,14 +141,9 @@ export function Page(props: PageProps) {
             <div className="w-full mx-3 my-auto block relative">{props.bannerMain}</div>
             {/* header action buttons */}
             <HeaderActionButtons>
-              <HeaderIcon icon={GearsIcon} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
-              <HeaderIcon icon={CircleInfoIcon} tooltip="About" tooltipDir="bottom-end" onClick={() => props.aboutModal.onClick()} />
-              <HeaderIcon
-                icon={HandshakeIcon}
-                tooltip="Partner with us"
-                tooltipDir="bottom-end"
-                onClick={() => props.partnerModal.onClick()}
-              />
+              <HeaderIcon icon={IconSettingsCog} tooltip="Configure" tooltipDir="bottom" onClick={() => props.configModal.onClick()} />
+              <HeaderIcon icon={IconInfoCircle} tooltip="About" tooltipDir="bottom-end" onClick={() => props.aboutModal.onClick()} />
+              <HeaderIcon icon={IconSend} tooltip="Partner with us" tooltipDir="bottom-end" onClick={() => props.partnerModal.onClick()} />
               {profileLoadedState === 'loaded' && userProfile && (
                 <ProfileIcon userProfile={userProfile} onProfileClick={() => props.profileModal.onClick()} />
               )}
@@ -172,7 +167,7 @@ export function Page(props: PageProps) {
           {props.children}
         </div>
       </div>
-      <ConfigModal onClose={() => props.configModal.onClick()} isOpen={props.configModal.show} />
+      {props.configModal.show && <ConfigModal onClose={() => props.configModal.onClick()} isOpen={props.configModal.show} />}
       <AboutModal onClose={() => props.aboutModal.onClick()} isOpen={props.aboutModal.show} />
       <ProfileModal onClose={() => props.profileModal.onClick()} isOpen={props.profileModal.show} />
       <PartnerModal onClose={() => props.partnerModal.onClick()} isOpen={props.partnerModal.show} />

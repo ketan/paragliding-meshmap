@@ -3,6 +3,19 @@ import fs from 'fs'
 import { errLog } from '#helpers/logger'
 import { PathLike } from 'node:fs'
 
+export function channelSetFromUrl(url: string): meshtastic.ChannelSet {
+  // Extract the base64url string after the last '#'
+  const base64url = url.split('#').pop() || ''
+  // Convert base64url to base64
+  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/')
+  // Pad with '=' if needed
+  const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
+  // Decode base64 to buffer
+  const buf = Buffer.from(padded, 'base64')
+  // Decode protobuf
+  return meshtastic.ChannelSet.decode(buf)
+}
+
 function channelUrl(loRaConfig: meshtastic.Config.ILoRaConfig) {
   const chset = new meshtastic.ChannelSet({
     settings: [
@@ -31,9 +44,10 @@ export function getDefaultProfile() {
     region: meshtastic.Config.LoRaConfig.RegionCode.IN,
     txEnabled: true,
     hopLimit: 3,
-    txPower: 0, // default maxiumu
+    txPower: 0, // default maxiumum
     sx126xRxBoostedGain: true,
     ignoreMqtt: true,
+    // configOkToMqtt: true,
   })
   const deviceProfile = new meshtastic.DeviceProfile({
     config: new meshtastic.LocalConfig({

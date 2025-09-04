@@ -1,5 +1,5 @@
 import { CertificationDocumentsEntity } from '../../../db-entities'
-import { FileArrowDownIcon } from '../utils/icon-constants.ts'
+import { IconFileDownload } from '@tabler/icons-react'
 
 export function CertificationDocumentsTable({
   certificationDocuments,
@@ -45,7 +45,7 @@ export function CertificationDocumentsTable({
                 <td className={classNames}>{doc.certificateNumber}</td>
                 <td>
                   <a href={`/api/certification-documents/${doc.id}`} target="_blank" rel="noreferrer">
-                    <FileArrowDownIcon className={'w-4 h-4'} />
+                    <IconFileDownload className={'w-5 h-5 stroke-black'} />
                   </a>
                 </td>
               </tr>

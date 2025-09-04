@@ -1,9 +1,8 @@
 import icon from '../../../assets/images/icon.png'
 import glider from '../../../assets/images/glider.png'
-
-import { GithubIcon } from '../utils/icon-constants'
 import { Modal, ModalBaseProps } from './modal'
 import { meshtasticIndiaTelegramLink } from '../utils/link-utils.ts'
+import { IconBrandGithub } from '@tabler/icons-react'
 
 const aboutModalTitle = (
   <div className="w-min-full mx-auto text-center pt-4 text-sm md:text-md">
@@ -31,7 +30,7 @@ const aboutModalTitle = (
         title="GitHub"
         className="inline-flex items-center p-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#333333] bg-gray-100 hover:bg-gray-200"
       >
-        <GithubIcon className="w-4 h-4" />
+        <IconBrandGithub className="w-5 h-5 stroke-black" />
       </a>
     </div>
   </div>

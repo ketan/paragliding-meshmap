@@ -9,8 +9,8 @@ import { MessagesEntityForUI } from '../../../nodes-entity'
 import { Modal } from '../components/modal.tsx'
 import { nodeUrl } from '../utils/link-utils.ts'
 import { clearMessageUrlParams, setMessageUrlParams, timeAgo, TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
-import { FilterCircleXmarkIcon, FilterIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
+import { IconFilter, IconFilterX } from '@tabler/icons-react'
 
 interface Props {
   from?: number
@@ -133,7 +133,7 @@ export function MessagesModal({ from, to, since, nodes, onClose, updateDuration,
   function toggleFilterHeaderIcon() {
     const showAll = to === 'all'
 
-    const Element = showAll ? FilterCircleXmarkIcon : FilterIcon
+    const Element = showAll ? IconFilterX : IconFilter
     const tooltip = showAll ? `Show all messages sent by this pilot` : `Only show messages broadcasted by this pilot`
 
     return (

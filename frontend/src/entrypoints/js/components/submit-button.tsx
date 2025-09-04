@@ -1,16 +1,16 @@
 import { ReactNode } from 'react'
-import { CheckIcon, SpinnerIcon, TriangleExclamationIcon } from '../utils/icon-constants.ts'
+import { IconAlertTriangle, IconCheck, IconProgress } from '@tabler/icons-react'
 
 export type SubmitButtonIcon = 'submitted' | 'submitting' | 'error' | undefined
 
 function iconFor(icon?: SubmitButtonIcon) {
   switch (icon) {
     case 'submitting':
-      return <SpinnerIcon className={`w-4 h-4 fill-white animate-spin mr-3`} />
+      return <IconProgress className={`w-4 h-4 fill-white animate-spin mr-3`} />
     case 'submitted':
-      return <CheckIcon className={`w-4 h-4 fill-white mr-3`} />
+      return <IconCheck className={`w-4 h-4 fill-white mr-3`} />
     case 'error':
-      return <TriangleExclamationIcon className={`w-4 h-4 fill-white mr-3`} />
+      return <IconAlertTriangle className={`w-4 h-4 fill-white mr-3`} />
     default:
       return null
   }

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { Modal } from './modal.tsx'
 import { PhoneLink } from './phone-link.tsx'
 import { DateTime } from 'luxon'
-import { FileArrowDownIcon } from '../utils/icon-constants.ts'
 import { InsuranceDocumentsTable } from './insurance-documents-table.tsx'
+import { IconFileDownload } from '@tabler/icons-react'
 
 interface ProfileModalProps {
   user: UsersEntity
@@ -51,7 +51,7 @@ export function UserDetailsModal({ user, onClose }: ProfileModalProps) {
   }, [user])
 
   const sectionHeader = 'lg:px-4 sm:px-1 pt-4 first:pt-2 pb-2'
-  const listItemClass = 'lg:px-4 sm:px-2 sm:py-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 border-b'
+  const listItemClass = 'lg:px-4 sm:px-2 sm:py-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 border-b border-b-gray-200'
   const listItemHeaderClass = 'text-xs sm:text-sm font-medium text-gray-900'
   const listItemValueClass = 'mt-1 text-xs sm:text-sm text-gray-700 sm:col-span-2 sm:mt-0'
 
@@ -130,7 +130,7 @@ export function UserDetailsModal({ user, onClose }: ProfileModalProps) {
               <dd className={listItemValueClass}>
                 {userDetails.identityDocuments.map((doc, index) => (
                   <a href={`/api/identity-documents/${doc.id}`} key={index} target="_blank" rel="noreferrer">
-                    <FileArrowDownIcon className={'w-4 h-4'} />
+                    <IconFileDownload className={'w-5 h-5 stroke-black'} />
                   </a>
                 ))}
               </dd>

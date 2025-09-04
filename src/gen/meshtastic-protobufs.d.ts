@@ -449,6 +449,7 @@ export namespace meshtastic {
         LOST_AND_FOUND = 9,
         TAK_TRACKER = 10,
         ROUTER_LATE = 11,
+        CLIENT_BASE = 12,
       }
 
       /** Defines the device's behavior for how messages are rebroadcast */
@@ -953,7 +954,7 @@ export namespace meshtastic {
        * Deprecated in 2.7.4: Unused
        * How the GPS coordinates are formatted on the OLED screen.
        */
-      gpsFormat?: meshtastic.Config.DisplayConfig.GpsCoordinateFormat | null
+      gpsFormat?: meshtastic.Config.DisplayConfig.DeprecatedGpsCoordinateFormat | null
 
       /**
        * Automatically toggles to the next page on the screen like a carousel, based the specified interval in seconds.
@@ -993,6 +994,12 @@ export namespace meshtastic {
        * If true, the device will display the time in 12-hour format on screen.
        */
       use_12hClock?: boolean | null
+
+      /**
+       * If false (default), the device will use short names for various display screens.
+       * If true, node names will show in long format
+       */
+      useLongNodeName?: boolean | null
     }
 
     /** Display Config */
@@ -1013,7 +1020,7 @@ export namespace meshtastic {
        * Deprecated in 2.7.4: Unused
        * How the GPS coordinates are formatted on the OLED screen.
        */
-      public gpsFormat: meshtastic.Config.DisplayConfig.GpsCoordinateFormat
+      public gpsFormat: meshtastic.Config.DisplayConfig.DeprecatedGpsCoordinateFormat
 
       /**
        * Automatically toggles to the next page on the screen like a carousel, based the specified interval in seconds.
@@ -1055,6 +1062,12 @@ export namespace meshtastic {
       public use_12hClock: boolean
 
       /**
+       * If false (default), the device will use short names for various display screens.
+       * If true, node names will show in long format
+       */
+      public useLongNodeName: boolean
+
+      /**
        * Encodes the specified DisplayConfig message. Does not implicitly {@link meshtastic.Config.DisplayConfig.verify|verify} messages.
        * @param message DisplayConfig message or plain object to encode
        * @param [writer] Writer to encode to
@@ -1074,14 +1087,9 @@ export namespace meshtastic {
     }
 
     namespace DisplayConfig {
-      /** How the GPS coordinates are displayed on the OLED screen. */
-      enum GpsCoordinateFormat {
-        DEC = 0,
-        DMS = 1,
-        UTM = 2,
-        MGRS = 3,
-        OLC = 4,
-        OSGR = 5,
+      /** Deprecated in 2.7.4: Unused */
+      enum DeprecatedGpsCoordinateFormat {
+        UNUSED = 0,
       }
 
       /** Unit display preference */
@@ -1666,6 +1674,9 @@ export namespace meshtastic {
      * true for analog clockface, false for digital clockface
      */
     isClockfaceAnalog?: boolean | null
+
+    /** How the GPS coordinates are formatted on the OLED screen. */
+    gpsFormat?: meshtastic.DeviceUIConfig.GpsCoordinateFormat | null
   }
 
   /** Represents a DeviceUIConfig. */
@@ -1736,6 +1747,9 @@ export namespace meshtastic {
      */
     public isClockfaceAnalog: boolean
 
+    /** How the GPS coordinates are formatted on the OLED screen. */
+    public gpsFormat: meshtastic.DeviceUIConfig.GpsCoordinateFormat
+
     /**
      * Encodes the specified DeviceUIConfig message. Does not implicitly {@link meshtastic.DeviceUIConfig.verify|verify} messages.
      * @param message DeviceUIConfig message or plain object to encode
@@ -1753,6 +1767,19 @@ export namespace meshtastic {
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
     public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): meshtastic.DeviceUIConfig
+  }
+
+  namespace DeviceUIConfig {
+    /** How the GPS coordinates are displayed on the OLED screen. */
+    enum GpsCoordinateFormat {
+      DEC = 0,
+      DMS = 1,
+      UTM = 2,
+      MGRS = 3,
+      OLC = 4,
+      OSGR = 5,
+      MLS = 6,
+    }
   }
 
   /** Properties of a NodeFilter. */
@@ -2017,6 +2044,7 @@ export namespace meshtastic {
     SLOVENIAN = 15,
     UKRAINIAN = 16,
     BULGARIAN = 17,
+    CZECH = 18,
     SIMPLIFIED_CHINESE = 30,
     TRADITIONAL_CHINESE = 31,
   }
@@ -2409,12 +2437,15 @@ export namespace meshtastic {
     QWANTZ_TINY_ARMS = 101,
     T_DECK_PRO = 102,
     T_LORA_PAGER = 103,
-    GAT562_MESH_TRIAL_TRACKER = 104,
+    M5STACK_RESERVED = 104,
     WISMESH_TAG = 105,
     RAK3312 = 106,
     THINKNODE_M5 = 107,
     HELTEC_MESH_SOLAR = 108,
     T_ECHO_LITE = 109,
+    HELTEC_V4 = 110,
+    M5STACK_C6L = 111,
+    M5STACK_CARDPUTER_ADV = 112,
     PRIVATE_HW = 255,
   }
 
@@ -6417,6 +6448,12 @@ export namespace meshtastic {
 
       /** Enable/Disable the health telemetry module on-device display */
       healthScreenEnabled?: boolean | null
+
+      /**
+       * Enable/Disable the device telemetry module to send metrics to the mesh
+       * Note: We will still send telemtry to the connected phone / client every minute over the API
+       */
+      deviceTelemetryEnabled?: boolean | null
     }
 
     /** Configuration for both device and environment metrics */
@@ -6486,6 +6523,12 @@ export namespace meshtastic {
 
       /** Enable/Disable the health telemetry module on-device display */
       public healthScreenEnabled: boolean
+
+      /**
+       * Enable/Disable the device telemetry module to send metrics to the mesh
+       * Note: We will still send telemtry to the connected phone / client every minute over the API
+       */
+      public deviceTelemetryEnabled: boolean
 
       /**
        * Encodes the specified TelemetryConfig message. Does not implicitly {@link meshtastic.ModuleConfig.TelemetryConfig.verify|verify} messages.

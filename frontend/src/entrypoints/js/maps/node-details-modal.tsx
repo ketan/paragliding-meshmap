@@ -12,10 +12,10 @@ import { Traceroutes } from './node-details-modal/traceroutes'
 import { Position } from './position.tsx'
 import { DateTime, Duration } from 'luxon'
 import _ from 'lodash'
-import { ArrowUpRightFromSquareIcon, CopyIcon } from '../utils/icon-constants.ts'
 import { Tooltip } from '../components/tooltip.tsx'
 import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import { toParams } from '../utils/link-utils.ts'
+import { IconCopy, IconExternalLink } from '@tabler/icons-react'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
@@ -128,7 +128,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
         <NameValue name="Fly XC ID" value={flyXCToken} />
 
         <Tooltip tooltipText="Copy link to clipboard" className="border-sm inline-block rounded border ml-3">
-          <CopyIcon
+          <IconCopy
             className="w-5 h-5 inline-block p-0.5"
             onClick={() => {
               navigator.clipboard.writeText(flyXCToken)
@@ -138,7 +138,7 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
 
         <Tooltip tooltipText="Configure your device in Fly XC" className="border-sm inline-block rounded border ml-3">
           <a href="https://flyxc.app/devices" target="_blank" rel="noreferrer">
-            <ArrowUpRightFromSquareIcon className="w-5 h-5 inline-block p-0.5" />
+            <IconExternalLink className="w-5 h-5 inline-block p-0.5" />
           </a>
         </Tooltip>
       </div>

@@ -281,3 +281,7 @@ export function randomHex(length: number) {
 export function isAdmin(userProfile: UserProfile) {
   return (userProfile.adminLocations && userProfile.adminLocations.length > 0) || userProfile.superUser
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

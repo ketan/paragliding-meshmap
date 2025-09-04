@@ -1,9 +1,9 @@
 import { UserProfile } from '../utils/profile.ts'
 import { useState } from 'react'
-import { ArrowRightFromBracketIcon, UserIcon, UserShieldIcon } from '../utils/icon-constants.ts'
 
 import { HeaderIcon } from './header-icon.tsx'
 import { isAdmin } from '../utils/ui-util.tsx'
+import { IconLogout, IconUser, IconUserShield } from '@tabler/icons-react'
 
 interface ProfileIconProps {
   userProfile: UserProfile
@@ -33,7 +33,7 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
         >
           {/* Add your custom dropdown content here */}
           <button className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left" onClick={onProfileClick}>
-            <UserIcon className="h-4 w-4 inline-block mr-3" />
+            <IconUser className="h-4 w-4 inline-block mr-3" />
             Profile
           </button>
 
@@ -42,7 +42,7 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
               className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left"
               onClick={() => (window.location.href = '/users.html')}
             >
-              <UserShieldIcon className="h-4 w-4 inline-block mr-3" />
+              <IconUserShield className="h-4 w-4 inline-block mr-3" />
               Users
             </button>
           )}
@@ -51,7 +51,7 @@ export function ProfileIcon({ onProfileClick, userProfile }: ProfileIconProps) {
             onClick={() => (window.location.href = '/auth/logout')}
             className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-left"
           >
-            <ArrowRightFromBracketIcon className={'h-4 w-4 inline-block mr-3'} />
+            <IconLogout className={'h-4 w-4 inline-block mr-3'} />
             Logout
           </button>
         </div>

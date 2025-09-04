@@ -10,6 +10,7 @@ cleanup() {
         kill $backup_pid
     fi
 }
+
 trap cleanup EXIT
 
 while kill -0 $backup_pid 2>/dev/null; do
@@ -17,6 +18,10 @@ while kill -0 $backup_pid 2>/dev/null; do
     sleep 1
     rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now tmp/
 done
+
+# final rsync to ensure we have the latest
+rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now tmp/
+
 
 echo "Backup job completed."
 

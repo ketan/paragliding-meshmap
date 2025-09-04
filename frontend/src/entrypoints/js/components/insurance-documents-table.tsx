@@ -1,7 +1,7 @@
 import { InsurancePolicyDocumentsEntity } from '../../../db-entities'
 import { DateTime } from 'luxon'
-import { FileArrowDownIcon } from '../utils/icon-constants.ts'
 import { PhoneLink } from './phone-link.tsx'
+import { IconFileDownload } from '@tabler/icons-react'
 
 export function InsuranceDocumentsTable({
   insuranceDocuments,
@@ -79,7 +79,7 @@ export function InsuranceDocumentsTable({
                 <td className={classNames}>{DateTime.fromISO(doc.validityEnd).toLocaleString(DateTime.DATE_MED)}</td>
                 <td>
                   <a href={`/api/insurance-documents/${doc.id}`} target="_blank" rel="noreferrer">
-                    <FileArrowDownIcon className={'w-4 h-4'} />
+                    <IconFileDownload className={'w-5 h-5 stroke-black'} />
                   </a>
                 </td>
               </tr>

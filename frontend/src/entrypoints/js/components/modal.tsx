@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { XMarkIcon } from '../utils/icon-constants.ts'
+import { IconX } from '@tabler/icons-react'
 
 interface HeaderButton {
   icon: React.JSX.Element
@@ -85,7 +85,7 @@ export function Modal({ isOpen, onClose, header, footerButtons, headerButtons, c
   }
 
   const allHeaderButtons = (headerButtons || []).concat({
-    icon: <XMarkIcon className="w-4 h-4" />,
+    icon: <IconX className="w-4 h-4" />,
     onClick: onClose,
   })
 

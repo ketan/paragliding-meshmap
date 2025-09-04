@@ -23,7 +23,6 @@ export class PartnerMessage extends BaseType {
     _.assign(this, opts)
   }
 
-
   @BeforeInsert()
   async sendNotification() {
     await sendEmail(this.emailParams())

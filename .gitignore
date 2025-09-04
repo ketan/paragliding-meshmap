@@ -37,3 +37,4 @@ coverage/
 
 # HGT data
 hgt/*.HGT
+*.jar

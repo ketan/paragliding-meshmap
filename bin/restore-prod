@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+now=$(date +'%Y-%m-%d-%H-%M-%S')
+
+ssh -tt ubuntu@aws.ketan.dev "sudo bash -xc 'rm -rf /opt/postgres/backups/* && docker exec -it postgres pg_dump --user postgres -j 4 -F d -f /var/lib/postgresql/backups/$now meshmap'" &
+backup_pid=$!
+
+cleanup() {
+    if kill -0 $backup_pid 2>/dev/null; then
+        kill $backup_pid
+    fi
+}
+trap cleanup EXIT
+
+while kill -0 $backup_pid 2>/dev/null; do
+    echo "Waiting for backup to complete..."
+    sleep 1
+    rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now tmp/
+done
+
+echo "Backup job completed."
+
+echo "Restoring..."
+dropdb --force meshmap-typeorm
+createdb meshmap-typeorm
+pg_restore -d meshmap-typeorm -F d -j 8 tmp/$now
+psql meshmap-typeorm -c 'delete from configs'

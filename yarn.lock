@@ -2765,11 +2765,11 @@
     "@types/node" "*"
 
 "@types/leaflet-groupedlayercontrol@^0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-groupedlayercontrol/-/leaflet-groupedlayercontrol-0.6.4.tgz#b2ba3ed0e94f501866a21165fca421a53837006c"
-  integrity sha512-h9e88I1EkCsPOGIdDKMGROdF5JVceGbL3hoe6bTc6XwhxpxrGSoUys+wLDXlHwNkYIwgZQ51PoSzC8qQJxgIzw==
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-groupedlayercontrol/-/leaflet-groupedlayercontrol-0.6.5.tgz#05601a71eeecce7f52cbd800b19b838daa3344f1"
+  integrity sha512-o5ZArc8hiMght+5NeDMu7dfOd6xY7sFFVFw/Nc9ysKgUgsjz8db0sgHV4/+SNzUNJRR4JzvyfiWjy9IvL2bEpA==
   dependencies:
-    "@types/leaflet" "*"
+    "@types/leaflet" "^1.9"
 
 "@types/leaflet.heat@^0.2.4":
   version "0.2.4"
@@ -2792,7 +2792,7 @@
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet@*", "@types/leaflet@^1.9.12":
+"@types/leaflet@*", "@types/leaflet@^1.9", "@types/leaflet@^1.9.12":
   version "1.9.20"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.20.tgz#a7feef4b0a4b36335dfc98456e76c0a86ab8462c"
   integrity sha512-rooalPMlk61LCaLOvBF2VIf9M47HgMQqi5xQ9QRi7c8PkdIe0WrIi5IxXUXQjAdL0c+vcQ01mYWbthzmp9GHWw==

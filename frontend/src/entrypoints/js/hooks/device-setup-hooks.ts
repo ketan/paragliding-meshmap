@@ -142,7 +142,7 @@ function randomId() {
   return Math.floor(Math.random() * 1e9)
 }
 
-// @ts-ignore
+// @ts-expect-error -- unused code, left for debugging, just in case
 function _subscribeAll(connection: MeshDevice) {
   connection.events.onRoutingPacket.subscribe((routingPacket) => {
     switch (routingPacket.data.variant.case) {

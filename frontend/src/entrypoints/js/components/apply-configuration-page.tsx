@@ -246,7 +246,13 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
                   connectionStatus={bleConnectionStatus}
                   onButtonClicked={scanBLEDevices}
                   processState={bleConfigurationProcessState}
-                  label={'Configure using Bluetooth (warning: may not work)'}
+                  label={({ processCompleted }) => {
+                    if (processCompleted) {
+                      return 'Configure completed - wait for device to reboot!'
+                    } else {
+                      return 'Configure using Bluetooth (warning: may not work)'
+                    }
+                  }}
                   icon={({ inProgress, processCompleted }) =>
                     processCompleted ? <IconCheckbox /> : <BluetoothStatusIcon inProgress={inProgress} />
                   }
@@ -259,7 +265,13 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
                   connectionStatus={serialConnectionStatus}
                   onButtonClicked={scanSerialDevices}
                   processState={usbConfigurationProcessState}
-                  label={'Configure using USB (recommended)'}
+                  label={({ processCompleted }) => {
+                    if (processCompleted) {
+                      return 'Configure completed - wait for device to reboot!'
+                    } else {
+                      return 'Configure using USB (recommended)'
+                    }
+                  }}
                   icon={({ inProgress, processCompleted }) =>
                     processCompleted ? <IconCheckbox /> : <UsbStatusIcon inProgress={inProgress} />
                   }

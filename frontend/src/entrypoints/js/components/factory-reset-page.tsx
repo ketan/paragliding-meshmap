@@ -53,6 +53,7 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                 <li>Wait 30 seconds for it to start up.</li>
                 {resetType === 'usb' && <li>Disconnect and reconnect the USB cable.</li>}
                 <li>Then attempt a factory reset.</li>
+                <li>If factory reset succeeds, you whould see the device rebooting...</li>
                 <li>
                   If this computer or phone cannot pair with your meshtastic device, try &#34;forgetting&#34; the bluetooth device from your
                   phone or computer settings and try again.
@@ -67,7 +68,14 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                   onButtonClicked={scanBLEDevices}
                   processState={factoryResetStateBle}
                   setFactoryResetState={setFactoryResetStateBle}
-                  label="Reset using Bluetooth (warning: may not work)"
+                  label={({ processCompleted }) => {
+                    if (processCompleted) {
+                      return 'Factory Reset Completed - wait for device to reboot!'
+                    } else {
+                      return 'Reset using Bluetooth (warning: may not work)'
+                    }
+                  }}
+                  // label="Reset using Bluetooth (warning: may not work)"
                   icon={({ inProgress, processCompleted }) =>
                     processCompleted ? <IconCheckbox /> : <BluetoothStatusIcon inProgress={inProgress} />
                   }
@@ -79,7 +87,13 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                   onButtonClicked={scanSerialDevices}
                   processState={factoryResetStateUsb}
                   setFactoryResetState={setFactoryResetStateUsb}
-                  label="Reset using USB (recommended)"
+                  label={({ processCompleted }) => {
+                    if (processCompleted) {
+                      return 'Factory Reset Completed - wait for device to reboot!'
+                    } else {
+                      return 'Reset using USB (recommended)'
+                    }
+                  }}
                   icon={({ inProgress, processCompleted }) =>
                     processCompleted ? <IconCheckbox /> : <UsbStatusIcon inProgress={inProgress} />
                   }

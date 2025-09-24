@@ -5,7 +5,7 @@ interface Props {
   connectionStatus: DeviceConnectionState
   onButtonClicked: () => Promise<void>
   processState: ProcessState
-  label: string
+  label: (props: { inProgress: boolean; processCompleted: boolean }) => React.ReactNode
   icon: (props: { inProgress: boolean; processCompleted: boolean }) => React.ReactNode
   setFactoryResetState: (state: ProcessState) => void
 }
@@ -37,7 +37,7 @@ export function ConnectionOperationButton({ connectionStatus, onButtonClicked, p
         className={`flex-1 text-left py-2 rounded-md inline-flex items-center relative`}
         style={{ whiteSpace: 'pre-line' }}
       >
-        {label}
+        {label({ inProgress, processCompleted })}
       </button>
     </div>
   )

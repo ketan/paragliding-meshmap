@@ -2701,11 +2701,11 @@
     "@types/leaflet" "^1.9"
 
 "@types/leaflet.heat@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@types/leaflet.heat/-/leaflet.heat-0.2.4.tgz#0fbc47b409f1eab79697ab6f9e36ce4ab2a3d5cf"
-  integrity sha512-Ocdgf2LUBsPAdQ29KY7QAwe5J5NDq/T2msTsA3OL7eYG3EVjMvkrPqXYJtLbXIauxP9e7bOReDie3GzC7lBLqg==
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@types/leaflet.heat/-/leaflet.heat-0.2.5.tgz#841e0e159f9b0bdcecc34639eab1113ae382a831"
+  integrity sha512-wmDePJPn2vhW9BScsWTV4pSfWayhdDwXuWIQzUuaJkvk5DCHsYsIegTD7tybo38E/0mxpuWODKV/LhsxPESWJg==
   dependencies:
-    "@types/leaflet" "*"
+    "@types/leaflet" "^1.9"
 
 "@types/leaflet.markercluster@^1.5.4":
   version "1.5.5"

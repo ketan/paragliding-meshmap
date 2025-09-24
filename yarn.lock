@@ -7709,12 +7709,12 @@ performance-now@^2.1.0:
   integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
 
 pg-boss@^10.1.1:
-  version "10.3.2"
-  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-10.3.2.tgz#8e613bdca76c47312ee3728d0ac49480b8381eb9"
-  integrity sha512-yy96jwKekgUW4DVvve5xjvLZlNqVCRayl1wJvBxQeDNhIrblgEG0YnqbcNth4wsehkYWVJND9TeWbqb+cfxJKQ==
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-10.3.3.tgz#a51cde7c37ebf14504934d96f76774fcf363d2d2"
+  integrity sha512-LDebdaCT3xU5FvUYQjXoobBbJH/LEybf8dCQAkFxxq6KJPAJ4mjra7f/EImf9EF3PCOtzTtJsRSUmurIB3UaPQ==
   dependencies:
     cron-parser "^4.9.0"
-    pg "^8.16.0"
+    pg "^8.16.3"
     serialize-error "^8.1.0"
 
 pg-cloudflare@^1.2.7:
@@ -7770,7 +7770,7 @@ pg-types@2.2.0, pg-types@^2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.12.0, pg@^8.16.0:
+pg@^8.12.0, pg@^8.16.3:
   version "8.16.3"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.16.3.tgz#160741d0b44fdf64680e45374b06d632e86c99fd"
   integrity sha512-enxc1h0jA/aq5oSDMvqyW3q89ra6XIIDZgCX9vkMrnz5DFTw/Ny3Li2lFQ+pt3L6MCgm/5o2o8HW9hiJji+xvw==

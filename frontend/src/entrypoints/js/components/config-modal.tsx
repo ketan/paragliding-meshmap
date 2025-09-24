@@ -31,10 +31,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
   const [isFormValid, setIsFormValid] = useState(false)
 
   useEffect(() => {
-    console.log(`shortNameParam`, shortNameParam)
-    console.log(`formData.shortName`, formData.shortName)
     if (shortNameParam !== formData.shortName) {
-      console.log(`updating...`)
       setShortNameParam(formData.shortName ?? '')
     }
   }, [formData.shortName, shortNameParam, setShortNameParam])

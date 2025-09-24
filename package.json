@@ -190,7 +190,7 @@
     "response-time": "^2.3.2",
     "supports-color": "^10.0.0",
     "typeorm": "^0.3.20",
-    "uuid": "^11.0.2"
+    "uuid": "^13.0.0"
   },
   "engines": {
     "node": ">=22.0"

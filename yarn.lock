@@ -2715,13 +2715,13 @@
     "@types/leaflet" "^1.9"
 
 "@types/leaflet.polylinemeasure@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/leaflet.polylinemeasure/-/leaflet.polylinemeasure-1.0.4.tgz#479a17dc5b03a2bcfd7e983d5ade2cc9674a48fb"
-  integrity sha512-o8lWax8B44zYFhijFEqfjnIIh4eaYKPA4n50QlSk0pT1MEZYDVW0htz/7oAbTq129Kci6Q8DcufXx1uf+qIx3g==
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/leaflet.polylinemeasure/-/leaflet.polylinemeasure-1.0.5.tgz#5744f3df13aaf75d983c0f74e167242ab891ac03"
+  integrity sha512-lDBjpV4qFyNLawWT6K7ce7QaaNDUhIljlJyRu9F6ImWEZAlNgb7AXgGNMs56Xb8wU+Zx2CVc+ngL3vjVZxq1jA==
   dependencies:
-    "@types/leaflet" "*"
+    "@types/leaflet" "^1.9"
 
-"@types/leaflet@*", "@types/leaflet@^1.9", "@types/leaflet@^1.9.12":
+"@types/leaflet@^1.9", "@types/leaflet@^1.9.12":
   version "1.9.20"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.20.tgz#a7feef4b0a4b36335dfc98456e76c0a86ab8462c"
   integrity sha512-rooalPMlk61LCaLOvBF2VIf9M47HgMQqi5xQ9QRi7c8PkdIe0WrIi5IxXUXQjAdL0c+vcQ01mYWbthzmp9GHWw==

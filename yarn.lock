@@ -7596,10 +7596,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
 
-pg-boss@^10.1.1:
-  version "10.3.3"
-  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-10.3.3.tgz#a51cde7c37ebf14504934d96f76774fcf363d2d2"
-  integrity sha512-LDebdaCT3xU5FvUYQjXoobBbJH/LEybf8dCQAkFxxq6KJPAJ4mjra7f/EImf9EF3PCOtzTtJsRSUmurIB3UaPQ==
+pg-boss@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-11.0.0.tgz#59e4f2a648f0b1105c440e6ad1674ec5e3d30fb9"
+  integrity sha512-sVBI1I2Apa8BAOJLbd14qOo8mpts6GsY5m82eUg4WQbNfNi5Q2PlIOS84cgNdJWdoD+zYw2wktJ7doZRJohcDA==
   dependencies:
     cron-parser "^4.9.0"
     pg "^8.16.3"

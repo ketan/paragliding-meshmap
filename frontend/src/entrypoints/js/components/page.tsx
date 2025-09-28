@@ -36,6 +36,50 @@ interface PageProps extends React.PropsWithChildren {
     onClick: () => void
   }
 }
+function PilotProfileToast({ onDismiss }: { onDismiss: () => void }) {
+  const [dontAsk, setDontAsk] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('pilotProfileInfoOptOut', String(dontAsk))
+  }, [dontAsk])
+
+  return (
+    <div>
+      <div className="mb-2 text-sm leading-relaxed">
+        <strong>If you are a pilot</strong>, please provide your information to help us respond quickly in case of an emergency.
+        <br />
+        <span className="text-gray-700">
+          This information will be kept confidential and used only for search and rescue operations, or if requested by the authorities.
+        </span>
+      </div>
+      <div className="mb-3">
+        <button
+          className="inline-block px-3 py-1 text-xs font-semibold bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring"
+          onClick={() => {
+            onDismiss()
+            toast.dismiss()
+          }}
+        >
+          Fill Profile Information
+        </button>
+      </div>
+      <div className="flex items-center">
+        <input id="dont-ask-again" type="checkbox" checked={dontAsk} onChange={(e) => setDontAsk(e.target.checked)} className="mr-2" />
+        <label htmlFor="dont-ask-again" className="text-xs cursor-pointer select-none">
+          Don&#39;t ask me again
+        </label>
+        <button
+          className="ml-3 px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300"
+          onClick={() => {
+            toast.dismiss()
+          }}
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export function Page(props: PageProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>()
@@ -65,32 +109,20 @@ export function Page(props: PageProps) {
     if (!userProfile) {
       return
     }
+    // Check localStorage for opt-out
+    if (localStorage.getItem('pilotProfileInfoOptOut') === 'true') {
+      return
+    }
     try {
       profileFormDataYUPSchema.validateSync(userProfile, {
         stripUnknown: true,
       })
     } catch (_e) {
       toast.dismiss()
-      toast.info(
-        <span>
-          If you are a pilot, please provide your information to help us respond quickly in case of an emergency. This information will be
-          kept confidential and used only for search and rescue operations, or if requested by the authorities.{' '}
-          <a
-            href="#"
-            onClick={() => {
-              props.profileModal.onClick()
-              toast.dismiss()
-              return false
-            }}
-          >
-            Click here
-          </a>{' '}
-          to provide the information.
-        </span>,
-        {
-          autoClose: 10000,
-        }
-      )
+      // Custom component for toast with checkbox
+      toast.info(<PilotProfileToast onDismiss={() => props.profileModal.onClick()} />, {
+        autoClose: 10000,
+      })
     }
   }, [props.profileModal, userProfile])
 

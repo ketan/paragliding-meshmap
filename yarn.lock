@@ -15,17 +15,17 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@apm-js-collab/code-transformer@^0.7.0":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@apm-js-collab/code-transformer/-/code-transformer-0.7.2.tgz#8c848f9d28f8389c92cdd08bcdae938bc681acb6"
-  integrity sha512-waZeIZFmPCf5/nD3O1gMHlHEPMRwgnaTfVTaDbkclg5OByy8IowR/dUDij5tC77VYH/ieXIujSx9vPFvhx35Fg==
+"@apm-js-collab/code-transformer@^0.8.0":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@apm-js-collab/code-transformer/-/code-transformer-0.8.2.tgz#a3160f16d1c4df9cb81303527287ad18d00994d1"
+  integrity sha512-YRjJjNq5KFSjDUoqu5pFUWrrsvGOxl6c3bu+uMFc9HNNptZ2rNU/TI2nLw4jnhQNtka972Ee2m3uqbvDQtPeCA==
 
-"@apm-js-collab/tracing-hooks@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@apm-js-collab/tracing-hooks/-/tracing-hooks-0.1.1.tgz#73f86cd18827e6d6253eda5322a6feb5753cfc58"
-  integrity sha512-4s8fUde6La3n09m10Ol3zQXUaiDZyuzFKwvdEgbZVKT/XXqycFbqaKfut+UWOAs/yyiocK87MAC9C2JV51CpKg==
+"@apm-js-collab/tracing-hooks@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@apm-js-collab/tracing-hooks/-/tracing-hooks-0.3.1.tgz#414d3a93c3a15d8be543a3fac561f7c602b6a588"
+  integrity sha512-Vu1CbmPURlN5fTboVuKMoJjbO5qcq9fA5YXpskx3dXe/zTBvjODFoerw+69rVBlRLrJpwPqSDqEuJDEKIrTldw==
   dependencies:
-    "@apm-js-collab/code-transformer" "^0.7.0"
+    "@apm-js-collab/code-transformer" "^0.8.0"
     debug "^4.4.1"
     module-details-from-path "^1.0.4"
 
@@ -5769,9 +5769,9 @@ import-fresh@^3.3.0:
     resolve-from "^4.0.0"
 
 import-in-the-middle@^1.13.0:
-  version "1.14.3"
-  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.14.3.tgz#3f0d7124f9c37e3f508fe39dc226204244105822"
-  integrity sha512-ajmxBgfBxVO9GWzD79xktBvMk2kTrqsXPKV0jg5pcwwcFpuLNSHwcPPvp4cgCQshlWz2ivgu5JiuRgDh+2ixGQ==
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.14.4.tgz#5350cf8eba46e3b51cd3e507f5fe36a8faeb3684"
+  integrity sha512-eWjxh735SJLFJJDs5X82JQ2405OdJeAHDBnaoFCfdr5GVc7AWc9xU7KbrF+3Xd5F2ccP1aQFKtY+65X6EfKZ7A==
   dependencies:
     acorn "^8.14.0"
     acorn-import-attributes "^1.9.5"
@@ -7105,11 +7105,11 @@ neo-async@^2.6.2:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 newrelic@^13.0.0:
-  version "13.3.3"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-13.3.3.tgz#8b8b7ea60bb31da2aa27ee0954384bb1d14882b0"
-  integrity sha512-hBowuGDGRXChxU3QDiGBjM7VJJmA6yXDbY9eEwbXhZd/D9KWi97BR7wS4nycVSWJ7jjacWoiiPLR7x9WGHabLw==
+  version "13.4.0"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-13.4.0.tgz#b67e3580992c880d072eb333034571bb2140c3fe"
+  integrity sha512-XEGimVRw2wT8szwDnZ1GUFPh2+VVtN276W9I0rZUmXHYykMQ5D7XuqhtSouCznGuDGs37tMBQfmxUTtVhu+N3Q==
   dependencies:
-    "@apm-js-collab/tracing-hooks" "^0.1.0"
+    "@apm-js-collab/tracing-hooks" "^0.3.1"
     "@grpc/grpc-js" "^1.13.2"
     "@grpc/proto-loader" "^0.7.5"
     "@newrelic/security-agent" "^2.4.2"

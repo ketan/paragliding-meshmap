@@ -9075,9 +9075,9 @@ tslib@^2.0.3, tslib@^2.1.0, tslib@^2.4.0, tslib@^2.6.2, tslib@^2.6.3, tslib@^2.8
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
 tslog@^4.9.3:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/tslog/-/tslog-4.10.0.tgz#74cb83adea84b29669ec5e7297eab2d9981d4720"
-  integrity sha512-9F8Gd85Yq9KuplLvyUF9/qkRA7kbdD7jJDkWOcEcZLVa+laYIWHEKXg8QZIGDQ+a6PERCjuu9MluNq17wHp7Sw==
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/tslog/-/tslog-4.10.2.tgz#45c870d7fe9558d59ce288eeb86ba49eaaf25e1e"
+  integrity sha512-XuELoRpMR+sq8fuWwX7P0bcj+PRNiicOKDEb3fGNURhxWVyykCi9BNq7c4uVz7h7P0sj8qgBsr5SWS6yBClq3g==
 
 tunnel-agent@^0.6.0:
   version "0.6.0"

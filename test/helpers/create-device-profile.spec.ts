@@ -64,7 +64,7 @@ describe('getDefaultProfile', () => {
     expect(deviceProfile.moduleConfig?.detectionSensor).to.be.an.instanceof(meshtastic.ModuleConfig.DetectionSensorConfig)
     expect(deviceProfile.moduleConfig?.paxcounter).to.be.an.instanceof(meshtastic.ModuleConfig.PaxcounterConfig)
 
-    expect(deviceProfile.channelUrl).to.eq('https://meshtastic.org/e/#CgkSAQEoAToCCCASDwgBOApAA0gBUABoAcAGAQ')
+    expect(deviceProfile.channelUrl).to.eq('https://meshtastic.org/e/#CgkSAQEoAToCCCASFAgBOApAA0gBUABYAGgBwAYByAYB')
   })
 })
 describe('createDeviceProfile', () => {
@@ -96,7 +96,7 @@ describe('createDeviceProfile', () => {
     expect(deviceProfile.moduleConfig?.neighborInfo).to.be.an.instanceof(meshtastic.ModuleConfig.NeighborInfoConfig)
     expect(deviceProfile.moduleConfig?.neighborInfo?.updateInterval).to.equal(900)
 
-    expect(deviceProfile.channelUrl).to.be.eq('https://meshtastic.org/e/#CgkSAQEoAToCCCASDwgBOApAA0gBUABoAcAGAQ')
+    expect(deviceProfile.channelUrl).to.be.eq('https://meshtastic.org/e/#CgkSAQEoAToCCCASFAgBOApAA0gBUABYAGgBwAYByAYB')
   })
 
   it('should handle edge cases', () => {

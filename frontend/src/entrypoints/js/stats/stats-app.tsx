@@ -47,7 +47,7 @@ function PositionsOverTime() {
             formatter={(value, _name) => [value, 'Count']}
           />
           <Legend />
-          <Bar type="monotone" dataKey="count" fill="#8884d8" label="Foo" />
+          <Bar type="monotone" dataKey="count" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
     </div>

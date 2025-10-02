@@ -1,0 +1,10 @@
+{
+	debug
+	acme_dns cloudflare {
+		api_token {env.CLOUDFLARE_API_TOKEN}
+	}
+}
+
+dev.ketan.dev {
+	reverse_proxy http://host.docker.internal:5173
+}

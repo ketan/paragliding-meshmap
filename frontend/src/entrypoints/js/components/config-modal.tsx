@@ -5,8 +5,6 @@ import { ConfigFormPage, FormInputs } from './config-form-page'
 import { useEffect, useState } from 'react'
 import { ApplyConfigurationPage } from './apply-configuration-page'
 import { FactoryResetPage } from './factory-reset-page'
-import { SerialDeviceProvider } from '../hooks/SerialDeviceContext.tsx'
-import { BleDeviceProvider } from '../hooks/BleDeviceContext.tsx'
 import { useSearchParam } from '../hooks/use-window-location.tsx'
 import { ChooseYourDevicePage } from './choose-your-device-page.tsx'
 import { DownloadConfiguration } from './download-android-config.tsx'
@@ -107,11 +105,7 @@ export function ConfigModal({ onClose, isOpen }: ModalBaseProps) {
       }}
       header={`Configure Meshtastic device`}
     >
-      <BleDeviceProvider>
-        <SerialDeviceProvider>
-          <Wizard steps={steps} onStepChange={setStepNumber} canProceed={canProceed} stepNumber={stepNumber} />
-        </SerialDeviceProvider>
-      </BleDeviceProvider>
+      <Wizard steps={steps} onStepChange={setStepNumber} canProceed={canProceed} stepNumber={stepNumber} />
     </Modal>
   )
 }

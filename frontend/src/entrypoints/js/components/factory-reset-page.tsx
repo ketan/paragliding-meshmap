@@ -1,17 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { deviceLogger } from '../hooks/device-setup-hooks.ts'
 import { MeshDevice } from '@meshtastic/core'
 import { sleep } from '../utils/ui-util.tsx'
 import { ConnectionOperationButton } from './connection-operation-button.tsx'
 import { IconCheckbox } from '@tabler/icons-react'
-import { UsbStatusIcon } from './usb-status-icon.tsx'
 import { BluetoothStatusIcon } from './bluetooth-status-icon.tsx'
-import { useSerialDevice } from '../hooks/SerialDeviceContext.tsx'
-import { useBleDevice } from '../hooks/BleDeviceContext.tsx'
-import { ProcessState } from '../hooks/device-connection'
+import { DeviceConnectionState, ProcessState } from '../hooks/device-connection'
+import { UsbStatusIcon } from './usb-status-icon.tsx'
+import { useDisconnect } from '../hooks/use-disconnect.tsx'
+import { useSerial } from '../hooks/use-serial.tsx'
+import { useBle } from '../hooks/use-ble.tsx'
 
 async function factoryReset(connection: MeshDevice, setFactoryResetInProgress: (state: ProcessState) => void) {
-  await sleep(1000)
+  deviceLogger.info("Starting factory reset process in 10 seconds. Don't move or disconnect the device...")
+  await sleep(10000)
   setFactoryResetInProgress('in-progress')
   deviceLogger.info('factory resetting the device...')
   await sleep(1000)
@@ -28,16 +30,35 @@ interface FactoryResetPageProps {
 
 export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
   const [factoryResetStateBle, setFactoryResetStateBle] = useState<ProcessState>('not-started')
-  const [factoryResetStateUsb, setFactoryResetStateUsb] = useState<ProcessState>('not-started')
+  const [factoryResetStateUsb, setfactoryResetStateUsb] = useState<ProcessState>('not-started')
 
-  // Use custom hooks for BLE and Serial setup
-  const { bleConnectionStatus, scanBLEDevices } = useBleDevice({
-    onConnect: (device) => factoryReset(device, setFactoryResetStateBle),
+  const [bleConnectionStatus, setBleConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+  const [serialConnectionStatus, setSerialConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+
+  const bleConnection = useRef<MeshDevice | undefined>(undefined)
+  const serialConnection = useRef<MeshDevice | undefined>(undefined)
+
+  const disconnect = useDisconnect(bleConnection, serialConnection)
+
+  const scanBLEDevices = useBle({
+    setStatus: setBleConnectionStatus,
+    disconnect,
+    connectionRef: bleConnection,
+    onConnect: async (device) => await factoryReset(device, setFactoryResetStateBle),
   })
 
-  const { serialConnectionStatus, scanSerialDevices } = useSerialDevice({
-    onConnect: (device) => factoryReset(device, setFactoryResetStateUsb),
+  const scanSerialDevices = useSerial({
+    setStatus: setSerialConnectionStatus,
+    disconnect,
+    connectionRef: serialConnection,
+    onConnect: async (device) => await factoryReset(device, setfactoryResetStateUsb),
   })
+
+  useEffect(() => {
+    return () => {
+      disconnect()
+    }
+  }, [disconnect])
 
   return (
     <div className="text-sm md:text-md">
@@ -75,7 +96,6 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                       return 'Reset using Bluetooth (warning: may not work)'
                     }
                   }}
-                  // label="Reset using Bluetooth (warning: may not work)"
                   icon={({ inProgress, processCompleted }) =>
                     processCompleted ? <IconCheckbox /> : <BluetoothStatusIcon inProgress={inProgress} />
                   }
@@ -86,7 +106,7 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                   connectionStatus={serialConnectionStatus}
                   onButtonClicked={scanSerialDevices}
                   processState={factoryResetStateUsb}
-                  setFactoryResetState={setFactoryResetStateUsb}
+                  setFactoryResetState={setfactoryResetStateUsb}
                   label={({ processCompleted }) => {
                     if (processCompleted) {
                       return 'Factory Reset Completed - wait for device to reboot!'

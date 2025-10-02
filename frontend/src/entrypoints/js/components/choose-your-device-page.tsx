@@ -2,6 +2,7 @@ import { ResetType } from './config-modal.tsx'
 import { twMerge } from 'tailwind-merge'
 import { IconBluetooth, IconBrandAndroid, IconUsb } from '@tabler/icons-react'
 import { ReactNode } from 'react'
+import { isDesktop } from '../utils/ui-util.tsx'
 
 interface ChooseYourDevicePageProps {
   resetType: ResetType
@@ -9,7 +10,10 @@ interface ChooseYourDevicePageProps {
 }
 
 const hasBluetooth = 'bluetooth' in navigator
-const hasSerial = 'serial' in navigator
+const hasSerial = 'serial' in navigator && isDesktop()
+
+console.log('Web Bluetooth support:', hasBluetooth)
+console.log('Web Serial support:', hasSerial)
 
 const choices: { label: ReactNode; value: ResetType; icon: ReactNode }[] = [
   {

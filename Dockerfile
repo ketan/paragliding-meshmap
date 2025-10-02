@@ -1,13 +1,13 @@
 FROM node:24.8-alpine AS build
 
-COPY package.json yarn.lock /app/
+COPY package.json pnpm-lock.yaml /app/
 WORKDIR /app
 ARG GIT_SHA
-
-RUN time yarn install --network-timeout 1000000 --frozen-lockfile
+RUN corepack enable
+RUN time pnpm install --frozen-lockfile
 COPY . /app/
-RUN GIT_SHA=${GIT_SHA} time yarn --debug --verbose run build
-RUN time yarn install --network-timeout 1000000 --frozen-lockfile --prod
+RUN GIT_SHA=${GIT_SHA} time pnpm --verbose run build
+RUN time pnpm install --prod --frozen-lockfile && pnpm prune --prod
 
 FROM node:24.8-alpine
 ARG GIT_SHA
@@ -15,7 +15,7 @@ LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshm
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"
 LABEL org.opencontainers.image.licenses=MIT
 
-COPY --from=build /app/package.json /app/yarn.lock /app/build /app/
+COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/build /app/
 COPY --from=build /app/node_modules /app/node_modules
 
 WORKDIR /app

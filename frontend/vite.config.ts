@@ -11,6 +11,7 @@ import Inspect from 'vite-plugin-inspect'
 import viteCompression from 'vite-plugin-compression'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
 import tailwindcss from '@tailwindcss/vite'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -65,6 +66,9 @@ function svgToReact(_options?: SVGToReactOptions): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    nodePolyfills({
+      include: ['process', 'os', 'path'],
+    }),
     tailwindcss(),
     runtimeEnvScript({
       variables: ['GOOGLE_CLIENT_ID'],

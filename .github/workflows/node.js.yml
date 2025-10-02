@@ -44,13 +44,13 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn run lint
-      - run: yarn test
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm run test
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/meshmap-test
-      - run: yarn run build
+      - run: pnpm run build
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5

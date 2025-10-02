@@ -38,3 +38,5 @@ coverage/
 # HGT data
 hgt/*.HGT
 *.jar
+
+caddy-data/

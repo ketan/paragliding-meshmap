@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { create } from '@bufbuild/protobuf'
 import * as Protobuf from '@meshtastic/protobufs'
 import { toByteArray } from 'base64-js'
@@ -6,14 +6,15 @@ import { MeshDevice } from '@meshtastic/core'
 import { sleep } from '../utils/ui-util'
 import { IconCheckbox } from '@tabler/icons-react'
 import { deviceLogger } from '../hooks/device-setup-hooks'
-import { useSerialDevice } from '../hooks/SerialDeviceContext.tsx'
 import { meshtastic } from '../../../../../src/gen/meshtastic-protobufs'
-import { useBleDevice } from '../hooks/BleDeviceContext.tsx'
 import { ConnectionOperationButton } from './connection-operation-button.tsx'
 import { BluetoothStatusIcon } from './bluetooth-status-icon.tsx'
 import { UsbStatusIcon } from './usb-status-icon.tsx'
 import { FormInputs } from './config-form-page.tsx'
-import { ProcessState } from '../hooks/device-connection'
+import { DeviceConnectionState, ProcessState } from '../hooks/device-connection'
+import { useDisconnect } from '../hooks/use-disconnect.tsx'
+import { useBle } from '../hooks/use-ble.tsx'
+import { useSerial } from '../hooks/use-serial.tsx'
 
 function loraConfig() {
   return create(Protobuf.Config.ConfigSchema, {
@@ -62,6 +63,16 @@ function bluetoothConfig() {
     },
   })
 }
+type ConfigVariant = 'lora' | 'device' | 'position' | 'power' | 'network' | 'display' | 'bluetooth' | 'security' | 'sessionkey' | 'deviceUi'
+
+function createEmptyDeviceConfig(configVariant: ConfigVariant) {
+  return create(Protobuf.Config.ConfigSchema, {
+    payloadVariant: {
+      case: configVariant,
+      value: {},
+    },
+  })
+}
 
 function createMqttConfig() {
   return create(Protobuf.ModuleConfig.ModuleConfigSchema, {
@@ -81,6 +92,30 @@ function createMqttConfig() {
           shouldReportLocation: true,
         },
       },
+    },
+  })
+}
+
+type PayloadVariantCase =
+  | 'mqtt'
+  | 'serial'
+  | 'externalNotification'
+  | 'storeForward'
+  | 'rangeTest'
+  | 'telemetry'
+  | 'cannedMessage'
+  | 'audio'
+  | 'remoteHardware'
+  | 'neighborInfo'
+  | 'ambientLighting'
+  | 'detectionSensor'
+  | 'paxcounter'
+
+function createEmptyModuleConfig(configVariant: PayloadVariantCase) {
+  return create(Protobuf.ModuleConfig.ModuleConfigSchema, {
+    payloadVariant: {
+      case: configVariant,
+      value: {},
     },
   })
 }
@@ -134,52 +169,53 @@ const onConnect = async (connection: MeshDevice, formData: FormInputs, setState:
     loraConfig(),
     bluetoothConfig(),
     positionConfig(),
-    // createEmptyDeviceConfig('security'),
-    // createEmptyDeviceConfig('power'), // has some problems, hanging, skipping for now
-    // createEmptyDeviceConfig('network'), // has some problems, hanging, skipping for now
-    // createEmptyDeviceConfig('display'),
-    // createEmptyDeviceConfig('device'),
-    // createEmptyDeviceConfig('deviceUi'),
+    createEmptyDeviceConfig('security'),
+    createEmptyDeviceConfig('power'), // has some problems, hanging, skipping for now
+    createEmptyDeviceConfig('network'), // has some problems, hanging, skipping for now
+    createEmptyDeviceConfig('display'),
+    createEmptyDeviceConfig('device'),
+    createEmptyDeviceConfig('deviceUi'),
   ]
 
   // Chain the promises in configs
   for (const cfg of configs) {
-    deviceLogger.info(`Setting config ${cfg.payloadVariant.case}...`)
+    deviceLogger.info(`Setting config ${cfg.payloadVariant.case}...`, cfg)
     await connection.setConfig(cfg)
     deviceLogger.info(`Saved config ${cfg.payloadVariant.case}`)
-    await sleep(2000)
+    await sleep(500)
   }
+
   // await Promise.all(
   //   configs.map(async (cfg) => {
-  //     bleLogger.info(`Setting config ${cfg.payloadVariant.case}...`)
+  //     deviceLogger.info(`Setting config ${cfg.payloadVariant.case}...`, cfg)
   //     await connection.setConfig(cfg)
-  //     bleLogger.info(`Saved config ${cfg.payloadVariant.case}`)
+  //     deviceLogger.info(`Saved config ${cfg.payloadVariant.case}`)
   //   })
   // )
 
   await sleep(5000)
 
   const moduleConfigs = [
-    // createEmptyModuleConfig('neighborInfo'),
-    // createEmptyModuleConfig('externalNotification'),
-    // createEmptyModuleConfig('storeForward'),
-    // createEmptyModuleConfig('rangeTest'),
-    // createEmptyModuleConfig('telemetry'),
+    createEmptyModuleConfig('neighborInfo'),
+    createEmptyModuleConfig('externalNotification'),
+    createEmptyModuleConfig('storeForward'),
+    createEmptyModuleConfig('rangeTest'),
+    createEmptyModuleConfig('telemetry'),
     cannedMessages(),
-    // createEmptyModuleConfig('audio'),
-    // createEmptyModuleConfig('remoteHardware'),
-    // createEmptyModuleConfig('ambientLighting'),
-    // createEmptyModuleConfig('detectionSensor'),
-    // createEmptyModuleConfig('paxcounter'),
+    createEmptyModuleConfig('audio'),
+    createEmptyModuleConfig('remoteHardware'),
+    createEmptyModuleConfig('ambientLighting'),
+    createEmptyModuleConfig('detectionSensor'),
+    createEmptyModuleConfig('paxcounter'),
+    createEmptyModuleConfig('serial'),
     createMqttConfig(),
-    // createEmptyModuleConfig('serial'),
   ]
 
   // await Promise.all(
   //   moduleConfigs.map(async (cfg) => {
-  //     bleLogger.info(`Setting module ${cfg.payloadVariant.case}...`)
+  //     deviceLogger.info(`Setting module ${cfg.payloadVariant.case}...`, cfg)
   //     await connection.setModuleConfig(cfg)
-  //     bleLogger.info(`Saved module ${cfg.payloadVariant.case}`)
+  //     deviceLogger.info(`Saved module ${cfg.payloadVariant.case}`)
   //   })
   // )
 
@@ -189,7 +225,7 @@ const onConnect = async (connection: MeshDevice, formData: FormInputs, setState:
     deviceLogger.info(`Setting module config ${modCfg.payloadVariant.case}...`)
     await connection.setModuleConfig(modCfg)
     deviceLogger.info(`Saved module config ${modCfg.payloadVariant.case}`)
-    await sleep(2000)
+    await sleep(500)
   }
 
   await sleep(1000)
@@ -197,7 +233,7 @@ const onConnect = async (connection: MeshDevice, formData: FormInputs, setState:
   await connection.setOwner(createOwner(formData.shortName, formData.longName))
 
   deviceLogger.info(`Committing...`)
-  connection.commitEditSettings()
+  await connection.commitEditSettings()
   await sleep(1000)
   deviceLogger.info(`Done configuring`)
   setState('done')
@@ -207,15 +243,35 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
   const [bleConfigurationProcessState, setBleConfigurationProcessState] = useState<ProcessState>('not-started')
   const [usbConfigurationProcessState, setUsbConfigurationProcessState] = useState<ProcessState>('not-started')
 
+  const [bleConnectionStatus, setBleConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+  const [serialConnectionStatus, setSerialConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+
+  const bleConnection = useRef<MeshDevice | undefined>(undefined)
+  const serialConnection = useRef<MeshDevice | undefined>(undefined)
+
+  const disconnect = useDisconnect(bleConnection, serialConnection)
+
+  const scanBLEDevices = useBle({
+    setStatus: setBleConnectionStatus,
+    disconnect,
+    connectionRef: bleConnection,
+    onConnect: async (device) => await onConnect(device, formData, setBleConfigurationProcessState),
+  })
+
+  const scanSerialDevices = useSerial({
+    setStatus: setSerialConnectionStatus,
+    disconnect,
+    connectionRef: serialConnection,
+    onConnect: async (device) => await onConnect(device, formData, setUsbConfigurationProcessState),
+  })
+
+  useEffect(() => {
+    return () => {
+      disconnect()
+    }
+  }, [disconnect])
+
   const [errorMessage, _setErrorMessage] = useState<ReactNode>()
-
-  const { bleConnectionStatus, scanBLEDevices } = useBleDevice({
-    onConnect: (device) => onConnect(device, formData, setBleConfigurationProcessState),
-  })
-
-  const { serialConnectionStatus, scanSerialDevices } = useSerialDevice({
-    onConnect: (device) => onConnect(device, formData, setUsbConfigurationProcessState),
-  })
 
   return (
     <div className="text-sm md:text-md">

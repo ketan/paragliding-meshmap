@@ -285,3 +285,7 @@ export function isAdmin(userProfile: UserProfile) {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export function randomId() {
+  return Math.floor(Math.random() * 1e9)
+}

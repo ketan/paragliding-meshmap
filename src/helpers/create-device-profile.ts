@@ -47,7 +47,8 @@ export function getDefaultProfile() {
     txPower: 0, // default maxiumum
     sx126xRxBoostedGain: true,
     ignoreMqtt: true,
-    // configOkToMqtt: true,
+    configOkToMqtt: true,
+    channelNum: 0,
   })
   const deviceProfile = new meshtastic.DeviceProfile({
     config: new meshtastic.LocalConfig({
@@ -85,6 +86,7 @@ export function getDefaultProfile() {
         mapReportSettings: new meshtastic.ModuleConfig.MapReportSettings({
           publishIntervalSecs: 7200,
           positionPrecision: 32,
+          shouldReportLocation: true,
         }),
       }),
 

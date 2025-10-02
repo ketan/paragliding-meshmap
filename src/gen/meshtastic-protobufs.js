@@ -910,6 +910,7 @@ export const meshtastic = ($root.meshtastic = (() => {
        * @property {number} REPEATER=4 Description: Infrastructure node for extending network coverage by relaying messages with minimal overhead. Not visible in Nodes list.
        * Technical Details: Mesh packets will simply be rebroadcasted over this node. Nodes configured with this role will not originate NodeInfo, Position, Telemetry
        * or any other packet type. They will simply rebroadcast any mesh packets on the same frequency, channel num, spread factor, and coding rate.
+       * Deprecated in v2.7.11 because it creates "holes" in the mesh rebroadcast chain.
        * @property {number} TRACKER=5 Description: Broadcasts GPS position packets as priority.
        * Technical Details: Position Mesh packets will be prioritized higher and sent more frequently by default.
        * When used in conjunction with power.is_power_saving = true, nodes will wake up,
@@ -4909,7 +4910,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} LINK_32=98 Lilygo LINK32 board with sensors
    * @property {number} SEEED_WIO_TRACKER_L1=99 Seeed Tracker L1
    * @property {number} SEEED_WIO_TRACKER_L1_EINK=100 Seeed Tracker L1 EINK driver
-   * @property {number} QWANTZ_TINY_ARMS=101 Reserved ID for future and past use
+   * @property {number} MUZI_R1_NEO=101 Muzi Works R1 Neo
    * @property {number} T_DECK_PRO=102 Lilygo T-Deck Pro
    * @property {number} T_LORA_PAGER=103 Lilygo TLora Pager
    * @property {number} M5STACK_RESERVED=104 M5Stack Reserved
@@ -4922,6 +4923,8 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} HELTEC_V4=110 New Heltec LoRA32 with ESP32-S3 CPU
    * @property {number} M5STACK_C6L=111 M5Stack C6L
    * @property {number} M5STACK_CARDPUTER_ADV=112 M5Stack Cardputer Adv
+   * @property {number} HELTEC_WIRELESS_TRACKER_V2=113 ESP32S3 main controller with GPS and TFT screen.
+   * @property {number} T_WATCH_ULTRA=114 LilyGo T-Watch Ultra
    * @property {number} PRIVATE_HW=255 ------------------------------------------------------------------------------------------------------------------------------------------
    * Reserved ID For developing private Ports. These will show up in live traffic sparsely, so we can use a high number. Keep it within 8 bits.
    * ------------------------------------------------------------------------------------------------------------------------------------------
@@ -5030,7 +5033,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[98] = 'LINK_32')] = 98
     values[(valuesById[99] = 'SEEED_WIO_TRACKER_L1')] = 99
     values[(valuesById[100] = 'SEEED_WIO_TRACKER_L1_EINK')] = 100
-    values[(valuesById[101] = 'QWANTZ_TINY_ARMS')] = 101
+    values[(valuesById[101] = 'MUZI_R1_NEO')] = 101
     values[(valuesById[102] = 'T_DECK_PRO')] = 102
     values[(valuesById[103] = 'T_LORA_PAGER')] = 103
     values[(valuesById[104] = 'M5STACK_RESERVED')] = 104
@@ -5042,6 +5045,8 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[110] = 'HELTEC_V4')] = 110
     values[(valuesById[111] = 'M5STACK_C6L')] = 111
     values[(valuesById[112] = 'M5STACK_CARDPUTER_ADV')] = 112
+    values[(valuesById[113] = 'HELTEC_WIRELESS_TRACKER_V2')] = 113
+    values[(valuesById[114] = 'T_WATCH_ULTRA')] = 114
     values[(valuesById[255] = 'PRIVATE_HW')] = 255
     return values
   })()
@@ -10307,6 +10312,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * @property {boolean|null} [uplinkEnabled] If true, messages on the mesh will be sent to the *public* internet by any gateway ndoe
      * @property {boolean|null} [downlinkEnabled] If true, messages seen on the internet will be forwarded to the local mesh.
      * @property {meshtastic.IModuleSettings|null} [moduleSettings] Per-channel module settings.
+     * @property {boolean|null} [mute] Whether or not we should receive notifactions / alerts through this channel
      */
 
     /**
@@ -10420,6 +10426,14 @@ export const meshtastic = ($root.meshtastic = (() => {
     ChannelSettings.prototype.moduleSettings = null
 
     /**
+     * Whether or not we should receive notifactions / alerts through this channel
+     * @member {boolean} mute
+     * @memberof meshtastic.ChannelSettings
+     * @instance
+     */
+    ChannelSettings.prototype.mute = false
+
+    /**
      * Encodes the specified ChannelSettings message. Does not implicitly {@link meshtastic.ChannelSettings.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.ChannelSettings
@@ -10442,6 +10456,7 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.downlinkEnabled)
       if (message.moduleSettings != null && Object.hasOwnProperty.call(message, 'moduleSettings'))
         $root.meshtastic.ModuleSettings.encode(message.moduleSettings, writer.uint32(/* id 7, wireType 2 =*/ 58).fork()).ldelim()
+      if (message.mute != null && Object.hasOwnProperty.call(message, 'mute')) writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.mute)
       return writer
     }
 
@@ -10490,6 +10505,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 7: {
             message.moduleSettings = $root.meshtastic.ModuleSettings.decode(reader, reader.uint32())
+            break
+          }
+          case 8: {
+            message.mute = reader.bool()
             break
           }
           default:

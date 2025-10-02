@@ -2434,7 +2434,7 @@ export namespace meshtastic {
     LINK_32 = 98,
     SEEED_WIO_TRACKER_L1 = 99,
     SEEED_WIO_TRACKER_L1_EINK = 100,
-    QWANTZ_TINY_ARMS = 101,
+    MUZI_R1_NEO = 101,
     T_DECK_PRO = 102,
     T_LORA_PAGER = 103,
     M5STACK_RESERVED = 104,
@@ -2446,6 +2446,8 @@ export namespace meshtastic {
     HELTEC_V4 = 110,
     M5STACK_C6L = 111,
     M5STACK_CARDPUTER_ADV = 112,
+    HELTEC_WIRELESS_TRACKER_V2 = 113,
+    T_WATCH_ULTRA = 114,
     PRIVATE_HW = 255,
   }
 
@@ -5051,6 +5053,9 @@ export namespace meshtastic {
 
     /** Per-channel module settings. */
     moduleSettings?: meshtastic.IModuleSettings | null
+
+    /** Whether or not we should receive notifactions / alerts through this channel */
+    mute?: boolean | null
   }
 
   /**
@@ -5129,6 +5134,9 @@ export namespace meshtastic {
 
     /** Per-channel module settings. */
     public moduleSettings?: meshtastic.IModuleSettings | null
+
+    /** Whether or not we should receive notifactions / alerts through this channel */
+    public mute: boolean
 
     /**
      * Encodes the specified ChannelSettings message. Does not implicitly {@link meshtastic.ChannelSettings.verify|verify} messages.

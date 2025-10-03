@@ -1,4 +1,4 @@
-FROM node:24.8-alpine AS build
+FROM node:24.9-alpine AS build
 
 COPY package.json pnpm-lock.yaml /app/
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY . /app/
 RUN GIT_SHA=${GIT_SHA} time pnpm --verbose run build
 RUN time pnpm install --prod --frozen-lockfile && pnpm prune --prod
 
-FROM node:24.8-alpine
+FROM node:24.9-alpine
 ARG GIT_SHA
 LABEL org.opencontainers.image.source=https://github.com/ketan/paragliding-meshmap
 LABEL org.opencontainers.image.description="Meshmap tracker for paragliding"

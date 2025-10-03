@@ -176,7 +176,7 @@
     "newrelic": "^13.0.0",
     "node-hgt": "^1.2.3",
     "nodemailer": "^7.0.3",
-    "p-queue": "^8.0.1",
+    "p-queue": "^9.0.0",
     "p-retry": "^7.0.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",

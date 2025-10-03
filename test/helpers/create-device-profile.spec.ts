@@ -64,7 +64,7 @@ describe('getDefaultProfile', () => {
     expect(deviceProfile.moduleConfig?.detectionSensor).to.be.an.instanceof(meshtastic.ModuleConfig.DetectionSensorConfig)
     expect(deviceProfile.moduleConfig?.paxcounter).to.be.an.instanceof(meshtastic.ModuleConfig.PaxcounterConfig)
 
-    expect(deviceProfile.channelUrl).to.eq('https://meshtastic.org/e/#CgsSAQEoATABOgIIIBISCAE4CkADSAFQHmgBwAYByAYB')
+    expect(deviceProfile.channelUrl).to.eq('https://meshtastic.org/e/#CgkSAQEoAToCCCASFAgBOApAA0gBUABYAGgBwAYByAYB')
   })
 })
 describe('createDeviceProfile', () => {

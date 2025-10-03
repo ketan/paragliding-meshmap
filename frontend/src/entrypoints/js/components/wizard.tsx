@@ -34,7 +34,7 @@ export function Wizard({ steps, onStepChange, canProceed = true, stepNumber = 0 
             disabled={step === 0}
             className="px-3 py-1 bg-blue-500 rounded text-white"
           >
-            <IconArrowLeft className='w-4 h-4 inline'/> Back
+            <IconArrowLeft className="w-4 h-4 inline" /> Back
           </button>
           {step === steps.length - 1 ? (
             <button type="button" onClick={() => onStepChange && onStepChange(-1)} className="px-3 py-1 bg-red-200 rounded">
@@ -47,7 +47,7 @@ export function Wizard({ steps, onStepChange, canProceed = true, stepNumber = 0 
               disabled={!canProceed}
               className="px-3 py-1 bg-blue-500 rounded text-white"
             >
-              Next <IconArrowRight className='w-4 h-4 inline'/>
+              Next <IconArrowRight className="w-4 h-4 inline" />
             </button>
           )}
         </div>

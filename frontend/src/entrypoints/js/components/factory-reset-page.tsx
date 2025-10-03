@@ -10,13 +10,11 @@ import { UsbStatusIcon } from './usb-status-icon.tsx'
 import { useDisconnect } from '../hooks/use-disconnect.tsx'
 import { useSerial } from '../hooks/use-serial.tsx'
 import { useBle } from '../hooks/use-ble.tsx'
+import { getProgressMessage } from '../utils/device-helpers.ts'
 
 async function factoryReset(connection: MeshDevice, setFactoryResetInProgress: (state: ProcessState) => void) {
   deviceLogger.info("Starting factory reset process in 10 seconds. Don't move or disconnect the device...")
-  await sleep(10000)
   setFactoryResetInProgress('in-progress')
-  deviceLogger.info('factory resetting the device...')
-  await sleep(1000)
   deviceLogger.info('issuing a factory reset command...')
   connection.factoryResetConfig()
   await sleep(4000)
@@ -81,10 +79,10 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                 </li>
               </ul>
             </div>
-
-            <div className="flex gap-4 text-white">
+            <div className="flex gap-4">
               {resetType === 'bluetooth' && (
                 <ConnectionOperationButton
+                  progressMessage={() => getProgressMessage(bleConnectionStatus, factoryResetStateBle, 'Bluetooth', 'factory reset')}
                   connectionStatus={bleConnectionStatus}
                   onButtonClicked={scanBLEDevices}
                   processState={factoryResetStateBle}
@@ -101,8 +99,10 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
                   }
                 />
               )}
+
               {resetType === 'usb' && (
                 <ConnectionOperationButton
+                  progressMessage={() => getProgressMessage(serialConnectionStatus, factoryResetStateUsb, 'USB', 'factory reset')}
                   connectionStatus={serialConnectionStatus}
                   onButtonClicked={scanSerialDevices}
                   processState={factoryResetStateUsb}

@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 
 export interface WizardStep {
   name: string
@@ -31,9 +32,9 @@ export function Wizard({ steps, onStepChange, canProceed = true, stepNumber = 0 
             type="button"
             onClick={() => setStep((s) => Math.max(0, s - 1))}
             disabled={step === 0}
-            className="px-3 py-1 bg-gray-200 rounded"
+            className="px-3 py-1 bg-blue-500 rounded text-white"
           >
-            Back
+            <IconArrowLeft className='w-4 h-4 inline'/> Back
           </button>
           {step === steps.length - 1 ? (
             <button type="button" onClick={() => onStepChange && onStepChange(-1)} className="px-3 py-1 bg-red-200 rounded">
@@ -44,9 +45,9 @@ export function Wizard({ steps, onStepChange, canProceed = true, stepNumber = 0 
               type="button"
               onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
               disabled={!canProceed}
-              className="px-3 py-1 bg-blue-200 rounded"
+              className="px-3 py-1 bg-blue-500 rounded text-white"
             >
-              Next
+              Next <IconArrowRight className='w-4 h-4 inline'/>
             </button>
           )}
         </div>

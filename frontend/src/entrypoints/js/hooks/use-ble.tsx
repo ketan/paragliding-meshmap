@@ -3,7 +3,7 @@ import { RefObject, useCallback } from 'react'
 import { TransportWebBluetooth } from '@meshtastic/transport-web-bluetooth'
 import { MeshDevice } from '@meshtastic/core'
 import { randomId } from '../utils/ui-util.tsx'
-import { waitForConnection } from '../utils/initialize-device.ts'
+import { waitForConnection } from '../utils/device-helpers.ts'
 
 export function useBle({
   setStatus,

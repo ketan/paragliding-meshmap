@@ -80,26 +80,6 @@ export function DownloadConfiguration({ formData }: DownloadConfigurationProps) 
             {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
 
             <div className="flex gap-4 text-white">
-              {/*<ConnectionOperationButton*/}
-              {/*  connectionStatus={bleConnectionStatus}*/}
-              {/*  onButtonClicked={scanBLEDevices}*/}
-              {/*  processState={bleConfigurationProcessState}*/}
-              {/*  label={'Configure using Bluetooth (warning: may not work)'}*/}
-              {/*  icon={({ inProgress, processCompleted }) =>*/}
-              {/*    processCompleted ? <IconCheckbox /> : <BluetoothStatusIcon inProgress={inProgress} />*/}
-              {/*  }*/}
-              {/*  setFactoryResetState={setBleConfigurationProcessState}*/}
-              {/*/>*/}
-              {/*<ConnectionOperationButton*/}
-              {/*  connectionStatus={serialConnectionStatus}*/}
-              {/*  onButtonClicked={scanSerialDevices}*/}
-              {/*  processState={usbConfigurationProcessState}*/}
-              {/*  label={'Configure using USB (recommended)'}*/}
-              {/*  icon={({ inProgress, processCompleted }) =>*/}
-              {/*    processCompleted ? <IconCheckbox /> : <UsbStatusIcon inProgress={inProgress} />*/}
-              {/*  }*/}
-              {/*  setFactoryResetState={setUsbConfigurationProcessState}*/}
-              {/*/>*/}
               <div className="flex-1 flex items-center gap-2 p-2 bg-blue-500 rounded">
                 <IconBrandAndroid className="w-10 h-10 text-blue-600" />
                 <button

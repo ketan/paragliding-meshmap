@@ -4,7 +4,7 @@ import { deviceLogger } from './device-setup-hooks.ts'
 import { TransportWebSerial } from '@meshtastic/transport-web-serial'
 import { MeshDevice } from '@meshtastic/core'
 import { randomId } from '../utils/ui-util.tsx'
-import { waitForConnection } from '../utils/initialize-device.ts'
+import { waitForConnection } from '../utils/device-helpers.ts'
 
 export function useSerial({
   setStatus,

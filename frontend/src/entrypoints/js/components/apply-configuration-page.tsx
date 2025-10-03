@@ -15,6 +15,7 @@ import { DeviceConnectionState, ProcessState } from '../hooks/device-connection'
 import { useDisconnect } from '../hooks/use-disconnect.tsx'
 import { useBle } from '../hooks/use-ble.tsx'
 import { useSerial } from '../hooks/use-serial.tsx'
+import { getProgressMessage } from '../utils/device-helpers.ts'
 
 function loraConfig() {
   return create(Protobuf.Config.ConfigSchema, {
@@ -157,8 +158,6 @@ function cannedMessages() {
 
 const onConnect = async (connection: MeshDevice, formData: FormInputs, setState: (state: ProcessState) => void) => {
   setState('in-progress')
-  await sleep(1000)
-
   // Save all channel configs first, doesn't require a commit/reboot
   deviceLogger.info(`Configuring channel...`)
   await connection.setChannel(createChannel())
@@ -299,6 +298,9 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
             <div className="flex gap-4 text-white">
               {resetType === 'bluetooth' && (
                 <ConnectionOperationButton
+                  progressMessage={() =>
+                    getProgressMessage(bleConnectionStatus, bleConfigurationProcessState, 'Bluetooth', 'configuration')
+                  }
                   connectionStatus={bleConnectionStatus}
                   onButtonClicked={scanBLEDevices}
                   processState={bleConfigurationProcessState}
@@ -318,6 +320,7 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
 
               {resetType === 'usb' && (
                 <ConnectionOperationButton
+                  progressMessage={() => getProgressMessage(serialConnectionStatus, usbConfigurationProcessState, 'USB', 'configuration')}
                   connectionStatus={serialConnectionStatus}
                   onButtonClicked={scanSerialDevices}
                   processState={usbConfigurationProcessState}

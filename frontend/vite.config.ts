@@ -12,11 +12,32 @@ import viteCompression from 'vite-plugin-compression'
 import { runtimeEnvScript } from 'vite-runtime-env-script-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import * as fs from 'node:fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const commitHash = process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString().trim()
+function gitSha() {
+  return child.execSync('git rev-parse --short HEAD').toString().trim()
+}
+
+const commitHash = process.env.GIT_SHA || gitSha()
+
+const initialSha = commitHash
+setInterval(() => {
+  try {
+    const currentSha = gitSha()
+    if (currentSha !== initialSha) {
+      // eslint-disable-next-line no-console
+      console.warn(`[vite.config] Detected git SHA change (${initialSha} -> ${currentSha}), touching vite.config.ts and exiting...`)
+      fs.utimesSync(__filename, new Date(), new Date())
+      process.exit(-1)
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('[vite.config] Error checking git SHA:', err)
+  }
+}, 5000)
 
 interface SVGToReactOptions {}
 

@@ -8,7 +8,7 @@
     "build": "concurrently pnpm:build:fe pnpm:build:be && cp -rf frontend/dist build/public",
     "build:be": "rm -rf build && npx rollup -c rollup.config.js",
     "build:fe": "cd frontend && rm -rf ./dist && tsc -b && NODE_OPTIONS='-r dotenv-flow/config' DOTENV_FLOW_PATH=$(pwd)/.. ../node_modules/.bin/vite build --mode=production",
-    "start": "concurrently -P 'pnpm:start:be {@}' pnpm:start:fe --",
+    "start": "concurrently --restart-tries '-1' --restart-after 3000 -P 'pnpm:start:be {@}' pnpm:start:fe --",
     "start:be": "export NODE_ENV=development; NODE_OPTIONS='-r dotenv-flow/config' nodemon --exec node --loader ts-node/esm --enable-source-maps src/index.ts --",
     "start:fe": "export NODE_ENV=development; cd frontend && NODE_OPTIONS='-r dotenv-flow/config' DOTENV_FLOW_PATH=$(pwd)/.. ../node_modules/.bin/vite dev",
     "mqtt": "export NODE_ENV=development; NODE_OPTIONS='-r dotenv-flow/config' nodemon --exec node --loader ts-node/esm --enable-source-maps src/mqtt.ts",

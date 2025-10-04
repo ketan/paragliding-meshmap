@@ -29,6 +29,7 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
 
   const serverVersion = response.headers.get('X-App-Version')
   if (serverVersion && serverVersion !== currentVersion) {
+    debugger
     window.location.reload()
   }
 

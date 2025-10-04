@@ -87,12 +87,22 @@ export function setupCSRFMiddleware(app: Express) {
 
 let cachedCommitHash: string | null = null
 
+function getSHA() {
+  if (!getSHA.cache || Date.now() - getSHA.cacheTime > 5000) {
+    getSHA.cache = execSync('git rev-parse --short HEAD').toString().trim()
+    getSHA.cacheTime = Date.now()
+  }
+  return getSHA.cache
+}
+getSHA.cache = null as string | null
+getSHA.cacheTime = 0
+
 export function getCommitHash() {
   if (isProduction && cachedCommitHash) {
     return cachedCommitHash
   }
 
-  const commitHash = process.env.GIT_SHA || execSync('git rev-parse --short HEAD').toString().trim()
+  const commitHash = process.env.GIT_SHA || getSHA()
 
   if (isProduction) {
     cachedCommitHash = commitHash

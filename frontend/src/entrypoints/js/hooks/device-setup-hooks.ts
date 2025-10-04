@@ -1,5 +1,4 @@
 import { MeshDevice } from '@meshtastic/core'
-import * as Protobuf from '@meshtastic/protobufs'
 import { Logger } from 'tslog'
 
 export const deviceLogger = new Logger({
@@ -13,88 +12,65 @@ export const dumpLogger = new Logger({
 })
 
 export function _subscribeAll(connection: MeshDevice) {
-  connection.events.onRoutingPacket.subscribe((routingPacket) => {
-    switch (routingPacket.data.variant.case) {
-      case 'errorReason': {
-        if (routingPacket.data.variant.value === Protobuf.Mesh.Routing_Error.NONE) {
-          return
-        }
-        dumpLogger.error(`Routing Error: ${routingPacket.data.variant.value}`)
-        break
-      }
-      case 'routeReply': {
-        dumpLogger.error(`Route Reply: ${routingPacket.data.variant.value}`)
-        break
-      }
-      case 'routeRequest': {
-        dumpLogger.error(`Route Request: ${routingPacket.data.variant.value}`)
-        break
-      }
-    }
-  })
-
   connection.events.onDeviceMetadataPacket.subscribe((packet) => {
-    dumpLogger.info(`onDeviceMetadataPacket`, packet)
+    dumpLogger.info(`onDeviceMetadataPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onTelemetryPacket.subscribe((packet) => {
-    dumpLogger.info(`onTelemetryPacket`, packet)
+    dumpLogger.info(`onTelemetryPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onDeviceStatus.subscribe((packet) => {
-    dumpLogger.info(`onDeviceStatus`, packet)
+    dumpLogger.info(`onDeviceStatus`, JSON.stringify(packet, null, 2))
   })
   connection.events.onWaypointPacket.subscribe((packet) => {
-    dumpLogger.info(`onWaypointPacket`, packet)
+    dumpLogger.info(`onWaypointPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onMyNodeInfo.subscribe((packet) => {
-    dumpLogger.info(`onMyNodeInfo`, packet)
+    dumpLogger.info(`onMyNodeInfo`, JSON.stringify(packet, null, 2))
   })
   connection.events.onUserPacket.subscribe((packet) => {
-    dumpLogger.info(`onUserPacket`, packet)
+    dumpLogger.info(`onUserPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onPositionPacket.subscribe((packet) => {
-    dumpLogger.info(`onPositionPacket`, packet)
+    dumpLogger.info(`onPositionPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onNodeInfoPacket.subscribe((packet) => {
-    dumpLogger.info(`onNodeInfoPacket`, packet)
+    dumpLogger.info(`onNodeInfoPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onChannelPacket.subscribe((packet) => {
-    dumpLogger.info(`onChannelPacket`, packet)
+    dumpLogger.info(`onChannelPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onConfigPacket.subscribe((packet) => {
-    dumpLogger.info(`onConfigPacket`, packet)
+    dumpLogger.info(`onConfigPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onModuleConfigPacket.subscribe((packet) => {
-    dumpLogger.info(`onModuleConfigPacket`, packet)
+    dumpLogger.info(`onModuleConfigPacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onMessagePacket.subscribe((packet) => {
-    dumpLogger.info(`onMessagePacket`, packet)
+    dumpLogger.info(`onMessagePacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onTraceRoutePacket.subscribe((packet) => {
-    dumpLogger.info(`onTraceRoutePacket`, packet)
+    dumpLogger.info(`onTraceRoutePacket`, JSON.stringify(packet, null, 2))
   })
   connection.events.onPendingSettingsChange.subscribe((packet) => {
-    dumpLogger.info(`onPendingSettingsChange`, packet)
+    dumpLogger.info(`onPendingSettingsChange`, JSON.stringify(packet, null, 2))
   })
   connection.events.onMeshPacket.subscribe((packet) => {
-    dumpLogger.info(`onMeshPacket`, packet)
+    dumpLogger.info(`onMeshPacket`, JSON.stringify(packet, null, 2))
   })
 
   connection.events.onRoutingPacket.subscribe((routingPacket) => {
-    if (routingPacket.data.variant.case === 'errorReason') {
-      switch (routingPacket.data.variant.value) {
-        case Protobuf.Mesh.Routing_Error.MAX_RETRANSMIT:
-          console.error(`Routing Error: ${routingPacket.data.variant.value}`)
-          break
-        case Protobuf.Mesh.Routing_Error.NO_CHANNEL:
-          console.error(`Routing Error: ${routingPacket.data.variant.value}`)
-          break
-        case Protobuf.Mesh.Routing_Error.PKI_UNKNOWN_PUBKEY:
-          console.error(`Routing Error: ${routingPacket.data.variant.value}`)
-          break
-        default: {
-          break
-        }
-      }
-    }
+    dumpLogger.info(`onRoutingPacket`, JSON.stringify(routingPacket, null, 2))
+  })
+}
+
+// Monkey patch to allow JSON.stringify to handle BigInt values
+if (!('toJSON' in BigInt.prototype)) {
+  // eslint-disable-next-line no-extend-native
+  Object.defineProperty(BigInt.prototype, 'toJSON', {
+    value: function () {
+      return this.toString()
+    },
+    configurable: true,
+    writable: true,
   })
 }

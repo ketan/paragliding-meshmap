@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { MeshDevice } from '@meshtastic/core'
-import { IconCheckbox } from '@tabler/icons-react'
+import { IconCheckbox, IconCopy } from '@tabler/icons-react'
 import { deviceLogger } from '../hooks/device-setup-hooks'
 import { ConnectionOperationButton } from './connection-operation-button.tsx'
 import { BluetoothStatusIcon } from './bluetooth-status-icon.tsx'
@@ -12,6 +12,7 @@ import { useBle } from '../hooks/use-ble.tsx'
 import { useSerial } from '../hooks/use-serial.tsx'
 import { getProgressMessage, LogEvent, configureDevice } from '../utils/device-helpers.ts'
 import _ from 'lodash'
+import { Tooltip } from './tooltip.tsx'
 
 interface ApplyConfigurationPageParams {
   formData: FormInputs
@@ -168,7 +169,19 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
         </div>
       </div>
       {/**/}
-      <div className="mt-6 max-h-32 overflow-y-auto bg-gray-50 border border-gray-200 rounded p-2 text-xs text-gray-700 font-mono">
+      <div className="mt-6 max-h-32 overflow-y-auto bg-gray-50 border border-gray-200 rounded p-2 text-xs text-gray-700 font-mono relative">
+        {/* Floating copy icon/tooltip, fixed to the parent container's top right, not scrolling with content */}
+        <div className="sticky top-0 right-0 z-20 float-right">
+          <Tooltip tooltipText="Copy logs to clipboard" className="border-sm inline-block rounded border">
+            <IconCopy
+              className="w-5 h-5 inline-block p-0.5 cursor-pointer"
+              onClick={() => {
+                const text = statusMessages.map((e) => `${e.time.toLocaleTimeString()} - ${e.message}`).join('\n')
+                navigator.clipboard.writeText(text)
+              }}
+            />
+          </Tooltip>
+        </div>
         {statusMessages.map((event, idx) => (
           <div key={idx}>
             {event.time.toLocaleTimeString()} - {event.message}

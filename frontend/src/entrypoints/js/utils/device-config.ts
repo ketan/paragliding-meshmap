@@ -34,6 +34,7 @@ export function bluetoothConfig() {
     },
   })
 }
+
 export function positionConfig() {
   return create(Protobuf.Config.ConfigSchema, {
     payloadVariant: {

@@ -35,5 +35,5 @@ export function useSerial({
       await waitForConnection(connectionRef.current, setStatus, setDeviceMetadata, logStatus)
       await onConnect(connectionRef.current)
     }
-  }, [setStatus, disconnect, logStatus, connectionRef, onConnect])
+  }, [setStatus, disconnect, logStatus, connectionRef, setDeviceMetadata, onConnect])
 }

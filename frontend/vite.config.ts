@@ -18,10 +18,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 function gitSha() {
-  return child.execSync('git rev-parse --short HEAD').toString().trim()
+  return process.env.GIT_SHA || child.execSync('git rev-parse --short HEAD').toString().trim()
 }
 
-const commitHash = process.env.GIT_SHA || gitSha()
+const commitHash = gitSha()
 
 const initialSha = commitHash
 const interval = setInterval(() => {

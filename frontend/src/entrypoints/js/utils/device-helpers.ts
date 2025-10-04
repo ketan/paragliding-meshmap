@@ -74,12 +74,6 @@ async function opSetOwner(connection: MeshDevice, formData: FormInputs, logStatu
   logStatus('Done setting owner...')
 }
 
-async function opResetNodes(connection: MeshDevice, logStatus: (msg: string, ...args: unknown[]) => void) {
-  logStatus('Clearing nodes...')
-  await connection.resetNodes()
-  logStatus('Nodes cleared...')
-}
-
 async function opCommit(connection: MeshDevice, logStatus: (msg: string, ...args: unknown[]) => void) {
   logStatus('Almost done... Rebooting device...')
   await connection.reboot(5)
@@ -134,7 +128,6 @@ export async function configureDevice(
     async () => await sleep(5000),
     ...moduleConfigs.map((modCfg) => async () => await opSetModuleConfig(connection, modCfg, logStatus)),
     async () => await sleep(5000),
-    async () => await opResetNodes(connection, logStatus),
     async () => await opSetOwner(connection, formData, logStatus),
     async () => await opCommit(connection, logStatus),
   ]

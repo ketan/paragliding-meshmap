@@ -69,6 +69,9 @@ export function getDefaultProfile() {
       }),
       display: new meshtastic.Config.DisplayConfig(),
       lora: loRaConfig,
+      device: new meshtastic.Config.DeviceConfig({
+        tzdef: 'IST-5:30',
+      }),
     }),
     moduleConfig: new meshtastic.LocalModuleConfig({
       neighborInfo: new meshtastic.ModuleConfig.NeighborInfoConfig({

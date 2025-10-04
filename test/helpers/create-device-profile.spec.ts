@@ -37,6 +37,9 @@ describe('getDefaultProfile', () => {
     expect(deviceProfile.config?.lora?.sx126xRxBoostedGain).to.be.true
     expect(deviceProfile.config?.lora?.ignoreMqtt).to.be.true
 
+    expect(deviceProfile.config?.device).to.be.an.instanceof(meshtastic.Config.DeviceConfig)
+    expect(deviceProfile.config?.device?.tzdef).to.equal('IST-5:30')
+
     expect(deviceProfile.moduleConfig).to.be.an.instanceof(meshtastic.LocalModuleConfig)
     expect(deviceProfile.moduleConfig?.neighborInfo).to.be.an.instanceof(meshtastic.ModuleConfig.NeighborInfoConfig)
     expect(deviceProfile.moduleConfig?.neighborInfo?.updateInterval).to.equal(900)

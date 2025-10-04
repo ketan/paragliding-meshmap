@@ -10,11 +10,13 @@ export function useBle({
   disconnect,
   connectionRef,
   onConnect,
+  logStatus,
 }: {
   setStatus: (value: DeviceConnectionState) => void
   disconnect: () => void
   connectionRef: RefObject<MeshDevice | undefined>
   onConnect: (device: MeshDevice) => Promise<unknown>
+  logStatus: (msg: string, ...args: unknown[]) => void
 }) {
   return useCallback(async () => {
     setStatus('connecting')
@@ -25,10 +27,11 @@ export function useBle({
     })
 
     if (bleDevice) {
+      logStatus(`Got device ${bleDevice.id}/${bleDevice.name}`)
       const transport = await TransportWebBluetooth.createFromDevice(bleDevice)
       connectionRef.current = new MeshDevice(transport, randomId())
-      await waitForConnection(connectionRef.current, setStatus)
+      await waitForConnection(connectionRef.current, setStatus, logStatus)
       await onConnect(connectionRef.current)
     }
-  }, [setStatus, disconnect, connectionRef, onConnect])
+  }, [setStatus, disconnect, logStatus, connectionRef, onConnect])
 }

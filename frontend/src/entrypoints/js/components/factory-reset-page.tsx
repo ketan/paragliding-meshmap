@@ -43,6 +43,7 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
     disconnect,
     connectionRef: bleConnection,
     onConnect: async (device) => await factoryReset(device, setFactoryResetStateBle),
+    logStatus: (msg, ...args) => deviceLogger.info(msg, ...args),
   })
 
   const scanSerialDevices = useSerial({
@@ -50,6 +51,7 @@ export function FactoryResetPage({ resetType }: FactoryResetPageProps) {
     disconnect,
     connectionRef: serialConnection,
     onConnect: async (device) => await factoryReset(device, setfactoryResetStateUsb),
+    logStatus: (msg, ...args) => deviceLogger.info(msg, ...args),
   })
 
   useEffect(() => {

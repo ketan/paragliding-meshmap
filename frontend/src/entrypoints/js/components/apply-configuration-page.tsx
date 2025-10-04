@@ -1,12 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { create } from '@bufbuild/protobuf'
-import * as Protobuf from '@meshtastic/protobufs'
-import { toByteArray } from 'base64-js'
 import { MeshDevice } from '@meshtastic/core'
-import { sleep } from '../utils/ui-util'
 import { IconCheckbox } from '@tabler/icons-react'
 import { deviceLogger } from '../hooks/device-setup-hooks'
-import { meshtastic } from '../../../../../src/gen/meshtastic-protobufs'
 import { ConnectionOperationButton } from './connection-operation-button.tsx'
 import { BluetoothStatusIcon } from './bluetooth-status-icon.tsx'
 import { UsbStatusIcon } from './usb-status-icon.tsx'
@@ -15,227 +10,28 @@ import { DeviceConnectionState, ProcessState } from '../hooks/device-connection'
 import { useDisconnect } from '../hooks/use-disconnect.tsx'
 import { useBle } from '../hooks/use-ble.tsx'
 import { useSerial } from '../hooks/use-serial.tsx'
-import { getProgressMessage } from '../utils/device-helpers.ts'
-
-function loraConfig() {
-  return create(Protobuf.Config.ConfigSchema, {
-    payloadVariant: {
-      case: 'lora',
-      value: {
-        usePreset: true,
-        region: Protobuf.Config.Config_LoRaConfig_RegionCode.IN,
-        txEnabled: true,
-        hopLimit: 3,
-        txPower: 0, // default maxiumum
-        sx126xRxBoostedGain: true,
-        ignoreMqtt: true,
-        configOkToMqtt: true,
-        channelNum: 0,
-      },
-    },
-  })
-}
-
-function positionConfig() {
-  return create(Protobuf.Config.ConfigSchema, {
-    payloadVariant: {
-      case: 'position',
-      value: {
-        positionBroadcastSecs: 180,
-        gpsUpdateInterval: 60,
-        positionFlags: 811,
-        broadcastSmartMinimumDistance: 100,
-        broadcastSmartMinimumIntervalSecs: 30,
-        gpsMode: Protobuf.Config.Config_PositionConfig_GpsMode.ENABLED,
-      },
-    },
-  })
-}
-
-function bluetoothConfig() {
-  return create(Protobuf.Config.ConfigSchema, {
-    payloadVariant: {
-      case: 'bluetooth',
-      value: {
-        enabled: true,
-        mode: Protobuf.Config.Config_BluetoothConfig_PairingMode.FIXED_PIN,
-        fixedPin: 123456,
-      },
-    },
-  })
-}
-type ConfigVariant = 'lora' | 'device' | 'position' | 'power' | 'network' | 'display' | 'bluetooth' | 'security' | 'sessionkey' | 'deviceUi'
-
-function createEmptyDeviceConfig(configVariant: ConfigVariant) {
-  return create(Protobuf.Config.ConfigSchema, {
-    payloadVariant: {
-      case: configVariant,
-      value: {},
-    },
-  })
-}
-
-function createMqttConfig() {
-  return create(Protobuf.ModuleConfig.ModuleConfigSchema, {
-    payloadVariant: {
-      case: 'mqtt',
-      value: {
-        address: 'mqtt.bircom.in',
-        username: 'uplink',
-        password: 'uplink',
-        root: 'msh/IN/Bir/mqtt',
-        enabled: true,
-        proxyToClientEnabled: true,
-        mapReportingEnabled: true,
-        mapReportSettings: {
-          publishIntervalSecs: 7200,
-          positionPrecision: 32,
-          shouldReportLocation: true,
-        },
-      },
-    },
-  })
-}
-
-type PayloadVariantCase =
-  | 'mqtt'
-  | 'serial'
-  | 'externalNotification'
-  | 'storeForward'
-  | 'rangeTest'
-  | 'telemetry'
-  | 'cannedMessage'
-  | 'audio'
-  | 'remoteHardware'
-  | 'neighborInfo'
-  | 'ambientLighting'
-  | 'detectionSensor'
-  | 'paxcounter'
-
-function createEmptyModuleConfig(configVariant: PayloadVariantCase) {
-  return create(Protobuf.ModuleConfig.ModuleConfigSchema, {
-    payloadVariant: {
-      case: configVariant,
-      value: {},
-    },
-  })
-}
-
-function createOwner(shortName: string, longName: string): Protobuf.Mesh.User {
-  return create(Protobuf.Mesh.UserSchema, {
-    shortName: shortName,
-    longName: longName,
-  })
-}
-
-function createChannel(): Protobuf.Channel.Channel {
-  return create(Protobuf.Channel.ChannelSchema, {
-    role: Protobuf.Channel.Channel_Role.PRIMARY,
-    settings: {
-      channelNum: 0,
-      psk: toByteArray('AQ=='),
-      uplinkEnabled: true,
-      moduleSettings: {
-        positionPrecision: 32,
-      },
-    },
-  })
-}
+import { getProgressMessage, LogEvent, configureDevice } from '../utils/device-helpers.ts'
+import _ from 'lodash'
 
 interface ApplyConfigurationPageParams {
   formData: FormInputs
   resetType: 'bluetooth' | 'usb'
 }
 
-function cannedMessages() {
-  return create(Protobuf.ModuleConfig.ModuleConfigSchema, {
-    payloadVariant: {
-      case: 'cannedMessage',
-      value: new meshtastic.ModuleConfig.CannedMessageConfig() as unknown as Protobuf.ModuleConfig.ModuleConfig_CannedMessageConfig,
-    },
-  })
-}
-
-const onConnect = async (connection: MeshDevice, formData: FormInputs, setState: (state: ProcessState) => void) => {
-  setState('in-progress')
-  // Save all channel configs first, doesn't require a commit/reboot
-  deviceLogger.info(`Configuring channel...`)
-  await connection.setChannel(createChannel())
-  deviceLogger.info(`Channel configured.`)
-  await sleep(1000)
-
-  const configs = [
-    loraConfig(),
-    bluetoothConfig(),
-    positionConfig(),
-    createEmptyDeviceConfig('security'),
-    createEmptyDeviceConfig('power'), // has some problems, hanging, skipping for now
-    createEmptyDeviceConfig('network'), // has some problems, hanging, skipping for now
-    createEmptyDeviceConfig('display'),
-    createEmptyDeviceConfig('device'),
-    createEmptyDeviceConfig('deviceUi'),
-  ]
-
-  // Chain the promises in configs
-  for (const cfg of configs) {
-    deviceLogger.info(`Setting config ${cfg.payloadVariant.case}...`, cfg)
-    await connection.setConfig(cfg)
-    deviceLogger.info(`Saved config ${cfg.payloadVariant.case}`)
-    await sleep(500)
+function RenderProgress({ logEvents, progress: progress, suffix }: { suffix: string; progress: [number, number]; logEvents: LogEvent[] }) {
+  if (progress[1] === 0) {
+    return <span>{suffix}</span>
   }
-
-  // await Promise.all(
-  //   configs.map(async (cfg) => {
-  //     deviceLogger.info(`Setting config ${cfg.payloadVariant.case}...`, cfg)
-  //     await connection.setConfig(cfg)
-  //     deviceLogger.info(`Saved config ${cfg.payloadVariant.case}`)
-  //   })
-  // )
-
-  await sleep(5000)
-
-  const moduleConfigs = [
-    createEmptyModuleConfig('neighborInfo'),
-    createEmptyModuleConfig('externalNotification'),
-    createEmptyModuleConfig('storeForward'),
-    createEmptyModuleConfig('rangeTest'),
-    createEmptyModuleConfig('telemetry'),
-    cannedMessages(),
-    createEmptyModuleConfig('audio'),
-    createEmptyModuleConfig('remoteHardware'),
-    createEmptyModuleConfig('ambientLighting'),
-    createEmptyModuleConfig('detectionSensor'),
-    createEmptyModuleConfig('paxcounter'),
-    createEmptyModuleConfig('serial'),
-    createMqttConfig(),
-  ]
-
-  // await Promise.all(
-  //   moduleConfigs.map(async (cfg) => {
-  //     deviceLogger.info(`Setting module ${cfg.payloadVariant.case}...`, cfg)
-  //     await connection.setModuleConfig(cfg)
-  //     deviceLogger.info(`Saved module ${cfg.payloadVariant.case}`)
-  //   })
-  // )
-
-  await sleep(5000)
-
-  for (const modCfg of moduleConfigs) {
-    deviceLogger.info(`Setting module config ${modCfg.payloadVariant.case}...`)
-    await connection.setModuleConfig(modCfg)
-    deviceLogger.info(`Saved module config ${modCfg.payloadVariant.case}`)
-    await sleep(500)
-  }
-
-  await sleep(1000)
-  deviceLogger.info(`Setting owner...`)
-  await connection.setOwner(createOwner(formData.shortName, formData.longName))
-
-  deviceLogger.info(`Committing...`)
-  await connection.commitEditSettings()
-  await sleep(1000)
-  deviceLogger.info(`Done configuring`)
-  setState('done')
+  return (
+    <div>
+      <span>{suffix}</span>
+      <br />
+      <span>
+        Step {progress[0]} of {progress[1]} -
+      </span>{' '}
+      <span>{_.last(logEvents)?.message}</span>
+    </div>
+  )
 }
 
 export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurationPageParams) {
@@ -244,24 +40,42 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
 
   const [bleConnectionStatus, setBleConnectionStatus] = useState<DeviceConnectionState>('not-connected')
   const [serialConnectionStatus, setSerialConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+  const [progress, setProgress] = useState<[number, number]>([0, 0])
+  const [statusMessages, setStatusMessages] = useState<LogEvent[]>([])
+  const statusMessagesRef = useRef<LogEvent[]>([])
+  const logStatus = (msg: string, ...args: unknown[]) => {
+    statusMessagesRef.current = [...statusMessagesRef.current, { time: new Date(), message: msg }]
+    setStatusMessages([...statusMessagesRef.current])
+    deviceLogger.info(msg, ...args)
+  }
 
   const bleConnection = useRef<MeshDevice | undefined>(undefined)
   const serialConnection = useRef<MeshDevice | undefined>(undefined)
 
   const disconnect = useDisconnect(bleConnection, serialConnection)
 
+  useEffect(() => {
+    if (bleConnectionStatus === 'connecting' || serialConnectionStatus === 'connecting') {
+      setProgress([0, 0])
+      statusMessagesRef.current = []
+      setStatusMessages([])
+    }
+  }, [bleConnectionStatus, serialConnectionStatus])
+
   const scanBLEDevices = useBle({
     setStatus: setBleConnectionStatus,
     disconnect,
     connectionRef: bleConnection,
-    onConnect: async (device) => await onConnect(device, formData, setBleConfigurationProcessState),
+    onConnect: async (device) => await configureDevice(device, formData, setBleConfigurationProcessState, logStatus, setProgress),
+    logStatus,
   })
 
   const scanSerialDevices = useSerial({
     setStatus: setSerialConnectionStatus,
     disconnect,
     connectionRef: serialConnection,
-    onConnect: async (device) => await onConnect(device, formData, setUsbConfigurationProcessState),
+    onConnect: async (device) => await configureDevice(device, formData, setUsbConfigurationProcessState, logStatus, setProgress),
+    logStatus,
   })
 
   useEffect(() => {
@@ -271,6 +85,14 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
   }, [disconnect])
 
   const [errorMessage, _setErrorMessage] = useState<ReactNode>()
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' })
+    }
+  }, [statusMessages])
 
   return (
     <div className="text-sm md:text-md">
@@ -298,9 +120,10 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
             <div className="flex gap-4 text-white">
               {resetType === 'bluetooth' && (
                 <ConnectionOperationButton
-                  progressMessage={() =>
-                    getProgressMessage(bleConnectionStatus, bleConfigurationProcessState, 'Bluetooth', 'configuration')
-                  }
+                  progressMessage={() => {
+                    const suffix = getProgressMessage(bleConnectionStatus, bleConfigurationProcessState, 'Bluetooth', 'configuration')
+                    return <RenderProgress suffix={suffix} progress={progress} logEvents={statusMessages} />
+                  }}
                   connectionStatus={bleConnectionStatus}
                   onButtonClicked={scanBLEDevices}
                   processState={bleConfigurationProcessState}
@@ -320,7 +143,10 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
 
               {resetType === 'usb' && (
                 <ConnectionOperationButton
-                  progressMessage={() => getProgressMessage(serialConnectionStatus, usbConfigurationProcessState, 'USB', 'configuration')}
+                  progressMessage={() => {
+                    const suffix = getProgressMessage(serialConnectionStatus, usbConfigurationProcessState, 'USB', 'configuration')
+                    return <RenderProgress suffix={suffix} progress={progress} logEvents={statusMessages} />
+                  }}
                   connectionStatus={serialConnectionStatus}
                   onButtonClicked={scanSerialDevices}
                   processState={usbConfigurationProcessState}
@@ -340,6 +166,15 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
             </div>
           </div>
         </div>
+      </div>
+      {/**/}
+      <div className="mt-6 max-h-32 overflow-y-auto bg-gray-50 border border-gray-200 rounded p-2 text-xs text-gray-700 font-mono">
+        {statusMessages.map((event, idx) => (
+          <div key={idx}>
+            {event.time.toLocaleTimeString()} - {event.message}
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   )

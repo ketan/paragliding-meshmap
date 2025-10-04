@@ -24,7 +24,7 @@ function gitSha() {
 const commitHash = process.env.GIT_SHA || gitSha()
 
 const initialSha = commitHash
-setInterval(() => {
+const interval = setInterval(() => {
   try {
     const currentSha = gitSha()
     if (currentSha !== initialSha) {
@@ -36,6 +36,7 @@ setInterval(() => {
     console.error('[vite.config] Error checking git SHA:', err)
   }
 }, 5000)
+interval.unref()
 
 interface SVGToReactOptions {}
 

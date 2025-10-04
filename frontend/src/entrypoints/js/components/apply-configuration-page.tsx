@@ -13,6 +13,8 @@ import { useSerial } from '../hooks/use-serial.tsx'
 import { getProgressMessage, LogEvent, configureDevice } from '../utils/device-helpers.ts'
 import _ from 'lodash'
 import { Tooltip } from './tooltip.tsx'
+import * as Protobuf from '@meshtastic/protobufs'
+import { HardwareModelIDToName } from '../../../hardware-modules.ts'
 
 interface ApplyConfigurationPageParams {
   formData: FormInputs
@@ -41,7 +43,11 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
 
   const [bleConnectionStatus, setBleConnectionStatus] = useState<DeviceConnectionState>('not-connected')
   const [serialConnectionStatus, setSerialConnectionStatus] = useState<DeviceConnectionState>('not-connected')
+
+  const [deviceMetadata, setDeviceMetadata] = useState<Protobuf.Mesh.DeviceMetadata>()
+
   const [progress, setProgress] = useState<[number, number]>([0, 0])
+
   const [statusMessages, setStatusMessages] = useState<LogEvent[]>([])
   const statusMessagesRef = useRef<LogEvent[]>([])
   const logStatus = (msg: string, ...args: unknown[]) => {
@@ -63,12 +69,19 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
     }
   }, [bleConnectionStatus, serialConnectionStatus])
 
+  useEffect(() => {
+    if (deviceMetadata) {
+      logStatus(`Firmware version ${deviceMetadata.firmwareVersion} running on ${HardwareModelIDToName[deviceMetadata.hwModel]}`)
+    }
+  }, [deviceMetadata])
+
   const scanBLEDevices = useBle({
     setStatus: setBleConnectionStatus,
     disconnect,
     connectionRef: bleConnection,
     onConnect: async (device) => await configureDevice(device, formData, setBleConfigurationProcessState, logStatus, setProgress),
     logStatus,
+    setDeviceMetadata,
   })
 
   const scanSerialDevices = useSerial({
@@ -77,6 +90,7 @@ export function ApplyConfigurationPage({ formData, resetType }: ApplyConfigurati
     connectionRef: serialConnection,
     onConnect: async (device) => await configureDevice(device, formData, setUsbConfigurationProcessState, logStatus, setProgress),
     logStatus,
+    setDeviceMetadata,
   })
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import { TransportWebSerial } from '@meshtastic/transport-web-serial'
 import { MeshDevice } from '@meshtastic/core'
 import { randomId } from '../utils/ui-util.tsx'
 import { waitForConnection } from '../utils/device-helpers.ts'
+import * as Protobuf from '@meshtastic/protobufs'
 
 export function useSerial({
   setStatus,
@@ -11,11 +12,13 @@ export function useSerial({
   connectionRef,
   onConnect,
   logStatus,
+  setDeviceMetadata,
 }: {
   setStatus: (value: DeviceConnectionState) => void
   disconnect: () => void
   connectionRef: RefObject<MeshDevice | undefined>
   onConnect: (device: MeshDevice) => Promise<unknown>
+  setDeviceMetadata: (meta: Protobuf.Mesh.DeviceMetadata) => void
   logStatus: (msg: string, ...args: unknown[]) => void
 }) {
   return useCallback(async () => {
@@ -29,7 +32,7 @@ export function useSerial({
       logStatus(`Got port from user: usbVendorId=${usbVendorId} usbProductId=${usbProductId}`)
       const transport = await TransportWebSerial.createFromPort(serialDevice)
       connectionRef.current = new MeshDevice(transport, randomId())
-      await waitForConnection(connectionRef.current, setStatus, logStatus)
+      await waitForConnection(connectionRef.current, setStatus, setDeviceMetadata, logStatus)
       await onConnect(connectionRef.current)
     }
   }, [setStatus, disconnect, logStatus, connectionRef, onConnect])

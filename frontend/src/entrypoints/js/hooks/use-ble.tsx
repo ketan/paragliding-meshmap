@@ -4,6 +4,7 @@ import { TransportWebBluetooth } from '@meshtastic/transport-web-bluetooth'
 import { MeshDevice } from '@meshtastic/core'
 import { randomId } from '../utils/ui-util.tsx'
 import { waitForConnection } from '../utils/device-helpers.ts'
+import * as Protobuf from '@meshtastic/protobufs'
 
 export function useBle({
   setStatus,
@@ -11,9 +12,11 @@ export function useBle({
   connectionRef,
   onConnect,
   logStatus,
+  setDeviceMetadata,
 }: {
   setStatus: (value: DeviceConnectionState) => void
   disconnect: () => void
+  setDeviceMetadata: (meta: Protobuf.Mesh.DeviceMetadata) => void
   connectionRef: RefObject<MeshDevice | undefined>
   onConnect: (device: MeshDevice) => Promise<unknown>
   logStatus: (msg: string, ...args: unknown[]) => void
@@ -30,8 +33,8 @@ export function useBle({
       logStatus(`Got device ${bleDevice.id}/${bleDevice.name}`)
       const transport = await TransportWebBluetooth.createFromDevice(bleDevice)
       connectionRef.current = new MeshDevice(transport, randomId())
-      await waitForConnection(connectionRef.current, setStatus, logStatus)
+      await waitForConnection(connectionRef.current, setStatus, setDeviceMetadata, logStatus)
       await onConnect(connectionRef.current)
     }
-  }, [setStatus, disconnect, logStatus, connectionRef, onConnect])
+  }, [setStatus, disconnect, logStatus, connectionRef, setDeviceMetadata, onConnect])
 }

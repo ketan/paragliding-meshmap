@@ -7,6 +7,11 @@ export const deviceLogger = new Logger({
   prettyLogTemplate: '{{hh}}:{{MM}}:{{ss}}:{{ms}}\t{{logLevelName}}\t[{{name}}]\t',
 })
 
+export const dumpLogger = new Logger({
+  name: 'meshmap:dump',
+  prettyLogTemplate: '{{hh}}:{{MM}}:{{ss}}:{{ms}}\t{{logLevelName}}\t[{{name}}]\t',
+})
+
 export function _subscribeAll(connection: MeshDevice) {
   connection.events.onRoutingPacket.subscribe((routingPacket) => {
     switch (routingPacket.data.variant.case) {
@@ -14,64 +19,64 @@ export function _subscribeAll(connection: MeshDevice) {
         if (routingPacket.data.variant.value === Protobuf.Mesh.Routing_Error.NONE) {
           return
         }
-        deviceLogger.error(`Routing Error: ${routingPacket.data.variant.value}`)
+        dumpLogger.error(`Routing Error: ${routingPacket.data.variant.value}`)
         break
       }
       case 'routeReply': {
-        deviceLogger.error(`Route Reply: ${routingPacket.data.variant.value}`)
+        dumpLogger.error(`Route Reply: ${routingPacket.data.variant.value}`)
         break
       }
       case 'routeRequest': {
-        deviceLogger.error(`Route Request: ${routingPacket.data.variant.value}`)
+        dumpLogger.error(`Route Request: ${routingPacket.data.variant.value}`)
         break
       }
     }
   })
 
   connection.events.onDeviceMetadataPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onDeviceMetadataPacket`, packet)
   })
   connection.events.onTelemetryPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onTelemetryPacket`, packet)
   })
   connection.events.onDeviceStatus.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onDeviceStatus`, packet)
   })
   connection.events.onWaypointPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onWaypointPacket`, packet)
   })
   connection.events.onMyNodeInfo.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onMyNodeInfo`, packet)
   })
   connection.events.onUserPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onUserPacket`, packet)
   })
   connection.events.onPositionPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onPositionPacket`, packet)
   })
   connection.events.onNodeInfoPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onNodeInfoPacket`, packet)
   })
   connection.events.onChannelPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onChannelPacket`, packet)
   })
   connection.events.onConfigPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onConfigPacket`, packet)
   })
   connection.events.onModuleConfigPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onModuleConfigPacket`, packet)
   })
   connection.events.onMessagePacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onMessagePacket`, packet)
   })
   connection.events.onTraceRoutePacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onTraceRoutePacket`, packet)
   })
   connection.events.onPendingSettingsChange.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onPendingSettingsChange`, packet)
   })
   connection.events.onMeshPacket.subscribe((packet) => {
-    console.log(packet)
+    dumpLogger.info(`onMeshPacket`, packet)
   })
 
   connection.events.onRoutingPacket.subscribe((routingPacket) => {

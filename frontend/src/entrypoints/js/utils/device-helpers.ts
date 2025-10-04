@@ -15,6 +15,7 @@ import {
   positionConfig,
 } from './device-config.ts'
 import { createEmptyModuleConfig, createMqttConfig } from './module-config.ts'
+import { _subscribeAll } from '../hooks/device-setup-hooks.ts'
 
 export type LogEvent = {
   time: Date
@@ -143,6 +144,7 @@ export async function configureDevice(
 export async function waitForConnection(
   meshDevice: MeshDevice,
   setConnectionStatus: (value: DeviceConnectionState) => void,
+  setDeviceMetadata: (meta: Protobuf.Mesh.DeviceMetadata) => void,
   logStatus: (msg: string, ...args: unknown[]) => void
 ) {
   logStatus('Waiting for connection...')
@@ -151,15 +153,21 @@ export async function waitForConnection(
   logStatus('Sent configure command...')
   // _subscribeAll(meshDevice)
 
-  await new Promise<void>((resolve) => {
-    const subscriptionHandler = async () => {
-      logStatus('Got node info from device. Assuming connected...')
-      // we received node info, so we are connected
-      resolve()
-    }
-    logStatus('Subscribing to node info events...')
-    meshDevice.events.onMyNodeInfo.one(subscriptionHandler)
-  })
+  logStatus('Subscribing to node info events...')
+  await Promise.all([
+    new Promise<void>((resolve) => {
+      meshDevice.events.onMyNodeInfo.one(async (nodeInfo) => {
+        logStatus('Got node info from device. Assuming connected...', nodeInfo)
+        resolve()
+      })
+    }),
+    new Promise<void>((resolve) => {
+      meshDevice.events.onDeviceMetadataPacket.one(async (meta) => {
+        setDeviceMetadata(meta.data)
+        resolve()
+      })
+    }),
+  ])
 
   setConnectionStatus('connected')
   logStatus('Waiting 10s for the connection to stabilize...')

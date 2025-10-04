@@ -15,7 +15,6 @@ import {
   positionConfig,
 } from './device-config.ts'
 import { createEmptyModuleConfig, createMqttConfig } from './module-config.ts'
-import { _subscribeAll } from '../hooks/device-setup-hooks.ts'
 
 export type LogEvent = {
   time: Date

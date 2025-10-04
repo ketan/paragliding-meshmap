@@ -28,13 +28,13 @@ setInterval(() => {
   try {
     const currentSha = gitSha()
     if (currentSha !== initialSha) {
-      // eslint-disable-next-line no-console
+       
       console.warn(`[vite.config] Detected git SHA change (${initialSha} -> ${currentSha}), touching vite.config.ts and exiting...`)
       fs.utimesSync(__filename, new Date(), new Date())
       process.exit(-1)
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error('[vite.config] Error checking git SHA:', err)
   }
 }, 5000)

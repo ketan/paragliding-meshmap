@@ -65,7 +65,6 @@ export function _subscribeAll(connection: MeshDevice) {
 
 // Monkey patch to allow JSON.stringify to handle BigInt values
 if (!('toJSON' in BigInt.prototype)) {
-  // eslint-disable-next-line no-extend-native
   Object.defineProperty(BigInt.prototype, 'toJSON', {
     value: function () {
       return this.toString()

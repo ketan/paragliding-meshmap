@@ -24,7 +24,7 @@ function channelUrl(loRaConfig: meshtastic.Config.ILoRaConfig) {
           positionPrecision: 32,
         },
         uplinkEnabled: true,
-        psk: Buffer.from('q2FIr54y5R5/mp9QovsGF7LHXcXXTleedJuuxmmfNt0=', 'base64'), // default channel key
+        psk: Buffer.from('AQ==', 'base64url'), // default channel key
       }),
     ],
     loraConfig: loRaConfig,

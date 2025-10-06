@@ -33,7 +33,7 @@ function createChannel(): Protobuf.Channel.Channel {
     role: Protobuf.Channel.Channel_Role.PRIMARY,
     settings: {
       channelNum: 0,
-      psk: toByteArray('q2FIr54y5R5/mp9QovsGF7LHXcXXTleedJuuxmmfNt0='),
+      psk: toByteArray('AQ=='),
       uplinkEnabled: true,
       moduleSettings: {
         positionPrecision: 32,

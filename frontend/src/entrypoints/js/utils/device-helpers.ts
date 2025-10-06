@@ -33,7 +33,7 @@ function createChannel(): Protobuf.Channel.Channel {
     role: Protobuf.Channel.Channel_Role.PRIMARY,
     settings: {
       channelNum: 0,
-      psk: toByteArray('AQ=='),
+      psk: toByteArray('q2FIr54y5R5/mp9QovsGF7LHXcXXTleedJuuxmmfNt0='),
       uplinkEnabled: true,
       moduleSettings: {
         positionPrecision: 32,
@@ -42,7 +42,6 @@ function createChannel(): Protobuf.Channel.Channel {
   })
 }
 
-// Individual connection operations as async functions
 async function opSetChannel(connection: MeshDevice, logStatus: (msg: string, ...args: unknown[]) => void) {
   logStatus('Configuring channel...')
   await connection.setChannel(createChannel())

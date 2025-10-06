@@ -38,6 +38,7 @@ export function addOpts(command: Command) {
   command.option('--mqtt-topics <topics...>', 'MQTT Topic to subscribe to (e.g: msh/#, msh/IN/#)', ['msh/#'])
   command.option('--decryption-keys <keys...>', 'Decryption keys encoded in base64 to use when decrypting service envelopes.', [
     '1PG7OiApB1nwvP+rz05pAQ==',
+    'q2FIr54y5R5/mp9QovsGF7LHXcXXTleedJuuxmmfNt0=',
   ])
 
   command.option(

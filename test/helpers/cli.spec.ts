@@ -10,7 +10,7 @@ describe('cli', () => {
       mqttPassword: 'large4cats',
       mqttTopics: ['msh/#'],
       mqttUsername: 'meshdev',
-      decryptionKeys: ['1PG7OiApB1nwvP+rz05pAQ=='],
+      decryptionKeys: ['1PG7OiApB1nwvP+rz05pAQ==', 'q2FIr54y5R5/mp9QovsGF7LHXcXXTleedJuuxmmfNt0='],
       purgeEvery: Duration.fromISO('PT10M'),
       purgeDataOlderThan: Duration.fromISO('P7D'),
       dumpStatsEvery: Duration.fromISO('PT5M'),

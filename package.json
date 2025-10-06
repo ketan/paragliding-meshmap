@@ -6,7 +6,7 @@
     "deep-clean": "rm -rf node_modules frontend/node_modules build frontend/dist",
     "clean": "rm -rf build frontend/dist",
     "build": "concurrently pnpm:build:fe pnpm:build:be && cp -rf frontend/dist build/public",
-    "build:be": "rm -rf build && npx rollup -c rollup.config.js",
+    "build:be": "rm -rf build && pnpm dlx rollup -c rollup.config.js",
     "build:fe": "cd frontend && rm -rf ./dist && tsc -b && NODE_OPTIONS='-r dotenv-flow/config' DOTENV_FLOW_PATH=$(pwd)/.. ../node_modules/.bin/vite build --mode=production",
     "start": "concurrently --restart-tries '-1' --restart-after 3000 -P 'pnpm:start:be {@}' pnpm:start:fe --",
     "start:be": "export NODE_ENV=development; NODE_OPTIONS='-r dotenv-flow/config' nodemon --exec node --loader ts-node/esm --enable-source-maps src/index.ts --",

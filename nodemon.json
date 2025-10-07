@@ -1,5 +1,5 @@
 {
-  "watch": ["src", "package.json", "tsconfig.json", ".env**", "yarn.lock", "pnpm-lock.yaml"],
+  "watch": ["src", "package.json", "tsconfig.json", ".env**", "yarn.lock", "pnpm-lock.yaml", ".env.development", ".env.development.local"],
   "ignore": ["test", "build", "tmp", "dist", "frontend/dist"],
   "ext": "*",
   "verbose": true

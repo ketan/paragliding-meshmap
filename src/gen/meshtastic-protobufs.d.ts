@@ -2045,6 +2045,7 @@ export namespace meshtastic {
     UKRAINIAN = 16,
     BULGARIAN = 17,
     CZECH = 18,
+    DANISH = 19,
     SIMPLIFIED_CHINESE = 30,
     TRADITIONAL_CHINESE = 31,
   }
@@ -7637,6 +7638,9 @@ export namespace meshtastic {
 
     /** Number of bytes free in the heap */
     heapFreeBytes?: number | null
+
+    /** Number of packets that were dropped because the transmit queue was full. */
+    numTxDropped?: number | null
   }
 
   /** Local device mesh statistics */
@@ -7691,6 +7695,9 @@ export namespace meshtastic {
 
     /** Number of bytes free in the heap */
     public heapFreeBytes: number
+
+    /** Number of packets that were dropped because the transmit queue was full. */
+    public numTxDropped: number
 
     /**
      * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.

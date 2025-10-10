@@ -4172,6 +4172,7 @@ export const meshtastic = ($root.meshtastic = (() => {
    * @property {number} UKRAINIAN=16 Ukrainian
    * @property {number} BULGARIAN=17 Bulgarian
    * @property {number} CZECH=18 Czech
+   * @property {number} DANISH=19 Danish
    * @property {number} SIMPLIFIED_CHINESE=30 Simplified Chinese (experimental)
    * @property {number} TRADITIONAL_CHINESE=31 Traditional Chinese (experimental)
    */
@@ -4197,6 +4198,7 @@ export const meshtastic = ($root.meshtastic = (() => {
     values[(valuesById[16] = 'UKRAINIAN')] = 16
     values[(valuesById[17] = 'BULGARIAN')] = 17
     values[(valuesById[18] = 'CZECH')] = 18
+    values[(valuesById[19] = 'DANISH')] = 19
     values[(valuesById[30] = 'SIMPLIFIED_CHINESE')] = 30
     values[(valuesById[31] = 'TRADITIONAL_CHINESE')] = 31
     return values
@@ -16093,6 +16095,7 @@ export const meshtastic = ($root.meshtastic = (() => {
      * This will always be zero for ROUTERs/REPEATERs. If this number is high, some other node(s) is/are relaying faster than you.
      * @property {number|null} [heapTotalBytes] Number of bytes used in the heap
      * @property {number|null} [heapFreeBytes] Number of bytes free in the heap
+     * @property {number|null} [numTxDropped] Number of packets that were dropped because the transmit queue was full.
      */
 
     /**
@@ -16216,6 +16219,14 @@ export const meshtastic = ($root.meshtastic = (() => {
     LocalStats.prototype.heapFreeBytes = 0
 
     /**
+     * Number of packets that were dropped because the transmit queue was full.
+     * @member {number} numTxDropped
+     * @memberof meshtastic.LocalStats
+     * @instance
+     */
+    LocalStats.prototype.numTxDropped = 0
+
+    /**
      * Encodes the specified LocalStats message. Does not implicitly {@link meshtastic.LocalStats.verify|verify} messages.
      * @function encode
      * @memberof meshtastic.LocalStats
@@ -16252,6 +16263,8 @@ export const meshtastic = ($root.meshtastic = (() => {
         writer.uint32(/* id 12, wireType 0 =*/ 96).uint32(message.heapTotalBytes)
       if (message.heapFreeBytes != null && Object.hasOwnProperty.call(message, 'heapFreeBytes'))
         writer.uint32(/* id 13, wireType 0 =*/ 104).uint32(message.heapFreeBytes)
+      if (message.numTxDropped != null && Object.hasOwnProperty.call(message, 'numTxDropped'))
+        writer.uint32(/* id 14, wireType 0 =*/ 112).uint32(message.numTxDropped)
       return writer
     }
 
@@ -16324,6 +16337,10 @@ export const meshtastic = ($root.meshtastic = (() => {
           }
           case 13: {
             message.heapFreeBytes = reader.uint32()
+            break
+          }
+          case 14: {
+            message.numTxDropped = reader.uint32()
             break
           }
           default:

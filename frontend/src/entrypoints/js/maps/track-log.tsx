@@ -9,8 +9,7 @@ import { nodePositionView } from '../../../templates/node-position.tsx'
 import { renderToString } from 'react-dom/server'
 import { Position } from './position.tsx'
 import { toast } from 'react-toastify'
-import { nodeName, sanitizeLatLong, TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
-import _ from 'lodash'
+import { earliestTimeThatIsNotTooOld, nodeName, sanitizeLatLong, TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import { generateGradient } from 'typescript-color-gradient'
 
 interface TrackLogProps {
@@ -87,13 +86,13 @@ export class TrackLog extends Component<TrackLogProps, TrackLogState> {
       .map((position) => {
         const latLong = sanitizeLatLong(position.latitude! / 10000000, position.longitude! / 10000000)!
 
-        const earliestTime = _([position.time, position.timestamp, position.createdAt]).compact().min()
+        const earliestTime = earliestTimeThatIsNotTooOld([position.time, position.timestamp, position.createdAt])
 
         return {
           id: position.id,
           latitude: latLong[0],
           longitude: latLong[1],
-          time: DateTime.fromISO(earliestTime!),
+          time: earliestTime!,
           altitude: position.altitude,
           aboveGroundLevel: position.aboveGroundLevel,
           pdop: position.pdop,

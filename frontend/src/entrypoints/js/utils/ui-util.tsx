@@ -289,3 +289,24 @@ export function sleep(ms: number): Promise<void> {
 export function randomId() {
   return Math.floor(Math.random() * 1e9)
 }
+
+export function earliestTimeThatIsNotTooOld(times: Array<string | undefined>): DateTime | undefined {
+  const validTimes = times
+    .filter(Boolean)
+    .map((t) => DateTime.fromISO(t!))
+    .filter((dt) => dt.isValid)
+
+  if (validTimes.length === 0) {
+    return undefined
+  }
+
+  const maxTime = validTimes.reduce((max, dt) => (dt > max ? dt : max))
+  const threshold = maxTime.minus({ days: 10 })
+
+  const recentTimes = validTimes.filter((dt) => dt > threshold)
+  if (recentTimes.length === 0) {
+    return undefined
+  }
+
+  return recentTimes.reduce((min, dt) => (dt < min ? dt : min))
+}

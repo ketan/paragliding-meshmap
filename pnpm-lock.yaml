@@ -227,7 +227,7 @@ importers:
         version: 9.0.10
       '@types/leaflet':
         specifier: ^1.9.12
-        version: 1.9.20
+        version: 1.9.21
       '@types/leaflet-groupedlayercontrol':
         specifier: ^0.6.4
         version: 0.6.5
@@ -2031,8 +2031,8 @@ packages:
   '@types/leaflet.polylinemeasure@1.0.5':
     resolution: {integrity: sha512-lDBjpV4qFyNLawWT6K7ce7QaaNDUhIljlJyRu9F6ImWEZAlNgb7AXgGNMs56Xb8wU+Zx2CVc+ngL3vjVZxq1jA==}
 
-  '@types/leaflet@1.9.20':
-    resolution: {integrity: sha512-rooalPMlk61LCaLOvBF2VIf9M47HgMQqi5xQ9QRi7c8PkdIe0WrIi5IxXUXQjAdL0c+vcQ01mYWbthzmp9GHWw==}
+  '@types/leaflet@1.9.21':
+    resolution: {integrity: sha512-TbAd9DaPGSnzp6QvtYngntMZgcRk+igFELwR2N99XZn7RXUdKgsXMR+28bUO0rPsWp8MIu/f47luLIQuSLYv/w==}
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
@@ -7790,21 +7790,21 @@ snapshots:
 
   '@types/leaflet-groupedlayercontrol@0.6.5':
     dependencies:
-      '@types/leaflet': 1.9.20
+      '@types/leaflet': 1.9.21
 
   '@types/leaflet.heat@0.2.5':
     dependencies:
-      '@types/leaflet': 1.9.20
+      '@types/leaflet': 1.9.21
 
   '@types/leaflet.markercluster@1.5.6':
     dependencies:
-      '@types/leaflet': 1.9.20
+      '@types/leaflet': 1.9.21
 
   '@types/leaflet.polylinemeasure@1.0.5':
     dependencies:
-      '@types/leaflet': 1.9.20
+      '@types/leaflet': 1.9.21
 
-  '@types/leaflet@1.9.20':
+  '@types/leaflet@1.9.21':
     dependencies:
       '@types/geojson': 7946.0.16
 

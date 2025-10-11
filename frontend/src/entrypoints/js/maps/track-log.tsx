@@ -2,7 +2,6 @@ import { NodesEntityForUI, PositionData, PositionsEntityJSON } from '../../../no
 import L, { DivIcon, DivIconOptions, Map, Marker, PointTuple } from 'leaflet'
 import { Component } from 'react'
 import { LoadedState } from './loaded-state.tsx'
-import { DateTime } from 'luxon'
 import { getTextSize } from '../utils/text-size.ts'
 import { cssClassFor } from '../../../templates/legend.tsx'
 import { nodePositionView } from '../../../templates/node-position.tsx'

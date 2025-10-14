@@ -76,7 +76,7 @@ importers:
         version: 2.6.9
       newrelic:
         specifier: ^13.0.0
-        version: 13.4.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 13.5.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       node-hgt:
         specifier: ^1.2.3
         version: 1.2.3
@@ -3662,8 +3662,8 @@ packages:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
     engines: {node: '>=6'}
 
-  import-in-the-middle@1.14.4:
-    resolution: {integrity: sha512-eWjxh735SJLFJJDs5X82JQ2405OdJeAHDBnaoFCfdr5GVc7AWc9xU7KbrF+3Xd5F2ccP1aQFKtY+65X6EfKZ7A==}
+  import-in-the-middle@1.15.0:
+    resolution: {integrity: sha512-bpQy+CrsRmYmoPMAE/0G33iwRqwW4ouqdRg8jgbH3aKuCtOc8lxgmYXg2dMM92CRiGP660EtBcymH/eVUpCSaA==}
 
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
@@ -4418,8 +4418,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  newrelic@13.4.0:
-    resolution: {integrity: sha512-XEGimVRw2wT8szwDnZ1GUFPh2+VVtN276W9I0rZUmXHYykMQ5D7XuqhtSouCznGuDGs37tMBQfmxUTtVhu+N3Q==}
+  newrelic@13.5.0:
+    resolution: {integrity: sha512-BSRQy6RAbhufvVh34YgjnnbDV0xfjAvxaWaAxn4BopY6Kr4ypUXI0Nk6zcQFiQjrTYuM0TdSZyQzO1iRgN/4YQ==}
     engines: {node: '>=20', npm: '>=6.0.0'}
     hasBin: true
 
@@ -4429,8 +4429,8 @@ packages:
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
 
-  node-abi@3.77.0:
-    resolution: {integrity: sha512-DSmt0OEcLoK4i3NuscSbGjOf3bqiDEutejqENSplMSFA/gmB8mkED9G4pKWnPl7MDU4rSHebKPHeitpDfyH0cQ==}
+  node-abi@3.78.0:
+    resolution: {integrity: sha512-E2wEyrgX/CqvicaQYU3Ze1PFGjc4QYPGsjUrlYkqAE0WjHEZwgOsGMPMzkMse4LjJbDmaEuDX3CM036j5K2DSQ==}
     engines: {node: '>=10'}
 
   node-addon-api@7.1.1:
@@ -5135,6 +5135,11 @@ packages:
 
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.7.3:
+    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -6785,7 +6790,7 @@ snapshots:
       pretty-bytes: 5.6.0
       request-ip: 3.3.0
       ringbufferjs: 2.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       unescape: 1.0.1
       unescape-js: 1.1.4
       uuid: 9.0.1
@@ -8003,7 +8008,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.2
+      semver: 7.7.3
       ts-api-utils: 1.4.3(typescript@5.9.3)
     optionalDependencies:
       typescript: 5.9.3
@@ -9782,7 +9787,7 @@ snapshots:
       parent-module: 1.0.1
       resolve-from: 4.0.0
 
-  import-in-the-middle@1.14.4:
+  import-in-the-middle@1.15.0:
     dependencies:
       acorn: 8.15.0
       acorn-import-attributes: 1.9.5(acorn@8.15.0)
@@ -10081,7 +10086,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.7.2
+      semver: 7.7.3
 
   jsprim@1.4.2:
     dependencies:
@@ -10320,7 +10325,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   make-error@1.3.6: {}
 
@@ -10531,7 +10536,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  newrelic@13.4.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  newrelic@13.5.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       '@apm-js-collab/tracing-hooks': 0.3.1(supports-color@10.2.2)
       '@grpc/grpc-js': 1.14.0
@@ -10548,13 +10553,13 @@ snapshots:
       '@tyriar/fibonacci-heap': 2.0.9
       concat-stream: 2.0.0
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
-      import-in-the-middle: 1.14.4
+      import-in-the-middle: 1.15.0
       json-bigint: 1.0.0
       json-stringify-safe: 5.0.1
       module-details-from-path: 1.0.4
       readable-stream: 3.6.2
       require-in-the-middle: 7.5.2(supports-color@10.2.2)
-      semver: 7.7.2
+      semver: 7.7.3
       winston-transport: 4.9.0
     optionalDependencies:
       '@newrelic/fn-inspect': 4.4.0
@@ -10573,9 +10578,9 @@ snapshots:
       lower-case: 2.0.2
       tslib: 2.8.1
 
-  node-abi@3.77.0:
+  node-abi@3.78.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
     optional: true
 
   node-addon-api@7.1.1:
@@ -10988,7 +10993,7 @@ snapshots:
     dependencies:
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
-      node-abi: 3.77.0
+      node-abi: 3.78.0
       npm-run-path: 3.1.0
       pump: 3.0.3
       tar-fs: 2.1.4
@@ -11385,6 +11390,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.2: {}
+
+  semver@7.7.3: {}
 
   send@0.19.0(supports-color@10.2.2):
     dependencies:

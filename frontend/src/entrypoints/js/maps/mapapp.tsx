@@ -38,6 +38,7 @@ import { MessagesModal } from './messages-modal.tsx'
 import { Meshmap } from '../../../../../src/gen/meshmap-protobufs'
 import _ from 'lodash'
 import { toast } from 'react-toastify'
+import { Tooltip } from 'react-tooltip'
 
 const logger = debug('meshmap')
 logger.enabled = true
@@ -305,6 +306,7 @@ export default class MapApp extends Component<MapProps, MapState> {
         {this.state.trackLogToShow && this.state.map && (
           <TrackLog trackLog={this.state.trackLogToShow} map={this.state.map} layer={this.tracklogLayerGroup} />
         )}
+        <Tooltip id="global-tooltip" />
       </Page>
     )
   }

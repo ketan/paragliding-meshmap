@@ -1,6 +1,4 @@
 import React from 'react'
-import { Tooltip as ReactTooltip } from 'react-tooltip'
-import { randomHex } from '../utils/ui-util.tsx'
 
 type TooltipProps = React.HTMLAttributes<HTMLSpanElement> & {
   tooltipText: string
@@ -23,7 +21,7 @@ export type TooltipDirection =
   | 'left-end'
 
 export function Tooltip({ children, tooltipText, className, tooltipDir = 'bottom', ...rest }: TooltipProps) {
-  const id = `tooltip-${randomHex(10)}`
+  const id = `global-tooltip`
   return (
     <>
       <span
@@ -35,7 +33,6 @@ export function Tooltip({ children, tooltipText, className, tooltipDir = 'bottom
       >
         {children}
       </span>
-      <ReactTooltip id={id} />
     </>
   )
 }

@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { BROADCAST_ADDR } from '#helpers/utils'
 import Position from '#entity/position'
-import MapReport from '#entity/map_report'
 import TextMessage from '#entity/text_message'
 import DeviceMetric from '#entity/device_metric'
 import EnvironmentMetric from '#entity/environment_metric'
@@ -27,17 +26,12 @@ nodeRouter.get('/nodes', async (_req, res) => {
 nodeRouter.get('/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
 
-  const [positions, mapReports] = await Promise.all([
-    Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
-    MapReport.forNode(db, nodeId, parseSinceParam(req, `PT12H`)),
-  ])
-
-  const response = [...positions, ...mapReports].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+  const positions = await Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`))
 
   if (isProduction) {
     res.header('cache-control', 'public,max-age=60')
   }
-  res.json(response)
+  res.json(positions)
 })
 
 nodeRouter.get(`/api/node/:nodeId`, async (req, res) => {

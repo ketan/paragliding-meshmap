@@ -9,6 +9,7 @@ import Traceroute from '#entity/traceroute'
 import { isProduction, parseDurationParam, parseNodeIdParam, parseSinceParam } from '#web/helpers'
 import { AppDataSource } from '#config/data-source'
 import Node from '#entity/node'
+import { DateTime } from 'luxon'
 
 const db = AppDataSource
 
@@ -25,8 +26,27 @@ nodeRouter.get('/nodes', async (_req, res) => {
 
 nodeRouter.get('/node/:nodeId/positions', async (req, res) => {
   const nodeId = parseNodeIdParam(req)
+  const cutoffHour = 7 // 7am
 
-  const positions = await Position.forNode(db, nodeId, parseSinceParam(req, `PT12H`))
+  let since: Date | undefined
+  if (req.query.since) {
+    // Use the provided 'since' param
+    since = parseSinceParam(req)
+  } else {
+    // Asia/Kolkata timezone logic
+    const now = DateTime.now().setZone('Asia/Kolkata')
+    let sinceDT: DateTime
+    if (now.hour > cutoffHour || (now.hour === cutoffHour && now.minute > 0)) {
+      // After cutoffHour: show positions since today at cutoffHour
+      sinceDT = now.set({ hour: cutoffHour, minute: 0, second: 0, millisecond: 0 })
+    } else {
+      // At or before cutoffHour: show positions since previous day at cutoffHour
+      sinceDT = now.minus({ days: 1 }).set({ hour: cutoffHour, minute: 0, second: 0, millisecond: 0 })
+    }
+    since = sinceDT.toJSDate()
+  }
+
+  const positions = await Position.forNode(db, nodeId, since)
 
   if (isProduction) {
     res.header('cache-control', 'public,max-age=60')

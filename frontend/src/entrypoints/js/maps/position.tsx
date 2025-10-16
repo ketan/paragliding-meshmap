@@ -1,6 +1,6 @@
 import { Header } from './node-details-modal/header.tsx'
 import { NameValue } from './node-details-modal/name-value.tsx'
-import { googleMapsLink, positionPrecision, timeAgo } from '../utils/ui-util.tsx'
+import { formattedDateTime, googleMapsLink, positionPrecision, timeAgo } from '../utils/ui-util.tsx'
 import { PointTuple } from 'leaflet'
 import { DateTime } from 'luxon'
 
@@ -42,6 +42,11 @@ export function Position({ positionAttrs, title = 'Position' }: { positionAttrs:
             }}
           />
         </div>
+
+        <div>
+          <NameValue name="Time" value={formattedDateTime(positionAttrs.time)} />
+        </div>
+
         <div>
           <NameValue name="Altitude" value={positionAttrs.altitude} unit="m" />
         </div>

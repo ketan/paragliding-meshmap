@@ -97,11 +97,15 @@ export function isDesktop() {
   return !isMobile()
 }
 
+export function formattedDateTime(dateTime: string | Date | DateTime) {
+  return parseDateTime(dateTime).toFormat('dd LLL, yyyy hh:mm a')
+}
+
 export function timeAgo(timestamp?: string | null | Date | DateTime, addParens: boolean = false) {
   if (timestamp) {
     const dateTime = parseDateTime(timestamp)
     return (
-      <Tooltip tooltipText={dateTime.toFormat('dd LLL, yyyy hh:mm a')} tooltipDir="bottom-end" className="text-nowrap">
+      <Tooltip tooltipText={formattedDateTime(dateTime)} tooltipDir="bottom-end" className="text-nowrap">
         {addParens ? '(' : null}
         {dateTime.toRelative()}
         {addParens ? ')' : null}

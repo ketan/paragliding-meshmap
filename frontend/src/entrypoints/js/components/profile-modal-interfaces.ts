@@ -134,6 +134,7 @@ export const profileFormDataYUPSchema = Yup.object().shape({
     }),
 
   flightLocations: Yup.array(Yup.string().required()).notRequired(),
+  trackerUrls: Yup.string().notRequired(),
   adminLocations: Yup.array(Yup.string().required()).notRequired(),
   superUser: Yup.boolean().required(),
 

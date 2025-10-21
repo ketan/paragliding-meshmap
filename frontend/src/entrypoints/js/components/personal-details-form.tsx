@@ -102,6 +102,15 @@ export function PersonalDetailsForm({ form }: PersonalDetailsFormProps) {
         errors={form.formState.errors}
         helpText="Select the locations where you fly. Your documents will be made availabe to administrators in these locations."
       />
+
+      <FormField
+        id="trackerUrls"
+        type="textarea"
+        label="Tracker URLs"
+        register={form.register}
+        errors={form.formState.errors}
+        helpText="Any external tracker URLs (one per line). Bircom may not integrate with this, but may be useful for SAR."
+      />
     </fieldset>
   )
 }

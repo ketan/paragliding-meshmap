@@ -126,6 +126,9 @@ export class User extends BaseType {
   @Column({ type: jsonType(), nullable: true })
   flightLocations: string[]
 
+  @Column({ nullable: true, type: 'text' })
+  trackerUrls: string
+
   constructor(opts: Partial<User> = {}) {
     super()
     _.assign(this, opts)

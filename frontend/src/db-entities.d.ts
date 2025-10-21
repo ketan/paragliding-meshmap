@@ -251,6 +251,7 @@ export interface UsersEntity {
   secondaryPhone?: string
   state?: string
   superUser: boolean
+  trackerUrls?: string
   updatedAt: string
 }
 export interface WaypointsEntity {

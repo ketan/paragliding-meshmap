@@ -1,5 +1,5 @@
 import { CertificationDocumentsEntity, IdentityDocumentsEntity, InsurancePolicyDocumentsEntity, UsersEntity } from '../../../db-entities'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Modal } from './modal.tsx'
 import { PhoneLink } from './phone-link.tsx'
 import { DateTime } from 'luxon'
@@ -54,6 +54,47 @@ export function UserDetailsModal({ user, onClose }: ProfileModalProps) {
   const listItemClass = 'lg:px-4 sm:px-2 sm:py-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 border-b border-b-gray-200'
   const listItemHeaderClass = 'text-xs sm:text-sm font-medium text-gray-900'
   const listItemValueClass = 'mt-1 text-xs sm:text-sm text-gray-700 sm:col-span-2 sm:mt-0'
+
+  // Helper: parse free-form text and extract URLs, returning JSX with highlighted links
+  const renderTrackerUrls = (text?: string) => {
+    if (!text) {
+      return null
+    }
+
+    // Match http(s) URLs or www.* entries
+    const regex = /(https?:\/\/\S+|www\.\S+)/gi
+    const parts: Array<ReactNode> = []
+    let lastIndex = 0
+    let match: RegExpExecArray | null
+
+    while ((match = regex.exec(text)) !== null) {
+      const matched = match[0]
+      const start = match.index
+
+      // push preceding text
+      if (start > lastIndex) {
+        parts.push(text.slice(lastIndex, start))
+      }
+
+      // Trim trailing punctuation that often follows URLs in free text
+      const trimmed = matched.replace(/[.,;:)]*$/, '')
+      const href = trimmed.toLowerCase().startsWith('http') ? trimmed : `http://${trimmed}`
+
+      parts.push(
+        <a key={`${start}-${trimmed}`} href={href} target="_blank" rel="noreferrer">
+          {trimmed}
+        </a>
+      )
+
+      lastIndex = start + matched.length
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex))
+    }
+
+    return <div className="whitespace-pre-wrap">{parts.map((p, i) => (typeof p === 'string' ? <span key={i}>{p}</span> : p))}</div>
+  }
 
   if (!userDetails) {
     return
@@ -120,6 +161,13 @@ export function UserDetailsModal({ user, onClose }: ProfileModalProps) {
             <div className={listItemClass}>
               <dt className={listItemHeaderClass}>Flying Sites</dt>
               <dd className={listItemValueClass}>{userDetails.flightLocations.join(', ')}</dd>
+            </div>
+          )}
+
+          {userDetails.trackerUrls && (
+            <div className={listItemClass}>
+              <dt className={listItemHeaderClass}>Tracker URLs</dt>
+              <dd className={listItemValueClass}>{renderTrackerUrls(userDetails.trackerUrls)}</dd>
             </div>
           )}
 

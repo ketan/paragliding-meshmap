@@ -346,8 +346,8 @@ importers:
         specifier: ^7.34.4
         version: 7.37.5(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))
       eslint-plugin-react-hooks:
-        specifier: ^6.0.0
-        version: 6.1.1(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)
+        specifier: ^7.0.0
+        version: 7.0.0(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)
       eslint-plugin-react-refresh:
         specifier: ^0.4.7
         version: 0.4.24(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))
@@ -3135,8 +3135,8 @@ packages:
     engines: {node: '>=4.0'}
     hasBin: true
 
-  eslint-plugin-react-hooks@6.1.1:
-    resolution: {integrity: sha512-St9EKZzOAQF704nt2oJvAKZHjhrpg25ClQoaAlHmPZuajFldVLqRDW4VBNAS01NzeiQF0m0qhG1ZA807K6aVaQ==}
+  eslint-plugin-react-hooks@7.0.0:
+    resolution: {integrity: sha512-fNXaOwvKwq2+pXiRpXc825Vd63+KM4DLL40Rtlycb8m7fYpp6efrTp1sa6ZbP/Ap58K2bEKFXRmhURE+CJAQWw==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -3605,6 +3605,12 @@ packages:
 
   help-me@3.0.0:
     resolution: {integrity: sha512-hx73jClhyk910sidBB7ERlnhMlFsJJIBqSVMFDwPN8o2v9nmp5KgLq1Xz1Bf1fCMMZ6mPrX159iG0VLy/fPMtQ==}
+
+  hermes-estree@0.25.1:
+    resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
+
+  hermes-parser@0.25.1:
+    resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
@@ -9112,11 +9118,12 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-plugin-react-hooks@6.1.1(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2):
+  eslint-plugin-react-hooks@7.0.0(eslint@9.38.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       '@babel/core': 7.28.4(supports-color@10.2.2)
       '@babel/parser': 7.28.4
       eslint: 9.38.0(jiti@2.6.1)(supports-color@10.2.2)
+      hermes-parser: 0.25.1
       zod: 4.1.11
       zod-validation-error: 4.0.2(zod@4.1.11)
     transitivePeerDependencies:
@@ -9710,6 +9717,12 @@ snapshots:
     dependencies:
       glob: 7.2.3
       readable-stream: 3.6.2
+
+  hermes-estree@0.25.1: {}
+
+  hermes-parser@0.25.1:
+    dependencies:
+      hermes-estree: 0.25.1
 
   hmac-drbg@1.0.1:
     dependencies:

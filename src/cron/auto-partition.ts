@@ -7,7 +7,7 @@ const PARTITIONED_TABLES = [
   'device_metrics',
   'environment_metrics',
   'map_reports',
-  'neighbor_infos',
+  'neighbour_infos',
   'positions',
   'power_metrics',
   'service_envelopes',

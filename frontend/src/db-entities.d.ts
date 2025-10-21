@@ -131,6 +131,15 @@ export interface NodesEntity {
   uptimeSeconds?: number
   voltage?: number
 }
+export interface PartnerMessagesEntity {
+  createdAt: string
+  email: string
+  id: number
+  message: string
+  name: string
+  subject: string
+  updatedAt: string
+}
 export interface PositionsEntity {
   aboveGroundLevel?: number
   altitude?: number

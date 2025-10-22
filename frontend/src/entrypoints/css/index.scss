@@ -54,36 +54,38 @@ a.button {
     @apply block w-0 border-[8px] border-solid border-transparent border-b-0 absolute -bottom-[8px];
     content: '';
     left: calc(50% - 8px);
+  }
 
-    &.node-status-offline {
-      @apply border-t-gray-600;
-    }
 
-    &.node-status-online {
-      @apply border-t-green-600;
-    }
+  &.node-status-offline::after {
+    @apply border-t-gray-600;
+  }
 
-    &.node-status-disconnected {
-      @apply border-t-purple-600;
-    }
+  &.node-status-online::after {
+    @apply border-t-green-600;
+  }
 
-    &.node-status-start-track {
-      @apply border-t-blue-600;
-    }
+  &.node-status-old::after {
+    @apply border-t-purple-600;
+  }
 
-    &.node-status-end-track {
-      @apply border-t-amber-600;
-    }
+  &.node-status-start-track::after {
+    @apply border-t-blue-600;
+  }
 
-    &.node-activity-fly {
-      @apply border-t-blue-600;
-    }
+  &.node-status-end-track::after {
+    @apply border-t-amber-600;
+  }
 
-    &.node-activity-concern {
-      @apply border-t-orange-600;
-    }
+  &.node-activity-fly::after {
+    @apply border-t-blue-600;
+  }
+
+  &.node-activity-concern::after {
+    @apply border-t-orange-600;
   }
 }
+
 
 .polyline-measure-tooltip {
   @apply text-sm p-2;

@@ -16,6 +16,7 @@ import { imageForModel } from '../image-for-model'
 import { NodesEntityForUI } from '../nodes-entity'
 import { nodeUrl } from '../entrypoints/js/utils/link-utils'
 import { IconCopy } from '@tabler/icons-react'
+import { PrecisionWarning } from '../entrypoints/js/components/precision-warning.tsx'
 
 function status(node: NodesEntityForUI, onlineAge: Duration, offlineAge: Duration) {
   const status = nodeStatus(node, onlineAge, offlineAge)
@@ -175,7 +176,7 @@ interface Props {
 
 export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMessages, offlineAge, onlineAge }: Props) {
   const hardwareModel = (node.hardwareModel && HardwareModelIDToName[node.hardwareModel]) || 'unknown'
-  const padding = () => <li key={randomHex(10)} className="mt-1.5"></li>
+  const padding = (multiplier: number = 1) => <li key={randomHex(10)} className={`mt-${multiplier * 1.5}`}></li>
 
   const nodeName = keyValue({
     key: 'Long Name',
@@ -219,6 +220,14 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
   )
 
   const elements = [
+    node.positionPrecisionBits && node.positionPrecisionBits < 32 ? (
+      <>
+        <li key="position-precision-warning">
+          <PrecisionWarning node={node} />
+        </li>
+        {padding(4)}
+      </>
+    ) : null,
     nodeName,
     keyValue({ key: 'Short Name', value: node.shortName }),
     keyValue({ key: 'Status', renderer: () => status(node, onlineAge, offlineAge) }),

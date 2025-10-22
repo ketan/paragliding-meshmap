@@ -50,4 +50,4 @@ export type NeighbourInfosEntityForUI = Pick<NeighbourInfosEntity, 'neighbours' 
 
 export type TraceroutesEntityForUI = Pick<TraceroutesEntity, 'route' | 'to' | 'createdAt'>
 
-export type NodeNameAttributes = Pick<NodesEntityForUI, 'shortName' | 'longName' | 'nodeId' | 'nodeIdHex'>
+export type NodeNameAttributes = Pick<NodesEntityForUI, 'shortName' | 'longName' | 'nodeId' | 'nodeIdHex' | 'positionPrecisionBits'>

@@ -86,7 +86,15 @@ export function positionPrecision(node: { positionPrecisionBits?: number }) {
 }
 
 export function nodeName(node: Partial<NodeNameAttributes>) {
-  return _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
+  let prefix = ''
+
+  const name = _.compact([node.shortName, node.longName, node.nodeId, node.nodeIdHex]).at(0)?.toString() || '<NO NAME>'
+
+  if (node.positionPrecisionBits && node.positionPrecisionBits < 32) {
+    prefix = `⚠️📍`
+  }
+
+  return prefix + name
 }
 
 export function isMobile() {

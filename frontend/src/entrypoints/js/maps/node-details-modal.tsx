@@ -16,6 +16,7 @@ import { Tooltip } from '../components/tooltip.tsx'
 import { TRACKER_API_BASE_URL } from '../utils/ui-util.tsx'
 import { toParams } from '../utils/link-utils.ts'
 import { IconCopy, IconExternalLink } from '@tabler/icons-react'
+import { PrecisionWarning } from '../components/precision-warning.tsx'
 
 interface Props {
   allNodes?: Record<number, NodesEntityForUI>
@@ -140,6 +141,11 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
 
   return (
     <Modal onClose={onClose} isOpen={true} header={node.longName || `UNKNOWN`}>
+      {node.positionPrecisionBits && node.positionPrecisionBits < 32 ? (
+        <div className="mb-4">
+          <PrecisionWarning node={node} />
+        </div>
+      ) : null}
       <Header str="Node Info" />
       <div className="p-2 px-4 text-sm md:text-md">
         <div className="flex items-start gap-4">

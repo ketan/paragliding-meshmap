@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+rm -rf /tmp/meshtastic-web-temp/ ./frontend/src/assets/images/devices/
+git clone https://github.com/meshtastic/web --depth 1 /tmp/meshtastic-web-temp/
+cp -rf /tmp/meshtastic-web-temp/packages/web/public/devices ./frontend/src/assets/images/
+cp -rf /tmp/meshtastic-web-temp/packages/web/src/components/generic/DeviceImage.tsx frontend/src/entrypoints/js/components/

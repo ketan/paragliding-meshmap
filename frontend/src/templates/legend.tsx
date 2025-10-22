@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server'
 import L from 'leaflet'
 import { NodeStatus } from '../entrypoints/js/utils/ui-util.tsx'
+import { NodeActivity } from '../interfaces'
 
 export const legendReactDOM = (
   <div className="p-3">
@@ -36,15 +37,22 @@ export function addLegendToMap(map: L.Map) {
   legend.addTo(map)
 }
 
-export function cssClassFor(str: NodeStatus | 'start-track' | 'end-track', activity?: string | undefined | null) {
-  const activityClass = activity ? `node-activity-${activity}` : ''
-  const commonClasses = `text-white rounded-full marker-location node-status-${str} ${activityClass}`
+export function cssClassFor(str: 'start-track' | 'end-track') {
+  const commonClasses = `text-white rounded-full marker-location node-status-${str}`
 
   switch (str) {
     case 'start-track':
       return `bg-blue-600 ${commonClasses}`
     case 'end-track':
       return `bg-amber-600 ${commonClasses}`
+  }
+}
+
+export function cssClassForActivity(str: NodeStatus, activity: NodeActivity) {
+  const activityClass = activity ? `node-activity-${activity}` : ''
+  const commonClasses = `text-white rounded-full marker-location node-status-${str} ${activityClass}`
+
+  switch (str) {
     case 'online':
       return `bg-green-600 ${commonClasses}`
     case 'old':

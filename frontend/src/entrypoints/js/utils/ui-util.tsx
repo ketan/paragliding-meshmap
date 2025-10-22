@@ -5,7 +5,7 @@ import { NodesEntity } from '../../../db-entities'
 import { NodeNameAttributes, NodesEntityForUI } from '../../../nodes-entity'
 import { Tooltip } from '../components/tooltip'
 import { NodeRoleIDToName } from '../../../hardware-modules.ts'
-import { cssClassFor } from '../../../templates/legend.tsx'
+import { cssClassForActivity } from '../../../templates/legend.tsx'
 import { UserProfile } from './profile.ts'
 
 export const TRACKER_API_BASE_URL = __TRACKER_API_BASE_URL__ || ''
@@ -170,7 +170,7 @@ export function getQueryParams(): QueryParams {
 export function getIconClassFor(node: Pick<NodesEntityForUI, 'updatedAt' | 'activity'>, onlineAge: Duration, offlineAge: Duration) {
   const status = nodeStatus(node, onlineAge, offlineAge)
   /* Only indicate activity for online nodes */
-  return cssClassFor(status, status == 'online' ? node.activity : null)
+  return cssClassForActivity(status, status == 'online' ? node.activity : null)
 }
 
 export function nodeStatus(node: Pick<NodesEntityForUI, 'updatedAt'>, onlineAge: Duration, offlineAge: Duration): NodeStatus {

@@ -93,7 +93,7 @@ export interface NeighbourInfosEntity {
 }
 export interface NodesEntity {
   aboveGroundLevel?: number
-  activity?: string
+  activity?: NodeActivity
   airUtilTx?: number
   altitude?: number
   barometricPressure?: number

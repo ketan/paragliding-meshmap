@@ -5,7 +5,7 @@ import { BaseType, BaseTypeWithoutPrimaryKey } from './base_types.js'
 import DeviceMetric from './device_metric.js'
 import EnvironmentMetric from './environment_metric.js'
 import MapReport from './map_report.js'
-import { MessageIn, MessageOut, Neighbors } from './neighbors.js'
+import type { MessageIn, MessageOut, Neighbors, NodeActivity } from './neighbors.js'
 import NeighbourInfo from './neighbour_info.js'
 import Position from './position.js'
 import TextMessage from './text_message.js'
@@ -94,7 +94,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   @Column({ type: 'text', nullable: true })
   flyXCToken?: string
   @Column({ type: 'text', nullable: true })
-  activity?: string | null /* 'fly', 'hike', 'concern', null */
+  activity?: NodeActivity
 
   static flyXCTokenNamespace: Configs
 
@@ -229,9 +229,9 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static determineActivity(position: Position): string | null {
+  static determineActivity(position: Position): NodeActivity {
     if (position.aboveGroundLevel == null || position.altitude == null) {
-      return null
+      return
     }
 
     /*
@@ -246,7 +246,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     } else if (position.altitude > 1600 && position.aboveGroundLevel < 50 && (position.groundSpeed == null || position.groundSpeed <= 6)) {
       return 'concern'
     } else {
-      return null
+      return
     }
   }
 

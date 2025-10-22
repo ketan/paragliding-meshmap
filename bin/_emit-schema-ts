@@ -68,6 +68,10 @@ const typescriptCode = await definition
     if (column.propertyName === 'flightLocations' || column.propertyName === 'adminLocations') {
       column.propertyType = 'string[]'
     }
+
+    if (column.propertyName === 'activity' && table.name === 'nodes') {
+      column.propertyType = 'NodeActivity'
+    }
     return column
   })
   .toTypescript()

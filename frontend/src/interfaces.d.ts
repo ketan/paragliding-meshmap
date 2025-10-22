@@ -27,3 +27,5 @@ export interface MessageOut extends Message {
 }
 
 export type All = `all`
+
+export type NodeActivity = 'fly' | 'concern' | undefined

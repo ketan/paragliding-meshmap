@@ -95,13 +95,6 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
     return null
   }
 
-  const image = imageForModel(node.hardwareModel) ? (
-    <img
-      className="mb-4 min-w-[250px] max-w-[250px] m-auto"
-      src={imageForModel(node.hardwareModel)}
-      alt={`Image for ${node.hardwareModel}`}
-    />
-  ) : null
   const hardwareModel =
     node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
 
@@ -147,21 +140,25 @@ export function NodeDetailsModal({ node, onClose, allNodes }: Props) {
 
   return (
     <Modal onClose={onClose} isOpen={true} header={node.longName || `UNKNOWN`}>
-      {image}
       <Header str="Node Info" />
       <div className="p-2 px-4 text-sm md:text-md">
-        <div>
-          <NameValue name="Long Name" value={node.longName} />
-        </div>
-        <div>
-          <NameValue name="Short Name" value={node.shortName} />
-        </div>
-        <div>
-          <NameValue name="Hex ID" value={node.nodeIdHex} /> / <NameValue name="ID" value={node.nodeId} />
-        </div>
-        {flyXCToken(node)}
-        <div>
-          <NameValue name="Hardware" value={hardwareModel} /> {firmwareVersion}
+        <div className="flex items-start gap-4">
+          <div className="flex-1 min-w-0">
+            <div>
+              <NameValue name="Long Name" value={node.longName} />
+            </div>
+            <div>
+              <NameValue name="Short Name" value={node.shortName} />
+            </div>
+            <div>
+              <NameValue name="Hex ID" value={node.nodeIdHex} /> / <NameValue name="ID" value={node.nodeId} />
+            </div>
+            {flyXCToken(node)}
+            <div>
+              <NameValue name="Hardware" value={hardwareModel} /> {firmwareVersion}
+            </div>
+          </div>
+          <img className="w-12 flex-shrink-0" src={imageForModel(node.hardwareModel)} alt={hardwareModel} title={hardwareModel} />
         </div>
       </div>
       <Position

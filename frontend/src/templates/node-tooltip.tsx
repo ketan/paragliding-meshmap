@@ -174,11 +174,7 @@ interface Props {
 }
 
 export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMessages, offlineAge, onlineAge }: Props) {
-  const image = imageForModel(node.hardwareModel) ? (
-    <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={`Image for ${node.hardwareModel}`} />
-  ) : null
-  const hardwareModel =
-    node.hardwareModel === undefined || node.hardwareModel === null ? undefined : HardwareModelIDToName[node.hardwareModel]
+  const hardwareModel = (node.hardwareModel && HardwareModelIDToName[node.hardwareModel]) || 'unknown'
   const padding = () => <li key={randomHex(10)} className="mt-1.5"></li>
 
   const nodeName = keyValue({
@@ -298,8 +294,8 @@ export function NodeTooltip({ node, callback, showDetail, showTrackLog, showMess
   })
 
   return (
-    <div className="lg:text-sm sm:text-xs text-wrap min-w-[250px]">
-      {image}
+    <div className="lg:text-sm sm:text-xs text-wrap min-w-[280px]">
+      <img className="mb-4 w-12 float-end" src={imageForModel(node.hardwareModel)} alt={hardwareModel} title={hardwareModel} />
       <ul>{_.compact(elements)}</ul>
     </div>
   )

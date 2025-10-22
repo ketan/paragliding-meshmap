@@ -16,17 +16,16 @@ trap cleanup EXIT
 while kill -0 $backup_pid 2>/dev/null; do
     echo "Waiting for backup to complete..."
     sleep 1
-    rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now tmp/
+    rsync -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now/ tmp/backup/
 done
 
 # final rsync to ensure we have the latest
-rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now tmp/
-
+rsync --delete -aqzP -e "ssh" --rsync-path="sudo rsync" ubuntu@aws.ketan.dev:/opt/postgres/backups/$now/ tmp/backup/
 
 echo "Backup job completed."
 
 echo "Restoring..."
 dropdb --force meshmap-typeorm
 createdb meshmap-typeorm
-pg_restore -d meshmap-typeorm -F d -j 8 tmp/$now
+pg_restore -d meshmap-typeorm -F d -j 8 tmp/backup/
 psql meshmap-typeorm -c 'delete from configs'

@@ -56,7 +56,6 @@ a.button {
     left: calc(50% - 8px);
   }
 
-
   &.node-status-offline::after {
     @apply border-t-gray-600;
   }
@@ -85,7 +84,6 @@ a.button {
     @apply border-t-orange-600;
   }
 }
-
 
 .polyline-measure-tooltip {
   @apply text-sm p-2;

@@ -16,4 +16,4 @@ export interface MessageOut extends Message {
   to: number
 }
 
-export type NodeActivity = 'fly' | 'concern' | undefined
+export type NodeActivity = 'fly' | 'concern' | 'hike' | undefined

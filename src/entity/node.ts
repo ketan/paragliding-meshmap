@@ -240,11 +240,12 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
      */
 
     /* Current logic: AGL > 50M and speed > 5 km/h could be used to detect flying nodes. */
-    if (position.aboveGroundLevel > 50) {
+    if (position.aboveGroundLevel > 50 && position.groundSpeed != null && position.groundSpeed > 5) {
       return 'fly'
-      /* This is an example of identifying the concern activity */
-    } else if (position.altitude > 1600 && position.aboveGroundLevel < 50 && (position.groundSpeed == null || position.groundSpeed <= 6)) {
+    } else if ((position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) || position.groundSpeed == null) {
       return 'concern'
+    } else if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
+      return 'hike'
     } else {
       return
     }

@@ -233,16 +233,12 @@ static determineActivity(position: Position): NodeActivity {
   // Return nothing if aboveGroundLevel or altitude is missing
   if (
     position.aboveGroundLevel == null ||
-    position.altitude == null
+    position.altitude == null ||
+    position.groundSpeed == null
   ) {
     return;
   }
-
-  // Concern: If groundSpeed is null or undefined (telemetry without speed)
-  if (position.groundSpeed == null) {
-    return 'concern';
-  }
-
+  
   // Flying: AGL > 50m and speed > 5 km/h
   if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
     return 'fly';

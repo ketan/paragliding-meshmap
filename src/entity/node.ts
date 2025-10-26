@@ -234,28 +234,27 @@ static determineActivity(position: Position): NodeActivity {
   if (
     position.aboveGroundLevel == null ||
     position.altitude == null ||
-    position.groundSpeed == null
   ) {
-    return
+    return;
   }
 
   // Flying: AGL > 50m and speed > 5 km/h
   if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
-    return 'fly'
+    return 'fly';
   }
 
   // Hiking: AGL < 50m, speed between 0 and 5 km/h
   if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
-    return 'hike'
+    return 'hike';
   }
 
   // Stationary at high altitude, low AGL (e.g., landed on a mountain)
   if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) {
-    return 'concern'
+    return 'concern';
   }
 
   // Default: unknown
-  return
+  return;
 }
 
   async createOrUpdate(trx: EntityManager) {

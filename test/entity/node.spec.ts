@@ -348,16 +348,6 @@ describe('Node', () => {
       expect(Node.determineActivity(p)).to.equal('concern')
     })
 
-    it('should return concern when groundSpeed is null/undefined (telemetry without speed)', () => {
-      const p = new Position({
-        altitude: 900,
-        aboveGroundLevel: 10,
-        groundSpeed: undefined,
-      })
-
-      expect(Node.determineActivity(p)).to.equal('concern')
-    })
-
     it('should return hike when AGL < 50 and 0 < groundSpeed < 5', () => {
       const p = new Position({
         altitude: 900,

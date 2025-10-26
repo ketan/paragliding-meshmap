@@ -230,12 +230,17 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   }
 
 static determineActivity(position: Position): NodeActivity {
-  // Return "unknown" if any required parameter is null or undefined
+  // Return nothing if aboveGroundLevel or altitude is missing
   if (
     position.aboveGroundLevel == null ||
-    position.altitude == null ||
+    position.altitude == null
   ) {
     return;
+  }
+
+  // Concern: If groundSpeed is null or undefined (telemetry without speed)
+  if (position.groundSpeed == null) {
+    return 'concern';
   }
 
   // Flying: AGL > 50m and speed > 5 km/h
@@ -253,7 +258,7 @@ static determineActivity(position: Position): NodeActivity {
     return 'concern';
   }
 
-  // Default: unknown
+  // Default: return nothing
   return;
 }
 

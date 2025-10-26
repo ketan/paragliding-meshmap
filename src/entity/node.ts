@@ -236,7 +236,7 @@ static determineActivity(position: Position): NodeActivity {
     position.altitude == null ||
     position.groundSpeed == null
   ) {
-    return 'unknown'
+    return
   }
 
   // Flying: AGL > 50m and speed > 5 km/h
@@ -255,7 +255,7 @@ static determineActivity(position: Position): NodeActivity {
   }
 
   // Default: unknown
-  return 'unknown'
+  return
 }
 
   async createOrUpdate(trx: EntityManager) {

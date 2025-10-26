@@ -8,8 +8,8 @@ import EnvironmentMetric from '#entity/environment_metric'
 import MapReport from '#entity/map_report'
 import { meshtastic } from '../../src/gen/meshtastic-protobufs.js'
 import _ from 'lodash'
-import HardwareModel = meshtastic.HardwareModel
 import Position from '#entity/position'
+import HardwareModel = meshtastic.HardwareModel
 
 describe('Node', () => {
   describe('inboundMessage', () => {
@@ -324,19 +324,12 @@ describe('Node', () => {
 
   describe('determineActivity', () => {
     it('should return undefined when altitude or aboveGroundLevel is null/undefined', () => {
-      const base = { from: 1, to: 1, nodeId: 1 } as any
-
-      expect(Node.determineActivity(new Position({ ...base, altitude: null, aboveGroundLevel: 10, groundSpeed: 6 }))).to.be
-        .undefined
-      expect(Node.determineActivity(new Position({ ...base, altitude: 1700, aboveGroundLevel: null, groundSpeed: 6 }))).to.be
-        .undefined
+      expect(Node.determineActivity(new Position({ altitude: null, aboveGroundLevel: 10, groundSpeed: 6 }))).to.be.undefined
+      expect(Node.determineActivity(new Position({ altitude: 1700, aboveGroundLevel: null, groundSpeed: 6 }))).to.be.undefined
     })
 
     it('should return fly when AGL > 50 and groundSpeed > 5', () => {
       const p = new Position({
-        from: 1,
-        to: 1,
-        nodeId: 1,
         altitude: 1200,
         aboveGroundLevel: 51,
         groundSpeed: 5.1,
@@ -347,9 +340,6 @@ describe('Node', () => {
 
     it('should return concern when altitude > 1600, AGL < 50 and groundSpeed === 0', () => {
       const p = new Position({
-        from: 1,
-        to: 1,
-        nodeId: 1,
         altitude: 1700,
         aboveGroundLevel: 10,
         groundSpeed: 0,
@@ -358,11 +348,18 @@ describe('Node', () => {
       expect(Node.determineActivity(p)).to.equal('concern')
     })
 
+    it('should return concern when groundSpeed is null/undefined (telemetry without speed)', () => {
+      const p = new Position({
+        altitude: 900,
+        aboveGroundLevel: 10,
+        groundSpeed: undefined,
+      })
+
+      expect(Node.determineActivity(p)).to.equal('concern')
+    })
+
     it('should return hike when AGL < 50 and 0 < groundSpeed < 5', () => {
       const p = new Position({
-        from: 1,
-        to: 1,
-        nodeId: 1,
         altitude: 900,
         aboveGroundLevel: 10,
         groundSpeed: 3.2,
@@ -373,9 +370,6 @@ describe('Node', () => {
 
     it('should return undefined for states that do not match any rule', () => {
       const p = new Position({
-        from: 1,
-        to: 1,
-        nodeId: 1,
         altitude: 1200,
         aboveGroundLevel: 60,
         groundSpeed: 4.9, // not > 5, not hike (AGL >= 50), not concern

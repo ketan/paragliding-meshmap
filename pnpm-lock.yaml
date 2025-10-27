@@ -203,7 +203,7 @@ importers:
         version: 0.0.40
       '@types/cookie-parser':
         specifier: ^1.4.7
-        version: 1.4.10(@types/express@4.17.24)
+        version: 1.4.10(@types/express@4.17.25)
       '@types/country-list':
         specifier: ^2.1.4
         version: 2.1.4
@@ -215,7 +215,7 @@ importers:
         version: 1.0.4
       '@types/express':
         specifier: ^4.17.21
-        version: 4.17.24
+        version: 4.17.25
       '@types/express-session':
         specifier: ^1.18.0
         version: 1.18.2
@@ -548,6 +548,7 @@ packages:
   '@aws-sdk/credential-provider-web-identity@3.917.0':
     resolution: {integrity: sha512-pZncQhFbwW04pB0jcD5OFv3x2gAddDYCVxyJVixgyhSw7bKCYxqu6ramfq1NxyVpmm+qsw+ijwi/3cCmhUHF/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: This version contains a compilation TypeScript error https://github.com/aws/aws-sdk-js-v3/issues/7457 - please use @aws-sdk/credential-providers@3.918.0 or higher
 
   '@aws-sdk/middleware-host-header@3.914.0':
     resolution: {integrity: sha512-7r9ToySQ15+iIgXMF/h616PcQStByylVkCshmQqcdeynD/lCn2l667ynckxW4+ql0Q+Bo/URljuhJRxVJzydNA==}
@@ -2019,8 +2020,8 @@ packages:
   '@types/express-session@1.18.2':
     resolution: {integrity: sha512-k+I0BxwVXsnEU2hV77cCobC08kIsn4y44C3gC0b46uxZVMaXA04lSPgRLR/bSL2w0t0ShJiG8o4jPzRG/nscFg==}
 
-  '@types/express@4.17.24':
-    resolution: {integrity: sha512-Mbrt4SRlXSTWryOnHAh2d4UQ/E7n9lZyGSi6KgX+4hkuL9soYbLOVXVhnk/ODp12YsGc95f4pOvqywJ6kngUwg==}
+  '@types/express@4.17.25':
+    resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
 
   '@types/formidable@3.4.6':
     resolution: {integrity: sha512-LI4Hk+KNsM5q7br4oMVoaWeb+gUqJpz1N8+Y2Q6Cz9cVH33ybahRKUWaRmMboVlkwSbOUGgwc/pEkS7yMSzoWg==}
@@ -7782,20 +7783,20 @@ snapshots:
 
   '@types/compression@1.8.1':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/node': 24.9.1
 
   '@types/connect-flash@0.0.40':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
 
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 24.9.1
 
-  '@types/cookie-parser@1.4.10(@types/express@4.17.24)':
+  '@types/cookie-parser@1.4.10(@types/express@4.17.25)':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
 
   '@types/cookiejar@2.1.5': {}
 
@@ -7846,9 +7847,9 @@ snapshots:
 
   '@types/express-session@1.18.2':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
 
-  '@types/express@4.17.24':
+  '@types/express@4.17.25':
     dependencies:
       '@types/body-parser': 1.19.6
       '@types/express-serve-static-core': 4.19.7
@@ -7938,30 +7939,30 @@ snapshots:
 
   '@types/passport-google-oauth20@2.0.17':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/passport': 1.0.17
       '@types/passport-oauth2': 1.8.0
 
   '@types/passport-local@1.0.38':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/passport': 1.0.17
       '@types/passport-strategy': 0.2.38
 
   '@types/passport-oauth2@1.8.0':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/oauth': 0.9.6
       '@types/passport': 1.0.17
 
   '@types/passport-strategy@0.2.38':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/passport': 1.0.17
 
   '@types/passport@1.0.17':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
 
   '@types/pg@8.15.5':
     dependencies:
@@ -7985,7 +7986,7 @@ snapshots:
 
   '@types/response-time@2.3.9':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/node': 24.9.1
 
   '@types/send@0.17.6':

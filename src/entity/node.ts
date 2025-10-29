@@ -229,27 +229,34 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-  static determineActivity(position: Position): NodeActivity {
-    if (position.aboveGroundLevel == null || position.altitude == null) {
-      return
-    }
-
-    /*
-     * This is where we would add logic to identify the 'concern' activity (not
-     * currently implemented) based on location, altitude and movement.
-     */
-
-    /* Current logic: AGL > 50M and speed > 5 km/h could be used to detect flying nodes. */
-    if (position.aboveGroundLevel > 50 && position.groundSpeed != null && position.groundSpeed > 5) {
-      return 'fly'
-    } else if ((position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) || position.groundSpeed == null) {
-      return 'concern'
-    } else if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
-      return 'hike'
-    } else {
-      return
-    }
+static determineActivity(position: Position): NodeActivity {
+  // Return nothing if aboveGroundLevel or altitude is missing
+  if (
+    position.aboveGroundLevel == null ||
+    position.altitude == null ||
+    position.groundSpeed == null
+  ) {
+    return;
   }
+  
+  // Flying: AGL > 50m and speed > 5 km/h
+  if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
+    return 'fly';
+  }
+
+  // Hiking: AGL < 50m, speed between 0 and 5 km/h
+  if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
+    return 'hike';
+  }
+
+  // Stationary at high altitude, low AGL (e.g., landed on a mountain)
+  if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) {
+    return 'concern';
+  }
+
+  // Default: return nothing
+  return;
+}
 
   async createOrUpdate(trx: EntityManager) {
     const repository = trx.getRepository(Node)

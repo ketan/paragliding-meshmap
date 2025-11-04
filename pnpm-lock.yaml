@@ -105,8 +105,8 @@ importers:
         specifier: ^8.12.0
         version: 8.16.3
       pg-boss:
-        specifier: ^10.1.1
-        version: 10.3.3
+        specifier: ^11.0.0
+        version: 11.1.2
       pg-connection-string:
         specifier: ^2.7.0
         version: 2.9.1
@@ -2781,9 +2781,9 @@ packages:
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
-  cron-parser@4.9.0:
-    resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
-    engines: {node: '>=12.0.0'}
+  cron-parser@5.4.0:
+    resolution: {integrity: sha512-HxYB8vTvnQFx4dLsZpGRa0uHp6X3qIzS3ZJgJ9v6l/5TJMgeWQbLkR5yiJ5hOxGbc9+jCADDnydIe15ReLZnJA==}
+    engines: {node: '>=18'}
 
   cron@3.5.0:
     resolution: {integrity: sha512-0eYZqCnapmxYcV06uktql93wNWdlTmmBFP2iYz+JPVcQqlyFYcn1lFuIk4R54pkOmE7mcldTAPZv6X5XA4Q46A==}
@@ -4727,9 +4727,9 @@ packages:
   performance-now@2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
 
-  pg-boss@10.3.3:
-    resolution: {integrity: sha512-LDebdaCT3xU5FvUYQjXoobBbJH/LEybf8dCQAkFxxq6KJPAJ4mjra7f/EImf9EF3PCOtzTtJsRSUmurIB3UaPQ==}
-    engines: {node: '>=20'}
+  pg-boss@11.1.2:
+    resolution: {integrity: sha512-E+JioJchjDmKLEuU2I+C0BEhs9pP0iwkVLwnDmtS0vK/I/HqB3zIEij08xmhDDrW8Gg2sqezdB58viXF1DM5hQ==}
+    engines: {node: '>=22'}
 
   pg-cloudflare@1.2.7:
     resolution: {integrity: sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg==}
@@ -8721,7 +8721,7 @@ snapshots:
 
   create-require@1.1.1: {}
 
-  cron-parser@4.9.0:
+  cron-parser@5.4.0:
     dependencies:
       luxon: 3.7.2
 
@@ -10988,9 +10988,9 @@ snapshots:
 
   performance-now@2.1.0: {}
 
-  pg-boss@10.3.3:
+  pg-boss@11.1.2:
     dependencies:
-      cron-parser: 4.9.0
+      cron-parser: 5.4.0
       pg: 8.16.3
       serialize-error: 8.1.0
     transitivePeerDependencies:

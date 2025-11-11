@@ -323,16 +323,16 @@ importers:
         version: 10.1.3
       chai:
         specifier: ^6.0.0
-        version: 6.2.0
+        version: 6.2.1
       chai-as-promised:
         specifier: ^8.0.0
-        version: 8.0.2(chai@6.2.0)
+        version: 8.0.2(chai@6.2.1)
       chai-deep-equal-ignore-undefined:
         specifier: ^1.1.1
-        version: 1.1.1(chai@6.2.0)
+        version: 1.1.1(chai@6.2.1)
       chai-exclude:
         specifier: ^3.0.0
-        version: 3.0.1(chai@6.2.0)
+        version: 3.0.1(chai@6.2.1)
       compression:
         specifier: ^1.7.5
         version: 1.8.1(supports-color@10.2.2)
@@ -2595,8 +2595,8 @@ packages:
     peerDependencies:
       chai: '>= 5'
 
-  chai@6.2.0:
-    resolution: {integrity: sha512-aUTnJc/JipRzJrNADXVvpVqi6CO0dn3nx4EVPxijri+fj3LUUDyZQOgVeW54Ob3Y1Xh9Iz8f+CgaCl8v0mn9bA==}
+  chai@6.2.1:
+    resolution: {integrity: sha512-p4Z49OGG5W/WBCPSS/dH3jQ73kD6tiMmUM+bckNK6Jr5JHMG3k9bg/BvKR8lKmtVBKmOiuVaV2ws8s9oSbwysg==}
     engines: {node: '>=18'}
 
   chalk@4.1.2:
@@ -8516,21 +8516,21 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  chai-as-promised@8.0.2(chai@6.2.0):
+  chai-as-promised@8.0.2(chai@6.2.1):
     dependencies:
-      chai: 6.2.0
+      chai: 6.2.1
       check-error: 2.1.1
 
-  chai-deep-equal-ignore-undefined@1.1.1(chai@6.2.0):
+  chai-deep-equal-ignore-undefined@1.1.1(chai@6.2.1):
     dependencies:
-      chai: 6.2.0
+      chai: 6.2.1
 
-  chai-exclude@3.0.1(chai@6.2.0):
+  chai-exclude@3.0.1(chai@6.2.1):
     dependencies:
-      chai: 6.2.0
+      chai: 6.2.1
       fclone: 1.0.11
 
-  chai@6.2.0: {}
+  chai@6.2.1: {}
 
   chalk@4.1.2:
     dependencies:

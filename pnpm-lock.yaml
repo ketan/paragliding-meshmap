@@ -76,7 +76,7 @@ importers:
         version: 2.6.9
       newrelic:
         specifier: ^13.0.0
-        version: 13.6.5(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 13.6.6(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       node-hgt:
         specifier: ^1.2.3
         version: 1.2.3
@@ -4463,8 +4463,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  newrelic@13.6.5:
-    resolution: {integrity: sha512-0VfeTydhneCJ7vTuHIuegyHRo4PuTj5olyJspDsu6BC/feaalzyZJnQtSSgxdMPVF+J6vXGw74dHj2i/NEyT0w==}
+  newrelic@13.6.6:
+    resolution: {integrity: sha512-3wf+HgpY2RpZexcbBVDpuan+C7FGKZmCyO01IMDCcl7/CT0NrRjSOIsOk3jxV8qgwMQ+I/gzvAheGhN/n99X0Q==}
     engines: {node: '>=20', npm: '>=6.0.0'}
     hasBin: true
 
@@ -10651,7 +10651,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  newrelic@13.6.5(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  newrelic@13.6.6(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       '@apm-js-collab/tracing-hooks': 0.3.1(supports-color@10.2.2)
       '@grpc/grpc-js': 1.14.1

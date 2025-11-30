@@ -28,7 +28,7 @@ importers:
         version: 1.4.7
       cron:
         specifier: ^4.3.3
-        version: 4.3.4
+        version: 4.3.5
       csrf-csrf:
         specifier: ^4.0.3
         version: 4.0.3
@@ -2788,8 +2788,8 @@ packages:
   cron@3.5.0:
     resolution: {integrity: sha512-0eYZqCnapmxYcV06uktql93wNWdlTmmBFP2iYz+JPVcQqlyFYcn1lFuIk4R54pkOmE7mcldTAPZv6X5XA4Q46A==}
 
-  cron@4.3.4:
-    resolution: {integrity: sha512-OiO0l73MGhQOZQCjYZ0v7r8yFWpBOWteemwR1RIxiHtfVsIOwiTJZDvg7GmKzggkwC0RO8tI3P1QYBUCIZNYRQ==}
+  cron@4.3.5:
+    resolution: {integrity: sha512-hKPP7fq1+OfyCqoePkKfVq7tNAdFwiQORr4lZUHwrf0tebC65fYEeWgOrXOL6prn1/fegGOdTfrM6e34PJfksg==}
     engines: {node: '>=18.x'}
 
   cross-spawn@7.0.6:
@@ -8738,7 +8738,7 @@ snapshots:
       '@types/luxon': 3.4.2
       luxon: 3.5.0
 
-  cron@4.3.4:
+  cron@4.3.5:
     dependencies:
       '@types/luxon': 3.7.1
       luxon: 3.7.2

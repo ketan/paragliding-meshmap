@@ -85,7 +85,7 @@
     "@types/response-time": "^2.3.8",
     "@types/sinon": "^21.0.0",
     "@types/supertest": "^6.0.2",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "@types/w3c-web-serial": "^1.0.8",
     "@types/web-bluetooth": "^0.0.21",
     "@typescript-eslint/eslint-plugin": "^7.16.1",

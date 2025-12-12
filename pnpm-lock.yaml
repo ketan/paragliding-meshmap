@@ -137,7 +137,7 @@ importers:
     devDependencies:
       '@bufbuild/protobuf':
         specifier: ^2.9.0
-        version: 2.10.1
+        version: 2.10.2
       '@eslint/js':
         specifier: ^9.6.0
         version: 9.39.1
@@ -720,8 +720,8 @@ packages:
   '@borewit/text-codec@0.1.1':
     resolution: {integrity: sha512-5L/uBxmjaCIX5h8Z+uu+kA9BQLkc/Wl06UGR5ajNRxu+/XjonB5i8JpgFMrPj3LXTCPA0pv8yxUvbUi+QthGGA==}
 
-  '@bufbuild/protobuf@2.10.1':
-    resolution: {integrity: sha512-ckS3+vyJb5qGpEYv/s1OebUHDi/xSNtfgw1wqKZo7MR9F2z+qXr0q5XagafAG/9O0QPVIUfST0smluYSTpYFkg==}
+  '@bufbuild/protobuf@2.10.2':
+    resolution: {integrity: sha512-uFsRXwIGyu+r6AMdz+XijIIZJYpoWeYzILt5yZ2d3mCjQrWUTVpVD9WL/jZAbvp+Ed04rOhrsk7FiTcEDseB5A==}
 
   '@colors/colors@1.6.0':
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
@@ -6578,7 +6578,7 @@ snapshots:
 
   '@borewit/text-codec@0.1.1': {}
 
-  '@bufbuild/protobuf@2.10.1': {}
+  '@bufbuild/protobuf@2.10.2': {}
 
   '@colors/colors@1.6.0': {}
 
@@ -6812,7 +6812,7 @@ snapshots:
 
   '@jsr/meshtastic__core@2.6.6(buffer@6.0.3)':
     dependencies:
-      '@bufbuild/protobuf': 2.10.1
+      '@bufbuild/protobuf': 2.10.2
       '@jsr/meshtastic__protobufs': 2.7.8
       crc: 4.3.2(buffer@6.0.3)
       ste-simple-events: 3.0.11
@@ -6822,7 +6822,7 @@ snapshots:
 
   '@jsr/meshtastic__protobufs@2.7.8':
     dependencies:
-      '@bufbuild/protobuf': 2.10.1
+      '@bufbuild/protobuf': 2.10.2
 
   '@meshtastic/core@2.6.7(buffer@6.0.3)':
     dependencies:

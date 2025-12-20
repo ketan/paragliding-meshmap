@@ -40,7 +40,7 @@
     "@meshtastic/protobufs": "jsr:^2.7.8",
     "@meshtastic/transport-web-bluetooth": "^0.1.5",
     "@meshtastic/transport-web-serial": "^0.2.5",
-    "@react-oauth/google": "^0.12.1",
+    "@react-oauth/google": "^0.13.0",
     "@rmp135/sql-ts": "^2.1.0",
     "@rollup/plugin-typescript": "^12.1.3",
     "@svgr/core": "^8.1.0",

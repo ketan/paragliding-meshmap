@@ -183,7 +183,7 @@
     "passport-google-one-tap": "^1.0.1",
     "passport-magic-login": "^1.2.2",
     "pg": "^8.12.0",
-    "pg-boss": "^10.1.1",
+    "pg-boss": "^12.0.0",
     "pg-connection-string": "^2.7.0",
     "pg-query-stream": "^4.7.1",
     "pluralize": "^8.0.0",

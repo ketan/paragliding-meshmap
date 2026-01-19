@@ -461,7 +461,7 @@ importers:
         version: 5.9.3
       typescript-color-gradient:
         specifier: ^4.0.1
-        version: 4.1.0
+        version: 4.2.0
       typescript-eslint:
         specifier: ^7.15.0
         version: 7.18.0(eslint@9.39.2(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
@@ -5678,8 +5678,8 @@ packages:
       typeorm-aurora-data-api-driver:
         optional: true
 
-  typescript-color-gradient@4.1.0:
-    resolution: {integrity: sha512-XgwZS8BPcr7Bm4izuQOmJOwJhYWyK5V1FY1sgdnUhEJEIFtwyFDMu+8ROcY8iAoaEK7Qld8kQmEGBE3wI35nBQ==}
+  typescript-color-gradient@4.2.0:
+    resolution: {integrity: sha512-If2yZZfj+9KbBjdPUqTuppmn3JgYAZoPwE9jlxSYf5u3zFKCMAInNSHnEaIekoeykkSuaS8CnnP4XI/X68KybQ==}
 
   typescript-eslint@7.18.0:
     resolution: {integrity: sha512-PonBkP603E3tt05lDkbOMyaxJjvKqQrXsnow72sVeOFINDE/qNmnnd+f9b4N+U7W6MXnnYyrhtmF2t08QWwUbA==}
@@ -12091,7 +12091,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  typescript-color-gradient@4.1.0: {}
+  typescript-color-gradient@4.2.0: {}
 
   typescript-eslint@7.18.0(eslint@9.39.2(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3):
     dependencies:

@@ -49,7 +49,7 @@ importers:
         version: 3.1.1(express@4.21.2(supports-color@10.2.2))
       express-session:
         specifier: ^1.18.0
-        version: 1.18.2(supports-color@10.2.2)
+        version: 1.19.0(supports-color@10.2.2)
       express-static-gzip:
         specifier: ^3.0.0
         version: 3.0.0(supports-color@10.2.2)
@@ -3002,8 +3002,8 @@ packages:
     peerDependencies:
       express: ^4.16.2
 
-  express-session@1.18.2:
-    resolution: {integrity: sha512-SZjssGQC7TzTs9rpPDuUrR23GNZ9+2+IkA/+IJWmvQilTr5OSliEHGF+D9scbIpdC6yGtTI0/VhaHoVes2AN/A==}
+  express-session@1.19.0:
+    resolution: {integrity: sha512-0csaMkGq+vaiZTmSMMGkfdCOabYv192VbytFypcvI0MANrp+4i/7yEkJ0sbAEhycQjntaKGzYfjfXQyVb7BHMA==}
     engines: {node: '>= 0.8.0'}
 
   express-static-gzip@3.0.0:
@@ -7691,7 +7691,7 @@ snapshots:
       '@types/debug': 0.0.31
       '@types/express-session': 1.18.2
       debug: 4.4.3(supports-color@10.2.2)
-      express-session: 1.18.2(supports-color@10.2.2)
+      express-session: 1.19.0(supports-color@10.2.2)
       typeorm: 0.3.28(pg-query-stream@4.10.3(pg@8.16.3))(pg@8.16.3)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.11)(@types/node@24.10.10)(typescript@5.9.3))
     transitivePeerDependencies:
       - supports-color
@@ -8418,7 +8418,7 @@ snapshots:
     dependencies:
       express: 4.21.2(supports-color@10.2.2)
 
-  express-session@1.18.2(supports-color@10.2.2):
+  express-session@1.19.0(supports-color@10.2.2):
     dependencies:
       cookie: 0.7.2
       cookie-signature: 1.0.7

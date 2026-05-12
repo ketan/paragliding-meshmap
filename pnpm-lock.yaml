@@ -158,7 +158,7 @@ importers:
         version: 0.2.5(buffer@6.0.3)
       '@react-oauth/google':
         specifier: ^0.13.0
-        version: 0.13.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.13.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@rmp135/sql-ts':
         specifier: ^2.1.0
         version: 2.2.0(pg@8.16.3)(supports-color@10.2.2)
@@ -1169,8 +1169,8 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
 
-  '@react-oauth/google@0.13.4':
-    resolution: {integrity: sha512-hGKyNEH+/PK8M0sFEuo3MAEk0txtHpgs94tDQit+s2LXg7b6z53NtzHfqDvoB2X8O6lGB+FRg80hY//X6hfD+w==}
+  '@react-oauth/google@0.13.5':
+    resolution: {integrity: sha512-xQWri2s/3nNekZJ4uuov2aAfQYu83bN3864KcFqw2pK1nNbFurQIjPFDXhWaKH3IjYJ2r/9yyIIpsn5lMqrheQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -6499,7 +6499,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@react-oauth/google@0.13.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@react-oauth/google@0.13.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)

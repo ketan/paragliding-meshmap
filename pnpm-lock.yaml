@@ -374,7 +374,7 @@ importers:
         version: 3.0.0
       libphonenumber-js:
         specifier: ^1.12.9
-        version: 1.12.41
+        version: 1.13.2
       mocha:
         specifier: ^11.0.1
         version: 11.7.5
@@ -3853,8 +3853,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libphonenumber-js@1.12.41:
-    resolution: {integrity: sha512-lsmMmGXBxXIK/VMLEj0kL6MtUs1kBGj1nTCzi6zgQoG1DEwqwt2DQyHxcLykceIxAnfE3hya7NuIh6PpC6S3fA==}
+  libphonenumber-js@1.13.2:
+    resolution: {integrity: sha512-S3kmBrptp3yRTm83NUcHy9g1vbwiWMzI8WvY22+koBJ6zkRteLnedBL2VX0MIAGwx2yiyxX4J85pceZyQ6ffgg==}
 
   lightningcss-android-arm64@1.30.2:
     resolution: {integrity: sha512-BH9sEdOCahSgmkVhBLeU7Hc9DWeZ1Eb6wNS6Da8igvUwAe0sqROHddIlvU06q3WyXVEOYDZ6ykBZQnjTbmo4+A==}
@@ -9422,7 +9422,7 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.12.41: {}
+  libphonenumber-js@1.13.2: {}
 
   lightningcss-android-arm64@1.30.2:
     optional: true

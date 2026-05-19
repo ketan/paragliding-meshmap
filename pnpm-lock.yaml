@@ -132,8 +132,8 @@ importers:
         specifier: ^0.3.20
         version: 0.3.28(pg-query-stream@4.15.0(pg@8.21.0))(pg@8.21.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.33)(@types/node@24.12.4)(typescript@5.9.3))
       uuid:
-        specifier: ^13.0.0
-        version: 13.0.1
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@bufbuild/protobuf':
         specifier: ^2.9.0
@@ -5557,8 +5557,8 @@ packages:
     resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
-  uuid@13.0.1:
-    resolution: {integrity: sha512-9ezox2roIft6ExBVTVqibSd5dc5/47Sw/uY6b4SjQUT2TzQ0tltNquWA46y4xPQmdZYqvnio22SgWd41M86+jw==}
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
 
   uuid@3.4.0:
@@ -11323,7 +11323,7 @@ snapshots:
 
   uuid@11.1.1: {}
 
-  uuid@13.0.1: {}
+  uuid@14.0.0: {}
 
   uuid@3.4.0: {}
 

@@ -416,7 +416,7 @@ importers:
         version: 5.0.0(leaflet@1.9.4)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-toastify:
         specifier: ^11.0.2
-        version: 11.0.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 11.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-tooltip:
         specifier: ^6.0.0
         version: 6.0.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -4777,8 +4777,8 @@ packages:
       redux:
         optional: true
 
-  react-toastify@11.0.5:
-    resolution: {integrity: sha512-EpqHBGvnSTtHYhCPLxML05NLY2ZX0JURbAdNYa6BUkk+amz4wbKBQvoKQAB0ardvSarUBuY4Q4s1sluAzZwkmA==}
+  react-toastify@11.1.0:
+    resolution: {integrity: sha512-e9h23x3phN0wbFeB6yovmWp7lobzV4CaCH0LO8nVP6H7Y+3GbcLpIzMm9dJhcp1RXbpyfvjgpfXqO80QAmn7sg==}
     peerDependencies:
       react: ^18 || ^19
       react-dom: ^18 || ^19
@@ -10408,7 +10408,7 @@ snapshots:
       '@types/react': 19.2.14
       redux: 5.0.1
 
-  react-toastify@11.0.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  react-toastify@11.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       clsx: 2.1.1
       react: 19.2.4

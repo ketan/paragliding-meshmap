@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - id: commit
-        uses: prompt/actions-commit-hash@v3
+        uses: prompt/actions-commit-hash@v4
       - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6

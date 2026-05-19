@@ -94,7 +94,7 @@
     "autoprefixer": "^10.4.19",
     "base64-js": "^1.5.1",
     "base64url": "^3.0.1",
-    "c8": "^10.1.2",
+    "c8": "^11.0.0",
     "chai": "^6.0.0",
     "chai-as-promised": "^8.0.0",
     "chai-deep-equal-ignore-undefined": "^1.1.1",

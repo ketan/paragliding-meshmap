@@ -419,7 +419,7 @@ importers:
         version: 11.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-tooltip:
         specifier: ^6.0.0
-        version: 6.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 6.0.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       recharts:
         specifier: ^3.0.0
         version: 3.8.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@16.13.1)(react@19.2.6)(redux@5.0.1)
@@ -4973,8 +4973,8 @@ packages:
       react: ^18 || ^19
       react-dom: ^18 || ^19
 
-  react-tooltip@6.0.3:
-    resolution: {integrity: sha512-CFYZJOGVUiKV1ddF7p/jhNyY6+mbt6UZEIDBzWVgdAvhGTXGfXDwQT4tPwic7hTTszDKRy5kqTKbG92Sms03cQ==}
+  react-tooltip@6.0.4:
+    resolution: {integrity: sha512-UqRnj2wzkPQL12K+Zx12lY0oVrgCftGBfXjsN13H0qMt6rGQfZc/vyu2Hgrbujv3ZorvCc6GJMcNPYg+hhM/Dg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -10752,7 +10752,7 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  react-tooltip@6.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-tooltip@6.0.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@floating-ui/dom': 1.7.6
       clsx: 2.1.1

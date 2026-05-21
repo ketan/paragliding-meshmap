@@ -118,7 +118,7 @@ importers:
         version: 8.0.0
       protobufjs:
         specifier: ^8.0.0
-        version: 8.4.0
+        version: 8.4.1
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -398,7 +398,7 @@ importers:
         version: 3.8.3
       protobufjs-cli:
         specifier: ^2.0.0
-        version: 2.4.0(protobufjs@8.4.0)
+        version: 2.4.0(protobufjs@8.4.1)
       qs:
         specifier: ^6.13.0
         version: 6.15.2
@@ -4675,8 +4675,8 @@ packages:
     resolution: {integrity: sha512-NWWCCscLjs+cOKF/s/XVNFRW7Yih0fdH+9brffR5NZCy8k42yRdl5KlWKMVXuI1vfCoy4o1z80XR/W/QUb3V3w==}
     engines: {node: '>=12.0.0'}
 
-  protobufjs@8.4.0:
-    resolution: {integrity: sha512-iriNhQ57SYA5Jbdi+41AyPdx6jPPkFO7DODzkOBmqFhgYn/JzX2HxgxYPY18eQAs3CP/AWqtPvkWn8rclRAxdQ==}
+  protobufjs@8.4.1:
+    resolution: {integrity: sha512-oXf2UgIty8jnwfN4yvL1x79VLhL5uiKjZJbSGXGCIUmHmItTP4eS/UIlWDCeNx3seg+ujfn9vDlPMSrsh7wO+Q==}
     engines: {node: '>=12.0.0'}
 
   proxy-addr@2.0.7:
@@ -10275,7 +10275,7 @@ snapshots:
 
   property-expr@2.0.6: {}
 
-  protobufjs-cli@2.4.0(protobufjs@8.4.0):
+  protobufjs-cli@2.4.0(protobufjs@8.4.1):
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3
@@ -10284,7 +10284,7 @@ snapshots:
       glob: 8.1.0
       jsdoc: 4.0.5
       minimist: 1.2.8
-      protobufjs: 8.4.0
+      protobufjs: 8.4.1
       semver: 7.8.0
       tmp: 0.2.5
       uglify-js: 3.19.3
@@ -10319,7 +10319,7 @@ snapshots:
       '@types/node': 24.12.4
       long: 5.3.2
 
-  protobufjs@8.4.0:
+  protobufjs@8.4.1:
     dependencies:
       long: 5.3.2
 

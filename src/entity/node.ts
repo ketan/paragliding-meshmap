@@ -94,7 +94,7 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
   @Column({ type: 'text', nullable: true })
   flyXCToken?: string
   @Column({ type: 'text', nullable: true })
-  activity?: NodeActivity
+  activity?: NodeActivity | null
 
   static flyXCTokenNamespace: Configs
 
@@ -204,7 +204,8 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
       positionTimestamp: _([position.time, position.timestamp]).compact().min(),
       positionPrecisionBits: BaseType.sanitizeNumber(position.precisionBits),
       satsInView: BaseType.sanitizeNumber(position.satsInView),
-      activity: Node.determineActivity(position),
+      // `undefined` in TypeORM typically means “don’t update this column”, while null means “write SQL NULL”.
+      activity: Node.determineActivity(position) ?? null,
     })
     await this.maybeForwardCoordinates(node, position, nodeFilter)
     return await repository.save(node)

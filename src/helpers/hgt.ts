@@ -17,6 +17,7 @@ function loadHgt(latitude: number, longitude: number) {
   const suffix = (longitude >= 0 ? 'E' : 'W') + degreesLon.toString().padStart(3, '0')
   const filename = path.join(directory, prefix + suffix + '.HGT')
   if (!fs.existsSync(filename)) {
+    hgtLog('no HGT data available for these coordinates', latitude, longitude)
     return null
   }
   return new Hgt.Hgt(path.join(directory, prefix + suffix + '.HGT'), [degreesLat, degreesLon])
@@ -36,7 +37,11 @@ export function lookupHgt(latitude: number, longitude: number): number | null {
 
   // Return elevation in meters above sea level.
   // By default, elevation is interpolated bilinearly.
-  return hgt.getElevation([latitude, longitude])
+  const elevation = hgt.getElevation([latitude, longitude])
+  if (!elevation) {
+    hgtLog('no HGT data available for these coordinates', latitude, longitude)
+  }
+  return elevation
 }
 
 /*

@@ -31,6 +31,7 @@ const hardwareModelToFilename: { [key: string]: string } = {
   RAK4631: 'rak4631.svg',
   RAK4631_CASE: 'rak4631_case.svg',
   WIO_WM1110: 'wio-tracker-wm1110.svg',
+  SEEED_WIO_TRACKER_L1: 'wio_tracker_l1-pro.svg',
   WM1110_DEV_KIT: 'wm1110_dev_kit.svg',
   STATION_G2: 'station-g2.svg',
   TBEAM_V0P7: 'tbeam-s3-core.svg',

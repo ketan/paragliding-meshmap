@@ -154,7 +154,7 @@
   "dependencies": {
     "async-mqtt": "^2.6.3",
     "commander": "^15.0.0",
-    "concurrently": "^9.0.0",
+    "concurrently": "^10.0.0",
     "connect-flash": "^0.1.1",
     "connect-typeorm": "^2.0.0",
     "cookie-parser": "^1.4.6",

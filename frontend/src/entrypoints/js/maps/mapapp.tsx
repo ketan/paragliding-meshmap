@@ -85,7 +85,7 @@ interface MapState extends Partial<AllData>, UIConfig, QueryParams {
 
 export default class MapApp extends Component<MapProps, MapState> {
   private readonly defaultMessageSince = Duration.fromObject({ days: 7 }).rescale()
-  private loadDataInterval: NodeJS.Timeout | null = null
+  private loadDataInterval: ReturnType<typeof setInterval> | null = null
 
   state: MapState = {
     defaultZoomLevelForNode: localStorage.defaultZoomLevelForNode || 15,

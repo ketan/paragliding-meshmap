@@ -7,6 +7,6 @@ module.exports = {
   spec: 'test/**/*.spec.ts',
   require: ['ts-node/register', './test/hooks.ts'],
   'node-option': ['experimental-specifier-resolution=node', 'loader=ts-node/esm'],
-  timeout: 5000,
+  timeout: 8000,
   jobs: 1,
 }

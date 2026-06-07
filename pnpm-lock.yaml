@@ -398,7 +398,7 @@ importers:
         version: 3.8.3
       protobufjs-cli:
         specifier: ^2.0.0
-        version: 2.5.1(protobufjs@8.6.1)
+        version: 2.5.2(protobufjs@8.6.1)
       qs:
         specifier: ^6.13.0
         version: 6.15.2
@@ -4681,12 +4681,12 @@ packages:
   property-expr@2.0.6:
     resolution: {integrity: sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==}
 
-  protobufjs-cli@2.5.1:
-    resolution: {integrity: sha512-8dM55oj9M7/o6TaYOorrCvbpWr7K0VJ3VbQXD7RGr5VUqthE1bozOngojbOl/goaIIOp9aX3v6Fvny1aeA6unQ==}
+  protobufjs-cli@2.5.2:
+    resolution: {integrity: sha512-F+Oswot9soZ2KCWF1LXdT23JFKR5Djs4PZNLBggJHb5fevRYpZ4Oit4nSoyy9+4s4POKAjFXCHr22fTPEJpOqQ==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: ^8.6.0
+      protobufjs: ^8.6.1
 
   protobufjs@7.6.2:
     resolution: {integrity: sha512-N9EiLovGEQOJSPF26Ij7qUGvahfEnq0eeYZ02aigIedkmz1qZSwjnP9SBITHJuF/6MYbIW4HDN8zdYjsjqJKXQ==}
@@ -10328,7 +10328,7 @@ snapshots:
 
   property-expr@2.0.6: {}
 
-  protobufjs-cli@2.5.1(protobufjs@8.6.1):
+  protobufjs-cli@2.5.2(protobufjs@8.6.1):
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3

@@ -4,6 +4,7 @@
   "semanticCommits": "enabled",
   "semanticCommitScope": "deps",
   "semanticCommitType": "chore",
+  "minimumReleaseAge": "2 days",
   "prConcurrentLimit": 20,
   "packageRules": [
     {

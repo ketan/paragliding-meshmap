@@ -9,9 +9,9 @@ import 'reflect-metadata'
 import { DataSource, DefaultNamingStrategy, NamingStrategyInterface, Table } from 'typeorm'
 import { fileURLToPath } from 'url'
 import _ from 'lodash'
-import PgBoss from 'pg-boss'
 import parse from 'pg-connection-string'
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions.js'
+import { PgBoss } from 'pg-boss'
 
 // https://github.com/trancong12102/typeorm-naming-strategies/blob/master/src/postgres-naming.strategy.ts
 class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -69,8 +69,6 @@ export const pgBoss = new PgBoss({
   host: dbConnectionOpts.host ?? undefined,
   port: dbConnectionOpts.port ? parseInt(dbConnectionOpts.port) : undefined,
   database: dbConnectionOpts.database ?? undefined,
-  retentionDays: 7,
-  deleteAfterDays: 7,
 })
 
 // console.log(`Using connection parameters`, connString)

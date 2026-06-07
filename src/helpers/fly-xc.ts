@@ -2,7 +2,7 @@ import { errLog, flyXCLog } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 import _ from 'lodash'
 import Position from '#entity/position'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import Node from '#entity/node'
 
 export interface PositionPayload {
@@ -37,7 +37,8 @@ export async function flyXCJobProcessor() {
     retryLimit: 3,
     retryBackoff: true,
     retryDelay: 30,
-    name: 'fly-xc',
+    retentionSeconds: Duration.fromObject({ days: 7 }).seconds,
+    deleteAfterSeconds: Duration.fromObject({ days: 7 }).seconds,
   })
 
   pgBoss.work(

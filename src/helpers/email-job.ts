@@ -1,13 +1,15 @@
 import { pgBoss } from '#config/data-source'
 import { mailTransport } from '#web/mailer'
 import Mail from 'nodemailer/lib/mailer/index.js'
+import { Duration } from 'luxon'
 
 export async function emailJobProcessor() {
   await pgBoss.createQueue('email', {
     retryLimit: 3,
     retryBackoff: true,
     retryDelay: 30,
-    name: 'email',
+    retentionSeconds: Duration.fromObject({ days: 7 }).seconds,
+    deleteAfterSeconds: Duration.fromObject({ days: 7 }).seconds,
   })
 
   pgBoss.work<Mail.Options>(

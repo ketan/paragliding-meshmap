@@ -2,7 +2,7 @@ import { errLog, pureTrackLog } from '#helpers/logger'
 import { pgBoss } from '#config/data-source'
 import Node from '#entity/node'
 import Position from '#entity/position'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 import { HardwareModelIDToName } from '../../frontend/src/hardware-modules.js'
 
 interface PositionPayload {
@@ -70,7 +70,8 @@ export async function pureTrackIOJobProcessor() {
     retryLimit: 3,
     retryBackoff: true,
     retryDelay: 30,
-    name: 'puretrack.io',
+    retentionSeconds: Duration.fromObject({ days: 7 }).seconds,
+    deleteAfterSeconds: Duration.fromObject({ days: 7 }).seconds,
   })
 
   pgBoss.work(

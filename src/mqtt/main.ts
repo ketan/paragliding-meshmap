@@ -13,13 +13,15 @@ import { flyXCJobProcessor } from '#helpers/fly-xc'
 import { sendTelegramMessage } from '#helpers/telegram'
 import { pureTrackIOJobProcessor } from '#helpers/pure-track'
 import { dumpStats } from '#helpers/stats'
+import { Duration } from 'luxon'
 
 async function telegramJobProcessor() {
   await pgBoss.createQueue('telegram', {
     retryLimit: 3,
     retryBackoff: true,
     retryDelay: 30,
-    name: 'telegram',
+    retentionSeconds: Duration.fromObject({ days: 7 }).seconds,
+    deleteAfterSeconds: Duration.fromObject({ days: 7 }).seconds,
   })
 
   pgBoss.work<{ from: string; message: string }>(

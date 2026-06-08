@@ -117,6 +117,22 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          if (id.includes('node_modules/leaflet-groupedlayercontrol')) {
+            return 'leaflet-groupedlayercontrol'
+          }
+
+          if (id.includes('node_modules/leaflet.markercluster')) {
+            return 'leaflet-markercluster'
+          }
+
+          if (id.includes('node_modules/leaflet.polylinemeasure')) {
+            return 'leaflet-polylinemeasure'
+          }
+
+          if (id.includes('node_modules/leaflet.heat')) {
+            return 'leaflet-heat'
+          }
+
           if (id.includes('node_modules')) {
             return 'vendor'
           }

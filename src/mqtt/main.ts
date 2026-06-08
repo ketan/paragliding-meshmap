@@ -20,8 +20,8 @@ async function telegramJobProcessor() {
     retryLimit: 3,
     retryBackoff: true,
     retryDelay: 30,
-    retentionSeconds: Duration.fromObject({ days: 7 }).seconds,
-    deleteAfterSeconds: Duration.fromObject({ days: 7 }).seconds,
+    retentionSeconds: Duration.fromObject({ days: 7 }).as('seconds'),
+    deleteAfterSeconds: Duration.fromObject({ days: 7 }).as('seconds'),
   })
 
   pgBoss.work<{ from: string; message: string }>(

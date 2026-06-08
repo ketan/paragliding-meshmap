@@ -230,34 +230,30 @@ export default class Node extends BaseTypeWithoutPrimaryKey {
     )
   }
 
-static determineActivity(position: Position): NodeActivity {
-  // Return nothing if aboveGroundLevel or altitude is missing
-  if (
-    position.aboveGroundLevel == null ||
-    position.altitude == null ||
-    position.groundSpeed == null
-  ) {
-    return;
-  }
-  
-  // Flying: AGL > 50m and speed > 5 km/h
-  if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
-    return 'fly';
-  }
+  static determineActivity(position: Position): NodeActivity {
+    // Return nothing if aboveGroundLevel or altitude is missing
+    if (position.aboveGroundLevel == null || position.altitude == null || position.groundSpeed == null) {
+      return
+    }
 
-  // Hiking: AGL < 50m, speed between 0 and 5 km/h
-  if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
-    return 'hike';
-  }
+    // Flying: AGL > 50m and speed > 5 km/h
+    if (position.aboveGroundLevel > 50 && position.groundSpeed > 5) {
+      return 'fly'
+    }
 
-  // Stationary at high altitude, low AGL (e.g., landed on a mountain)
-  if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) {
-    return 'concern';
-  }
+    // Hiking: AGL < 50m, speed between 0 and 5 km/h
+    if (position.aboveGroundLevel < 50 && position.groundSpeed > 0 && position.groundSpeed < 5) {
+      return 'hike'
+    }
 
-  // Default: return nothing
-  return;
-}
+    // Stationary at high altitude, low AGL (e.g., landed on a mountain)
+    if (position.altitude > 1600 && position.aboveGroundLevel < 50 && position.groundSpeed === 0) {
+      return 'concern'
+    }
+
+    // Default: return nothing
+    return
+  }
 
   async createOrUpdate(trx: EntityManager) {
     const repository = trx.getRepository(Node)

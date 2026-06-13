@@ -106,7 +106,7 @@ importers:
         version: 8.21.0
       pg-boss:
         specifier: ^12.0.0
-        version: 12.18.2
+        version: 12.18.3
       pg-connection-string:
         specifier: ^2.7.0
         version: 2.13.0
@@ -4641,8 +4641,8 @@ packages:
   performance-now@2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
 
-  pg-boss@12.18.2:
-    resolution: {integrity: sha512-06kXeWvVWY+BUNsOt2me1okg6NXx2DBnAQHTurA9jtrvbAO9qUOSE3/0ERERQDrokI+FREFM2Twha+JbrFT/8Q==}
+  pg-boss@12.18.3:
+    resolution: {integrity: sha512-3pwVjvVwWE38XsD1lW01MA3LFlxemkasWbX3qB/NjZ5r9uQDfiytqA3hV7Jmsq7Up8bT7deZLJ98Kagcsw4VAg==}
     engines: {node: '>=22.12.0'}
     hasBin: true
 
@@ -10408,7 +10408,7 @@ snapshots:
 
   performance-now@2.1.0: {}
 
-  pg-boss@12.18.2:
+  pg-boss@12.18.3:
     dependencies:
       cron-parser: 5.5.0
       pg: 8.21.0

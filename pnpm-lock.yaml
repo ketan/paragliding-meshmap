@@ -398,7 +398,7 @@ importers:
         version: 3.8.4
       protobufjs-cli:
         specifier: ^2.0.0
-        version: 2.5.2(protobufjs@8.6.3)
+        version: 2.5.4(protobufjs@8.6.3)
       qs:
         specifier: ^6.13.0
         version: 6.15.2
@@ -2158,6 +2158,11 @@ packages:
 
   acorn@8.16.0:
     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.17.0:
+    resolution: {integrity: sha512-xRQbDb9BnwDafYNn6Vwl839DYVjqXYb1XVGtWAZ1kcDc6iwAL4hg3B1dZlRiuENFeO2H53gFG3in621AdERVAg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -4800,12 +4805,12 @@ packages:
   property-expr@2.0.6:
     resolution: {integrity: sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==}
 
-  protobufjs-cli@2.5.2:
-    resolution: {integrity: sha512-F+Oswot9soZ2KCWF1LXdT23JFKR5Djs4PZNLBggJHb5fevRYpZ4Oit4nSoyy9+4s4POKAjFXCHr22fTPEJpOqQ==}
+  protobufjs-cli@2.5.4:
+    resolution: {integrity: sha512-EfQ8CmU0tLv/nL6SuXpr1gH2KUJRlJgMWx82E7+U9O4SwrEk5Husl+YRZHbQr8ZdD4NdxQgj522CIcXrf5L+tg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: ^8.6.1
+      protobufjs: ^8.6.3
 
   protobufjs@7.6.4:
     resolution: {integrity: sha512-RJJPTTpvFfHcWLkIa2JFWK4XvtSzS0yEWDmunqHXli1h3JlkbcQZXDZdcWxv+JK3Xsl5/UFDPZ0iGm7DAengYw==}
@@ -7541,6 +7546,10 @@ snapshots:
     dependencies:
       acorn: 8.16.0
 
+  acorn-jsx@5.3.2(acorn@8.17.0):
+    dependencies:
+      acorn: 8.17.0
+
   acorn-walk@8.3.4:
     dependencies:
       acorn: 8.15.0
@@ -7548,6 +7557,8 @@ snapshots:
   acorn@8.15.0: {}
 
   acorn@8.16.0: {}
+
+  acorn@8.17.0: {}
 
   agent-base@6.0.2(supports-color@10.2.2):
     dependencies:
@@ -8738,8 +8749,8 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.16.0
-      acorn-jsx: 5.3.2(acorn@8.16.0)
+      acorn: 8.17.0
+      acorn-jsx: 5.3.2(acorn@8.17.0)
       eslint-visitor-keys: 3.4.3
 
   esprima@4.0.1: {}
@@ -10541,7 +10552,7 @@ snapshots:
 
   property-expr@2.0.6: {}
 
-  protobufjs-cli@2.5.2(protobufjs@8.6.3):
+  protobufjs-cli@2.5.4(protobufjs@8.6.3):
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3

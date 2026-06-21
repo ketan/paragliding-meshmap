@@ -109,7 +109,7 @@ importers:
         version: 12.18.3
       pg-connection-string:
         specifier: ^2.7.0
-        version: 2.13.0
+        version: 2.14.0
       pg-query-stream:
         specifier: ^4.7.1
         version: 4.15.0(pg@8.21.0)
@@ -4651,8 +4651,8 @@ packages:
   pg-cloudflare@1.4.0:
     resolution: {integrity: sha512-Vo7z/6rrQYxpNRylp4Tlob2elzbh+N/MOQbxFVWCxS7oEx6jF53GTJFxK2WWpKuBRkmiin4Mt+xofFDjx09R0A==}
 
-  pg-connection-string@2.13.0:
-    resolution: {integrity: sha512-EMnU9E2fSULdsbErBbMaXJvFeD9B4+nPcM3f+4lsiCR0BHLPrLVjv3DbyM2hgQQviKJaTWIRRTjKjWlHg3p2ig==}
+  pg-connection-string@2.14.0:
+    resolution: {integrity: sha512-XwWDGcLRGCXAR8F/AM5bG7Q+A3Wm2s6QeEjlOKZLlH3UYcguiqCWKyWXVag5TLTIjR7oOJUY8kcADaZgWPyLeg==}
 
   pg-connection-string@2.6.2:
     resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
@@ -10425,7 +10425,7 @@ snapshots:
   pg-cloudflare@1.4.0:
     optional: true
 
-  pg-connection-string@2.13.0: {}
+  pg-connection-string@2.14.0: {}
 
   pg-connection-string@2.6.2: {}
 
@@ -10456,7 +10456,7 @@ snapshots:
 
   pg@8.21.0:
     dependencies:
-      pg-connection-string: 2.13.0
+      pg-connection-string: 2.14.0
       pg-pool: 3.14.0(pg@8.21.0)
       pg-protocol: 1.14.0
       pg-types: 2.2.0

@@ -329,7 +329,7 @@ importers:
         version: 8.0.2(chai@6.2.2)
       chai-deep-equal-ignore-undefined:
         specifier: ^1.1.1
-        version: 1.1.1(chai@6.2.2)
+        version: 1.2.0(chai@6.2.2)
       chai-exclude:
         specifier: ^3.0.0
         version: 3.0.1(chai@6.2.2)
@@ -2482,10 +2482,10 @@ packages:
     peerDependencies:
       chai: '>= 2.1.2 < 7'
 
-  chai-deep-equal-ignore-undefined@1.1.1:
-    resolution: {integrity: sha512-BE4nUR2Jbqmmv8A0EuAydFRB/lXgXWAfa9TvO3YzHeGHAU7ZRwPZyu074oDl/CZtNXM7jXINpQxKBOe7N0P4bg==}
+  chai-deep-equal-ignore-undefined@1.2.0:
+    resolution: {integrity: sha512-3y0fKGXMP+lJJg7FbjkNGTbxxtc4yQmr+GHx4qkaev7IyURge4L2Nk4bweUAFOLsnex7aBBMoLRVra4v8nZ/Tw==}
     peerDependencies:
-      chai: '>= 4.0.0 < 5'
+      chai: '>= 4.0.0 < 7'
 
   chai-exclude@3.0.1:
     resolution: {integrity: sha512-cx7nCdrlkS4xiLTWJ2ewhCi34EeJLt0bWpR+ZUMHT1yrXUeOEtJElXj1rOEm8J3CjU0QlSkHaV/4CRM0cX6yfg==}
@@ -7929,7 +7929,7 @@ snapshots:
       chai: 6.2.2
       check-error: 2.1.1
 
-  chai-deep-equal-ignore-undefined@1.1.1(chai@6.2.2):
+  chai-deep-equal-ignore-undefined@1.2.0(chai@6.2.2):
     dependencies:
       chai: 6.2.2
 

@@ -84,7 +84,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/response-time": "^2.3.8",
-    "@types/sinon": "^21.0.0",
+    "@types/sinon": "^22.0.0",
     "@types/supertest": "^7.0.0",
     "@types/uuid": "^11.0.0",
     "@types/w3c-web-serial": "^1.0.8",

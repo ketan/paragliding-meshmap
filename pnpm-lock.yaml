@@ -398,7 +398,7 @@ importers:
         version: 3.9.4
       protobufjs-cli:
         specifier: ^2.0.0
-        version: 2.5.7(protobufjs@8.6.6)
+        version: 2.6.0(protobufjs@8.6.6)
       qs:
         specifier: ^6.13.0
         version: 6.15.3
@@ -2359,8 +2359,8 @@ packages:
   brace-expansion@2.1.0:
     resolution: {integrity: sha512-TN1kCZAgdgweJhWWpgKYrQaMNHcDULHkWwQIspdtjV4Y5aurRdZpjAqn6yX3FPqTA9ngHCc4hJxMAMgGfve85w==}
 
-  brace-expansion@2.1.1:
-    resolution: {integrity: sha512-WR1cURNjuvBLMZBMbqM0UoE+WAfdUcEV1ccD8PVBVOI+Z3ND4+SZbN8RsfT2bMuG1qwz5RFvPukSZm5fF2D5eA==}
+  brace-expansion@2.1.2:
+    resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
 
   brace-expansion@5.0.5:
     resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
@@ -4800,12 +4800,12 @@ packages:
   property-expr@2.0.6:
     resolution: {integrity: sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==}
 
-  protobufjs-cli@2.5.7:
-    resolution: {integrity: sha512-vTO8KSAG6qAXZYOT4pulivSN1wV+1RgulUeT2NCUvfKnypfJ2kF0GGYFNhlqQr7I9o8syQbfhJLnq6OJglliqw==}
+  protobufjs-cli@2.6.0:
+    resolution: {integrity: sha512-ad4OuOQvCGO92amxWbqPy02p6JjmM97SP8mHz35PYl2tjYIsaeUOyizpXy8MDKxPwQ8u0wzrNzcswKyq12JIBg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: ^8.6.6
+      protobufjs: ^8.7.0
 
   protobufjs@7.6.5:
     resolution: {integrity: sha512-/FPD0nUc9jH6rfFjji9IBqOz4pcSE3CsT1m7Ep6Mdb0LxSUMj8hgl6GomOvZzpNpAqqGaXA0P3VSrZLFzIhQrw==}
@@ -7783,7 +7783,7 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@2.1.1:
+  brace-expansion@2.1.2:
     dependencies:
       balanced-match: 1.0.2
 
@@ -9938,7 +9938,7 @@ snapshots:
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.1
+      brace-expansion: 2.1.2
 
   minimatch@9.0.9:
     dependencies:
@@ -10553,7 +10553,7 @@ snapshots:
 
   property-expr@2.0.6: {}
 
-  protobufjs-cli@2.5.7(protobufjs@8.6.6):
+  protobufjs-cli@2.6.0(protobufjs@8.6.6):
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3

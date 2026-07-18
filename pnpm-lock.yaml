@@ -185,7 +185,7 @@ importers:
         version: 4.3.2
       '@tailwindcss/vite':
         specifier: ^4.1.12
-        version: 4.3.2(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 4.3.2(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       '@types/body-parser':
         specifier: ^1.19.5
         version: 1.19.6
@@ -308,7 +308,7 @@ importers:
         version: 7.18.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       '@vitejs/plugin-react-swc':
         specifier: ^4.0.0
-        version: 4.3.1(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 4.3.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.5.3(postcss@8.5.19)
@@ -467,19 +467,19 @@ importers:
         version: 7.18.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       vite:
         specifier: ^8.0.0
-        version: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+        version: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(supports-color@10.2.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 0.5.1(supports-color@10.2.2)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       vite-plugin-inspect:
         specifier: ^11.2.0
-        version: 11.4.1(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 11.4.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       vite-plugin-node-polyfills:
         specifier: ^0.28.0
-        version: 0.28.0(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 0.28.0(rollup@4.62.2)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       vite-runtime-env-script-plugin:
         specifier: ^1.2.3
-        version: 1.2.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+        version: 1.2.3(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
       yup:
         specifier: ^1.4.0
         version: 1.7.1
@@ -5773,8 +5773,8 @@ packages:
     peerDependencies:
       vite: ^4.3.2
 
-  vite@8.1.4:
-    resolution: {integrity: sha512-bTT9PsdWO+MQMNG9ZXIP/qM9wGh37DFxTV/sPq9cFpHr3w4jkgef032PkAL9jAqhk3Nz8NQw3O8n6/xFkqO4QQ==}
+  vite@8.1.5:
+    resolution: {integrity: sha512-7ULLwsCdYx/nRyrpiEwvqb5TFHrMVZyBt+rg/OAXT7rgj/z+DtTDyKFeLAdDkubDVDKD8jOsndmy7m55XcfUsw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -7134,12 +7134,12 @@ snapshots:
       postcss: 8.5.19
       tailwindcss: 4.3.2
 
-  '@tailwindcss/vite@4.3.2(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))':
+  '@tailwindcss/vite@4.3.2(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))':
     dependencies:
       '@tailwindcss/node': 4.3.2
       '@tailwindcss/oxide': 4.3.2
       tailwindcss: 4.3.2
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
 
   '@tokenizer/inflate@0.4.1(supports-color@10.2.2)':
     dependencies:
@@ -7512,11 +7512,11 @@ snapshots:
 
   '@tyriar/fibonacci-heap@2.0.9': {}
 
-  '@vitejs/plugin-react-swc@4.3.1(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))':
+  '@vitejs/plugin-react-swc@4.3.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       '@swc/core': 1.15.33
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -11642,26 +11642,26 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite-dev-rpc@2.0.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-dev-rpc@2.0.0(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
       birpc: 4.0.0
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
-      vite-hot-client: 2.2.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite-hot-client: 2.2.0(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
 
-  vite-hot-client@2.2.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-hot-client@2.2.0(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
 
-  vite-plugin-compression@0.5.1(supports-color@10.2.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-plugin-compression@0.5.1(supports-color@10.2.2)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
       chalk: 4.1.2
       debug: 4.4.3(supports-color@10.2.2)
       fs-extra: 10.1.0
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-inspect@11.4.1(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-plugin-inspect@11.4.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
       ansis: 4.3.0
       error-stack-parser-es: 1.0.5
@@ -11671,22 +11671,22 @@ snapshots:
       perfect-debounce: 2.1.0
       sirv: 3.0.2
       unplugin-utils: 0.3.1
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
-      vite-dev-rpc: 2.0.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite-dev-rpc: 2.0.0(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0))
 
-  vite-plugin-node-polyfills@0.28.0(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-plugin-node-polyfills@0.28.0(rollup@4.62.2)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.62.2)
       node-stdlib-browser: 1.3.1
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
     transitivePeerDependencies:
       - rollup
 
-  vite-runtime-env-script-plugin@1.2.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
+  vite-runtime-env-script-plugin@1.2.3(vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)):
     dependencies:
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)
 
-  vite@8.1.4(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0):
+  vite@8.1.5(@types/node@24.13.3)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5

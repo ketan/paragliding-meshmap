@@ -85,7 +85,7 @@ importers:
         version: 9.0.3
       p-queue:
         specifier: ^9.0.0
-        version: 9.3.1
+        version: 9.3.2
       p-retry:
         specifier: ^8.0.0
         version: 8.0.0
@@ -4517,8 +4517,8 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
-  p-queue@9.3.1:
-    resolution: {integrity: sha512-POWdiIPmsUPGwb4FeQ4OBg46aqmcInSWe45CKDsGHiOBiVQM9chqfQTuqhuTzcg2Vz9faTI65at0KkVyVEiCHw==}
+  p-queue@9.3.2:
+    resolution: {integrity: sha512-pCsnA4piiqkrwAJ555Xh/lc717SijJrTBr96P1q6BRnUdm2XPB4v91oiXVAUr5HbIbXW4D8kIslfJUE28Rud6A==}
     engines: {node: '>=20'}
 
   p-retry@8.0.0:
@@ -10285,7 +10285,7 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
-  p-queue@9.3.1:
+  p-queue@9.3.2:
     dependencies:
       eventemitter3: 5.0.4
       p-timeout: 7.0.1

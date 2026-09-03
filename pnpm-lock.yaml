@@ -22,7 +22,7 @@ importers:
         version: 0.1.1
       connect-typeorm:
         specifier: ^2.0.0
-        version: 2.0.0(supports-color@10.2.2)(typeorm@0.3.31(pg-query-stream@4.16.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3)))
+        version: 2.0.0(supports-color@10.2.2)(typeorm@0.3.31(pg-query-stream@4.17.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3)))
       cookie-parser:
         specifier: ^1.4.6
         version: 1.4.7
@@ -112,7 +112,7 @@ importers:
         version: 2.14.0
       pg-query-stream:
         specifier: ^4.7.1
-        version: 4.16.0(pg@8.22.0)
+        version: 4.17.0(pg@8.22.0)
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -130,7 +130,7 @@ importers:
         version: 10.2.2
       typeorm:
         specifier: ^0.3.20
-        version: 0.3.31(pg-query-stream@4.16.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))
+        version: 0.3.31(pg-query-stream@4.17.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))
       uuid:
         specifier: ^14.0.0
         version: 14.0.1
@@ -4691,8 +4691,8 @@ packages:
   pg-connection-string@2.6.2:
     resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
 
-  pg-cursor@2.21.0:
-    resolution: {integrity: sha512-IYvk/j+Suhtbo/C3uOf4JLsLK/gWxOTUOmYbDsbKnLaVJDq+KwhwK6ngpRfiCk8eDMS3AmGQABZCv0cREEzHQw==}
+  pg-cursor@2.22.0:
+    resolution: {integrity: sha512-knzXLKqarTjOvb3qDSW0JiGsazmxwEKXrqHfWRte7XUsOYccQRafn3BLnQobWwInkzFJSyOej8y8cQRh2z3kGw==}
     peerDependencies:
       pg: ^8
 
@@ -4711,8 +4711,8 @@ packages:
   pg-protocol@1.16.0:
     resolution: {integrity: sha512-sILXutLVjCLjcDuOmvhX5e2Z4cS5qG/6Bu3VkpFwdf/633ElGLpEh9bgmuI5I4sqKqkifQiGyiCcx1HdtrK7tg==}
 
-  pg-query-stream@4.16.0:
-    resolution: {integrity: sha512-vyqxAG4YVax43BCSfqcKxHSbh8YQshhVR0CjLNdo7MIM2UOqI+XsIYk0bVZJ0aKjQfjJQcGiGo9xK3hz0JcFyg==}
+  pg-query-stream@4.17.0:
+    resolution: {integrity: sha512-69bug2CH/AJi1BN8r08eZ8tAGdbZZVp9kB0FG9OC2VkJPHIyj7d3Nk9V8tmporO60wqeWvhn7qtQ5oNimwlFug==}
     peerDependencies:
       pg: ^8
 
@@ -8066,13 +8066,13 @@ snapshots:
 
   connect-flash@0.1.1: {}
 
-  connect-typeorm@2.0.0(supports-color@10.2.2)(typeorm@0.3.31(pg-query-stream@4.16.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))):
+  connect-typeorm@2.0.0(supports-color@10.2.2)(typeorm@0.3.31(pg-query-stream@4.17.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))):
     dependencies:
       '@types/debug': 0.0.31
       '@types/express-session': 1.19.0
       debug: 4.4.3(supports-color@10.2.2)
       express-session: 1.19.0(supports-color@10.2.2)
-      typeorm: 0.3.31(pg-query-stream@4.16.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))
+      typeorm: 0.3.31(pg-query-stream@4.17.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3))
     transitivePeerDependencies:
       - supports-color
 
@@ -10471,7 +10471,7 @@ snapshots:
 
   pg-connection-string@2.6.2: {}
 
-  pg-cursor@2.21.0(pg@8.22.0):
+  pg-cursor@2.22.0(pg@8.22.0):
     dependencies:
       pg: 8.22.0
 
@@ -10485,10 +10485,10 @@ snapshots:
 
   pg-protocol@1.16.0: {}
 
-  pg-query-stream@4.16.0(pg@8.22.0):
+  pg-query-stream@4.17.0(pg@8.22.0):
     dependencies:
       pg: 8.22.0
-      pg-cursor: 2.21.0(pg@8.22.0)
+      pg-cursor: 2.22.0(pg@8.22.0)
 
   pg-types@2.2.0:
     dependencies:
@@ -11545,7 +11545,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typeorm@0.3.31(pg-query-stream@4.16.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3)):
+  typeorm@0.3.31(pg-query-stream@4.17.0(pg@8.22.0))(pg@8.22.0)(supports-color@10.2.2)(ts-node@10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3)):
     dependencies:
       '@sqltools/formatter': 1.2.5
       ansis: 4.3.1
@@ -11564,7 +11564,7 @@ snapshots:
       yargs: 17.7.3
     optionalDependencies:
       pg: 8.22.0
-      pg-query-stream: 4.16.0(pg@8.22.0)
+      pg-query-stream: 4.17.0(pg@8.22.0)
       ts-node: 10.9.2(@swc/core@1.15.47)(@types/node@24.13.3)(typescript@6.0.3)
     transitivePeerDependencies:
       - babel-plugin-macros

@@ -70,7 +70,7 @@ importers:
         version: 3.7.2
       morgan:
         specifier: ^1.10.0
-        version: 1.11.0(supports-color@10.2.2)
+        version: 1.12.0(supports-color@10.2.2)
       morgan-body:
         specifier: ^2.6.9
         version: 2.6.9
@@ -4367,8 +4367,8 @@ packages:
   morgan-body@2.6.9:
     resolution: {integrity: sha512-O0dlv/V67gSszFo4rraZ7nMhD+iuWOg2w7hOLcAC6S+nF26Q8XvikGFjoJ7+dVuh49BBsIvQqRUGbs9e8keFKw==}
 
-  morgan@1.11.0:
-    resolution: {integrity: sha512-zSkVu3t18r39pw4ixfBKvfZi3y2UOqr7d4WYwcj3m8nXpEQK4rPO6GLzs/CExoRgmX3y9EjmmcXqv6jq0SK46g==}
+  morgan@1.12.0:
+    resolution: {integrity: sha512-OHpTRQwn2ezasILW8iKe+Yww1XsfWsZIpUOLF7RDb2g5GwO3trPaRwi7+8BDiJ7HFx2Kg2mfUdCBcVhwYlOz2g==}
     engines: {node: '>= 0.8.0'}
 
   mqtt-packet@6.10.0:
@@ -10063,7 +10063,7 @@ snapshots:
       on-finished: 2.4.1
       on-headers: 1.1.0
 
-  morgan@1.11.0(supports-color@10.2.2):
+  morgan@1.12.0(supports-color@10.2.2):
     dependencies:
       basic-auth: 2.0.1
       debug: 2.6.9(supports-color@10.2.2)

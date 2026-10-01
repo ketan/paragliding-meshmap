@@ -140,7 +140,7 @@
     "terser": "^5.43.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
-    "tslog": "^4.9.3",
+    "tslog": "^5.0.0",
     "typescript": "^6.0.0",
     "typescript-color-gradient": "^4.0.1",
     "typescript-eslint": "^7.15.0",

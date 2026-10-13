@@ -192,7 +192,7 @@
     "reflect-metadata": "^0.2.2",
     "response-time": "^2.3.2",
     "supports-color": "^10.0.0",
-    "typeorm": "^0.3.20",
+    "typeorm": "^1.0.0",
     "uuid": "^14.0.0"
   },
   "engines": {

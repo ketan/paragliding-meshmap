@@ -133,7 +133,7 @@
     "rollup": "^4.18.1",
     "sass": "^1.77.6",
     "sinon": "^22.0.0",
-    "ste-simple-events": "^3.0.11",
+    "ste-simple-events": "^4.0.0",
     "supertest": "^7.0.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.12",

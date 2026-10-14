@@ -191,7 +191,7 @@
     "protobufjs": "^8.0.0",
     "reflect-metadata": "^0.2.2",
     "response-time": "^2.3.2",
-    "supports-color": "^10.0.0",
+    "supports-color": "^11.0.0",
     "typeorm": "^0.3.20",
     "uuid": "^14.0.0"
   },

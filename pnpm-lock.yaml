@@ -245,7 +245,7 @@ importers:
         version: 4.17.26
       '@types/luxon':
         specifier: ^3.4.2
-        version: 3.7.3
+        version: 3.7.6
       '@types/mocha':
         specifier: ^10.0.7
         version: 10.0.10
@@ -2031,8 +2031,8 @@ packages:
   '@types/lodash@4.17.26':
     resolution: {integrity: sha512-48NWfiY6oNcKOh47Z4h+sIvwcQR91h6KPhaYKgeMIrkT2jV82Gy90SErj60vW8jQbeMSOSbhIv3bZ7JoqPPVhA==}
 
-  '@types/luxon@3.7.3':
-    resolution: {integrity: sha512-pE7BSbKHiojpl4v7iEzdfFLXXJaH5RPJxI3Wr4x3HU59l83PJfhcUx4mGPWq245+DCAENAzRF/+ZoYr2tJCe/g==}
+  '@types/luxon@3.7.6':
+    resolution: {integrity: sha512-6KSjliQAXK8ZLgFQO4B7iE4Rpf/B3rItzCFuXezBY/XIAGxOdLd7vRNK9/StRPwiS/yJsVbB7HKpW46B8tcEuQ==}
 
   '@types/markdown-it@14.2.0':
     resolution: {integrity: sha512-NoQ2yGlLWj4wpxMs+TYmRKk3thDrQ97agr7sFqfLsAlvoS8SNQuTrlObhFqG9iugdTtgOE9jpJ6FNM4ZGsa5xQ==}
@@ -7447,7 +7447,7 @@ snapshots:
 
   '@types/lodash@4.17.26': {}
 
-  '@types/luxon@3.7.3': {}
+  '@types/luxon@3.7.6': {}
 
   '@types/markdown-it@14.2.0':
     dependencies:
@@ -8287,7 +8287,7 @@ snapshots:
 
   cron@4.4.0:
     dependencies:
-      '@types/luxon': 3.7.3
+      '@types/luxon': 3.7.6
       luxon: 3.7.2
 
   cross-spawn@7.0.6:

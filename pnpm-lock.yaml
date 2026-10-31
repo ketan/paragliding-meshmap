@@ -82,7 +82,7 @@ importers:
         version: 1.2.3
       nodemailer:
         specifier: ^10.0.0
-        version: 10.0.16
+        version: 10.3.0
       p-queue:
         specifier: ^9.0.0
         version: 9.3.5
@@ -4554,8 +4554,8 @@ packages:
     resolution: {integrity: sha512-X75ZN8DCLftGM5iKwoYLA3rjnrAEs97MkzvSd4q2746Tgpg8b8XWiBGiBG4ZpgcAqBgtgPHTiAc8ZMCvZuikDw==}
     engines: {node: '>=10'}
 
-  nodemailer@10.0.16:
-    resolution: {integrity: sha512-VL9xKErxN+el77o8eBOuYKUPMyEx7F9hfnDCuiUKJRp9v3wnWMOudYgP/SWbwSHy8rUL4cylobuXtki1LpQS7A==}
+  nodemailer@10.3.0:
+    resolution: {integrity: sha512-LsqM+Sxjap8BMgxQuVvABoEcm9ed2f3h2e0ohB7kV3sl9+4IaXlxC0DT8CQelg/S0he38gT4yT0RH1pvZxHf+A==}
     engines: {node: '>=20.0.0'}
 
   nodemon@3.1.14:
@@ -10329,7 +10329,7 @@ snapshots:
       util: 0.12.5
       vm-browserify: 1.1.2
 
-  nodemailer@10.0.16: {}
+  nodemailer@10.3.0: {}
 
   nodemon@3.1.14:
     dependencies:

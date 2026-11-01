@@ -296,7 +296,7 @@ importers:
         version: 11.0.0
       '@types/w3c-web-serial':
         specifier: ^1.0.8
-        version: 1.0.8
+        version: 1.0.9
       '@types/web-bluetooth':
         specifier: ^0.0.21
         version: 0.0.21
@@ -2136,8 +2136,8 @@ packages:
     resolution: {integrity: sha512-HVyk8nj2m+jcFRNazzqyVKiZezyhDKrGUA3jlEcg/nZ6Ms+qHwocba1Y/AaVaznJTAM9xpdFSh+ptbNrhOGvZA==}
     deprecated: This is a stub types definition. uuid provides its own type definitions, so you do not need this installed.
 
-  '@types/w3c-web-serial@1.0.8':
-    resolution: {integrity: sha512-QQOT+bxQJhRGXoZDZGLs3ksLud1dMNnMiSQtBA0w8KXvLpXX4oM4TZb6J0GgJ8UbCaHo5s9/4VQT8uXy9JER2A==}
+  '@types/w3c-web-serial@1.0.9':
+    resolution: {integrity: sha512-IVPnnhE1IC3Za0j+ykQDMvRwe3m92hcDIAJjUA4aZW+7f+osL48SDS+02Xsqj5dHluXOCsEA9HS10isX4O59EA==}
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
@@ -6619,7 +6619,7 @@ snapshots:
   '@meshtastic/transport-web-serial@0.2.5(buffer@6.0.3)':
     dependencies:
       '@meshtastic/core': 2.6.7(buffer@6.0.3)
-      '@types/w3c-web-serial': 1.0.8
+      '@types/w3c-web-serial': 1.0.9
     transitivePeerDependencies:
       - buffer
 
@@ -7575,7 +7575,7 @@ snapshots:
     dependencies:
       uuid: 14.0.3
 
-  '@types/w3c-web-serial@1.0.8': {}
+  '@types/w3c-web-serial@1.0.9': {}
 
   '@types/web-bluetooth@0.0.20': {}
 

@@ -31,7 +31,7 @@ importers:
         version: 4.4.0
       csrf-csrf:
         specifier: ^4.0.3
-        version: 4.0.3
+        version: 4.1.0
       debug:
         specifier: ^4.3.5
         version: 4.4.3(supports-color@10.2.2)
@@ -2803,8 +2803,8 @@ packages:
     resolution: {integrity: sha512-r4ESw/IlusD17lgQi1O20Fa3qNnsckR126TdUuBgAu7GBYSIPvdNyONd3Zrxh0xCwA4+6w/TDArBPsMvhur+KQ==}
     engines: {node: '>= 0.10'}
 
-  csrf-csrf@4.0.3:
-    resolution: {integrity: sha512-DaygOzelL4Qo1pHwI9LPyZL+X2456/OzpT596kNeZGiTSqKVDOk/9PPJ+FjzZacjMUEusOHw3WJKe1RW4iUhrw==}
+  csrf-csrf@4.1.0:
+    resolution: {integrity: sha512-hqnuSC2OEHXdFA9cbtRD2arM8VfjUGn4gnlsOWOhbUCkhhBS0PJTvGBQN9OCbVCvW6tLsshmjL9yovAP+hJXmg==}
 
   css-select@5.2.2:
     resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
@@ -3640,10 +3640,6 @@ packages:
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
-
-  http-errors@2.0.0:
-    resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
-    engines: {node: '>= 0.8'}
 
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
@@ -5414,10 +5410,6 @@ packages:
     resolution: {integrity: sha512-2p2KJZTSqQ/I3+HX42EpYOa2l3f8Erv8MWKsy2I9uf4wA7yFIkXRffYdsx86y6z4vHtV8u7g+pPlr8/4ouAxsQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
-
-  statuses@2.0.1:
-    resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
-    engines: {node: '>= 0.8'}
 
   statuses@2.0.2:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
@@ -8356,9 +8348,9 @@ snapshots:
       randombytes: 2.1.0
       randomfill: 1.0.4
 
-  csrf-csrf@4.0.3:
+  csrf-csrf@4.1.0:
     dependencies:
-      http-errors: 2.0.0
+      http-errors: 2.0.1
 
   css-select@5.2.2:
     dependencies:
@@ -9423,14 +9415,6 @@ snapshots:
   html-entities@2.6.0: {}
 
   html-escaper@2.0.2: {}
-
-  http-errors@2.0.0:
-    dependencies:
-      depd: 2.0.0
-      inherits: 2.0.4
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      toidentifier: 1.0.1
 
   http-errors@2.0.1:
     dependencies:
@@ -11358,8 +11342,6 @@ snapshots:
       jsbn: 0.1.1
       safer-buffer: 2.1.2
       tweetnacl: 0.14.5
-
-  statuses@2.0.1: {}
 
   statuses@2.0.2: {}
 

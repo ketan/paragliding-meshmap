@@ -54,10 +54,19 @@ export function cssClassForActivity(str: NodeStatus, activity: NodeActivity) {
 
   switch (str) {
     case 'online':
-      return `bg-green-600 ${commonClasses}`
+      break; /* see below */
     case 'old':
       return `bg-purple-600 ${commonClasses}`
     case 'offline':
       return `bg-gray-600 ${commonClasses}`
+  }
+
+  switch(activity) {
+    case 'fly':
+      return `bg-blue-600 ${commonClasses}`
+    case 'concern':
+      return `bg-orange-600 ${commonClasses}`
+    default:
+      return `bg-green-600 ${commonClasses}`
   }
 }
